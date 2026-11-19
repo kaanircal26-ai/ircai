@@ -8,464 +8,493 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="TOZRA">
+
 <title>TOZRA — Creative Intelligence</title>
 
 <link rel="icon" href="/logo.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/logo.svg">
+<link rel="manifest" href="/manifest.json">
 
 <style>
 :root {
-  --bg:#f7f7f5;
-  --surface:#ffffff;
-  --text:#171717;
-  --muted:#858585;
-  --line:#e9e9e6;
-  --soft:#f0f0ed;
-  --accent:#222222;
-  --sidebar:260px;
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --text: #171717;
+  --muted: #858585;
+  --border: #e9e9e6;
+  --accent: #171717;
+  --sidebar: 260px;
 }
 
 * {
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
+  box-sizing: border-box;
 }
 
 body {
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  min-height:100dvh;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
 }
 
-button,textarea {
-  font:inherit;
+button, textarea {
+  font: inherit;
 }
 
 button {
-  cursor:pointer;
-}
-
-#splash {
-  position:fixed;
-  inset:0;
-  z-index:1000;
-  background:var(--bg);
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  gap:18px;
-  transition:opacity .5s ease,visibility .5s ease;
-}
-
-#splash.hide {
-  opacity:0;
-  visibility:hidden;
-}
-
-.splash-logo {
-  width:76px;
-  height:76px;
-  animation:appear .7s ease both;
-}
-
-.splash-name {
-  font-size:24px;
-  font-weight:750;
-  letter-spacing:7px;
-  animation:appear .8s ease both;
-}
-
-.splash-tag {
-  color:var(--muted);
-  font-size:10px;
-  letter-spacing:3px;
-}
-
-@keyframes appear {
-  from {opacity:0;transform:translateY(12px)}
-  to {opacity:1;transform:translateY(0)}
+  cursor: pointer;
 }
 
 .app {
-  display:flex;
-  min-height:100dvh;
+  display: flex;
+  min-height: 100vh;
 }
 
+/* SIDEBAR */
+
 .sidebar {
-  width:var(--sidebar);
-  background:#fff;
-  border-right:1px solid var(--line);
-  padding:26px 18px;
-  display:flex;
-  flex-direction:column;
-  flex-shrink:0;
+  width: var(--sidebar);
+  background: #fff;
+  border-right: 1px solid var(--border);
+  padding: 25px 18px;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
 }
 
 .brand {
-  display:flex;
-  align-items:center;
-  gap:11px;
-  padding:0 8px 30px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0 8px;
+  margin-bottom: 38px;
 }
 
-.brand-mark {
-  width:34px;
-  height:34px;
+.brand img {
+  width: 36px;
+  height: 36px;
 }
 
 .brand-name {
-  font-size:19px;
-  font-weight:750;
-  letter-spacing:3px;
+  font-size: 19px;
+  font-weight: 750;
+  letter-spacing: 2px;
+}
+
+.brand-sub {
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: var(--muted);
+  margin-top: 3px;
 }
 
 .new-chat {
-  border:1px solid var(--line);
-  background:#fff;
-  padding:13px 14px;
-  border-radius:12px;
-  text-align:left;
-  font-size:13px;
-  color:var(--text);
-  transition:.2s;
+  width: 100%;
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 12px;
+  padding: 13px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+  transition: .2s;
 }
 
 .new-chat:hover {
-  background:var(--soft);
+  background: #f7f7f5;
 }
 
-.side-label {
-  color:#aaa;
-  font-size:10px;
-  letter-spacing:1.5px;
-  margin:32px 8px 12px;
+.sidebar-label {
+  color: #aaa;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  margin: 30px 8px 12px;
+  text-transform: uppercase;
 }
 
-.side-note {
-  color:#aaa;
-  font-size:12px;
-  line-height:1.7;
-  padding:0 8px;
+.sidebar-info {
+  margin-top: auto;
+  padding: 15px 9px 0;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.7;
 }
 
-.sidebar-bottom {
-  margin-top:auto;
-  border-top:1px solid var(--line);
-  padding:18px 8px 0;
-  color:#999;
-  font-size:11px;
-  line-height:1.7;
-}
+/* MAIN */
 
 .main {
-  flex:1;
-  min-width:0;
-  display:flex;
-  flex-direction:column;
-  min-height:100dvh;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .topbar {
-  height:68px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 34px;
-  border-bottom:1px solid var(--line);
-  background:rgba(255,255,255,.55);
+  height: 70px;
+  padding: 0 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255,255,255,.7);
 }
 
 .topbar-title {
-  font-size:13px;
-  font-weight:600;
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .status {
-  display:flex;
-  align-items:center;
-  gap:7px;
-  font-size:11px;
-  color:#777;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 11px;
 }
 
 .status-dot {
-  width:7px;
-  height:7px;
-  background:#63a77c;
-  border-radius:50%;
+  width: 7px;
+  height: 7px;
+  background: #54a77a;
+  border-radius: 50%;
 }
 
-.mobile-brand {
-  display:none;
-  align-items:center;
-  gap:8px;
-  font-weight:750;
-  letter-spacing:2px;
-}
+/* CHAT */
 
-.content {
-  width:100%;
-  max-width:900px;
-  margin:0 auto;
-  padding:50px 35px 30px;
-  flex:1;
-  display:flex;
-  flex-direction:column;
+.chat-area {
+  flex: 1;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 55px 30px 25px;
+  display: flex;
+  flex-direction: column;
 }
 
 .welcome {
-  text-align:center;
-  margin:auto auto 35px;
-  padding-top:30px;
-  width:100%;
+  margin: auto 0;
+  text-align: center;
+  padding: 30px 0;
 }
 
-.welcome-mark {
-  width:54px;
-  height:54px;
-  margin:0 auto 25px;
+.welcome-logo {
+  width: 65px;
+  height: 65px;
+  margin-bottom: 25px;
 }
 
 .welcome h1 {
-  font-size:clamp(27px,4vw,39px);
-  letter-spacing:-1.5px;
-  font-weight:650;
-  margin-bottom:13px;
+  font-size: clamp(27px, 5vw, 39px);
+  letter-spacing: -1.5px;
+  margin: 0 0 12px;
+  font-weight: 650;
 }
 
 .welcome p {
-  color:var(--muted);
-  font-size:14px;
-  line-height:1.7;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+  margin: 0;
 }
 
 .suggestions {
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:9px;
-  margin-top:29px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  max-width: 540px;
+  margin: 34px auto 0;
 }
 
 .suggestion {
-  background:#fff;
-  border:1px solid var(--line);
-  padding:11px 15px;
-  border-radius:30px;
-  font-size:12px;
-  color:#555;
-  transition:.2s;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  padding: 15px;
+  text-align: left;
+  color: #444;
+  font-size: 12px;
+  line-height: 1.5;
+  transition: .2s;
 }
 
 .suggestion:hover {
-  background:var(--soft);
-  border-color:#d5d5d0;
+  border-color: #aaa;
+  transform: translateY(-2px);
 }
 
+/* MESSAGES */
+
 .messages {
-  display:flex;
-  flex-direction:column;
-  gap:24px;
-  width:100%;
-  padding-bottom:30px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-bottom: 25px;
 }
 
 .message {
-  display:flex;
-  gap:13px;
-  align-items:flex-start;
-  animation:appear .25s ease;
+  display: flex;
+  gap: 13px;
+  align-items: flex-start;
+  animation: appear .25s ease;
+}
+
+@keyframes appear {
+  from { opacity: 0; transform: translateY(7px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .message.user {
-  justify-content:flex-end;
+  justify-content: flex-end;
+}
+
+.message-icon {
+  width: 31px;
+  height: 31px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  background: #171717;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
 }
 
 .message-content {
-  max-width:min(75%,680px);
-  font-size:14px;
-  line-height:1.8;
-  white-space:pre-wrap;
-  overflow-wrap:anywhere;
+  max-width: 78%;
+  min-width: 0;
 }
 
-.user .message-content {
-  background:#eaeae6;
-  padding:13px 17px;
-  border-radius:17px 17px 4px 17px;
+.message.user .message-content {
+  background: #ededeb;
+  border-radius: 15px 4px 15px 15px;
+  padding: 13px 16px;
 }
 
-.assistant .message-content {
-  padding:5px 0;
+.message.assistant .message-content {
+  padding: 5px 0;
+  line-height: 1.75;
+  font-size: 14px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
-.avatar {
-  width:30px;
-  height:30px;
-  border-radius:10px;
-  background:#191919;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#fff;
-  flex-shrink:0;
-}
-
-.avatar svg {
-  width:19px;
-  height:19px;
+.message.user .message-content {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 14px;
+  line-height: 1.65;
 }
 
 .message-actions {
-  display:flex;
-  gap:8px;
-  margin-top:9px;
+  margin-top: 8px;
 }
 
-.message-actions button {
-  border:0;
-  background:transparent;
-  color:#999;
-  font-size:11px;
+.copy-btn {
+  border: 0;
+  background: transparent;
+  color: #999;
+  font-size: 11px;
+  padding: 4px 0;
 }
 
-.message-actions button:hover {
-  color:#222;
+.copy-btn:hover {
+  color: #222;
 }
 
-.typing {
-  color:#999;
-  font-size:12px;
-  padding:8px 0;
-}
+/* COMPOSER */
 
-.composer-area {
-  width:100%;
-  max-width:900px;
-  margin:0 auto;
-  padding:0 35px 22px;
+.composer-wrap {
+  position: sticky;
+  bottom: 0;
+  background: var(--bg);
+  padding: 15px 0 12px;
 }
 
 .composer {
-  background:#fff;
-  border:1px solid #e4e4e0;
-  border-radius:18px;
-  padding:13px 14px 11px;
-  box-shadow:0 5px 25px rgba(0,0,0,.035);
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  background: #fff;
+  border: 1px solid #dededb;
+  border-radius: 17px;
+  padding: 12px 13px 12px 17px;
+  box-shadow: 0 5px 25px rgba(0,0,0,.035);
 }
 
 .composer textarea {
-  display:block;
-  width:100%;
-  border:0;
-  outline:0;
-  resize:none;
-  min-height:43px;
-  max-height:180px;
-  padding:8px 5px;
-  background:transparent;
-  color:var(--text);
-  font-size:14px;
-  line-height:1.6;
+  flex: 1;
+  border: 0;
+  outline: 0;
+  resize: none;
+  min-height: 27px;
+  max-height: 150px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text);
+  background: transparent;
 }
 
 .composer textarea::placeholder {
-  color:#aaa;
-}
-
-.composer-bottom {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:5px 2px 0;
-}
-
-.composer-hint {
-  color:#aaa;
-  font-size:10px;
+  color: #aaa;
 }
 
 .send-btn {
-  width:36px;
-  height:36px;
-  border:0;
-  border-radius:11px;
-  background:#191919;
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  transition:.2s;
+  width: 37px;
+  height: 37px;
+  border: 0;
+  border-radius: 11px;
+  background: #171717;
+  color: #fff;
+  font-size: 17px;
+  flex-shrink: 0;
+  transition: .2s;
 }
 
 .send-btn:hover {
-  background:#444;
-  transform:translateY(-1px);
+  background: #444;
 }
 
 .send-btn:disabled {
-  opacity:.35;
-  cursor:not-allowed;
+  opacity: .4;
+  cursor: not-allowed;
 }
 
-.send-btn svg {
-  width:17px;
-  height:17px;
+.disclaimer {
+  text-align: center;
+  font-size: 10px;
+  color: #aaa;
+  margin-top: 10px;
 }
 
-.footer {
-  text-align:center;
-  color:#aaa;
-  font-size:10px;
-  padding:0 10px 15px;
+/* LOADING */
+
+.typing {
+  display: flex;
+  gap: 5px;
+  padding: 10px 0;
 }
 
-.error {
-  color:#b44;
-  font-size:13px;
+.typing span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #aaa;
+  animation: pulse 1s infinite alternate;
 }
 
-@media(max-width:700px) {
-  .sidebar {display:none}
+.typing span:nth-child(2) { animation-delay: .2s; }
+.typing span:nth-child(3) { animation-delay: .4s; }
+
+@keyframes pulse {
+  from { opacity: .3; transform: translateY(0); }
+  to { opacity: 1; transform: translateY(-4px); }
+}
+
+/* SPLASH */
+
+.splash {
+  position: fixed;
+  inset: 0;
+  background: #f7f7f5;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  transition: opacity .5s ease, visibility .5s ease;
+}
+
+.splash.hide {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.splash img {
+  width: 76px;
+  height: 76px;
+  margin-bottom: 18px;
+}
+
+.splash-name {
+  font-size: 25px;
+  font-weight: 750;
+  letter-spacing: 5px;
+}
+
+.splash-sub {
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: #888;
+  margin-top: 8px;
+}
+
+/* MOBILE */
+
+.mobile-brand {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .sidebar {
+    display: none;
+  }
+
   .topbar {
-    height:58px;
-    padding:0 18px;
+    height: 60px;
+    padding: 0 18px;
   }
-  .topbar-title {display:none}
-  .mobile-brand {display:flex}
-  .content {
-    padding:28px 19px 20px;
+
+  .mobile-brand {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-weight: 750;
+    letter-spacing: 1.5px;
+    font-size: 14px;
   }
+
+  .mobile-brand img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .chat-area {
+    padding: 30px 17px 15px;
+  }
+
   .welcome {
-    padding-top:15px;
-    margin-bottom:30px;
+    padding: 20px 0;
   }
-  .welcome h1 {
-    font-size:29px;
+
+  .welcome-logo {
+    width: 54px;
+    height: 54px;
   }
-  .welcome p {
-    font-size:13px;
-  }
+
   .suggestions {
-    gap:8px;
-    margin-top:24px;
+    grid-template-columns: 1fr;
+    margin-top: 25px;
   }
+
   .suggestion {
-    font-size:11px;
-    padding:10px 12px;
+    padding: 13px;
   }
-  .composer-area {
-    padding:0 13px 12px;
-  }
+
   .message-content {
-    max-width:85%;
-    font-size:13px;
+    max-width: 88%;
   }
-  .footer {
-    font-size:9px;
-    padding-bottom:10px;
+
+  .composer-wrap {
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+
+  .disclaimer {
+    font-size: 9px;
   }
 }
 </style>
@@ -473,38 +502,33 @@ button {
 
 <body>
 
-<div id="splash">
-  <svg class="splash-logo" viewBox="0 0 100 100" aria-label="TOZRA">
-    <rect width="100" height="100" rx="24" fill="#171717"/>
-    <path d="M19 23H81V39H58V78H42V39H19Z" fill="#fff"/>
-  </svg>
+<div class="splash" id="splash">
+  <img src="/logo.svg" alt="TOZRA">
   <div class="splash-name">TOZRA</div>
-  <div class="splash-tag">CREATIVE INTELLIGENCE</div>
+  <div class="splash-sub">CREATIVE INTELLIGENCE</div>
 </div>
 
 <div class="app">
 
   <aside class="sidebar">
     <div class="brand">
-      <svg class="brand-mark" viewBox="0 0 100 100">
-        <rect width="100" height="100" rx="23" fill="#171717"/>
-        <path d="M19 23H81V39H58V78H42V39H19Z" fill="#fff"/>
-      </svg>
-      <span class="brand-name">TOZRA</span>
+      <img src="/logo.svg" alt="TOZRA">
+      <div>
+        <div class="brand-name">TOZRA</div>
+        <div class="brand-sub">CREATIVE INTELLIGENCE</div>
+      </div>
     </div>
 
-    <button class="new-chat" onclick="newChat()">＋ &nbsp; Yeni sohbet</button>
+    <button class="new-chat" onclick="newChat()">
+      + &nbsp; Yeni sohbet
+    </button>
 
-    <div class="side-label">ÇALIŞMA ALANI</div>
-    <div class="side-note">
-      Fikirlerini geliştir.<br>
-      Yeni projeler oluştur.<br>
-      Yaratıcılığını keşfet.
-    </div>
+    <div class="sidebar-label">Çalışma alanı</div>
 
-    <div class="sidebar-bottom">
+    <div class="sidebar-info">
       TOZRA<br>
-      Creative Intelligence
+      Creative Intelligence<br><br>
+      Fikirlerini geliştir.
     </div>
   </aside>
 
@@ -512,75 +536,78 @@ button {
 
     <header class="topbar">
       <div class="mobile-brand">
-        <svg width="25" height="25" viewBox="0 0 100 100">
-          <rect width="100" height="100" rx="23" fill="#171717"/>
-          <path d="M19 23H81V39H58V78H42V39H19Z" fill="#fff"/>
-        </svg>
+        <img src="/logo.svg" alt="TOZRA">
         TOZRA
       </div>
-      <div class="topbar-title">Yeni sohbet</div>
+
+      <div class="topbar-title">Yapay zekâ asistanı</div>
+
       <div class="status">
         <span class="status-dot"></span>
         Hazır
       </div>
     </header>
 
-    <section class="content">
+    <section class="chat-area">
 
       <div class="welcome" id="welcome">
-        <svg class="welcome-mark" viewBox="0 0 100 100">
-          <rect width="100" height="100" rx="23" fill="#171717"/>
-          <path d="M19 23H81V39H58V78H42V39H19Z" fill="#fff"/>
-        </svg>
+        <img class="welcome-logo" src="/logo.svg" alt="TOZRA">
 
-        <h1>Fikrini hayata geçir.</h1>
+        <h1>Fikrini geliştirmeye başla.</h1>
+
         <p>
-          Merak ettiğin şeyleri sor, fikirlerini geliştir<br>
-          ve yeni projeler keşfet.
+          Düşüncelerini projelere dönüştür.<br>
+          TOZRA ile üretmeye başla.
         </p>
 
         <div class="suggestions">
-          <button class="suggestion" onclick="useSuggestion('Bana yaratıcı bir proje fikri üret.')">Yaratıcı fikir üret</button>
-          <button class="suggestion" onclick="useSuggestion('Yeni bir marka oluşturmak istiyorum. Bana yardımcı ol.')">Marka oluştur</button>
-          <button class="suggestion" onclick="useSuggestion('Bana içerik önerileri sun.')">İçerik fikirleri</button>
+          <button class="suggestion" onclick="useSuggestion('Bana yaratıcı bir proje fikri üret.')">
+            ✦ Yaratıcı proje fikirleri
+          </button>
+
+          <button class="suggestion" onclick="useSuggestion('Bir içerik üretim planı hazırla.')">
+            ◇ İçerik üretim planı
+          </button>
+
+          <button class="suggestion" onclick="useSuggestion('Yeni bir marka oluşturmak istiyorum. Bana yardımcı ol.')">
+            ▢ Marka geliştirme
+          </button>
+
+          <button class="suggestion" onclick="useSuggestion('Bana yeni ve özgün bir iş fikri öner.')">
+            ↗ Yeni fikirler keşfet
+          </button>
         </div>
       </div>
 
       <div class="messages" id="messages"></div>
 
-    </section>
+      <div class="composer-wrap">
+        <div class="composer">
+          <textarea
+            id="prompt"
+            placeholder="TOZRA'ya bir şey sor..."
+            rows="1"
+            oninput="resizeInput(this)"
+            onkeydown="handleKey(event)"
+          ></textarea>
 
-    <div class="composer-area">
-      <div class="composer">
-        <textarea
-          id="prompt"
-          placeholder="TOZRA'ya bir şey sor..."
-          rows="1"
-          oninput="resizeInput()"
-          onkeydown="handleKey(event)"
-        ></textarea>
-
-        <div class="composer-bottom">
-          <span class="composer-hint">Enter ile gönder · Shift + Enter ile yeni satır</span>
-          <button class="send-btn" id="sendBtn" onclick="sendMessage()" aria-label="Mesaj gönder">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 19V5M5 12l7-7 7 7"/>
-            </svg>
+          <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+            ↑
           </button>
         </div>
+
+        <div class="disclaimer">
+          TOZRA yapay zekâ tarafından oluşturulan yanıtlar sunar.
+        </div>
       </div>
-    </div>
 
-    <div class="footer">
-      TOZRA yapay zekâ tarafından oluşturulan yanıtlar hata içerebilir.
-    </div>
-
+    </section>
   </main>
 </div>
 
 <script>
 let history = [];
-let busy = false;
+let isLoading = false;
 
 const promptInput = document.getElementById("prompt");
 const messages = document.getElementById("messages");
@@ -593,10 +620,9 @@ window.addEventListener("load", () => {
   }, 1100);
 });
 
-function resizeInput() {
-  promptInput.style.height = "auto";
-  promptInput.style.height =
-    Math.min(promptInput.scrollHeight, 180) + "px";
+function resizeInput(element) {
+  element.style.height = "auto";
+  element.style.height = Math.min(element.scrollHeight, 150) + "px";
 }
 
 function handleKey(event) {
@@ -606,93 +632,86 @@ function handleKey(event) {
   }
 }
 
-function useSuggestion(value) {
-  promptInput.value = value;
-  resizeInput();
+function useSuggestion(text) {
+  promptInput.value = text;
   sendMessage();
 }
 
-function newChat() {
-  history = [];
-  messages.innerHTML = "";
-  welcome.style.display = "";
-  document.querySelector(".topbar-title").textContent = "Yeni sohbet";
-  promptInput.value = "";
-  resizeInput();
-}
-
 function addMessage(role, text) {
-  const item = document.createElement("div");
-  item.className = "message " + role;
+  welcome.style.display = "none";
 
-  if (role === "user") {
-    const bubble = document.createElement("div");
-    bubble.className = "message-content";
-    bubble.textContent = text;
-    item.appendChild(bubble);
-  } else {
-    const avatar = document.createElement("div");
-    avatar.className = "avatar";
-    avatar.innerHTML = `
-      <svg viewBox="0 0 100 100">
-        <path d="M19 23H81V39H58V78H42V39H19Z" fill="white"/>
-      </svg>
-    `;
+  const wrapper = document.createElement("div");
+  wrapper.className = "message " + role;
 
-    const wrapper = document.createElement("div");
-    wrapper.style.minWidth = "0";
+  const content = document.createElement("div");
+  content.className = "message-content";
+  content.textContent = text;
 
-    const bubble = document.createElement("div");
-    bubble.className = "message-content";
-    bubble.textContent = text;
+  if (role === "assistant") {
+    const icon = document.createElement("div");
+    icon.className = "message-icon";
+    icon.textContent = "T";
+    wrapper.appendChild(icon);
 
     const actions = document.createElement("div");
     actions.className = "message-actions";
 
     const copy = document.createElement("button");
+    copy.className = "copy-btn";
     copy.textContent = "Kopyala";
-    copy.onclick = async () => {
-      try {
-        await navigator.clipboard.writeText(text);
-        copy.textContent = "Kopyalandı";
-        setTimeout(() => copy.textContent = "Kopyala", 1500);
-      } catch {
-        copy.textContent = "Kopyalanamadı";
-      }
-    };
+    copy.onclick = () => copyText(text);
 
     actions.appendChild(copy);
-    wrapper.appendChild(bubble);
-    wrapper.appendChild(actions);
-    item.appendChild(avatar);
-    item.appendChild(wrapper);
+    content.appendChild(actions);
   }
 
-  messages.appendChild(item);
-  item.scrollIntoView({behavior:"smooth", block:"end"});
-  return item;
+  wrapper.appendChild(content);
+  messages.appendChild(wrapper);
+
+  window.scrollTo({
+    top: document.body.scrollHeight,
+    behavior: "smooth"
+  });
+
+  return wrapper;
+}
+
+function showTyping() {
+  const wrapper = document.createElement("div");
+  wrapper.className = "message assistant";
+  wrapper.id = "typing";
+
+  const icon = document.createElement("div");
+  icon.className = "message-icon";
+  icon.textContent = "T";
+
+  const dots = document.createElement("div");
+  dots.className = "typing";
+  dots.innerHTML = "<span></span><span></span><span></span>";
+
+  wrapper.appendChild(icon);
+  wrapper.appendChild(dots);
+  messages.appendChild(wrapper);
+
+  window.scrollTo({
+    top: document.body.scrollHeight,
+    behavior: "smooth"
+  });
 }
 
 async function sendMessage() {
   const prompt = promptInput.value.trim();
 
-  if (!prompt || busy) return;
+  if (!prompt || isLoading) return;
 
-  busy = true;
+  isLoading = true;
   sendBtn.disabled = true;
-  welcome.style.display = "none";
-
-  document.querySelector(".topbar-title").textContent = "Sohbet";
-
-  addMessage("user", prompt);
 
   promptInput.value = "";
-  resizeInput();
+  promptInput.style.height = "27px";
 
-  const typing = document.createElement("div");
-  typing.className = "typing";
-  typing.textContent = "TOZRA yanıt hazırlıyor...";
-  messages.appendChild(typing);
+  addMessage("user", prompt);
+  showTyping();
 
   try {
     const response = await fetch("/api/chat", {
@@ -708,37 +727,73 @@ async function sendMessage() {
 
     const data = await response.json();
 
+    document.getElementById("typing")?.remove();
+
     if (!response.ok) {
       throw new Error(data.error || "Sunucu isteği başarısız oldu.");
     }
 
-    const answer = data.answer;
-
-    if (typeof answer !== "string" || !answer.trim()) {
-      throw new Error("Sunucudan geçerli bir yanıt alınamadı.");
+    if (!data.answer) {
+      throw new Error(data.error || "Yanıt alınamadı.");
     }
 
-    typing.remove();
+    const answer = data.answer;
+
+    history.push({
+      role: "user",
+      content: prompt
+    });
+
+    history.push({
+      role: "assistant",
+      content: answer
+    });
 
     addMessage("assistant", answer);
 
-    history.push(
-      {role:"user", content:prompt},
-      {role:"assistant", content:answer}
-    );
-
   } catch (error) {
-    typing.remove();
-    const errorItem = addMessage(
-      "assistant",
-      "Bir hata oluştu: " + error.message
-    );
-    errorItem.querySelector(".message-content").classList.add("error");
-  }
+    document.getElementById("typing")?.remove();
 
-  busy = false;
-  sendBtn.disabled = false;
-  promptInput.focus();
+    addMessage(
+      "assistant",
+      "Bir hata oluştu: " + error.message +
+      "\n\nLütfen bağlantını kontrol edip tekrar dene."
+    );
+
+  } finally {
+    isLoading = false;
+    sendBtn.disabled = false;
+    promptInput.focus();
+  }
+}
+
+function newChat() {
+  history = [];
+  messages.innerHTML = "";
+  welcome.style.display = "block";
+  promptInput.value = "";
+  promptInput.style.height = "27px";
+}
+
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch (error) {
+    const area = document.createElement("textarea");
+    area.value = text;
+    document.body.appendChild(area);
+    area.select();
+    document.execCommand("copy");
+    area.remove();
+  }
+}
+
+// PWA SERVICE WORKER
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js")
+      .catch(error => console.error("TOZRA:", error));
+  });
 }
 </script>
 
