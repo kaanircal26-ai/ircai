@@ -11,8 +11,7 @@
 
 <title>TOZRA — Creative Intelligence</title>
 
-<link rel="icon" type="image/png" href="/Tozra-icon.PNG">
-<link rel="apple-touch-icon" href="/Tozra-icon.PNG">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%23222220'/%3E%3Cpath d='M25 30h50M50 30v42M36 72h28' stroke='white' stroke-width='9' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="manifest" href="/manifest.json">
 
 <style>
@@ -62,11 +61,11 @@ body {
   padding: 3px 5px 30px;
 }
 
-.brand img {
+.logo {
   width: 36px;
   height: 36px;
-  object-fit: contain;
-  border-radius: 10px;
+  flex-shrink: 0;
+  display: block;
 }
 
 .brand-name {
@@ -178,8 +177,7 @@ body {
 .welcome-logo {
   width: 70px;
   height: 70px;
-  object-fit: contain;
-  border-radius: 20px;
+  display: block;
   margin-bottom: 25px;
 }
 
@@ -396,11 +394,9 @@ body {
     gap: 9px;
   }
 
-  .mobile-brand img {
+  .mobile-brand .logo {
     width: 27px;
     height: 27px;
-    object-fit: contain;
-    border-radius: 7px;
   }
 
   .mobile-brand span {
@@ -444,11 +440,27 @@ body {
 
 <body>
 
+<!-- TOZRA LOGO -->
+<svg xmlns="http://www.w3.org/2000/svg" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
+  <symbol id="tozra-mark" viewBox="0 0 100 100">
+    <rect width="100" height="100" rx="25" fill="#222220"/>
+    <path d="M25 30H75 M50 30V72 M36 72H64"
+      fill="none"
+      stroke="#ffffff"
+      stroke-width="9"
+      stroke-linecap="round"
+      stroke-linejoin="round"/>
+    <circle cx="50" cy="18" r="4" fill="#ffffff"/>
+  </symbol>
+</svg>
+
 <div class="app">
 
   <aside class="sidebar">
     <div class="brand">
-      <img src="/Tozra-icon.PNG" alt="TOZRA">
+      <svg class="logo" viewBox="0 0 100 100" aria-label="TOZRA logo">
+        <use href="#tozra-mark"/>
+      </svg>
       <div>
         <div class="brand-name">TOZRA</div>
         <div class="brand-subtitle">CREATIVE INTELLIGENCE</div>
@@ -470,7 +482,9 @@ body {
 
     <header class="topbar">
       <div class="mobile-brand">
-        <img src="/Tozra-icon.PNG" alt="TOZRA">
+        <svg class="logo" viewBox="0 0 100 100" aria-label="TOZRA logo">
+          <use href="#tozra-mark"/>
+        </svg>
         <span>TOZRA</span>
       </div>
 
@@ -486,11 +500,10 @@ body {
       <div class="chat-inner">
 
         <div class="welcome" id="welcome">
-          <img
-            class="welcome-logo"
-            src="/Tozra-icon.PNG"
-            alt="TOZRA Logo"
-          >
+
+          <svg class="welcome-logo" viewBox="0 0 100 100" aria-label="TOZRA Logo">
+            <use href="#tozra-mark"/>
+          </svg>
 
           <h1>Fikrini keşfet.</h1>
 
