@@ -8,7 +8,12 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const { prompt, history = [] } = req.body || {};
+    const {
+      prompt,
+      history = [],
+      images = [],
+      videoFrames = []
+    } = req.body || {};
 
     if (typeof prompt !== "string" || !prompt.trim()) {
       return res.status(400).json({
@@ -36,27 +41,95 @@ module.exports = async function handler(req, res) {
           .slice(-10)
       : [];
 
-    const messages = [
-      {
-        role: "system",
-        content: `
-Sen Tozra adında gelişmiş bir yapay zekâ asistanısın.
+    // Fotoğraflar ve videodan çıkarılan kareler
+    const allImages = [
+      ...(Array.isArray(images) ? images : []),
+      ...(Array.isArray(videoFrames) ? videoFrames : [])
+    ];
+
+    if (allImages.length > 3) {
+      return res.status(400).json({
+        success: false,
+        error: "Bir istekte en fazla 3 görüntü gönderebilirsin."
+      });
+    }
+
+    let totalSize = 0;
+
+    const imageParts = [];
+
+    for (const image of allImages) {
+      if (typeof image !== "string") {
+        return res.status(400).json({
+          success: false,
+          error: "Geçersiz görüntü dosyası."
+        });
+      }
+
+      const match = image.match(
+        /^data:(image\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/=]+)$/
+      );
+
+      if (!match) {
+        return res.status(400).json({
+          success: false,
+          error: "Desteklenmeyen görüntü formatı."
+        });
+      }
+
+      totalSize += match[2].length;
+
+      if (totalSize > 3_500_000) {
+        return res.status(413).json({
+          success: false,
+          error: "Görüntülerin toplam boyutu çok büyük. Daha küçük dosyalar dene."
+        });
+      }
+
+      imageParts.push({
+        type: "image_url",
+        image_url: {
+          url: image,
+          detail: "auto"
+        }
+      });
+    }
+
+    const systemMessage = {
+      role: "system",
+      content: `
+Sen TOZRA adında gelişmiş bir yapay zekâ asistanısın.
 
 Görevlerin:
 - Kullanıcıya Türkçe cevap ver.
 - Açık, anlaşılır ve faydalı ol.
 - Yaratıcı fikirler üret.
 - Soruları dikkatlice analiz et.
+- Fotoğrafları inceleyerek açıklamalar yap.
+- Görüntülerdeki nesneleri, yazıları ve ayrıntıları tanımlamaya çalış.
+- Görmediğin ayrıntıları uydurma.
+- Emin olmadığın durumlarda bunu açıkça belirt.
 - Gereksiz uzun cevaplardan kaçın.
-- Bilmediğin konularda uydurma bilgi verme.
+- Kullanıcıya profesyonel ve yardımcı bir üslupla yaklaş.
 
-Kendini Tozra olarak tanıt.
-        `.trim()
+Kendini TOZRA olarak tanıt.
+      `.trim()
+    };
+
+    const userContent = [
+      {
+        type: "text",
+        text: prompt.trim()
       },
+      ...imageParts
+    ];
+
+    const messages = [
+      systemMessage,
       ...safeHistory,
       {
         role: "user",
-        content: prompt.trim()
+        content: userContent
       }
     ];
 
@@ -69,10 +142,10 @@ Kendini Tozra olarak tanıt.
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          model: "openai/gpt-oss-20b",
-          messages: messages,
+          model: "qwen/qwen3.8-27b",
+          messages,
           temperature: 0.7,
-          max_tokens: 2048
+          max_completion_tokens: 2048
         })
       }
     );
@@ -99,11 +172,11 @@ Kendini Tozra olarak tanıt.
 
     return res.status(200).json({
       success: true,
-      answer: answer
+      answer
     });
 
   } catch (error) {
-    console.error("Tozra server error:", error);
+    console.error("TOZRA server error:", error);
 
     return res.status(500).json({
       success: false,
