@@ -31,7 +31,7 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    // Geçmiş mesajlardan desteklenmeyen tüm alanları temizle.
+    // Sohbet geçmişini güvenli biçime dönüştür.
     const safeHistory = Array.isArray(history)
       ? history
           .filter(item =>
@@ -46,16 +46,17 @@ module.exports = async function handler(req, res) {
           }))
       : [];
 
-    // Fotoğraflar ve videodan çıkarılan kareler.
+    // Fotoğrafları ve videodan çıkarılan kareleri birleştir.
     const allImages = [
       ...(Array.isArray(images) ? images : []),
       ...(Array.isArray(videoFrames) ? videoFrames : [])
     ];
 
-    if (allImages.length > 3) {
+    // En fazla 15 görüntü kabul et.
+    if (allImages.length > 15) {
       return res.status(400).json({
         success: false,
-        error: "Bir istekte en fazla 3 görüntü gönderebilirsin."
+        error: "Bir istekte en fazla 15 görüntü gönderebilirsin."
       });
     }
 
@@ -83,10 +84,11 @@ module.exports = async function handler(req, res) {
 
       totalSize += match[2].length;
 
+      // Toplam görüntü boyutunu sınırla.
       if (totalSize > 3500000) {
         return res.status(413).json({
           success: false,
-          error: "Görüntülerin toplam boyutu çok büyük. Daha küçük dosyalar dene."
+          error: "Görüntülerin toplam boyutu çok büyük. Daha küçük görüntüler dene."
         });
       }
 
@@ -103,7 +105,7 @@ module.exports = async function handler(req, res) {
       content: `
 Sen TOZRA adında gelişmiş bir yapay zekâ asistanısın.
 
-Görevlerin:
+GENEL GÖREVLERİN:
 - Kullanıcıya Türkçe cevap ver.
 - Açık, anlaşılır ve faydalı ol.
 - Yaratıcı fikirler üret.
@@ -112,8 +114,19 @@ Görevlerin:
 - Görüntülerdeki nesneleri, yazıları ve ayrıntıları tanımlamaya çalış.
 - Görmediğin ayrıntıları uydurma.
 - Emin olmadığın durumlarda bunu açıkça belirt.
-- Gereksiz uzun cevaplardan kaçın.
 - Profesyonel ve yardımcı bir üslup kullan.
+
+VİDEO ANALİZİ:
+- Sana bir videodan farklı zamanlarda alınmış görüntü kareleri gönderilebilir.
+- Kullanıcı zaman damgaları verdiyse bunları dikkate al.
+- Kareleri mümkün olduğunca kronolojik sırayla incele.
+- Başlangıç, orta ve son bölümlerdeki görsel farklılıkları karşılaştır.
+- Nesnelerin konumlarını, sahne değişimlerini ve kamera hareketlerini incele.
+- Birbirine benzeyen kareleri otomatik olarak farklı sahneler gibi anlatma.
+- Görüntüler arasında belirgin bir değişiklik yoksa bunu açıkça söyle.
+- Sadece gönderilen karelere dayanarak videonun tamamı hakkında kesin hüküm verme.
+- İncelenemeyen zaman aralıkları varsa bunu belirt.
+- Kullanıcı kronolojik özet istediğinde olayları zaman sırasına göre açıkla.
 
 Kendini TOZRA olarak tanıt.
       `.trim()
