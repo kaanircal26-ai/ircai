@@ -1,17 +1,16 @@
 
-const CACHE_NAME = "tozra-v2";
+const CACHE_NAME = "tozra-v4";
 
 const APP_FILES = [
   "/",
   "/manifest.json",
-  "/Tozro-icon.png"
+  "/tozra-icon.png"
 ];
 
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => cache.addAll(APP_FILES))
   );
-
   self.skipWaiting();
 });
 
@@ -25,7 +24,6 @@ self.addEventListener("activate", event => {
       )
     )
   );
-
   self.clients.claim();
 });
 
