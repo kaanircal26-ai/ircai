@@ -4,11 +4,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#f7f7f5">
+<meta name="theme-color" content="#050806">
 <meta name="description" content="TOZRA — Creative Intelligence">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="TOZRA">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>TOZRA — Creative Intelligence</title>
 <link rel="icon" type="image/png" href="/apple-touch-icon.PNG">
 <link rel="apple-touch-icon" href="/apple-touch-icon.PNG">
@@ -16,131 +16,305 @@
 
 <style>
 :root{
---bg:#f7f7f5;--surface:#fff;--text:#20201f;
---muted:#858580;--border:#e9e9e5;--soft:#f0f0ed;
---dark:#222220;--shadow:0 12px 35px rgba(0,0,0,.06)
+--bg:#050806;
+--surface:#0c120e;
+--surface2:#101a13;
+--text:#f1f5f1;
+--muted:#89958b;
+--border:#1c2b20;
+--green:#42e477;
+--green2:#19bd55;
+--shadow:0 15px 45px rgba(0,0,0,.35);
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text)}
+body{
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-min-height:100vh;min-height:100dvh}
+min-height:100vh;min-height:100dvh
+}
 button,input,textarea{font:inherit}
 button{cursor:pointer}
+
+/* AÇILIŞ EKRANI */
+.splash{
+position:fixed;inset:0;z-index:9999;
+background:#030604;
+display:flex;align-items:center;justify-content:center;
+flex-direction:column;
+transition:opacity .75s ease,visibility .75s ease;
+}
+.splash.hide{opacity:0;visibility:hidden;pointer-events:none}
+.splash-inner{
+display:flex;align-items:center;flex-direction:column;
+animation:splashEnter 1.5s cubic-bezier(.2,.8,.2,1) both
+}
+.splash-logo{
+width:92px;height:92px;border-radius:25px;
+overflow:hidden;background:#101a13;
+box-shadow:0 0 55px rgba(55,230,111,.13);
+animation:logoGrow 1.5s cubic-bezier(.16,1,.3,1) both;
+}
+.splash-logo img{width:100%;height:100%;object-fit:cover}
+.splash-name{
+margin-top:22px;font-size:25px;font-weight:850;
+letter-spacing:7px;color:#f4fff5;
+}
+.splash-tagline{
+margin-top:9px;font-size:10px;letter-spacing:3px;
+color:#77877b;
+}
+.loader{
+width:145px;height:3px;border-radius:10px;
+background:#17251a;overflow:hidden;margin-top:38px;
+}
+.loader-bar{
+height:100%;width:0;border-radius:10px;
+background:var(--green);
+box-shadow:0 0 12px var(--green);
+animation:loading 2.4s ease forwards;
+}
+@keyframes logoGrow{
+0%{transform:scale(.25);opacity:0}
+65%{transform:scale(1.09);opacity:1}
+100%{transform:scale(1)}
+}
+@keyframes splashEnter{
+from{opacity:0;transform:translateY(12px)}
+to{opacity:1;transform:translateY(0)}
+}
+@keyframes loading{to{width:100%}}
+
+/* UYGULAMA */
 .app{display:flex;min-height:100vh;min-height:100dvh}
-.sidebar{width:260px;flex-shrink:0;background:#f0f0ed;
+.sidebar{
+width:260px;flex-shrink:0;background:#080d09;
 border-right:1px solid var(--border);padding:22px 16px;
-display:flex;flex-direction:column;z-index:20}
-.brand{display:flex;align-items:center;gap:11px;font-size:19px;
-font-weight:800;letter-spacing:2px;margin:4px 5px 35px}
-.brand-icon{width:36px;height:36px;border-radius:11px;
-background:#222;overflow:hidden;flex-shrink:0}
+display:flex;flex-direction:column;z-index:20
+}
+.brand{
+display:flex;align-items:center;gap:11px;
+font-size:19px;font-weight:850;letter-spacing:2px;
+margin:4px 5px 35px
+}
+.brand-icon{
+width:36px;height:36px;border-radius:11px;
+background:#101a13;overflow:hidden;flex-shrink:0;
+border:1px solid #263b2b
+}
 .brand-icon img{width:100%;height:100%;object-fit:cover}
-.new-chat,.side-action{width:100%;border:1px solid #deded9;
-background:white;border-radius:12px;padding:13px;text-align:left;
-color:var(--text);font-weight:600;margin-bottom:8px}
-.side-action{border:0;background:transparent;font-weight:500;color:#666}
-.side-action:hover,.history-item:hover{background:#e7e7e3}
-.history-title{color:var(--muted);font-size:10px;letter-spacing:1.5px;
-margin:28px 8px 12px}
+.new-chat,.side-action{
+width:100%;border:1px solid var(--border);
+background:#101811;border-radius:12px;padding:13px;
+text-align:left;color:var(--text);font-weight:600;margin-bottom:8px
+}
+.new-chat:hover{border-color:var(--green);background:#122017}
+.side-action{
+border-color:transparent;background:transparent;
+font-weight:500;color:#9aa79c
+}
+.side-action:hover,.history-item:hover{background:#142018;color:white}
+.history-title{
+color:#68776c;font-size:10px;letter-spacing:1.5px;
+margin:28px 8px 12px
+}
 .history{display:flex;flex-direction:column;gap:5px;overflow-y:auto}
-.history-item{padding:11px;border-radius:9px;font-size:13px;
-color:#666;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sidebar-footer{margin-top:auto;padding:15px 7px 5px;
-font-size:10px;color:var(--muted);letter-spacing:1px}
+.history-item{
+padding:11px;border-radius:9px;font-size:13px;
+color:#9ba79d;cursor:pointer;white-space:nowrap;
+overflow:hidden;text-overflow:ellipsis
+}
+.sidebar-footer{
+margin-top:auto;padding:15px 7px 5px;
+font-size:10px;color:#56665a;letter-spacing:1px
+}
 .main{flex:1;min-width:0;display:flex;flex-direction:column}
-.topbar{height:66px;display:flex;align-items:center;justify-content:space-between;
-padding:0 28px;border-bottom:1px solid var(--border);
-background:rgba(255,255,255,.65)}
-.topbar-title{font-size:12px;font-weight:700;letter-spacing:1.5px}
+.topbar{
+height:66px;display:flex;align-items:center;
+justify-content:space-between;padding:0 28px;
+border-bottom:1px solid var(--border);
+background:rgba(7,13,9,.94)
+}
+.topbar-title{font-size:12px;font-weight:700;letter-spacing:1.5px;color:#a6b3a8}
 .top-actions{display:flex;align-items:center;gap:10px}
-.top-button{border:1px solid var(--border);background:white;
-border-radius:10px;padding:9px 13px;font-size:12px;font-weight:600}
-.avatar{width:35px;height:35px;border:0;border-radius:50%;
-background:#222;color:white;font-weight:700}
-.status{font-size:11px;color:#777}
-.status:before{content:"";display:inline-block;width:7px;height:7px;
-background:#58a878;border-radius:50%;margin-right:7px}
-.content{width:100%;max-width:900px;margin:auto;padding:35px 24px 15px;
-flex:1;display:flex;flex-direction:column}
+.top-button{
+border:1px solid var(--border);background:#101811;
+color:#dce7dd;border-radius:10px;padding:9px 13px;
+font-size:12px;font-weight:600
+}
+.top-button:hover{border-color:var(--green)}
+.avatar{
+width:35px;height:35px;border:1px solid #2a5134;
+border-radius:50%;background:#15351e;color:var(--green);font-weight:700
+}
+.status{font-size:11px;color:#8c9b8f}
+.status:before{
+content:"";display:inline-block;width:7px;height:7px;
+background:var(--green);border-radius:50%;margin-right:7px;
+box-shadow:0 0 9px rgba(66,228,119,.7)
+}
+.content{
+width:100%;max-width:900px;margin:auto;
+padding:35px 24px 15px;flex:1;
+display:flex;flex-direction:column
+}
 .welcome{margin:auto 0;text-align:center;padding:25px 0}
-.welcome-logo{width:76px;height:76px;margin:0 auto 22px;
-border-radius:22px;background:#222;overflow:hidden;box-shadow:var(--shadow)}
+.welcome-logo{
+width:76px;height:76px;margin:0 auto 22px;
+border-radius:22px;background:#101a13;overflow:hidden;
+border:1px solid #29432f;
+box-shadow:0 0 35px rgba(66,228,119,.09)
+}
 .welcome-logo img{width:100%;height:100%;object-fit:cover}
-.welcome h1{font-size:clamp(27px,5vw,39px);margin:0 0 12px;letter-spacing:-1.5px}
+.welcome h1{
+font-size:clamp(27px,5vw,39px);
+margin:0 0 12px;letter-spacing:-1.5px
+}
 .welcome p{color:var(--muted);font-size:14px;line-height:1.6;margin:0}
-.suggestions{display:grid;grid-template-columns:repeat(2,1fr);
-gap:10px;max-width:600px;margin:30px auto 0;width:100%}
-.suggestion{background:white;border:1px solid var(--border);
-padding:16px;border-radius:13px;text-align:left;color:#555;font-size:13px;
-transition:.2s}
-.suggestion:hover{border-color:#aaa;transform:translateY(-2px)}
+.suggestions{
+display:grid;grid-template-columns:repeat(2,1fr);
+gap:10px;max-width:600px;margin:30px auto 0;width:100%
+}
+.suggestion{
+background:#0c140e;border:1px solid var(--border);
+padding:16px;border-radius:13px;text-align:left;
+color:#bdc9bf;font-size:13px;transition:.2s
+}
+.suggestion:hover{
+border-color:var(--green);transform:translateY(-2px);
+background:#101d13
+}
 .messages{display:flex;flex-direction:column;gap:25px;padding-bottom:25px}
 .message{display:flex;flex-direction:column;gap:8px;max-width:88%}
 .message.user{align-self:flex-end;align-items:flex-end}
 .message.assistant{align-self:flex-start}
-.message-label{color:var(--muted);font-size:10px;letter-spacing:1.2px}
-.message-text{font-size:14px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}
-.user .message-text{background:#eaeae6;padding:13px 16px;border-radius:16px 16px 4px 16px}
-.assistant .message-text{padding:2px 0}
-.copy-button{border:0;background:transparent;color:#999;font-size:11px;padding:4px 0}
-.typing{color:var(--muted);font-size:13px;padding:10px 0}
-.composer-wrap{position:sticky;bottom:0;padding:15px 0 max(10px,env(safe-area-inset-bottom));
-background:linear-gradient(transparent,var(--bg) 20%)}
-.composer{background:white;border:1px solid #e5e5e0;border-radius:17px;
-padding:10px 11px;box-shadow:0 5px 25px rgba(0,0,0,.035)}
-.composer textarea{width:100%;resize:none;border:0;outline:none;
-min-height:38px;max-height:150px;padding:8px 4px;background:transparent;
-color:var(--text);font-size:14px}
-.composer textarea::placeholder{color:#aaa}
-.composer-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.message-label{color:#718075;font-size:10px;letter-spacing:1.2px}
+.message-text{
+font-size:14px;line-height:1.8;white-space:pre-wrap;
+overflow-wrap:anywhere
+}
+.user .message-text{
+background:#15321d;border:1px solid #244a2d;
+padding:13px 16px;border-radius:16px 16px 4px 16px
+}
+.assistant .message-text{padding:2px 0;color:#e3ebe4}
+.copy-button{
+border:0;background:transparent;color:var(--green);
+font-size:11px;padding:4px 0
+}
+.typing{color:var(--green);font-size:13px;padding:10px 0}
+.composer-wrap{
+position:sticky;bottom:0;
+padding:15px 0 max(10px,env(safe-area-inset-bottom));
+background:linear-gradient(transparent,var(--bg) 20%)
+}
+.composer{
+background:#0c120e;border:1px solid #26382a;
+border-radius:17px;padding:10px 11px;
+box-shadow:0 5px 25px rgba(0,0,0,.25)
+}
+.composer:focus-within{border-color:#347c45}
+.composer textarea{
+width:100%;resize:none;border:0;outline:none;
+min-height:38px;max-height:150px;padding:8px 4px;
+background:transparent;color:var(--text);font-size:14px
+}
+.composer textarea::placeholder{color:#68766b}
+.composer-bottom{
+display:flex;align-items:center;justify-content:space-between;gap:8px
+}
 .tools{display:flex;gap:6px;flex-wrap:wrap}
-.tool-button{border:1px solid var(--border);background:#fff;
-color:#666;border-radius:9px;padding:8px 10px;font-size:12px}
-.send{width:39px;height:39px;border:0;border-radius:12px;
-background:#222;color:white;font-size:18px}
+.tool-button{
+border:1px solid var(--border);background:#101811;
+color:#aab7ac;border-radius:9px;padding:8px 10px;font-size:12px
+}
+.tool-button:hover{border-color:var(--green);color:var(--green)}
+.send{
+width:39px;height:39px;border:0;border-radius:12px;
+background:var(--green);color:#061009;font-size:18px;font-weight:800
+}
+.send:hover{background:#6df092}
 .send:disabled{opacity:.4}
-.disclaimer{text-align:center;color:#aaa;font-size:10px;padding-top:10px}
+.disclaimer{text-align:center;color:#637066;font-size:10px;padding-top:10px}
 .attachments{display:flex;gap:8px;flex-wrap:wrap;padding:7px 0}
-.attachment{position:relative;border:1px solid var(--border);
-border-radius:10px;padding:6px 9px;background:#fafaf8;font-size:11px}
-.attachment img,.attachment video{display:block;width:75px;height:65px;
-object-fit:cover;border-radius:6px;margin-bottom:5px}
-.remove-file{border:0;background:#222;color:white;border-radius:50%;
-width:20px;height:20px;margin-left:6px}
+.attachment{
+position:relative;border:1px solid var(--border);
+border-radius:10px;padding:6px 9px;background:#111a13;font-size:11px
+}
+.attachment img,.attachment video{
+display:block;width:75px;height:65px;
+object-fit:cover;border-radius:6px;margin-bottom:5px
+}
+.remove-file{
+border:0;background:#23432b;color:white;border-radius:50%;
+width:20px;height:20px;margin-left:6px
+}
 .mobile-brand{display:none}
-.overlay{position:fixed;inset:0;background:rgba(20,20,18,.35);
-z-index:50;display:none;align-items:center;justify-content:center;padding:18px}
+.overlay{
+position:fixed;inset:0;background:rgba(0,0,0,.72);
+z-index:50;display:none;align-items:center;
+justify-content:center;padding:18px
+}
 .overlay.show{display:flex}
-.modal{background:white;width:100%;max-width:480px;max-height:85vh;
-overflow:auto;border-radius:20px;padding:25px;box-shadow:var(--shadow)}
-.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.modal{
+background:#0c120e;border:1px solid var(--border);
+color:var(--text);width:100%;max-width:480px;
+max-height:85vh;overflow:auto;border-radius:20px;
+padding:25px;box-shadow:var(--shadow)
+}
+.modal-head{
+display:flex;justify-content:space-between;
+align-items:center;margin-bottom:20px
+}
 .modal-head h2{font-size:21px;margin:0}
-.close{border:0;background:#f0f0ed;border-radius:9px;width:34px;height:34px}
-.modal p{color:#777;font-size:13px;line-height:1.6}
-.modal-input{width:100%;padding:13px;border:1px solid var(--border);
-border-radius:10px;margin:7px 0 12px;outline:none}
-.primary{width:100%;padding:13px;border:0;border-radius:11px;
-background:#222;color:white;font-weight:650;margin-top:10px}
-.secondary{width:100%;padding:12px;border:1px solid var(--border);
-border-radius:11px;background:white;margin-top:9px}
+.close{
+border:1px solid var(--border);background:#172119;
+color:white;border-radius:9px;width:34px;height:34px
+}
+.modal p{color:#95a196;font-size:13px;line-height:1.6}
+.modal-input{
+width:100%;padding:13px;background:#080e0a;
+color:white;border:1px solid var(--border);
+border-radius:10px;margin:7px 0 12px;outline:none
+}
+.modal-input:focus{border-color:var(--green)}
+.primary{
+width:100%;padding:13px;border:0;border-radius:11px;
+background:var(--green);color:#061009;font-weight:750;margin-top:10px
+}
+.secondary{
+width:100%;padding:12px;border:1px solid var(--border);
+border-radius:11px;background:#111a13;color:white;margin-top:9px
+}
 .plan-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
-.plan{border:1px solid var(--border);border-radius:15px;padding:17px}
+.plan{border:1px solid var(--border);border-radius:15px;padding:17px;background:#101811}
 .plan h3{font-size:14px;margin:0 0 12px}
-.price{font-size:27px;font-weight:750;letter-spacing:-1px}
-.plan small{color:#888}
-.plan button{width:100%;margin-top:15px;border:0;background:#222;
-color:white;padding:11px;border-radius:9px;font-size:12px}
-.notice{background:#f5f5f2;border-radius:11px;padding:12px;
-font-size:11px;color:#777;line-height:1.6;margin-top:12px}
+.price{font-size:27px;font-weight:750;letter-spacing:-1px;color:var(--green)}
+.plan small{color:#89958b}
+.plan button{
+width:100%;margin-top:15px;border:0;background:var(--green);
+color:#061009;padding:11px;border-radius:9px;font-size:12px;font-weight:700
+}
+.notice{
+background:#111a13;border:1px solid var(--border);
+border-radius:11px;padding:12px;font-size:11px;
+color:#89958b;line-height:1.6;margin-top:12px
+}
 .mobile-menu{display:none}
+
 @media(max-width:700px){
-.sidebar{display:none;position:fixed;left:0;top:0;bottom:0;width:275px;box-shadow:var(--shadow)}
+.sidebar{
+display:none;position:fixed;left:0;top:0;bottom:0;
+width:275px;box-shadow:var(--shadow)
+}
 .sidebar.open{display:flex}
 .topbar{height:58px;padding:0 14px}
 .mobile-brand{display:flex;align-items:center;gap:8px;font-weight:800;letter-spacing:1.3px}
 .mobile-brand .brand-icon{width:30px;height:30px}
 .topbar-title{display:none}
-.mobile-menu{display:block;border:0;background:transparent;font-size:21px;margin-right:8px}
+.mobile-menu{
+display:block;border:0;background:transparent;
+color:white;font-size:21px;margin-right:8px
+}
 .content{padding:20px 15px 10px}
 .welcome{padding:20px 0}
 .suggestions{grid-template-columns:1fr;margin-top:24px}
@@ -152,6 +326,19 @@ font-size:11px;color:#777;line-height:1.6;margin-top:12px}
 </head>
 
 <body>
+
+<!-- AÇILIŞ EKRANI -->
+<div class="splash" id="splash">
+  <div class="splash-inner">
+    <div class="splash-logo">
+      <img src="/apple-touch-icon.PNG" alt="TOZRA">
+    </div>
+    <div class="splash-name">TOZRA</div>
+    <div class="splash-tagline">CREATIVE INTELLIGENCE</div>
+    <div class="loader"><div class="loader-bar"></div></div>
+  </div>
+</div>
+
 <div class="app">
 <aside class="sidebar" id="sidebar">
   <div class="brand">
@@ -237,6 +424,14 @@ const messagesEl=$("messages"),welcomeEl=$("welcome");
 const historyEl=$("history");
 
 let conversation=[],conversations=[],busy=false,attachments=[];
+
+/* AÇILIŞ ANİMASYONU */
+window.addEventListener("load",()=>{
+  setTimeout(()=>{
+    $("splash").classList.add("hide");
+    setTimeout(()=>$("splash").remove(),800);
+  },2500);
+});
 
 function saveConversation(){
   if(!conversation.length)return;
@@ -344,7 +539,6 @@ function addFiles(files,kind){
     alert("Bir mesajda en fazla 3 dosya ekleyebilirsin.");
     return;
   }
-
   for(const file of selected){
     if(kind==="image"&&!["image/jpeg","image/png","image/webp"].includes(file.type)){
       alert("JPG, PNG veya WEBP fotoğraf seç.");
@@ -369,52 +563,39 @@ function clearAttachments(){
   renderAttachments();
 }
 
-// Fotoğrafı küçültüp Base64 formatına dönüştürür.
 function imageToDataURL(file,maxSide=1100,quality=.72){
   return new Promise((resolve,reject)=>{
     const img=new Image();
     const url=URL.createObjectURL(file);
-
     img.onload=()=>{
       const scale=Math.min(1,maxSide/Math.max(img.width,img.height));
       const canvas=document.createElement("canvas");
       canvas.width=Math.max(1,Math.round(img.width*scale));
       canvas.height=Math.max(1,Math.round(img.height*scale));
-
       const ctx=canvas.getContext("2d");
       ctx.drawImage(img,0,0,canvas.width,canvas.height);
-
       URL.revokeObjectURL(url);
       resolve(canvas.toDataURL("image/jpeg",quality));
     };
-
     img.onerror=()=>{
       URL.revokeObjectURL(url);
       reject(new Error("Fotoğraf okunamadı."));
     };
-
     img.src=url;
   });
 }
 
-// Saniyeyi dakika:saniye biçimine dönüştürür.
 function formatTime(seconds){
   const safe=Math.max(0,Math.floor(seconds));
-  const minutes=Math.floor(safe/60);
-  const remaining=safe%60;
-  return String(minutes).padStart(2,"0")+":"+String(remaining).padStart(2,"0");
+  return String(Math.floor(safe/60)).padStart(2,"0")+":"+
+  String(safe%60).padStart(2,"0");
 }
 
-// Videodan kronolojik sırayla 3 örnek kare çıkarır.
 function videoToFrames(file,count=3){
   return new Promise((resolve,reject)=>{
     const video=document.createElement("video");
     const url=URL.createObjectURL(file);
-
-    video.preload="auto";
-    video.muted=true;
-    video.playsInline=true;
-
+    video.preload="auto";video.muted=true;video.playsInline=true;
     let finished=false;
 
     const finish=()=>{
@@ -436,224 +617,117 @@ function videoToFrames(file,count=3){
     video.onloadeddata=async()=>{
       try{
         const duration=video.duration;
-
-        if(!Number.isFinite(duration)||duration<=0){
+        if(!Number.isFinite(duration)||duration<=0)
           throw new Error("Video süresi okunamadı.");
-        }
 
-        const fractions=count===1
-          ?[0.5]
-          :count===2
-            ?[0.2,0.8]
-            :[0.1,0.5,0.9];
-
-        const times=[];
-        for(const fraction of fractions){
-          const target=Math.min(
-            duration* fraction,
-            Math.max(0,duration-0.05)
-          );
-
-          if(!times.some(t=>Math.abs(t-target)<0.05)){
-            times.push(target);
-          }
-        }
-
+        const fractions=count===1?[.5]:count===2?[.2,.8]:[.1,.5,.9];
+        const times=fractions.map(f=>Math.min(duration*f,Math.max(0,duration-.05)));
         const frames=[];
 
         for(const target of times){
           await new Promise((resolveSeek,rejectSeek)=>{
             let settled=false;
-
             const cleanup=()=>{
               clearTimeout(timer);
               video.removeEventListener("seeked",onSeeked);
             };
-
             const done=()=>{
               if(settled)return;
-              settled=true;
-              cleanup();
-              resolveSeek();
+              settled=true;cleanup();resolveSeek();
             };
-
             const fail=()=>{
               if(settled)return;
-              settled=true;
-              cleanup();
+              settled=true;cleanup();
               rejectSeek(new Error("Video karesi alınamadı."));
             };
-
             const onSeeked=()=>done();
             const timer=setTimeout(fail,12000);
-
             video.addEventListener("seeked",onSeeked,{once:true});
-
             try{
               video.currentTime=target;
-              if(Math.abs(video.currentTime-target)<0.01&&video.readyState>=2){
-                done();
-              }
-            }catch(error){
-              fail();
-            }
+              if(Math.abs(video.currentTime-target)<.01&&video.readyState>=2)done();
+            }catch(e){fail()}
           });
 
-          if(!video.videoWidth||!video.videoHeight){
-            throw new Error("Videonun görüntü boyutları okunamadı.");
-          }
+          if(!video.videoWidth||!video.videoHeight)
+            throw new Error("Video görüntü boyutları okunamadı.");
 
-          const scale=Math.min(
-            1,
-            640/Math.max(video.videoWidth,video.videoHeight)
-          );
-
+          const scale=Math.min(1,640/Math.max(video.videoWidth,video.videoHeight));
           const canvas=document.createElement("canvas");
           canvas.width=Math.max(1,Math.round(video.videoWidth*scale));
           canvas.height=Math.max(1,Math.round(video.videoHeight*scale));
-
           const ctx=canvas.getContext("2d");
           if(!ctx)throw new Error("Video karesi işlenemedi.");
-
           ctx.drawImage(video,0,0,canvas.width,canvas.height);
-
-          frames.push({
-            data:canvas.toDataURL("image/jpeg",.55),
-            time:target
-          });
+          frames.push({data:canvas.toDataURL("image/jpeg",.55),time:target});
         }
-
         finish();
-
-        resolve({
-          frames,
-          duration,
-          name:file.name
-        });
-
-      }catch(error){
-        finish();
-        reject(error);
-      }
+        resolve({frames,duration,name:file.name});
+      }catch(error){finish();reject(error)}
     };
-
-    video.src=url;
-    video.load();
+    video.src=url;video.load();
   });
 }
 
-// Fotoğraf ve videoları hazırlar.
-// Video karelerinin zaman bilgilerini analiz metnine ekler.
 async function prepareMedia(){
-  const images=[];
-  const videoFrames=[];
-  const timeline=[];
-
+  const images=[],videoFrames=[],timeline=[];
   for(const item of attachments){
-    if(item.kind==="image"){
-      images.push(await imageToDataURL(item.file));
-    }
+    if(item.kind==="image")images.push(await imageToDataURL(item.file));
   }
-
   for(const item of attachments){
     if(item.kind==="video"){
       const remaining=3-images.length-videoFrames.length;
-
       if(remaining<=0)break;
-
-      const result=await videoToFrames(
-        item.file,
-        Math.min(3,remaining)
-      );
-
+      const result=await videoToFrames(item.file,Math.min(3,remaining));
       timeline.push({
-        name:result.name,
-        duration:result.duration,
-        frames:result.frames.map((frame,index)=>({
-          index:index+1,
-          time:frame.time
-        }))
+        name:result.name,duration:result.duration,
+        frames:result.frames.map((frame,index)=>({index:index+1,time:frame.time}))
       });
-
       videoFrames.push(...result.frames.map(frame=>frame.data));
     }
   }
-
-  if(images.length+videoFrames.length>3){
+  if(images.length+videoFrames.length>3)
     throw new Error("Bir istekte en fazla 3 görüntü gönderilebilir.");
-  }
 
   let timelineText="";
-
   if(timeline.length){
     timelineText="\n\n[VİDEO ANALİZİ - KRONOLOJİK KARELER]\n";
-
     timeline.forEach(video=>{
-      timelineText+=
-        "\nVideo dosyası: "+video.name+
-        "\nVideo süresi: "+video.duration.toFixed(2)+" saniye\n";
-
+      timelineText+="\nVideo: "+video.name+
+      "\nSüre: "+video.duration.toFixed(2)+" saniye\n";
       video.frames.forEach(frame=>{
-        timelineText+=
-          "Kare "+frame.index+
-          ": "+formatTime(frame.time)+
-          " zamanında alınmıştır.\n";
+        timelineText+="Kare "+frame.index+": "+
+        formatTime(frame.time)+" zamanında alınmıştır.\n";
       });
     });
-
     timelineText+=`
-    
 ANALİZ TALİMATI:
-- Kareleri yukarıdaki zaman sırasına göre incele.
-- İlk kareyi başlangıç, sonraki kareleri gelişim ve son kareyi videonun ilerleyen bölümü olarak değerlendir.
-- Kareler arasında görülebilen değişimleri karşılaştır.
-- Nesnelerin veya kişilerin konum değişikliklerini yalnızca görüntüden anlaşılabildiği ölçüde açıkla.
-- Olayların muhtemel sırasını kronolojik olarak anlat.
-- Görüntülerde bulunmayan hareketleri veya olayları uydurma.
-- Sadece örnek karelerin gösterdiği bilgileri kullan.
+- Kareleri zaman sırasına göre incele.
+- Görülebilen değişimleri karşılaştır.
+- Görüntüde olmayan hareketleri uydurma.
 - Videonun tamamını veya sesini analiz ettiğini iddia etme.
-- Sonunda kısa ve anlaşılır bir video özeti oluştur.
-`;
+- Sonunda kısa ve anlaşılır bir video özeti oluştur.`;
   }
-
-  return {
-    images,
-    videoFrames,
-    timelineText
-  };
+  return {images,videoFrames,timelineText};
 }
 
 async function sendMessage(value){
   const text=(value??promptInput.value).trim();
-
   if((!text&&!attachments.length)||busy)return;
-
   if(!text&&attachments.length){
     alert("Dosyanı analiz edebilmem için ne yapmamı istediğini de yaz.");
     return;
   }
 
-  busy=true;
-  sendButton.disabled=true;
+  busy=true;sendButton.disabled=true;
   welcomeEl.style.display="none";
-
   const fileNames=attachments.map(a=>a.file.name);
-  const displayText=text+
-    (fileNames.length?"\n\nEklenen dosyalar: "+fileNames.join(", "):"");
+  const displayText=text+(fileNames.length?
+    "\n\nEklenen dosyalar: "+fileNames.join(", "):"");
 
-  if(!conversation.length){
-    conversation.push({
-      id:Date.now(),
-      role:"user",
-      content:displayText
-    });
-  }else{
-    conversation.push({
-      role:"user",
-      content:displayText
-    });
-  }
-
+  const userMessage={role:"user",content:displayText};
+  if(!conversation.length)userMessage.id=Date.now();
+  conversation.push(userMessage);
   addMessageToScreen("user",displayText);
 
   promptInput.value="";
@@ -661,19 +735,16 @@ async function sendMessage(value){
 
   const typing=document.createElement("div");
   typing.className="typing";
-  typing.textContent="TOZRA görüntüleri analiz ediyor...";
+  typing.textContent="TOZRA düşünüyor...";
   messagesEl.appendChild(typing);
 
   try{
     const media=await prepareMedia();
-
-    const analysisPrompt=text+media.timelineText;
-
     const response=await fetch("/api/chat",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({
-        prompt:analysisPrompt,
+        prompt:text+media.timelineText,
         history:conversation.slice(0,-1),
         images:media.images,
         videoFrames:media.videoFrames
@@ -681,24 +752,14 @@ async function sendMessage(value){
     });
 
     let data;
+    try{data=await response.json()}
+    catch(e){throw new Error("Sunucudan geçerli yanıt alınamadı.")}
 
-    try{
-      data=await response.json();
-    }catch(e){
-      throw new Error("Sunucudan geçerli yanıt alınamadı.");
-    }
-
-    if(!response.ok||!data.success){
+    if(!response.ok||!data.success)
       throw new Error(data.error||"Yapay zekâ yanıt veremedi.");
-    }
 
     const answer=data.answer||"Bir yanıt oluşturulamadı.";
-
-    conversation.push({
-      role:"assistant",
-      content:answer
-    });
-
+    conversation.push({role:"assistant",content:answer});
     typing.remove();
     addMessageToScreen("assistant",answer);
     saveConversation();
@@ -706,23 +767,14 @@ async function sendMessage(value){
 
   }catch(error){
     typing.remove();
-
-    const message=
-      "İstek tamamlanamadı: "+
-      (error.message||"Bir bağlantı sorunu oluştu.");
-
-    conversation.push({
-      role:"assistant",
-      content:message
-    });
-
+    const message="İstek tamamlanamadı: "+
+    (error.message||"Bir bağlantı sorunu oluştu.");
+    conversation.push({role:"assistant",content:message});
     addMessageToScreen("assistant",message);
     saveConversation();
     console.error(error);
-
   }finally{
-    busy=false;
-    sendButton.disabled=false;
+    busy=false;sendButton.disabled=false;
   }
 }
 
@@ -766,12 +818,10 @@ function showModal(type){
       </form>
       <button class="secondary" id="registerSwitch">Hesap oluştur</button>
       <div class="notice">Gerçek hesap girişi için sunucu ve kullanıcı veritabanı bağlantısı gereklidir.</div>`;
-
     $("loginForm").onsubmit=e=>{
       e.preventDefault();
       alert("Üyelik sistemi henüz backend'e bağlanmadı.");
     };
-
     $("registerSwitch").onclick=()=>showModal("register");
   }
 
@@ -786,7 +836,6 @@ function showModal(type){
         <button class="primary" type="submit">Hesap oluştur</button>
       </form>
       <div class="notice">Bu ekran şu an arayüz önizlemesidir. Bilgilerin kaydedilmez.</div>`;
-
     $("registerForm").onsubmit=e=>{
       e.preventDefault();
       alert("Gerçek kayıt sistemi henüz bağlı değil.");
@@ -809,13 +858,12 @@ function showModal(type){
     title.textContent="Ayarlar";
     content.innerHTML=`
       <h3 style="font-size:14px">Görünüm</h3>
-      <p>TOZRA şu anda premium açık tema ile çalışıyor.</p>
+      <p>TOZRA premium siyah-yeşil tema ile çalışıyor.</p>
       <h3 style="font-size:14px">Uygulama</h3>
       <p>TOZRA — Creative Intelligence</p>
-      <p>Sürüm 2.2</p>
-      <div class="notice">Hesap, veri senkronizasyonu ve kişiselleştirme özellikleri sonraki backend aşamasında eklenecek.</div>`;
+      <p>Sürüm 3.0</p>
+      <div class="notice">Hesap ve veri senkronizasyonu özellikleri sonraki backend aşamasında eklenecek.</div>`;
   }
-
   $("modalOverlay").classList.add("show");
 }
 
@@ -826,76 +874,50 @@ function paymentNotice(){
 function addLink(){
   const url=prompt("Eklemek istediğin bağlantıyı yaz:");
   if(!url)return;
-
   let parsed;
-
-  try{
-    parsed=new URL(url);
-  }catch(e){
-    alert("Lütfen geçerli bir bağlantı gir.");
-    return;
-  }
-
+  try{parsed=new URL(url)}
+  catch(e){alert("Lütfen geçerli bir bağlantı gir.");return}
   if(!["http:","https:"].includes(parsed.protocol)){
     alert("Yalnızca http veya https bağlantıları kullanılabilir.");
     return;
   }
-
-  promptInput.value+=
-    (promptInput.value?"\n":"")+"Bağlantı: "+parsed.href;
-
+  promptInput.value+=(promptInput.value?"\n":"")+"Bağlantı: "+parsed.href;
   promptInput.focus();
-
-  alert("Bağlantı mesajına eklendi. Bağlantı içeriğinin okunması için ayrıca backend desteği gerekir.");
+  alert("Bağlantı mesajına eklendi. İçeriğinin okunması için backend desteği gerekir.");
 }
 
 $("send").onclick=()=>sendMessage();
-
 promptInput.addEventListener("keydown",e=>{
   if(e.key==="Enter"&&!e.shiftKey){
-    e.preventDefault();
-    sendMessage();
+    e.preventDefault();sendMessage();
   }
 });
-
 promptInput.addEventListener("input",()=>{
   promptInput.style.height="38px";
-  promptInput.style.height=
-    Math.min(promptInput.scrollHeight,150)+"px";
+  promptInput.style.height=Math.min(promptInput.scrollHeight,150)+"px";
 });
-
 $("newChat").onclick=newChat;
-
 document.querySelectorAll(".suggestion").forEach(button=>{
   button.onclick=()=>sendMessage(button.textContent);
 });
-
 $("imageButton").onclick=()=>$("imageInput").click();
 $("videoButton").onclick=()=>$("videoInput").click();
-
 $("imageInput").onchange=e=>{
-  addFiles(e.target.files,"image");
-  e.target.value="";
+  addFiles(e.target.files,"image");e.target.value="";
 };
-
 $("videoInput").onchange=e=>{
-  addFiles(e.target.files,"video");
-  e.target.value="";
+  addFiles(e.target.files,"video");e.target.value="";
 };
-
 $("linkButton").onclick=addLink;
 $("plansButton").onclick=()=>showModal("plans");
 $("sidePlans").onclick=()=>showModal("plans");
 $("sideSettings").onclick=()=>showModal("settings");
 $("profileButton").onclick=()=>showModal("profile");
 $("closeModal").onclick=()=>$("modalOverlay").classList.remove("show");
-
 $("modalOverlay").onclick=e=>{
-  if(e.target===$("modalOverlay")){
+  if(e.target===$("modalOverlay"))
     $("modalOverlay").classList.remove("show");
-  }
 };
-
 $("menuButton").onclick=()=>$("sidebar").classList.toggle("open");
 
 loadHistory();
