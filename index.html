@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#f7f7f5">
-<title>IRCAI — Creative Intelligence</title>
+<title>TÖZRA AI — Creative Intelligence</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#f7f7f5;--white:#fff;--text:#202124;--muted:#858585;--line:#e9e9e6;--soft:#f2f2ef}
@@ -98,12 +98,12 @@ textarea{width:100%;min-height:110px;resize:vertical;padding:14px;border:1px sol
 
 <div id="authScreen">
 <div class="auth-card">
-<div class="logo">IRCAI<span>.</span></div>
+<div class="logo">TÖZRA AI<span>.</span></div>
 <p class="auth-sub">Creative Intelligence Platform</p>
 
 <div id="loginForm">
 <h2>Tekrar hoş geldin.</h2>
-<p class="auth-sub">IRCAI hesabına giriş yap.</p>
+<p class="auth-sub">TÖZRA AI hesabına giriş yap.</p>
 <div class="field"><label>E-posta</label><input id="loginEmail" type="email" placeholder="E-posta adresin"></div>
 <div class="field"><label>Şifre</label><input id="loginPassword" type="password" placeholder="Şifren"></div>
 <button class="primary" id="loginBtn" onclick="login()">Giriş Yap</button>
@@ -114,7 +114,7 @@ textarea{width:100%;min-height:110px;resize:vertical;padding:14px;border:1px sol
 </div>
 
 <div id="registerForm" class="hidden">
-<h2>IRCAI'ye katıl.</h2>
+<h2>TÖZRA AI'ye katıl.</h2>
 <p class="auth-sub">Yeni hesabını oluştur.</p>
 <div class="field"><label>E-posta</label><input id="registerEmail" type="email" placeholder="E-posta adresin"></div>
 <div class="field"><label>Şifre</label><input id="registerPassword" type="password" placeholder="En az 8 karakter"></div>
@@ -135,7 +135,7 @@ textarea{width:100%;min-height:110px;resize:vertical;padding:14px;border:1px sol
 
 <div id="app" class="hidden">
 <aside class="sidebar" id="sidebar">
-<div class="side-logo"><div class="logo">IRCAI<span>.</span></div></div>
+<div class="side-logo"><div class="logo">TÖZRA AI<span>.</span></div></div>
 <div class="nav-label">ÇALIŞMA ALANI</div>
 <button class="nav-btn active" onclick="navigate('home',this)">⌂ &nbsp; Genel Bakış</button>
 <button class="nav-btn" onclick="navigate('chat',this)">◉ &nbsp; AI Sohbet</button>
@@ -155,18 +155,18 @@ textarea{width:100%;min-height:110px;resize:vertical;padding:14px;border:1px sol
 <button class="mobile-menu" onclick="toggleMenu()">☰</button>
 <h1 id="pageTitle">Genel Bakış</h1>
 </div>
-<div class="status">● IRCAI çevrimiçi</div>
+<div class="status">● TÖZRA AI çevrimiçi</div>
 </div>
 
 <div class="content">
 <section id="home" class="section active">
 <div class="welcome"><h2>Fikirlerini projelere dönüştür.</h2><p>Yaratıcılığını geliştir. Analiz et. Üret. Gerçekleştir.</p></div>
 <div class="cards">
-<div class="card"><h3>AI Sohbet</h3><p>IRCAI ile fikirlerini konuş ve yeni çözümler geliştir.</p></div>
+<div class="card"><h3>AI Sohbet</h3><p>TÖZRA AI ile fikirlerini konuş ve yeni çözümler geliştir.</p></div>
 <div class="card"><h3>Fikir Analizi</h3><p>Fikirlerini güçlü ve geliştirilebilir yönleriyle değerlendir.</p></div>
 <div class="card"><h3>Proje Laboratuvarı</h3><p>Yeni projeler oluştur ve planlarını geliştir.</p></div>
 </div>
-<div class="panel" style="margin-top:18px"><h2>Başlangıç</h2><p style="font-size:14px;color:#888">IRCAI ile çalışmaya başlamak için AI Sohbet bölümünü açabilirsin.</p><button class="small-btn" onclick="navigate('chat')">Sohbete Başla</button></div>
+<div class="panel" style="margin-top:18px"><h2>Başlangıç</h2><p style="font-size:14px;color:#888">TÖZRA AI ile çalışmaya başlamak için AI Sohbet bölümünü açabilirsin.</p><button class="small-btn" onclick="navigate('chat')">Sohbete Başla</button></div>
 </section>
 
 <section id="chat" class="section">
@@ -177,9 +177,9 @@ textarea{width:100%;min-height:110px;resize:vertical;padding:14px;border:1px sol
 </div>
 <div class="chat-window">
 <div class="chat-head" id="chatTitle">Yeni sohbet</div>
-<div class="messages" id="messages"><div class="empty">IRCAI'ye merhaba de ve başlayalım.</div></div>
+<div class="messages" id="messages"><div class="empty">TÖZRA AI'ye merhaba de ve başlayalım.</div></div>
 <div class="chat-compose">
-<textarea id="chatInput" placeholder="IRCAI'ye bir şey sor..." onkeydown="chatKeydown(event)"></textarea>
+<textarea id="chatInput" placeholder="TÖZRA AI'ye bir şey sor..." onkeydown="chatKeydown(event)"></textarea>
 <button class="small-btn" id="sendBtn" onclick="sendMessage()">Gönder</button>
 </div>
 </div>
@@ -189,7 +189,7 @@ textarea{width:100%;min-height:110px;resize:vertical;padding:14px;border:1px sol
 <section id="analysis" class="section">
 <div class="panel">
 <h2>Fikir Analizi</h2>
-<p style="color:#888;font-size:13px">Fikrini yaz. IRCAI güçlü yönleri, fırsatları ve geliştirme alanlarını değerlendirsin.</p>
+<p style="color:#888;font-size:13px">Fikrini yaz. TÖZRA AI güçlü yönleri, fırsatları ve geliştirme alanlarını değerlendirsin.</p>
 <textarea id="analysisInput" placeholder="Fikrini buraya yaz..."></textarea>
 <div class="action-row"><button class="small-btn" onclick="runTool('analysisInput','analysisOutput','Bu fikri güçlü yönler, zayıf yönler, fırsatlar, riskler ve geliştirme önerileri açısından analiz et: ')">Analiz Et</button></div>
 <div class="output" id="analysisOutput"></div>
@@ -199,7 +199,7 @@ textarea{width:100%;min-height:110px;resize:vertical;padding:14px;border:1px sol
 <section id="lab" class="section">
 <div class="panel">
 <h2>Proje Laboratuvarı</h2>
-<p style="color:#888;font-size:13px">Bir proje fikri gir. IRCAI senin için yol haritası oluştursun.</p>
+<p style="color:#888;font-size:13px">Bir proje fikri gir. TÖZRA AI senin için yol haritası oluştursun.</p>
 <textarea id="labInput" placeholder="Nasıl bir proje geliştirmek istiyorsun?"></textarea>
 <div class="action-row"><button class="small-btn" onclick="runTool('labInput','labOutput','Bu proje için amaç, hedef kitle, temel özellikler, aşamalar ve uygulanabilir bir yol haritası hazırla: ')">Proje Oluştur</button></div>
 <div class="output" id="labOutput"></div>
@@ -320,7 +320,7 @@ const match=[...document.querySelectorAll(".nav-btn")].find(b=>b.getAttribute("o
 if(match)match.classList.add("active");
 }
 const titles={home:"Genel Bakış",chat:"AI Sohbet",analysis:"Fikir Analizi",lab:"Proje Laboratuvarı",content:"İçerik Atölyesi",projects:"Projelerim"};
-document.getElementById("pageTitle").textContent=titles[page]||"IRCAI";
+document.getElementById("pageTitle").textContent=titles[page]||"TÖZRA AI";
 document.getElementById("sidebar").classList.remove("open");
 }
 function toggleMenu(){document.getElementById("sidebar").classList.toggle("open");}
@@ -357,10 +357,10 @@ function renderMessages(){
 const chat=activeChat();const box=document.getElementById("messages");
 document.getElementById("chatTitle").textContent=chat?.title||"Yeni sohbet";
 box.innerHTML="";
-if(!chat||!chat.messages?.length){box.innerHTML='<div class="empty">IRCAI’ye merhaba de ve başlayalım.</div>';return;}
+if(!chat||!chat.messages?.length){box.innerHTML='<div class="empty">TÖZRA AI’ye merhaba de ve başlayalım.</div>';return;}
 chat.messages.forEach(message=>{
 const wrapper=document.createElement("div");wrapper.className="message "+message.role;
-const role=document.createElement("div");role.className="message-role";role.textContent=message.role==="user"?"SEN":"IRCAI";
+const role=document.createElement("div");role.className="message-role";role.textContent=message.role==="user"?"SEN":"TÖZRA AI";
 const content=document.createElement("div");content.className="message-content";content.textContent=message.content;
 wrapper.append(role,content);box.appendChild(wrapper);
 });
@@ -390,7 +390,7 @@ busy=true;document.getElementById("sendBtn").disabled=true;input.value="";
 chat.messages.push({role:"user",content:prompt});
 if(chat.messages.length===1)chat.title=prompt.slice(0,42);
 renderMessages();
-const pending=document.createElement("div");pending.className="empty";pending.textContent="IRCAI düşünüyor...";pending.id="pendingMessage";
+const pending=document.createElement("div");pending.className="empty";pending.textContent="TÖZRA AI düşünüyor...";pending.id="pendingMessage";
 document.getElementById("messages").appendChild(pending);
 try{
 const {data}=await db.auth.getSession();const token=data.session?.access_token;
@@ -402,7 +402,7 @@ headers:{"Content-Type":"application/json","Authorization":"Bearer "+token},
 body:JSON.stringify({prompt,history})
 });
 const result=await response.json();
-if(!response.ok||!result.success)throw new Error(result.error||"IRCAI yanıt veremedi.");
+if(!response.ok||!result.success)throw new Error(result.error||"TÖZRA AI yanıt veremedi.");
 chat.messages.push({role:"assistant",content:result.answer});
 }catch(error){
 chat.messages.push({role:"assistant",content:"Bir hata oluştu: "+error.message});
@@ -428,7 +428,7 @@ return result.answer;
 async function runTool(inputId,outputId,prefix){
 const input=document.getElementById(inputId);const output=document.getElementById(outputId);
 const prompt=input.value.trim();if(!prompt)return alert("Önce bir metin gir.");
-output.textContent="IRCAI çalışıyor...";
+output.textContent="TÖZRA AI çalışıyor...";
 try{
 const answer=await askAI(prefix+prompt);output.textContent=answer;
 if(outputId==="labOutput")document.getElementById("saveLabBtn").classList.remove("hidden");
