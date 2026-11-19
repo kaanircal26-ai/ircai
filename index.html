@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#101114">
 <title>IRCAI — Yaratıcı Zekâ Merkezi</title>
+
 <style>
 :root {
   --bg:#101114;
@@ -47,6 +48,7 @@ button{
   cursor:pointer;
 }
 button:hover{background:#41434b}
+button:disabled{opacity:.5;cursor:wait}
 main{
   max-width:1100px;
   margin:auto;
@@ -83,6 +85,12 @@ label{font-size:13px;color:#ccc}
   white-space:pre-wrap;
   line-height:1.8;
   color:#ddd;
+  margin-top:18px;
+}
+.status{
+  color:#aeb3bd;
+  font-size:13px;
+  margin-top:12px;
 }
 footer{
   border-top:1px solid var(--line);
@@ -92,10 +100,16 @@ footer{
 }
 @media(max-width:600px){
   h1{font-size:30px}
-  header{align-items:flex-start;gap:15px;flex-direction:column}
+  header{
+    align-items:flex-start;
+    gap:15px;
+    flex-direction:column;
+  }
+  nav button{font-size:12px;padding:9px}
 }
 </style>
 </head>
+
 <body>
 
 <header>
@@ -115,6 +129,7 @@ footer{
   <p>YARATICI ZEKÂ MERKEZİ</p>
   <h1>Fikirlerini geliştir.<br>İz bırakacak işler üret.</h1>
   <p>IRCAI, fikirlerini dijital projelere dönüştürmene yardımcı olan yaratıcı çalışma alanın.</p>
+
   <button class="primary" onclick="sayfa('analysis')">Fikrimi analiz et →</button>
   <button onclick="sayfa('studio')">Proje oluştur</button>
 
@@ -122,10 +137,12 @@ footer{
     <h2>Fikir Analizi</h2>
     <p>Fikrini değerlendir, güçlü ve geliştirilmesi gereken yönlerini keşfet.</p>
   </div>
+
   <div class="card">
     <h2>Proje Stüdyosu</h2>
     <p>Fikrini planla ve projelerine dönüştür.</p>
   </div>
+
   <div class="card">
     <h2>İçerik Atölyesi</h2>
     <p>Dijital içerik taslakları oluştur.</p>
@@ -134,35 +151,48 @@ footer{
 
 <section id="analysis" class="page">
   <h1>Fikir Analizi</h1>
-  <p>Fikrini anlat, değerlendirme taslağını oluştur.</p>
+  <p>Fikrini anlat, Gemini ile değerlendir.</p>
+
   <div class="card">
     <label>Fikir başlığı</label>
     <input id="ideaTitle" placeholder="Fikrinin adı">
+
     <label>Fikir açıklaması</label>
     <textarea id="ideaText" placeholder="Fikrini ayrıntılı anlat..."></textarea>
-    <button class="primary" onclick="analizEt()">Fikri değerlendir</button>
+
+    <button class="primary" id="analysisButton" onclick="analizEt()">
+      Fikri değerlendir
+    </button>
+
+    <div id="analysisStatus" class="status"></div>
     <div id="analysisResult" class="result"></div>
   </div>
 </section>
 
 <section id="studio" class="page">
   <h1>Proje Stüdyosu</h1>
+
   <div class="card">
     <label>Proje adı</label>
     <input id="projectName" placeholder="Proje adı">
+
     <label>Projenin amacı</label>
     <textarea id="projectGoal" placeholder="Projenin amacı..."></textarea>
+
     <label>Hedef kitle</label>
     <input id="projectAudience" placeholder="Hedef kitlen">
+
     <button class="primary" onclick="projeKaydet()">Projeyi kaydet</button>
   </div>
 </section>
 
 <section id="content" class="page">
   <h1>İçerik Atölyesi</h1>
+
   <div class="card">
     <label>İçerik konusu</label>
     <input id="topic" placeholder="İçerik konusunu yaz">
+
     <label>Platform</label>
     <select id="platform">
       <option>Instagram</option>
@@ -170,13 +200,19 @@ footer{
       <option>YouTube</option>
       <option>LinkedIn</option>
     </select>
+
     <label>İçerik türü</label>
     <select id="format">
       <option>Kısa video</option>
       <option>Gönderi</option>
       <option>Video anlatımı</option>
     </select>
-    <button class="primary" onclick="icerikOlustur()">Taslak oluştur</button>
+
+    <button class="primary" id="contentButton" onclick="icerikOlustur()">
+      İçerik oluştur
+    </button>
+
+    <div id="contentStatus" class="status"></div>
     <div id="contentResult" class="result"></div>
   </div>
 </section>
@@ -193,54 +229,129 @@ footer{
 </footer>
 
 <script>
+
+// SAYFA GEÇİŞLERİ
+
 function sayfa(id){
   document.querySelectorAll('.page').forEach(p=>{
     p.classList.remove('active');
   });
+
   document.getElementById(id).classList.add('active');
+
   if(id==='saved') projeleriGoster();
 }
 
-function analizEt(){
-  const title=document.getElementById('ideaTitle').value;
-  const text=document.getElementById('ideaText').value;
 
-  if(text.trim().length<20){
+// GERÇEK GEMINI BAĞLANTISI
+
+async function ircaiAI(prompt){
+
+  const response = await fetch(
+    "https://ircai.kaanircal26.workers.dev/",
+    {
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({prompt})
+    }
+  );
+
+  let data;
+
+  try{
+    data=await response.json();
+  }catch{
+    throw new Error("Sunucudan geçersiz yanıt geldi.");
+  }
+
+  if(!response.ok){
+    throw new Error(data.error || "Gemini bağlantı hatası.");
+  }
+
+  if(!data.answer){
+    throw new Error("Yapay zekâ yanıt oluşturamadı.");
+  }
+
+  return data.answer;
+}
+
+
+// FİKİR ANALİZİ
+
+async function analizEt(){
+
+  const title=document.getElementById('ideaTitle').value.trim();
+  const text=document.getElementById('ideaText').value.trim();
+
+  const result=document.getElementById('analysisResult');
+  const status=document.getElementById('analysisStatus');
+  const button=document.getElementById('analysisButton');
+
+  if(text.length<20){
     alert('Lütfen fikrini biraz daha ayrıntılı anlat.');
     return;
   }
 
-  const result=`
-FİKİR: ${title}
+  button.disabled=true;
+  button.textContent="Gemini analiz ediyor...";
+  status.textContent="IRCAI yapay zekâ bağlantısı kuruluyor...";
+  result.textContent="";
 
-1. AMAÇ
-Fikrinin hedeflediği sonucu netleştir.
+  const prompt=`
+Sen IRCAI platformunun yaratıcı strateji asistanısın.
 
-2. HEDEF KİTLE
-Fikrinin kimin için olduğunu belirle.
+Aşağıdaki fikri profesyonel ve detaylı biçimde analiz et.
 
-3. DEĞER ÖNERİSİ
-Kullanıcıya hangi faydayı sağlayacağını açıkla.
+FİKİR BAŞLIĞI:
+${title || "Başlıksız fikir"}
 
-4. GÜÇLÜ YÖNLER
-Fikrinin öne çıkan özelliklerini belirle.
+FİKİR AÇIKLAMASI:
+${text}
 
-5. GELİŞTİRİLMESİ GEREKENLER
-Rakipleri, maliyetleri ve kullanıcı ihtiyaçlarını araştır.
+Şu başlıklarla Türkçe bir rapor oluştur:
 
-6. İLK ADIMLAR
-- Hedef kitleni belirle.
-- Küçük bir örnek hazırla.
-- Kullanıcı görüşü al.
-- Sonuçlara göre geliştir.
+1. FİKRİN ÖZETİ
+2. AMAÇ VE DEĞER ÖNERİSİ
+3. HEDEF KİTLE
+4. PAZAR VE POTANSİYEL
+5. GÜÇLÜ YÖNLER
+6. RİSKLER VE GELİŞTİRİLMESİ GEREKENLER
+7. BENZER PROJELERDEN FARKLILAŞMA
+8. GELİR MODELİ ÖNERİLERİ
+9. İLK 5 UYGULAMA ADIMI
+10. GENEL DEĞERLENDİRME
 
-NOT: Bu çıktı yerel bir ön değerlendirmedir.
-Harici yapay zekâ analizi değildir.
+Gerçekçi, uygulanabilir ve özgün öneriler sun.
+Bilmediğin verileri kesin bilgi gibi gösterme.
 `;
-  document.getElementById('analysisResult').textContent=result;
+
+  try{
+
+    const answer=await ircaiAI(prompt);
+
+    result.textContent=answer;
+    status.textContent="Gemini analizi tamamlandı.";
+
+  }catch(error){
+
+    status.textContent="Bağlantı kurulamadı.";
+    result.textContent="Hata: "+error.message;
+
+  }finally{
+
+    button.disabled=false;
+    button.textContent="Fikri değerlendir";
+
+  }
 }
 
+
+// PROJE KAYDETME
+
 function projeKaydet(){
+
   const name=document.getElementById('projectName').value.trim();
   const goal=document.getElementById('projectGoal').value.trim();
   const audience=document.getElementById('projectAudience').value.trim();
@@ -250,18 +361,37 @@ function projeKaydet(){
     return;
   }
 
-  const projects=JSON.parse(localStorage.getItem('ircaiProjects')||'[]');
-  projects.push({name,goal,audience});
-  localStorage.setItem('ircaiProjects',JSON.stringify(projects));
+  const projects=JSON.parse(
+    localStorage.getItem('ircaiProjects')||'[]'
+  );
+
+  projects.push({
+    name,
+    goal,
+    audience
+  });
+
+  localStorage.setItem(
+    'ircaiProjects',
+    JSON.stringify(projects)
+  );
 
   alert('Projen kaydedildi.');
+
   document.getElementById('projectName').value='';
   document.getElementById('projectGoal').value='';
   document.getElementById('projectAudience').value='';
 }
 
+
+// PROJELERİ GÖSTER
+
 function projeleriGoster(){
-  const projects=JSON.parse(localStorage.getItem('ircaiProjects')||'[]');
+
+  const projects=JSON.parse(
+    localStorage.getItem('ircaiProjects')||'[]'
+  );
+
   const list=document.getElementById('projectList');
 
   if(!projects.length){
@@ -279,79 +409,107 @@ function projeleriGoster(){
   `).join('');
 }
 
+
+// PROJE SİLME
+
 function projeSil(index){
-  const projects=JSON.parse(localStorage.getItem('ircaiProjects')||'[]');
+
+  const projects=JSON.parse(
+    localStorage.getItem('ircaiProjects')||'[]'
+  );
+
   projects.splice(index,1);
-  localStorage.setItem('ircaiProjects',JSON.stringify(projects));
+
+  localStorage.setItem(
+    'ircaiProjects',
+    JSON.stringify(projects)
+  );
+
   projeleriGoster();
 }
 
+
+// GÜVENLİ METİN
+
 function guvenli(text){
+
   return String(text).replace(/[&<>"']/g,c=>({
-    '&':'&amp;','<':'&lt;','>':'&gt;',
-    '"':'&quot;',"'":'&#39;'
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    '"':'&quot;',
+    "'":'&#39;'
   }[c]));
+
 }
 
-function icerikOlustur(){
+
+// GEMINI İLE İÇERİK OLUŞTURMA
+
+async function icerikOlustur(){
+
   const topic=document.getElementById('topic').value.trim();
   const platform=document.getElementById('platform').value;
   const format=document.getElementById('format').value;
+
+  const result=document.getElementById('contentResult');
+  const status=document.getElementById('contentStatus');
+  const button=document.getElementById('contentButton');
 
   if(!topic){
     alert('Önce içerik konusu yaz.');
     return;
   }
 
-  const result=`
-BAŞLIK:
-${topic}
+  button.disabled=true;
+  button.textContent="İçerik hazırlanıyor...";
+  status.textContent="Gemini yaratıcı içerik hazırlıyor...";
+  result.textContent="";
 
-GİRİŞ:
-Bugün birlikte ${topic} konusunu inceliyoruz.
+  const prompt=`
+Sen IRCAI'nin profesyonel içerik stratejistisin.
 
-ANA BÖLÜM:
-- Konunun neden önemli olduğunu anlat.
-- İlgi çekici bir örnek ver.
-- Bilgileri güvenilir kaynaklarla destekle.
+Şu bilgilerle özgün bir içerik hazırla:
 
-KAPANIŞ:
-Sen bu konuda ne düşünüyorsun?
-Yorumlarda bizimle paylaş.
-
+KONU: ${topic}
 PLATFORM: ${platform}
 İÇERİK TÜRÜ: ${format}
 
-#keşfet #içerik #ircai
+Şu bölümleri oluştur:
+
+1. DİKKAT ÇEKİCİ BAŞLIK
+2. İLK 3 SANİYEDE MERAK UYANDIRAN GİRİŞ
+3. ANA İÇERİK VE ANLATIM METNİ
+4. GÖRSEL VE SAHNE ÖNERİLERİ
+5. KAPANIŞ
+6. ETKİLEŞİM ÇAĞRISI
+7. HASHTAG ÖNERİLERİ
+
+İçerik özgün, akıcı ve platforma uygun olsun.
 `;
 
-  document.getElementById('contentResult').textContent=result;
-}
-</script> async function ircaiAI(prompt) {
-  try {
-    const response = await fetch(
-      "https://ircai.kaanircal26.workers.dev/",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ prompt })
-      }
-    );
+  try{
 
-    const data = await response.json();
+    const answer=await ircaiAI(prompt);
 
-    if (!response.ok) {
-      throw new Error(data.error || "AI bağlantı hatası");
-    }
+    result.textContent=answer;
+    status.textContent="İçerik başarıyla oluşturuldu.";
 
-    return data.answer;
+  }catch(error){
 
-  } catch (error) {
-    console.error("IRCAI AI:", error);
-    return "Şu anda yapay zekâ bağlantısı kurulamadı.";
+    status.textContent="Bağlantı kurulamadı.";
+    result.textContent="Hata: "+error.message;
+
+  }finally{
+
+    button.disabled=false;
+    button.textContent="İçerik oluştur";
+
   }
+
 }
+
+</script>
+
 </body>
 </html>
