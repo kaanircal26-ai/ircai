@@ -1,3 +1,7 @@
+
 name = "ircai"
-main = "worker.js"
+main = "Worker.js"
 compatibility_date = "2026-11-19"
+
+[observability]
+enabled = true
