@@ -9,135 +9,155 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="TOZRA">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-
 <title>TOZRA — Creative Intelligence</title>
-
-<!-- TOZRA LOGO -->
 <link rel="icon" type="image/png" href="/apple-touch-icon.PNG">
 <link rel="apple-touch-icon" href="/apple-touch-icon.PNG">
 <link rel="manifest" href="/manifest.json">
 
 <style>
-:root {
-  --bg:#f7f7f5;
-  --surface:#fff;
-  --text:#20201f;
-  --muted:#858580;
-  --border:#e9e9e5;
+:root{
+  --bg:#f7f7f5;--surface:#fff;--text:#20201f;
+  --muted:#858580;--border:#e9e9e5;--soft:#f0f0ed;
+  --dark:#222220;--shadow:0 12px 35px rgba(0,0,0,.06)
 }
 *{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  min-height:100vh;
-  min-height:100dvh;
-}
-button,textarea{font:inherit}
+body{margin:0;background:var(--bg);color:var(--text);
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+min-height:100vh;min-height:100dvh}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
 .app{display:flex;min-height:100vh;min-height:100dvh}
-.sidebar{
-  width:260px;background:#f0f0ed;border-right:1px solid var(--border);
-  padding:22px 16px;display:flex;flex-direction:column
-}
-.brand{display:flex;align-items:center;gap:11px;font-size:19px;font-weight:750;letter-spacing:2px;margin:4px 5px 35px}
-.brand-icon{
-  width:36px;height:36px;border-radius:11px;background:#222220;
-  display:grid;place-items:center;overflow:hidden
-}
+.sidebar{width:260px;flex-shrink:0;background:#f0f0ed;
+border-right:1px solid var(--border);padding:22px 16px;
+display:flex;flex-direction:column;z-index:20}
+.brand{display:flex;align-items:center;gap:11px;font-size:19px;
+font-weight:800;letter-spacing:2px;margin:4px 5px 35px}
+.brand-icon{width:36px;height:36px;border-radius:11px;
+background:#222;overflow:hidden;flex-shrink:0}
 .brand-icon img{width:100%;height:100%;object-fit:cover}
-.new-chat{
-  border:1px solid #deded9;background:white;border-radius:12px;
-  padding:13px;text-align:left;cursor:pointer;font-weight:600;color:var(--text)
-}
-.history-title{color:var(--muted);font-size:11px;letter-spacing:1.5px;margin:30px 8px 12px}
+.new-chat,.side-action{width:100%;border:1px solid #deded9;
+background:white;border-radius:12px;padding:13px;text-align:left;
+color:var(--text);font-weight:600;margin-bottom:8px}
+.side-action{border:0;background:transparent;font-weight:500;color:#666}
+.side-action:hover,.history-item:hover{background:#e7e7e3}
+.history-title{color:var(--muted);font-size:10px;letter-spacing:1.5px;
+margin:28px 8px 12px}
 .history{display:flex;flex-direction:column;gap:5px;overflow-y:auto}
-.history-item{
-  padding:11px;border-radius:9px;font-size:13px;color:#666;cursor:pointer;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis
-}
-.history-item:hover{background:#e7e7e3}
-.sidebar-footer{margin-top:auto;padding:15px 7px 5px;font-size:11px;color:var(--muted);letter-spacing:1px}
-.main{flex:1;display:flex;flex-direction:column;min-width:0}
-.topbar{
-  height:66px;display:flex;align-items:center;justify-content:space-between;
-  padding:0 28px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.55)
-}
-.topbar-title{font-size:13px;font-weight:650;letter-spacing:1px}
+.history-item{padding:11px;border-radius:9px;font-size:13px;
+color:#666;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sidebar-footer{margin-top:auto;padding:15px 7px 5px;
+font-size:10px;color:var(--muted);letter-spacing:1px}
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{height:66px;display:flex;align-items:center;justify-content:space-between;
+padding:0 28px;border-bottom:1px solid var(--border);
+background:rgba(255,255,255,.65)}
+.topbar-title{font-size:12px;font-weight:700;letter-spacing:1.5px}
+.top-actions{display:flex;align-items:center;gap:10px}
+.top-button{border:1px solid var(--border);background:white;
+border-radius:10px;padding:9px 13px;font-size:12px;font-weight:600}
+.avatar{width:35px;height:35px;border:0;border-radius:50%;
+background:#222;color:white;font-weight:700}
 .status{font-size:11px;color:#777}
-.status::before{
-  content:"";display:inline-block;width:7px;height:7px;background:#58a878;
-  border-radius:50%;margin-right:7px
-}
-.content{
-  width:100%;max-width:850px;margin:0 auto;padding:35px 24px 20px;
-  flex:1;display:flex;flex-direction:column
-}
+.status:before{content:"";display:inline-block;width:7px;height:7px;
+background:#58a878;border-radius:50%;margin-right:7px}
+.content{width:100%;max-width:900px;margin:auto;padding:35px 24px 15px;
+flex:1;display:flex;flex-direction:column}
 .welcome{margin:auto 0;text-align:center;padding:25px 0}
-.welcome-logo{
-  width:76px;height:76px;margin:0 auto 22px;border-radius:22px;
-  background:#222220;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.12)
-}
+.welcome-logo{width:76px;height:76px;margin:0 auto 22px;
+border-radius:22px;background:#222;overflow:hidden;box-shadow:var(--shadow)}
 .welcome-logo img{width:100%;height:100%;object-fit:cover}
-.welcome h1{font-size:clamp(27px,5vw,38px);margin:0 0 12px;letter-spacing:-1.5px}
+.welcome h1{font-size:clamp(27px,5vw,39px);margin:0 0 12px;letter-spacing:-1.5px}
 .welcome p{color:var(--muted);font-size:14px;line-height:1.6;margin:0}
-.suggestions{
-  display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
-  max-width:580px;margin:30px auto 0;width:100%
-}
-.suggestion{
-  background:white;border:1px solid var(--border);padding:15px;border-radius:13px;
-  text-align:left;color:#555;cursor:pointer;font-size:13px
-}
-.suggestion:hover{border-color:#aaa}
+.suggestions{display:grid;grid-template-columns:repeat(2,1fr);
+gap:10px;max-width:600px;margin:30px auto 0;width:100%}
+.suggestion{background:white;border:1px solid var(--border);
+padding:16px;border-radius:13px;text-align:left;color:#555;font-size:13px;
+transition:.2s}
+.suggestion:hover{border-color:#aaa;transform:translateY(-2px)}
 .messages{display:flex;flex-direction:column;gap:25px;padding-bottom:25px}
 .message{display:flex;flex-direction:column;gap:8px;max-width:88%}
 .message.user{align-self:flex-end;align-items:flex-end}
 .message.assistant{align-self:flex-start}
-.message-label{color:var(--muted);font-size:11px;letter-spacing:1px}
-.message-text{font-size:14px;line-height:1.75;white-space:pre-wrap;overflow-wrap:anywhere}
+.message-label{color:var(--muted);font-size:10px;letter-spacing:1.2px}
+.message-text{font-size:14px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}
 .user .message-text{background:#eaeae6;padding:13px 16px;border-radius:16px 16px 4px 16px}
 .assistant .message-text{padding:2px 0}
-.copy-button{border:0;background:transparent;color:#999;font-size:11px;cursor:pointer;padding:4px 0}
+.copy-button{border:0;background:transparent;color:#999;font-size:11px;padding:4px 0}
 .typing{color:var(--muted);font-size:13px;padding:10px 0}
-.composer-wrap{
-  position:sticky;bottom:0;padding:15px 0 max(10px,env(safe-area-inset-bottom));
-  background:linear-gradient(transparent,var(--bg) 20%)
-}
-.composer{
-  display:flex;align-items:flex-end;gap:10px;background:white;
-  border:1px solid #e5e5e0;border-radius:17px;padding:10px 11px 10px 16px;
-  box-shadow:0 5px 25px rgba(0,0,0,.035)
-}
-textarea{
-  flex:1;resize:none;border:0;outline:none;min-height:35px;max-height:150px;
-  padding:8px 0;background:transparent;color:var(--text);font-size:14px
-}
-textarea::placeholder{color:#aaa}
-.send{
-  width:38px;height:38px;border:0;border-radius:12px;
-  background:#222220;color:white;cursor:pointer;font-size:17px
-}
-.send:disabled{opacity:.4;cursor:default}
+.composer-wrap{position:sticky;bottom:0;padding:15px 0 max(10px,env(safe-area-inset-bottom));
+background:linear-gradient(transparent,var(--bg) 20%)}
+.composer{background:white;border:1px solid #e5e5e0;border-radius:17px;
+padding:10px 11px;box-shadow:0 5px 25px rgba(0,0,0,.035)}
+.composer textarea{width:100%;resize:none;border:0;outline:none;
+min-height:38px;max-height:150px;padding:8px 4px;background:transparent;
+color:var(--text);font-size:14px}
+.composer textarea::placeholder{color:#aaa}
+.composer-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.tools{display:flex;gap:6px;flex-wrap:wrap}
+.tool-button{border:1px solid var(--border);background:#fff;
+color:#666;border-radius:9px;padding:8px 10px;font-size:12px}
+.send{width:39px;height:39px;border:0;border-radius:12px;
+background:#222;color:white;font-size:18px}
+.send:disabled{opacity:.4}
 .disclaimer{text-align:center;color:#aaa;font-size:10px;padding-top:10px}
+.attachments{display:flex;gap:8px;flex-wrap:wrap;padding:7px 0}
+.attachment{position:relative;border:1px solid var(--border);
+border-radius:10px;padding:6px 9px;background:#fafaf8;font-size:11px}
+.attachment img,.attachment video{display:block;width:75px;height:65px;
+object-fit:cover;border-radius:6px;margin-bottom:5px}
+.remove-file{border:0;background:#222;color:white;border-radius:50%;
+width:20px;height:20px;margin-left:6px}
 .mobile-brand{display:none}
+.overlay{position:fixed;inset:0;background:rgba(20,20,18,.35);
+z-index:50;display:none;align-items:center;justify-content:center;padding:18px}
+.overlay.show{display:flex}
+.modal{background:white;width:100%;max-width:480px;max-height:85vh;
+overflow:auto;border-radius:20px;padding:25px;box-shadow:var(--shadow)}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.modal-head h2{font-size:21px;margin:0}
+.close{border:0;background:#f0f0ed;border-radius:9px;width:34px;height:34px}
+.modal p{color:#777;font-size:13px;line-height:1.6}
+.modal-input{width:100%;padding:13px;border:1px solid var(--border);
+border-radius:10px;margin:7px 0 12px;outline:none}
+.primary{width:100%;padding:13px;border:0;border-radius:11px;
+background:#222;color:white;font-weight:650;margin-top:10px}
+.secondary{width:100%;padding:12px;border:1px solid var(--border);
+border-radius:11px;background:white;margin-top:9px}
+.plan-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+.plan{border:1px solid var(--border);border-radius:15px;padding:17px}
+.plan h3{font-size:14px;margin:0 0 12px}
+.price{font-size:27px;font-weight:750;letter-spacing:-1px}
+.plan small{color:#888}
+.plan button{width:100%;margin-top:15px;border:0;background:#222;
+color:white;padding:11px;border-radius:9px;font-size:12px}
+.notice{background:#f5f5f2;border-radius:11px;padding:12px;
+font-size:11px;color:#777;line-height:1.6;margin-top:12px}
+.link-row{display:flex;gap:8px}
+.link-row input{min-width:0;flex:1}
+.link-row button{border:0;background:#222;color:white;border-radius:10px;padding:0 14px}
+.mobile-menu{display:none}
 @media(max-width:700px){
-  .sidebar{display:none}
-  .topbar{height:58px;padding:0 17px}
-  .mobile-brand{display:flex;align-items:center;gap:9px;font-weight:750;letter-spacing:1.5px}
-  .mobile-brand .brand-icon{width:30px;height:30px}
-  .content{padding:22px 16px 10px}
-  .welcome{padding:20px 0}
-  .suggestions{grid-template-columns:1fr;margin-top:24px}
-  .message{max-width:94%}
+ .sidebar{display:none;position:fixed;left:0;top:0;bottom:0;width:275px;
+ box-shadow:var(--shadow)}
+ .sidebar.open{display:flex}
+ .topbar{height:58px;padding:0 14px}
+ .mobile-brand{display:flex;align-items:center;gap:8px;font-weight:800;letter-spacing:1.3px}
+ .mobile-brand .brand-icon{width:30px;height:30px}
+ .topbar-title{display:none}
+ .mobile-menu{display:block;border:0;background:transparent;font-size:21px;margin-right:8px}
+ .content{padding:20px 15px 10px}
+ .welcome{padding:20px 0}
+ .suggestions{grid-template-columns:1fr;margin-top:24px}
+ .message{max-width:95%}
+ .top-button{padding:8px;font-size:11px}
+ .plan-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
 
 <body>
 <div class="app">
-
-<aside class="sidebar">
+<aside class="sidebar" id="sidebar">
   <div class="brand">
     <div class="brand-icon"><img src="/apple-touch-icon.PNG" alt="TOZRA"></div>
     <span>TOZRA</span>
@@ -145,24 +165,31 @@ textarea::placeholder{color:#aaa}
   <button class="new-chat" id="newChat">＋ Yeni sohbet</button>
   <div class="history-title">SOHBET GEÇMİŞİ</div>
   <div class="history" id="history"></div>
-  <div class="sidebar-footer">CREATIVE INTELLIGENCE</div>
+  <div style="margin-top:auto">
+    <button class="side-action" id="sidePlans">◇ Üyelik planları</button>
+    <button class="side-action" id="sideSettings">⚙ Ayarlar</button>
+    <div class="sidebar-footer">CREATIVE INTELLIGENCE</div>
+  </div>
 </aside>
 
 <main class="main">
 <header class="topbar">
   <div class="mobile-brand">
+    <button class="mobile-menu" id="menuButton">☰</button>
     <div class="brand-icon"><img src="/apple-touch-icon.PNG" alt="TOZRA"></div>
     TOZRA
   </div>
   <div class="topbar-title">CREATIVE INTELLIGENCE</div>
-  <div class="status">Çevrimiçi</div>
+  <div class="top-actions">
+    <div class="status">Çevrimiçi</div>
+    <button class="top-button" id="plansButton">Üyelik</button>
+    <button class="avatar" id="profileButton">U</button>
+  </div>
 </header>
 
 <section class="content">
   <div class="welcome" id="welcome">
-    <div class="welcome-logo">
-      <img src="/apple-touch-icon.PNG" alt="TOZRA">
-    </div>
+    <div class="welcome-logo"><img src="/apple-touch-icon.PNG" alt="TOZRA"></div>
     <h1>Merhaba, nasıl yardımcı olabilirim?</h1>
     <p>Fikirlerini keşfet. Üret. Geliştir.</p>
     <div class="suggestions">
@@ -177,8 +204,16 @@ textarea::placeholder{color:#aaa}
 
   <div class="composer-wrap">
     <div class="composer">
+      <div class="attachments" id="attachments"></div>
       <textarea id="prompt" rows="1" placeholder="TOZRA'ya bir şey sor..."></textarea>
-      <button class="send" id="send" aria-label="Gönder">↑</button>
+      <div class="composer-bottom">
+        <div class="tools">
+          <button class="tool-button" id="imageButton">＋ Fotoğraf</button>
+          <button class="tool-button" id="videoButton">＋ Video</button>
+          <button class="tool-button" id="linkButton">↗ Bağlantı</button>
+        </div>
+        <button class="send" id="send" aria-label="Gönder">↑</button>
+      </div>
     </div>
     <div class="disclaimer">TOZRA yapay zekâ tarafından desteklenmektedir. Yanıtları kontrol etmeyi unutma.</div>
   </div>
@@ -186,35 +221,46 @@ textarea::placeholder{color:#aaa}
 </main>
 </div>
 
-<script>
-const promptInput=document.getElementById("prompt");
-const sendButton=document.getElementById("send");
-const messagesEl=document.getElementById("messages");
-const welcomeEl=document.getElementById("welcome");
-const historyEl=document.getElementById("history");
+<input type="file" id="imageInput" accept="image/*" multiple hidden>
+<input type="file" id="videoInput" accept="video/*" multiple hidden>
 
-let conversation=[];
-let conversations=[];
-let busy=false;
+<div class="overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="modalTitle">TOZRA</h2>
+      <button class="close" id="closeModal">✕</button>
+    </div>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const promptInput=$("prompt"),sendButton=$("send");
+const messagesEl=$("messages"),welcomeEl=$("welcome");
+const historyEl=$("history");
+let conversation=[],conversations=[],busy=false,attachments=[];
 
 function saveConversation(){
   if(!conversation.length)return;
   const id=conversation[0].id;
-  const existing=conversations.findIndex(item=>item.id===id);
   const item={
     id,
     title:conversation.find(m=>m.role==="user")?.content.slice(0,35)||"Yeni sohbet",
     messages:conversation
   };
-  if(existing>=0)conversations[existing]=item;
+  const index=conversations.findIndex(x=>x.id===id);
+  if(index>=0)conversations[index]=item;
   else conversations.unshift(item);
   try{localStorage.setItem("tozra-conversations",JSON.stringify(conversations))}catch(e){}
   renderHistory();
 }
 
 function loadHistory(){
-  try{conversations=JSON.parse(localStorage.getItem("tozra-conversations")||"[]")}
-  catch(e){conversations=[]}
+  try{
+    const data=JSON.parse(localStorage.getItem("tozra-conversations")||"[]");
+    conversations=Array.isArray(data)?data:[];
+  }catch(e){conversations=[]}
   renderHistory();
 }
 
@@ -223,10 +269,11 @@ function renderHistory(){
   conversations.forEach(item=>{
     const button=document.createElement("div");
     button.className="history-item";
-    button.textContent=item.title;
+    button.textContent=item.title||"Sohbet";
     button.onclick=()=>{
-      conversation=item.messages;
+      conversation=Array.isArray(item.messages)?item.messages:[];
       renderMessages();
+      $("sidebar").classList.remove("open");
     };
     historyEl.appendChild(button);
   });
@@ -235,7 +282,7 @@ function renderHistory(){
 function renderMessages(){
   messagesEl.innerHTML="";
   welcomeEl.style.display=conversation.length?"none":"block";
-  conversation.forEach(message=>addMessageToScreen(message.role,message.content));
+  conversation.forEach(m=>addMessageToScreen(m.role,m.content));
 }
 
 function addMessageToScreen(role,content){
@@ -247,8 +294,7 @@ function addMessageToScreen(role,content){
   const text=document.createElement("div");
   text.className="message-text";
   text.textContent=content;
-  wrapper.appendChild(label);
-  wrapper.appendChild(text);
+  wrapper.append(label,text);
 
   if(role==="assistant"){
     const copy=document.createElement("button");
@@ -258,7 +304,6 @@ function addMessageToScreen(role,content){
       try{
         await navigator.clipboard.writeText(content);
         copy.textContent="Kopyalandı";
-        setTimeout(()=>copy.textContent="Kopyala",1500);
       }catch(e){copy.textContent="Kopyalanamadı"}
     };
     wrapper.appendChild(copy);
@@ -267,8 +312,8 @@ function addMessageToScreen(role,content){
   wrapper.scrollIntoView({behavior:"smooth",block:"end"});
 }
 
-async function sendMessage(text){
-  text=text.trim();
+async function sendMessage(value){
+  const text=(value??promptInput.value).trim();
   if(!text||busy)return;
   busy=true;
   sendButton.disabled=true;
@@ -279,14 +324,13 @@ async function sendMessage(text){
   }else{
     conversation.push({role:"user",content:text});
   }
-
   addMessageToScreen("user",text);
   promptInput.value="";
-  promptInput.style.height="35px";
+  promptInput.style.height="38px";
 
   const typing=document.createElement("div");
   typing.className="typing";
-  typing.textContent="TOZRA yazıyor...";
+  typing.textContent="TOZRA yanıt hazırlıyor...";
   messagesEl.appendChild(typing);
 
   try{
@@ -300,27 +344,64 @@ async function sendMessage(text){
     });
     const data=await response.json();
     typing.remove();
-
-    if(!response.ok||!data.success){
-      throw new Error(data.error||"Yanıt alınamadı.");
-    }
-
+    if(!response.ok||!data.success)throw new Error(data.error||"Yanıt alınamadı.");
     const answer=data.answer||"Bir yanıt oluşturulamadı.";
     conversation.push({role:"assistant",content:answer});
     addMessageToScreen("assistant",answer);
     saveConversation();
-
   }catch(error){
     typing.remove();
-    const errorMessage="Bir bağlantı sorunu oluştu. Lütfen tekrar dene.";
-    conversation.push({role:"assistant",content:errorMessage});
-    addMessageToScreen("assistant",errorMessage);
+    const message="Bağlantı sorunu oluştu. Lütfen tekrar dene.";
+    conversation.push({role:"assistant",content:message});
+    addMessageToScreen("assistant",message);
+    saveConversation();
     console.error(error);
   }finally{
     busy=false;
     sendButton.disabled=false;
-    promptInput.focus();
   }
+}
+
+function clearAttachments(){
+  attachments.forEach(a=>URL.revokeObjectURL(a.url));
+  attachments=[];
+  renderAttachments();
+}
+
+function renderAttachments(){
+  const area=$("attachments");
+  area.innerHTML="";
+  attachments.forEach((a,index)=>{
+    const item=document.createElement("div");
+    item.className="attachment";
+    if(a.kind==="image"){
+      const img=document.createElement("img");
+      img.src=a.url;item.appendChild(img);
+    }else{
+      const video=document.createElement("video");
+      video.src=a.url;video.muted=true;item.appendChild(video);
+    }
+    const name=document.createElement("span");
+    name.textContent=a.file.name.slice(0,18);
+    item.appendChild(name);
+    const remove=document.createElement("button");
+    remove.className="remove-file";
+    remove.textContent="×";
+    remove.onclick=()=>{
+      URL.revokeObjectURL(a.url);
+      attachments.splice(index,1);
+      renderAttachments();
+    };
+    item.appendChild(remove);
+    area.appendChild(item);
+  });
+}
+
+function addFiles(files,kind){
+  Array.from(files).forEach(file=>{
+    attachments.push({file,kind,url:URL.createObjectURL(file)});
+  });
+  renderAttachments();
 }
 
 function newChat(){
@@ -328,26 +409,138 @@ function newChat(){
   messagesEl.innerHTML="";
   welcomeEl.style.display="block";
   promptInput.value="";
+  clearAttachments();
+  $("sidebar").classList.remove("open");
 }
 
-sendButton.addEventListener("click",()=>sendMessage(promptInput.value));
+function showModal(type){
+  const title=$("modalTitle"),content=$("modalContent");
+  if(type==="plans"){
+    title.textContent="TOZRA üyelik planları";
+    content.innerHTML=`
+      <p>TOZRA deneyimini genişletmek için üyelik seçenekleri.</p>
+      <div class="plan-grid">
+        <div class="plan">
+          <h3>Aylık üyelik</h3>
+          <div class="price">₺200</div>
+          <small>Her ay</small>
+          <button onclick="paymentNotice()">Planı seç</button>
+        </div>
+        <div class="plan">
+          <h3>Yıllık üyelik</h3>
+          <div class="price">₺1.000</div>
+          <small>Yıllık ödeme</small>
+          <button onclick="paymentNotice()">Planı seç</button>
+        </div>
+      </div>
+      <div class="notice">Bu fiyatlar tasarım aşamasındaki planlardır. Gerçek ödeme sistemi henüz bağlı değildir.</div>`;
+  }
+  if(type==="login"){
+    title.textContent="TOZRA hesabına giriş";
+    content.innerHTML=`
+      <p>Hesabına giriş yaparak TOZRA deneyimine devam et.</p>
+      <form id="loginForm">
+        <input class="modal-input" type="email" placeholder="E-posta adresin" required>
+        <input class="modal-input" type="password" placeholder="Şifren" required>
+        <button class="primary" type="submit">Giriş yap</button>
+      </form>
+      <button class="secondary" id="registerSwitch">Hesap oluştur</button>
+      <div class="notice">Gerçek hesap girişi için sunucu ve kullanıcı veritabanı bağlantısı gereklidir.</div>`;
+    $("loginForm").onsubmit=e=>{
+      e.preventDefault();
+      alert("Üyelik sistemi henüz backend'e bağlanmadı.");
+    };
+    $("registerSwitch").onclick=()=>showModal("register");
+  }
+  if(type==="register"){
+    title.textContent="TOZRA hesabı oluştur";
+    content.innerHTML=`
+      <p>TOZRA dünyasına katıl.</p>
+      <form id="registerForm">
+        <input class="modal-input" placeholder="Adın" required>
+        <input class="modal-input" type="email" placeholder="E-posta adresin" required>
+        <input class="modal-input" type="password" placeholder="Şifre oluştur" required>
+        <button class="primary" type="submit">Hesap oluştur</button>
+      </form>
+      <div class="notice">Bu ekran şu an arayüz önizlemesidir. Bilgilerin kaydedilmez.</div>`;
+    $("registerForm").onsubmit=e=>{
+      e.preventDefault();
+      alert("Gerçek kayıt sistemi henüz bağlı değil.");
+    };
+  }
+  if(type==="profile"){
+    title.textContent="Profil";
+    content.innerHTML=`
+      <div style="text-align:center;padding:10px">
+        <div class="avatar" style="margin:auto;display:grid;place-items:center">U</div>
+        <h3>Misafir kullanıcı</h3>
+        <p>TOZRA hesabın henüz oluşturulmadı.</p>
+      </div>
+      <button class="primary" onclick="showModal('register')">Hesap oluştur</button>
+      <button class="secondary" onclick="showModal('login')">Giriş yap</button>`;
+  }
+  if(type==="settings"){
+    title.textContent="Ayarlar";
+    content.innerHTML=`
+      <h3 style="font-size:14px">Görünüm</h3>
+      <p>TOZRA şu anda premium açık tema ile çalışıyor.</p>
+      <h3 style="font-size:14px">Uygulama</h3>
+      <p>TOZRA — Creative Intelligence</p>
+      <p>Sürüm 2.0 arayüz önizlemesi</p>
+      <div class="notice">Hesap, veri senkronizasyonu ve gelişmiş kişiselleştirme özellikleri sonraki backend aşamasında eklenecek.</div>`;
+  }
+  $("modalOverlay").classList.add("show");
+}
 
-promptInput.addEventListener("keydown",event=>{
-  if(event.key==="Enter"&&!event.shiftKey){
-    event.preventDefault();
-    sendMessage(promptInput.value);
+function paymentNotice(){
+  alert("Ödeme altyapısı henüz bağlanmadı. Bu bölüm daha sonra etkinleştirilecek.");
+}
+
+function addLink(){
+  const url=prompt("Eklemek istediğin bağlantıyı yaz:");
+  if(!url)return;
+  let parsed;
+  try{parsed=new URL(url)}catch(e){
+    alert("Lütfen geçerli bir bağlantı gir.");
+    return;
+  }
+  if(!["http:","https:"].includes(parsed.protocol)){
+    alert("Yalnızca http veya https bağlantıları kullanılabilir.");
+    return;
+  }
+  promptInput.value+=(promptInput.value?"\n":"")+"Bağlantı: "+parsed.href;
+  promptInput.focus();
+  alert("Bağlantı mesajına eklendi. Mevcut API bağlantı içeriğini otomatik analiz etmez; bunun için backend geliştirmesi gerekir.");
+}
+
+$("send").onclick=()=>sendMessage();
+promptInput.addEventListener("keydown",e=>{
+  if(e.key==="Enter"&&!e.shiftKey){
+    e.preventDefault();sendMessage();
   }
 });
-
 promptInput.addEventListener("input",()=>{
-  promptInput.style.height="35px";
+  promptInput.style.height="38px";
   promptInput.style.height=Math.min(promptInput.scrollHeight,150)+"px";
 });
-
-document.getElementById("newChat").addEventListener("click",newChat);
+$("newChat").onclick=newChat;
 document.querySelectorAll(".suggestion").forEach(button=>{
-  button.addEventListener("click",()=>sendMessage(button.textContent));
+  button.onclick=()=>sendMessage(button.textContent);
 });
+$("imageButton").onclick=()=>$("imageInput").click();
+$("videoButton").onclick=()=>$("videoInput").click();
+$("imageInput").onchange=e=>addFiles(e.target.files,"image");
+$("videoInput").onchange=e=>addFiles(e.target.files,"video");
+$("linkButton").onclick=addLink;
+$("plansButton").onclick=()=>showModal("plans");
+$("sidePlans").onclick=()=>showModal("plans");
+$("sideSettings").onclick=()=>showModal("settings");
+$("profileButton").onclick=()=>showModal("profile");
+$("closeModal").onclick=()=>$("modalOverlay").classList.remove("show");
+$("modalOverlay").onclick=e=>{
+  if(e.target===$("modalOverlay"))$("modalOverlay").classList.remove("show");
+};
+$("menuButton").onclick=()=>$("sidebar").classList.toggle("open");
 
 loadHistory();
 
