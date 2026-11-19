@@ -5,84 +5,90 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#101114">
-<title>IRCAI — Creative Intelligence</title>
+<title>IRCAI — Command Center</title>
 <style>
 *{box-sizing:border-box}
-:root{--bg:#101114;--panel:#181a1f;--panel2:#202228;--line:#303239;--white:#f4f4f2;--muted:#92949b;--silver:#c4c7cc}
+:root{--bg:#101114;--panel:#181a1f;--line:#303239;--white:#f4f4f2;--muted:#92949b;--silver:#c4c7cc}
 body{margin:0;background:var(--bg);color:var(--white);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 button,input,textarea{font:inherit}
 button{cursor:pointer}
 .layout{min-height:100vh;display:flex}
-aside{width:245px;background:#141519;border-right:1px solid var(--line);padding:27px 17px;display:flex;flex-direction:column;flex-shrink:0}
-.logo{font-size:27px;font-weight:800;letter-spacing:4px;padding:5px 12px 35px}
+aside{width:235px;background:#141519;border-right:1px solid var(--line);padding:25px 16px;display:flex;flex-direction:column;flex-shrink:0}
+.logo{font-size:26px;font-weight:800;letter-spacing:4px;padding:5px 12px 35px}
 .logo span{color:#aeb2b9}
-.workspace{font-size:10px;color:#747780;letter-spacing:2px;padding:0 12px 13px}
-nav{display:grid;gap:7px}
+.small{font-size:10px;color:#777;letter-spacing:2px;padding:0 12px 12px}
+nav{display:grid;gap:6px}
 nav button{background:transparent;border:0;color:#a4a6ac;text-align:left;padding:13px 12px;border-radius:8px;font-size:13px}
 nav button.active,nav button:hover{background:#27292f;color:white}
 .navicon{display:inline-block;width:27px;color:#d0d1d4}
-.aside-bottom{margin-top:auto;border-top:1px solid var(--line);padding:20px 12px;color:#888;font-size:11px;line-height:1.8}
+.bottom{margin-top:auto;border-top:1px solid var(--line);padding:18px 12px;color:#888;font-size:10px;line-height:1.8}
 main{flex:1;min-width:0}
-.topbar{height:75px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 5%;background:#121317}
-.top-title{font-size:13px;color:#aaa}
+.topbar{height:68px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 5%;background:#121317}
+.top-title{font-size:12px;color:#aaa}
 .profile{width:34px;height:34px;border-radius:50%;background:#303238;border:1px solid #555;display:grid;place-items:center;font-size:12px}
-.content{max-width:1100px;margin:auto;padding:45px 5% 80px}
+.content{max-width:1100px;margin:auto;padding:40px 5% 70px}
 .eyebrow{font-size:10px;letter-spacing:3px;color:#9ea1a8}
-h1{font-size:clamp(31px,5vw,49px);letter-spacing:-1.8px;line-height:1.13;margin:18px 0 13px;font-weight:650}
+h1{font-size:clamp(30px,5vw,45px);letter-spacing:-1.5px;line-height:1.15;margin:16px 0 12px;font-weight:650}
 h1 span{color:#aeb2b9}
-.subtitle{font-size:14px;line-height:1.8;color:var(--muted);max-width:600px}
-.section{margin-top:38px}
-.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-.section-head h2{font-size:15px;font-weight:550}
-.muted{font-size:11px;color:#777a82}
-.grid{display:grid;grid-template-columns:1.5fr 1fr;gap:17px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:23px}
+.subtitle{font-size:13px;line-height:1.8;color:var(--muted);max-width:620px}
+.section{margin-top:32px}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.section-head h2{font-size:14px;font-weight:550}
+.muted{font-size:10px;color:#777a82}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:25px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;min-width:0}
+.stat-label{font-size:11px;color:#999}
+.stat-value{font-size:26px;font-weight:650;margin-top:12px}
 .card-title{font-size:14px;font-weight:600;margin-bottom:7px}
-.card-desc{font-size:12px;color:var(--muted);line-height:1.7}
-textarea,input{width:100%;background:#101115;border:1px solid #35373e;border-radius:8px;padding:15px;color:white;outline:none;font-size:13px}
-textarea{height:145px;resize:vertical;margin-top:15px}
+.card-desc{font-size:11px;color:var(--muted);line-height:1.7}
+textarea,input{width:100%;background:#101115;border:1px solid #35373e;border-radius:8px;padding:13px;color:white;outline:none;font-size:13px}
+textarea{height:120px;resize:vertical;margin-top:12px}
 textarea:focus,input:focus{border-color:#aeb2b9}
 textarea::placeholder,input::placeholder{color:#686b73}
-.row{display:flex;gap:10px;margin-top:13px}
-.primary{background:#d4d6d9;color:#151619;border:0;padding:13px 19px;border-radius:7px;font-size:12px;font-weight:700}
+.row{display:flex;gap:9px;margin-top:12px;flex-wrap:wrap}
+.primary{background:#d4d6d9;color:#151619;border:0;padding:12px 17px;border-radius:7px;font-size:11px;font-weight:700}
 .primary:hover{background:white}
-.secondary{background:#292b31;border:1px solid #41434a;color:white;padding:12px 16px;border-radius:7px;font-size:12px}
-.full{width:100%;margin-top:13px}
-.stat{display:flex;justify-content:space-between;align-items:center;padding:15px 0;border-bottom:1px solid var(--line)}
-.stat:last-child{border:0}
-.stat span{font-size:12px;color:#aaa}
-.stat strong{font-size:19px;font-weight:600}
-.feature{padding:17px 0;border-bottom:1px solid var(--line)}
-.feature:last-child{border:0}
-.feature strong{font-size:12px;display:block;margin-bottom:6px}
-.feature span{font-size:11px;color:var(--muted);line-height:1.7}
-#output{display:none;margin-top:20px}
-.result-section{padding:20px 0;border-bottom:1px solid var(--line)}
-.result-section h3{font-size:12px;color:#c5c8ce;letter-spacing:1px}
-.result-section p,.result-section li{font-size:13px;color:#b1b3ba;line-height:1.8}
-.result-section ul{padding-left:20px}
-.projects{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.project{background:#191b20;border:1px solid var(--line);border-radius:10px;padding:17px}
-.project strong{font-size:13px}
-.project p{font-size:11px;color:var(--muted);line-height:1.6}
-.project button{margin-top:9px}
+.secondary{background:#292b31;border:1px solid #41434a;color:white;padding:11px 14px;border-radius:7px;font-size:11px}
+.full{width:100%;margin-top:12px}
 .page{display:none}
 .page.active{display:block}
-.empty{padding:30px;text-align:center;color:#888;font-size:12px;border:1px dashed #383a40;border-radius:10px}
-footer{text-align:center;color:#60636b;font-size:10px;padding:30px;border-top:1px solid var(--line)}
+.task-form{display:flex;gap:8px;margin-top:15px}
+.task-form input{flex:1;min-width:0}
+.task-list{display:grid;gap:8px;margin-top:15px}
+.task{display:flex;align-items:center;gap:10px;padding:12px;background:#121317;border:1px solid #303239;border-radius:8px}
+.task input{width:16px;height:16px;accent-color:#c4c7cc}
+.task span{font-size:12px;flex:1;overflow-wrap:anywhere}
+.task.done span{text-decoration:line-through;color:#777}
+.delete{background:transparent;border:0;color:#888;font-size:17px}
+.bar{height:7px;background:#303239;border-radius:20px;overflow:hidden;margin-top:13px}
+.bar div{height:100%;background:#c4c7cc;width:0%;transition:width .2s}
+.activity{padding:12px 0;border-bottom:1px solid var(--line);font-size:11px;color:#aaa;line-height:1.6}
+.activity:last-child{border:0}
+.project{background:#191b20;border:1px solid var(--line);border-radius:10px;padding:16px}
+.project strong{font-size:13px}
+.project p{font-size:11px;color:var(--muted);line-height:1.6;overflow-wrap:anywhere}
+.empty{padding:25px;text-align:center;color:#888;font-size:12px;border:1px dashed #383a40;border-radius:10px}
+.result-section{padding:17px 0;border-bottom:1px solid var(--line)}
+.result-section h3{font-size:11px;color:#c5c8ce;letter-spacing:1px}
+.result-section p,.result-section li{font-size:12px;color:#b1b3ba;line-height:1.8}
+.result-section ul{padding-left:20px}
+#output{display:none;margin-top:18px}
+footer{text-align:center;color:#60636b;font-size:10px;padding:25px;border-top:1px solid var(--line)}
 @media(max-width:750px){
 .layout{display:block}
-aside{width:100%;height:auto;padding:12px 15px;border-right:0;border-bottom:1px solid var(--line)}
-.logo{padding:5px 8px 13px;font-size:22px}
-.workspace,.aside-bottom{display:none}
+aside{width:100%;height:auto;padding:12px 14px;border-right:0;border-bottom:1px solid var(--line)}
+.logo{padding:4px 8px 12px;font-size:22px}
+.small,.bottom{display:none}
 nav{display:flex;overflow-x:auto;gap:3px}
-nav button{white-space:nowrap;padding:10px 11px;font-size:11px}
-.navicon{width:19px}
-.topbar{height:58px;padding:0 20px}
-.content{padding:35px 19px 60px}
+nav button{white-space:nowrap;padding:10px;font-size:11px}
+.navicon{width:18px}
+.topbar{height:55px;padding:0 18px}
+.content{padding:30px 17px 55px}
+.stats{grid-template-columns:repeat(2,minmax(0,1fr))}
 .grid{grid-template-columns:1fr}
-.projects{grid-template-columns:1fr}
-.card{padding:18px}
+.card{padding:16px}
+.task-form{flex-direction:column}
 }
 </style>
 </head>
@@ -90,66 +96,78 @@ nav button{white-space:nowrap;padding:10px 11px;font-size:11px}
 <div class="layout">
 <aside>
 <div class="logo">IRC<span>AI</span></div>
-<div class="workspace">WORKSPACE</div>
+<div class="small">WORKSPACE</div>
 <nav>
-<button class="active" onclick="showPage('home',this)"><span class="navicon">⌂</span>Dashboard</button>
+<button class="active" onclick="showPage('home',this)"><span class="navicon">⌂</span>Command Center</button>
 <button onclick="showPage('idea',this)"><span class="navicon">✳</span>Idea Engine</button>
 <button onclick="showPage('projects',this)"><span class="navicon">▤</span>My Projects</button>
-<button onclick="showPage('about',this)"><span class="navicon">◈</span>About IRCAI</button>
 </nav>
-<div class="aside-bottom">IRCAI CREATIVE INTELLIGENCE<br>Version 2.0 · 2026</div>
+<div class="bottom">IRCAI CREATIVE INTELLIGENCE<br>COMMAND CENTER 1.0</div>
 </aside>
 <main>
 <div class="topbar">
-<div class="top-title">Creative Intelligence / Workspace</div>
+<div class="top-title">IRCAI / Command Center</div>
 <div class="profile">IR</div>
 </div>
 <div class="content">
 
 <section id="home" class="page active">
 <div class="eyebrow">YOUR CREATIVE WORKSPACE</div>
-<h1>Build something<br><span>extraordinary.</span></h1>
-<p class="subtitle">Fikirlerini geliştir, projelerini planla ve hayallerindeki dijital ürünleri oluşturmak için ilk adımı at.</p>
+<h1>Command <span>Center.</span></h1>
+<p class="subtitle">Projelerini, görevlerini ve üretim sürecini tek bir merkezden yönet.</p>
+
+<div class="stats">
+<div class="card"><div class="stat-label">TOPLAM PROJE</div><div class="stat-value" id="projectCount">0</div></div>
+<div class="card"><div class="stat-label">TOPLAM GÖREV</div><div class="stat-value" id="taskCount">0</div></div>
+<div class="card"><div class="stat-label">TAMAMLANAN</div><div class="stat-value" id="doneCount">0</div></div>
+<div class="card"><div class="stat-label">İLERLEME</div><div class="stat-value" id="progressText">%0</div></div>
+</div>
 
 <div class="section grid">
 <div class="card">
-<div class="eyebrow">01 / IDEA ENGINE</div>
-<div class="card-title" style="margin-top:14px">Aklındaki fikri anlat.</div>
-<p class="card-desc">Fikrini yapılandırılmış bir proje planına dönüştürmeye başla.</p>
-<textarea id="homeIdea" placeholder="Nasıl bir proje geliştirmek istiyorsun?"></textarea>
-<button class="primary full" onclick="startIdea()">Create a project →</button>
+<div class="section-head"><h2>Task Manager</h2><span class="muted">TASKS</span></div>
+<p class="card-desc">Görevlerini ekle ve tamamladıkça işaretle.</p>
+<div class="task-form">
+<input id="taskInput" placeholder="Yeni görev yaz...">
+<button class="primary" onclick="addTask()">Ekle +</button>
+</div>
+<div id="taskList" class="task-list"></div>
+<div class="bar"><div id="progressBar"></div></div>
+<p class="muted" id="progressLabel">%0 tamamlandı</p>
 </div>
 <div class="card">
-<div class="eyebrow">YOUR WORKSPACE</div>
-<div class="stat"><span>Kaydedilen projeler</span><strong id="projectCount">0</strong></div>
-<div class="stat"><span>Platform</span><strong>2.0</strong></div>
-<div class="stat"><span>AI Engine</span><strong style="font-size:12px">Hazırlanıyor</strong></div>
-<div style="margin-top:20px" class="card-title">Workspace</div>
-<p class="card-desc">Projelerini tek bir yerde oluştur, düzenle ve yönet.</p>
+<div class="section-head"><h2>Recent Activity</h2><span class="muted">ACTIVITY</span></div>
+<div id="activityList"></div>
 </div>
 </div>
 
 <div class="section">
-<div class="section-head"><h2>Platform capabilities</h2><span class="muted">CORE FEATURES</span></div>
+<div class="section-head"><h2>Quick Actions</h2><span class="muted">SHORTCUTS</span></div>
 <div class="grid">
-<div class="card feature"><strong>01 — Idea Development</strong><span>Fikirlerini kapsamlı proje planlarına dönüştür.</span></div>
-<div class="card feature"><strong>02 — Project Management</strong><span>Projelerini kaydet ve geliştirme sürecini takip et.</span></div>
-<div class="card feature"><strong>03 — Creative Studio</strong><span>Dijital içerik ve yaratıcı üretim alanı.</span></div>
-<div class="card feature"><strong>04 — AI Intelligence</strong><span>Yapay zekâ destekli özellikler için altyapı.</span></div>
+<div class="card">
+<div class="card-title">Yeni proje oluştur</div>
+<p class="card-desc">Aklındaki fikri yeni bir proje planına dönüştür.</p>
+<button class="primary" onclick="showPage('idea',document.querySelectorAll('nav button')[1])">Open Idea Engine →</button>
+</div>
+<div class="card">
+<div class="card-title">Projelerini görüntüle</div>
+<p class="card-desc">Kaydettiğin projelere göz at.</p>
+<button class="secondary" onclick="showPage('projects',document.querySelectorAll('nav button')[2])">Open Projects →</button>
+</div>
 </div>
 </div>
 </section>
 
 <section id="idea" class="page">
-<div class="eyebrow">01 / PROJECT DEVELOPMENT</div>
+<div class="eyebrow">PROJECT DEVELOPMENT</div>
 <h1>Idea <span>Engine.</span></h1>
-<p class="subtitle">Bir fikirle başla. Onu geliştirilebilir bir projeye dönüştür.</p>
+<p class="subtitle">Fikrini yaz, yapılandırılmış bir proje taslağı oluştur.</p>
 <div class="section card">
-<label class="card-title" for="ideaInput">Proje fikrin</label>
-<textarea id="ideaInput" placeholder="Fikrini detaylıca anlat. Hangi problemi çözüyor? Nasıl çalışacak? Kimler kullanacak?"></textarea>
-<label class="card-title" style="display:block;margin-top:20px">Proje adı</label>
+<div class="card-title">Proje fikrin</div>
+<textarea id="ideaInput" placeholder="Nasıl bir proje geliştirmek istiyorsun?"></textarea>
+<div class="card-title" style="margin-top:17px">Proje adı</div>
 <input id="ideaName" placeholder="Projene bir isim ver...">
-<label class="card-title" style="display:block;margin-top:20px">Kategori</label>
+<div class="card-title" style="margin-top:17px">Kategori</div>
 <input id="ideaCategory" placeholder="Örn. Teknoloji, medya, eğitim...">
 <button class="primary full" onclick="generate()">Generate project plan →</button>
 <div id="output" class="card">
@@ -160,34 +178,16 @@ nav button{white-space:nowrap;padding:10px 11px;font-size:11px}
 <div class="result-section"><h3>TARGET AUDIENCE</h3><p id="outAudience"></p></div>
 <div class="result-section"><h3>CORE FEATURES</h3><ul id="outFeatures"></ul></div>
 <div class="result-section"><h3>DEVELOPMENT ROADMAP</h3><ul id="outRoadmap"></ul></div>
-<div class="row">
 <button class="primary" onclick="saveProject()">Save project</button>
-<button class="secondary" onclick="copyProject()">Copy plan</button>
-</div>
 </div>
 </div>
 </section>
 
 <section id="projects" class="page">
-<div class="eyebrow">02 / PROJECT LIBRARY</div>
+<div class="eyebrow">PROJECT LIBRARY</div>
 <h1>My <span>Projects.</span></h1>
-<p class="subtitle">Oluşturduğun ve kaydettiğin projeler burada görüntülenir.</p>
-<div class="section">
-<div id="projectList" class="projects"></div>
-</div>
-</section>
-
-<section id="about" class="page">
-<div class="eyebrow">THE VISION</div>
-<h1>Ideas into <span>reality.</span></h1>
-<p class="subtitle">IRCAI, yaratıcı fikirlerin yapılandırılmış dijital projelere dönüşmesine yardımcı olmak için geliştirilen bir platformdur.</p>
-<div class="section card">
-<div class="card-title">Our mission</div>
-<p class="card-desc">Fikir geliştirme, proje planlama ve dijital üretim süreçlerini tek bir yaratıcı çalışma alanında bir araya getirmek.</p>
-<div class="feature"><strong>Clarity</strong><span>Fikirleri anlaşılır hâle getir.</span></div>
-<div class="feature"><strong>Creation</strong><span>Fikirleri projelere dönüştür.</span></div>
-<div class="feature"><strong>Progress</strong><span>Projelerini adım adım geliştir.</span></div>
-</div>
+<p class="subtitle">Kaydettiğin projeler burada görüntülenir.</p>
+<div class="section" id="projectList"></div>
 </section>
 
 </div>
@@ -197,89 +197,176 @@ nav button{white-space:nowrap;padding:10px 11px;font-size:11px}
 
 <script>
 let currentProject=null;
+
+function getData(key){
+try{return JSON.parse(localStorage.getItem(key)||'[]')}
+catch(e){return []}
+}
+function setData(key,data){
+localStorage.setItem(key,JSON.stringify(data));
+}
 function showPage(id,button){
 document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
 document.getElementById(id).classList.add('active');
 document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
-button.classList.add('active');
+if(button)button.classList.add('active');
 if(id==='projects')renderProjects();
 }
-function startIdea(){
-const value=document.getElementById('homeIdea').value.trim();
-if(!value){alert('Önce fikrini yaz.');return;}
-document.getElementById('ideaInput').value=value;
-showPage('idea',document.querySelectorAll('nav button')[1]);
+function logActivity(message){
+let items=getData('ircai_activity');
+items.unshift({message,date:new Date().toLocaleString('tr-TR')});
+setData('ircai_activity',items.slice(0,8));
+renderActivity();
+}
+function renderActivity(){
+let items=getData('ircai_activity');
+let box=document.getElementById('activityList');
+box.innerHTML='';
+if(!items.length){
+box.innerHTML='<div class="activity">IRCAI kullanıma hazır.</div>';
+return;
+}
+items.forEach(item=>{
+let div=document.createElement('div');
+div.className='activity';
+div.textContent=item.message+' · '+item.date;
+box.appendChild(div);
+});
+}
+function addTask(){
+let input=document.getElementById('taskInput');
+let value=input.value.trim();
+if(!value){alert('Önce bir görev yaz.');return;}
+let tasks=getData('ircai_tasks');
+tasks.push({id:Date.now(),text:value,done:false});
+setData('ircai_tasks',tasks);
+input.value='';
+logActivity('Yeni görev eklendi: '+value);
+renderTasks();
+}
+function toggleTask(id,checked){
+let tasks=getData('ircai_tasks');
+tasks=tasks.map(t=>t.id===id?{...t,done:checked}:t);
+setData('ircai_tasks',tasks);
+logActivity(checked?'Bir görev tamamlandı.':'Bir görev yeniden açıldı.');
+renderTasks();
+}
+function deleteTask(id){
+let tasks=getData('ircai_tasks').filter(t=>t.id!==id);
+setData('ircai_tasks',tasks);
+logActivity('Bir görev silindi.');
+renderTasks();
+}
+function renderTasks(){
+let tasks=getData('ircai_tasks');
+let list=document.getElementById('taskList');
+list.innerHTML='';
+if(!tasks.length){
+list.innerHTML='<div class="empty">Henüz görev eklenmedi.</div>';
+}
+tasks.forEach(task=>{
+let row=document.createElement('div');
+row.className='task'+(task.done?' done':'');
+let check=document.createElement('input');
+check.type='checkbox';
+check.checked=task.done;
+check.onchange=()=>toggleTask(task.id,check.checked);
+let label=document.createElement('span');
+label.textContent=task.text;
+let del=document.createElement('button');
+del.className='delete';
+del.textContent='×';
+del.setAttribute('aria-label','Görevi sil');
+del.onclick=()=>deleteTask(task.id);
+row.append(check,label,del);
+list.appendChild(row);
+});
+let done=tasks.filter(t=>t.done).length;
+let percent=tasks.length?Math.round(done/tasks.length*100):0;
+document.getElementById('taskCount').textContent=tasks.length;
+document.getElementById('doneCount').textContent=done;
+document.getElementById('progressText').textContent='%'+percent;
+document.getElementById('progressLabel').textContent='%'+percent+' tamamlandı';
+document.getElementById('progressBar').style.width=percent+'%';
 }
 function generate(){
-const idea=document.getElementById('ideaInput').value.trim();
+let idea=document.getElementById('ideaInput').value.trim();
 if(idea.length<10){alert('Lütfen fikrini biraz daha detaylı anlat.');return;}
-const name=document.getElementById('ideaName').value.trim()||'Untitled Project';
-const category=document.getElementById('ideaCategory').value.trim()||'Genel';
-const features=[
+let name=document.getElementById('ideaName').value.trim()||'Untitled Project';
+let category=document.getElementById('ideaCategory').value.trim()||'Genel';
+let features=[
 'Kullanıcı dostu bir ana ekran oluşturulması',
 'Temel proje fonksiyonlarının geliştirilmesi',
 'Kullanıcı deneyimi ve arayüz tasarımı',
 'Veri saklama ve proje yönetimi altyapısı',
 'Test ve performans iyileştirmeleri'
 ];
-const roadmap=[
+let roadmap=[
 '01 — Araştırma ve gereksinim analizi',
 '02 — Tasarım ve prototip oluşturma',
 '03 — Temel özelliklerin geliştirilmesi',
 '04 — Test ve iyileştirme',
-'05 — Yayınlama ve sürdürülebilir geliştirme'
+'05 — Yayınlama ve geliştirme'
 ];
-currentProject={name,idea,category,features,roadmap,date:new Date().toLocaleDateString('tr-TR')};
+currentProject={id:Date.now(),name,idea,category,features,roadmap,date:new Date().toLocaleDateString('tr-TR')};
 document.getElementById('outName').textContent=name;
 document.getElementById('outOverview').textContent=idea;
-document.getElementById('outObjective').textContent='Bu projenin amacı, '+idea+' Fikir henüz ilk taslak aşamasındadır; kapsamı geliştirme sırasında netleştirilmelidir.';
-document.getElementById('outAudience').textContent='Hedef kullanıcı kitlesi, '+category+' alanında bu fikre ihtiyaç duyan kişiler olarak belirlenebilir. Kullanıcı araştırmasıyla doğrulanmalıdır.';
+document.getElementById('outObjective').textContent='Projenin amacı: '+idea+' Bu hedefin kapsamı geliştirme sırasında netleştirilmelidir.';
+document.getElementById('outAudience').textContent=category+' alanında bu fikre ihtiyaç duyan kişiler. Hedef kitle araştırmayla doğrulanmalıdır.';
 document.getElementById('outFeatures').innerHTML=features.map(x=>'<li>'+x+'</li>').join('');
 document.getElementById('outRoadmap').innerHTML=roadmap.map(x=>'<li>'+x+'</li>').join('');
 document.getElementById('output').style.display='block';
+logActivity('Yeni proje taslağı oluşturuldu: '+name);
 }
 function saveProject(){
-if(!currentProject)return;
-let projects=JSON.parse(localStorage.getItem('ircai_projects')||'[]');
+if(!currentProject){alert('Önce proje oluştur.');return;}
+let projects=getData('ircai_projects');
+if(projects.some(p=>p.id===currentProject.id)){alert('Bu proje zaten kaydedilmiş.');return;}
 projects.push(currentProject);
-localStorage.setItem('ircai_projects',JSON.stringify(projects));
-updateCount();
-alert('Projen bu tarayıcıya kaydedildi.');
-renderProjects();
+setData('ircai_projects',projects);
+logActivity('Proje kaydedildi: '+currentProject.name);
+updateProjectCount();
+alert('Proje bu tarayıcıya kaydedildi.');
 }
 function renderProjects(){
-let projects=JSON.parse(localStorage.getItem('ircai_projects')||'[]');
-const list=document.getElementById('projectList');
+let projects=getData('ircai_projects');
+let list=document.getElementById('projectList');
 list.innerHTML='';
-if(!projects.length){list.innerHTML='<div class="empty">Henüz kaydedilmiş proje yok.</div>';return;}
-projects.forEach((p,i)=>{
-const card=document.createElement('div');
+if(!projects.length){
+list.innerHTML='<div class="empty">Henüz kaydedilmiş proje yok.</div>';
+return;
+}
+projects.forEach(project=>{
+let card=document.createElement('div');
 card.className='project';
-const title=document.createElement('strong');
-title.textContent=p.name;
-const desc=document.createElement('p');
-desc.textContent=p.idea;
-const date=document.createElement('p');
-date.textContent=p.date+' · '+p.category;
-const del=document.createElement('button');
+let title=document.createElement('strong');
+title.textContent=project.name;
+let desc=document.createElement('p');
+desc.textContent=project.idea;
+let date=document.createElement('p');
+date.textContent=project.date+' · '+project.category;
+let del=document.createElement('button');
 del.className='secondary';
 del.textContent='Projeyi sil';
-del.onclick=()=>{let arr=JSON.parse(localStorage.getItem('ircai_projects')||'[]');arr.splice(i,1);localStorage.setItem('ircai_projects',JSON.stringify(arr));renderProjects();updateCount();};
+del.onclick=()=>{
+setData('ircai_projects',getData('ircai_projects').filter(p=>p.id!==project.id));
+logActivity('Proje silindi: '+project.name);
+renderProjects();
+updateProjectCount();
+};
 card.append(title,desc,date,del);
 list.appendChild(card);
 });
 }
-function updateCount(){
-const projects=JSON.parse(localStorage.getItem('ircai_projects')||'[]');
-document.getElementById('projectCount').textContent=projects.length;
+function updateProjectCount(){
+document.getElementById('projectCount').textContent=getData('ircai_projects').length;
 }
-function copyProject(){
-if(!currentProject)return;
-const text='IRCAI PROJECT\n'+currentProject.name+'\n\n'+currentProject.idea+'\n\n'+currentProject.features.join('\n')+'\n\n'+currentProject.roadmap.join('\n');
-if(navigator.clipboard)navigator.clipboard.writeText(text).then(()=>alert('Plan kopyalandı.')).catch(()=>alert('Kopyalanamadı.'));
-else alert('Kopyalama desteklenmiyor.');
+function init(){
+updateProjectCount();
+renderTasks();
+renderActivity();
 }
-updateCount();
+init();
 </script>
 </body>
 </html>
