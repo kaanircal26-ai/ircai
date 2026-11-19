@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#101114">
-<title>IRCAI — Command Center</title>
+<title>IRCAI — Creative Intelligence</title>
 <style>
 *{box-sizing:border-box}
 :root{--bg:#101114;--panel:#181a1f;--line:#303239;--white:#f4f4f2;--muted:#92949b;--silver:#c4c7cc}
@@ -65,7 +65,7 @@ textarea::placeholder,input::placeholder{color:#686b73}
 .bar div{height:100%;background:#c4c7cc;width:0%;transition:width .2s}
 .activity{padding:12px 0;border-bottom:1px solid var(--line);font-size:11px;color:#aaa;line-height:1.6}
 .activity:last-child{border:0}
-.project{background:#191b20;border:1px solid var(--line);border-radius:10px;padding:16px}
+.project{background:#191b20;border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:12px}
 .project strong{font-size:13px}
 .project p{font-size:11px;color:var(--muted);line-height:1.6;overflow-wrap:anywhere}
 .empty{padding:25px;text-align:center;color:#888;font-size:12px;border:1px dashed #383a40;border-radius:10px}
@@ -74,6 +74,10 @@ textarea::placeholder,input::placeholder{color:#686b73}
 .result-section p,.result-section li{font-size:12px;color:#b1b3ba;line-height:1.8}
 .result-section ul{padding-left:20px}
 #output{display:none;margin-top:18px}
+.field{margin-top:17px}
+.field label{display:block;font-size:11px;color:#bfc1c7;margin-bottom:8px}
+.field textarea{margin-top:0}
+.result-tag{display:inline-block;border:1px solid #44464d;border-radius:20px;padding:6px 10px;font-size:10px;color:#c5c7cc;margin:8px 5px 0 0}
 footer{text-align:center;color:#60636b;font-size:10px;padding:25px;border-top:1px solid var(--line)}
 @media(max-width:750px){
 .layout{display:block}
@@ -102,11 +106,11 @@ nav button{white-space:nowrap;padding:10px;font-size:11px}
 <button onclick="showPage('idea',this)"><span class="navicon">✳</span>Idea Engine</button>
 <button onclick="showPage('projects',this)"><span class="navicon">▤</span>My Projects</button>
 </nav>
-<div class="bottom">IRCAI CREATIVE INTELLIGENCE<br>COMMAND CENTER 1.0</div>
+<div class="bottom">IRCAI CREATIVE INTELLIGENCE<br>COMMAND CENTER 3.0</div>
 </aside>
 <main>
 <div class="topbar">
-<div class="top-title">IRCAI / Command Center</div>
+<div class="top-title">IRCAI / Creative Intelligence</div>
 <div class="profile">IR</div>
 </div>
 <div class="content">
@@ -115,14 +119,12 @@ nav button{white-space:nowrap;padding:10px;font-size:11px}
 <div class="eyebrow">YOUR CREATIVE WORKSPACE</div>
 <h1>Command <span>Center.</span></h1>
 <p class="subtitle">Projelerini, görevlerini ve üretim sürecini tek bir merkezden yönet.</p>
-
 <div class="stats">
 <div class="card"><div class="stat-label">TOPLAM PROJE</div><div class="stat-value" id="projectCount">0</div></div>
 <div class="card"><div class="stat-label">TOPLAM GÖREV</div><div class="stat-value" id="taskCount">0</div></div>
 <div class="card"><div class="stat-label">TAMAMLANAN</div><div class="stat-value" id="doneCount">0</div></div>
 <div class="card"><div class="stat-label">İLERLEME</div><div class="stat-value" id="progressText">%0</div></div>
 </div>
-
 <div class="section grid">
 <div class="card">
 <div class="section-head"><h2>Task Manager</h2><span class="muted">TASKS</span></div>
@@ -140,13 +142,12 @@ nav button{white-space:nowrap;padding:10px;font-size:11px}
 <div id="activityList"></div>
 </div>
 </div>
-
 <div class="section">
 <div class="section-head"><h2>Quick Actions</h2><span class="muted">SHORTCUTS</span></div>
 <div class="grid">
 <div class="card">
 <div class="card-title">Yeni proje oluştur</div>
-<p class="card-desc">Aklındaki fikri yeni bir proje planına dönüştür.</p>
+<p class="card-desc">Aklındaki fikri profesyonel bir proje planına dönüştür.</p>
 <button class="primary" onclick="showPage('idea',document.querySelectorAll('nav button')[1])">Open Idea Engine →</button>
 </div>
 <div class="card">
@@ -159,26 +160,59 @@ nav button{white-space:nowrap;padding:10px;font-size:11px}
 </section>
 
 <section id="idea" class="page">
-<div class="eyebrow">PROJECT DEVELOPMENT</div>
-<h1>Idea <span>Engine.</span></h1>
-<p class="subtitle">Fikrini yaz, yapılandırılmış bir proje taslağı oluştur.</p>
+<div class="eyebrow">INTELLIGENT PROJECT DEVELOPMENT</div>
+<h1>Idea <span>Engine 2.0.</span></h1>
+<p class="subtitle">Bir fikri al, analiz et ve uygulanabilir bir proje yol haritasına dönüştür.</p>
+
 <div class="section card">
-<div class="card-title">Proje fikrin</div>
-<textarea id="ideaInput" placeholder="Nasıl bir proje geliştirmek istiyorsun?"></textarea>
-<div class="card-title" style="margin-top:17px">Proje adı</div>
+<div class="eyebrow">01 / PROJECT INPUT</div>
+<div class="field">
+<label>PROJE FİKRİN</label>
+<textarea id="ideaInput" placeholder="Nasıl bir proje geliştirmek istiyorsun? Hangi problemi çözecek? Nasıl çalışmasını hayal ediyorsun?"></textarea>
+</div>
+<div class="field">
+<label>PROJE ADI</label>
 <input id="ideaName" placeholder="Projene bir isim ver...">
-<div class="card-title" style="margin-top:17px">Kategori</div>
-<input id="ideaCategory" placeholder="Örn. Teknoloji, medya, eğitim...">
-<button class="primary full" onclick="generate()">Generate project plan →</button>
-<div id="output" class="card">
-<div class="eyebrow">PROJECT BLUEPRINT</div>
+</div>
+<div class="field">
+<label>KATEGORİ</label>
+<input id="ideaCategory" placeholder="Örn. Teknoloji, medya, eğitim, tasarım...">
+</div>
+<div class="field">
+<label>HEDEF KİTLE</label>
+<input id="ideaAudience" placeholder="Örn. içerik üreticileri, öğrenciler, işletmeler...">
+</div>
+<div class="field">
+<label>PROJENİN ÖNCELİĞİ</label>
+<select id="ideaPriority" style="width:100%;background:#101115;border:1px solid #35373e;border-radius:8px;padding:13px;color:white">
+<option value="hizli">Hızlı bir prototip oluşturmak</option>
+<option value="dengeli" selected>Kaliteli ve dengeli geliştirme</option>
+<option value="kapsamli">Kapsamlı bir ürün geliştirmek</option>
+</select>
+</div>
+<button class="primary full" onclick="generate()">Analyze & Build Project →</button>
+
+<div id="output">
+<div class="result-section">
+<div class="eyebrow">PROJECT BLUEPRINT / 2.0</div>
 <h2 id="outName"></h2>
-<div class="result-section"><h3>PROJECT OVERVIEW</h3><p id="outOverview"></p></div>
-<div class="result-section"><h3>PROJECT OBJECTIVE</h3><p id="outObjective"></p></div>
-<div class="result-section"><h3>TARGET AUDIENCE</h3><p id="outAudience"></p></div>
-<div class="result-section"><h3>CORE FEATURES</h3><ul id="outFeatures"></ul></div>
-<div class="result-section"><h3>DEVELOPMENT ROADMAP</h3><ul id="outRoadmap"></ul></div>
+<span class="result-tag" id="outCategory"></span>
+<span class="result-tag" id="outPriority"></span>
+</div>
+<div class="result-section"><h3>01 — PROJECT OVERVIEW</h3><p id="outOverview"></p></div>
+<div class="result-section"><h3>02 — PROJECT OBJECTIVE</h3><p id="outObjective"></p></div>
+<div class="result-section"><h3>03 — PROBLEM ANALYSIS</h3><p id="outProblem"></p></div>
+<div class="result-section"><h3>04 — TARGET AUDIENCE</h3><p id="outAudience"></p></div>
+<div class="result-section"><h3>05 — PROPOSED SOLUTION</h3><p id="outSolution"></p></div>
+<div class="result-section"><h3>06 — CORE FEATURES</h3><ul id="outFeatures"></ul></div>
+<div class="result-section"><h3>07 — REVENUE MODEL</h3><ul id="outRevenue"></ul></div>
+<div class="result-section"><h3>08 — DEVELOPMENT ROADMAP</h3><ul id="outRoadmap"></ul></div>
+<div class="result-section"><h3>09 — SUCCESS METRICS</h3><ul id="outMetrics"></ul></div>
+<div class="row">
 <button class="primary" onclick="saveProject()">Save project</button>
+<button class="secondary" onclick="addRoadmapTasks()">Add roadmap to tasks</button>
+</div>
+<p class="muted" style="margin-top:12px">Bu taslak otomatik bir analiz şablonuyla oluşturulmuştur. Pazar ve kullanıcı araştırmasıyla doğrulanmalıdır.</p>
 </div>
 </div>
 </section>
@@ -186,7 +220,7 @@ nav button{white-space:nowrap;padding:10px;font-size:11px}
 <section id="projects" class="page">
 <div class="eyebrow">PROJECT LIBRARY</div>
 <h1>My <span>Projects.</span></h1>
-<p class="subtitle">Kaydettiğin projeler burada görüntülenir.</p>
+<p class="subtitle">Kaydettiğin proje planlarını burada yönet.</p>
 <div class="section" id="projectList"></div>
 </section>
 
@@ -223,7 +257,7 @@ let items=getData('ircai_activity');
 let box=document.getElementById('activityList');
 box.innerHTML='';
 if(!items.length){
-box.innerHTML='<div class="activity">IRCAI kullanıma hazır.</div>';
+box.textContent='IRCAI kullanıma hazır.';
 return;
 }
 items.forEach(item=>{
@@ -289,45 +323,150 @@ document.getElementById('progressText').textContent='%'+percent;
 document.getElementById('progressLabel').textContent='%'+percent+' tamamlandı';
 document.getElementById('progressBar').style.width=percent+'%';
 }
+
+function addItems(id,items){
+let list=document.getElementById(id);
+list.innerHTML='';
+items.forEach(item=>{
+let li=document.createElement('li');
+li.textContent=item;
+list.appendChild(li);
+});
+}
+
 function generate(){
 let idea=document.getElementById('ideaInput').value.trim();
-if(idea.length<10){alert('Lütfen fikrini biraz daha detaylı anlat.');return;}
+if(idea.length<10){alert('Lütfen fikrini en az birkaç cümleyle anlat.');return;}
+
 let name=document.getElementById('ideaName').value.trim()||'Untitled Project';
 let category=document.getElementById('ideaCategory').value.trim()||'Genel';
+let audience=document.getElementById('ideaAudience').value.trim()||category+' alanına ilgi duyan kullanıcılar';
+let priority=document.getElementById('ideaPriority').value;
+
+let priorityName={
+hizli:'Hızlı prototip',
+dengeli:'Dengeli geliştirme',
+kapsamli:'Kapsamlı ürün'
+}[priority];
+
 let features=[
-'Kullanıcı dostu bir ana ekran oluşturulması',
-'Temel proje fonksiyonlarının geliştirilmesi',
-'Kullanıcı deneyimi ve arayüz tasarımı',
+'Temel kullanıcı ihtiyaçlarını karşılayan ana özellik',
+'Kolay anlaşılır ve kullanıcı dostu arayüz',
+'Kullanıcı geri bildirimlerini toplama sistemi',
 'Veri saklama ve proje yönetimi altyapısı',
-'Test ve performans iyileştirmeleri'
+'Performans, güvenlik ve kullanılabilirlik iyileştirmeleri'
 ];
-let roadmap=[
+
+let revenue=[
+'Ücretsiz temel kullanım ve isteğe bağlı premium özellikler',
+'Aylık veya yıllık abonelik modeli',
+'İşletmelere yönelik kurumsal paketler',
+'Projenin yapısına uygun iş ortaklıkları'
+];
+
+let roadmap=priority==='hizli'?[
+'01 — Fikri netleştir ve temel kullanıcı ihtiyacını belirle',
+'02 — Basit bir ekran tasarımı ve prototip hazırla',
+'03 — En önemli özelliği çalışır hâle getir',
+'04 — Küçük bir kullanıcı grubuyla test et',
+'05 — Geri bildirimlere göre ilk sürümü yayınla'
+]:priority==='kapsamli'?[
+'01 — Pazar, rakip ve kullanıcı araştırması yap',
+'02 — Ürün stratejisi ve kapsamlı tasarım sistemi oluştur',
+'03 — Teknik mimari ve veri altyapısını planla',
+'04 — Ana modülleri aşamalı olarak geliştir',
+'05 — Güvenlik ve performans testlerini tamamla',
+'06 — Beta sürümünü kullanıcılarla test et',
+'07 — Yayınla, ölç ve sürekli iyileştir'
+]:[
 '01 — Araştırma ve gereksinim analizi',
-'02 — Tasarım ve prototip oluşturma',
+'02 — Kullanıcı deneyimi ve arayüz prototipi',
 '03 — Temel özelliklerin geliştirilmesi',
-'04 — Test ve iyileştirme',
-'05 — Yayınlama ve geliştirme'
+'04 — Test, geri bildirim ve iyileştirme',
+'05 — Yayınlama ve sonraki sürüm planı'
 ];
-currentProject={id:Date.now(),name,idea,category,features,roadmap,date:new Date().toLocaleDateString('tr-TR')};
+
+let metrics=[
+'İlk kullanıcıların projeyi tamamlayabilme oranı',
+'Kullanıcı memnuniyeti ve geri bildirimler',
+'Haftalık aktif kullanıcı sayısı',
+'Temel özelliklerin kullanım oranı',
+'Projenin hedeflerine ulaşma düzeyi'
+];
+
+let objective='Bu projenin temel amacı, '+idea+' fikrini uygulanabilir ve sürdürülebilir bir ürüne dönüştürmektir.';
+
+let problem='Çözülmesi gereken temel ihtiyaç, kullanıcıların bu alandaki mevcut deneyiminde yaşadığı zorlukların belirlenmesidir. Önce kullanıcı görüşmeleri ve araştırma yapılmalı; varsayımlar gerçek ihtiyaçlarla karşılaştırılmalıdır.';
+
+let solution='Proje, '+idea+' fikrini merkezine alan anlaşılır bir deneyim sunmalıdır. İlk sürümde en önemli kullanıcı ihtiyacına odaklanmak, gereksiz özellikleri sonraki aşamalara bırakmak önerilir.';
+
+currentProject={
+id:Date.now(),
+name:name,
+idea:idea,
+category:category,
+audience:audience,
+priority:priorityName,
+objective:objective,
+problem:problem,
+solution:solution,
+features:features,
+revenue:revenue,
+roadmap:roadmap,
+metrics:metrics,
+date:new Date().toLocaleDateString('tr-TR')
+};
+
 document.getElementById('outName').textContent=name;
+document.getElementById('outCategory').textContent=category;
+document.getElementById('outPriority').textContent=priorityName;
 document.getElementById('outOverview').textContent=idea;
-document.getElementById('outObjective').textContent='Projenin amacı: '+idea+' Bu hedefin kapsamı geliştirme sırasında netleştirilmelidir.';
-document.getElementById('outAudience').textContent=category+' alanında bu fikre ihtiyaç duyan kişiler. Hedef kitle araştırmayla doğrulanmalıdır.';
-document.getElementById('outFeatures').innerHTML=features.map(x=>'<li>'+x+'</li>').join('');
-document.getElementById('outRoadmap').innerHTML=roadmap.map(x=>'<li>'+x+'</li>').join('');
+document.getElementById('outObjective').textContent=objective;
+document.getElementById('outProblem').textContent=problem;
+document.getElementById('outAudience').textContent=audience;
+document.getElementById('outSolution').textContent=solution;
+
+addItems('outFeatures',features);
+addItems('outRevenue',revenue);
+addItems('outRoadmap',roadmap);
+addItems('outMetrics',metrics);
+
 document.getElementById('output').style.display='block';
-logActivity('Yeni proje taslağı oluşturuldu: '+name);
+logActivity('Yeni proje planı oluşturuldu: '+name);
+document.getElementById('output').scrollIntoView({behavior:'smooth',block:'start'});
 }
+
 function saveProject(){
 if(!currentProject){alert('Önce proje oluştur.');return;}
 let projects=getData('ircai_projects');
-if(projects.some(p=>p.id===currentProject.id)){alert('Bu proje zaten kaydedilmiş.');return;}
+if(projects.some(p=>p.id===currentProject.id)){
+alert('Bu proje zaten kaydedilmiş.');
+return;
+}
 projects.push(currentProject);
 setData('ircai_projects',projects);
 logActivity('Proje kaydedildi: '+currentProject.name);
 updateProjectCount();
 alert('Proje bu tarayıcıya kaydedildi.');
 }
+
+function addRoadmapTasks(){
+if(!currentProject){alert('Önce proje oluştur.');return;}
+let tasks=getData('ircai_tasks');
+let added=0;
+currentProject.roadmap.forEach(item=>{
+let text=currentProject.name+' — '+item;
+if(!tasks.some(t=>t.text===text)){
+tasks.push({id:Date.now()+added,text:text,done:false});
+added++;
+}
+});
+setData('ircai_tasks',tasks);
+logActivity(added+' yol haritası görevi eklendi.');
+renderTasks();
+alert(added+' görev Command Center görev listesine eklendi.');
+}
+
 function renderProjects(){
 let projects=getData('ircai_projects');
 let list=document.getElementById('projectList');
@@ -349,6 +488,7 @@ let del=document.createElement('button');
 del.className='secondary';
 del.textContent='Projeyi sil';
 del.onclick=()=>{
+if(!confirm('Bu projeyi silmek istediğine emin misin?'))return;
 setData('ircai_projects',getData('ircai_projects').filter(p=>p.id!==project.id));
 logActivity('Proje silindi: '+project.name);
 renderProjects();
@@ -358,6 +498,7 @@ card.append(title,desc,date,del);
 list.appendChild(card);
 });
 }
+
 function updateProjectCount(){
 document.getElementById('projectCount').textContent=getData('ircai_projects').length;
 }
