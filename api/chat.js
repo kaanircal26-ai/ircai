@@ -31,6 +31,7 @@ module.exports = async function handler(req, res) {
       });
     }
 
+    // Geçmiş mesajlardan desteklenmeyen tüm alanları temizle.
     const safeHistory = Array.isArray(history)
       ? history
           .filter(item =>
@@ -39,9 +40,13 @@ module.exports = async function handler(req, res) {
             typeof item.content === "string"
           )
           .slice(-10)
+          .map(item => ({
+            role: item.role,
+            content: item.content
+          }))
       : [];
 
-    // Fotoğraflar ve videodan çıkarılan kareler
+    // Fotoğraflar ve videodan çıkarılan kareler.
     const allImages = [
       ...(Array.isArray(images) ? images : []),
       ...(Array.isArray(videoFrames) ? videoFrames : [])
@@ -55,7 +60,6 @@ module.exports = async function handler(req, res) {
     }
 
     let totalSize = 0;
-
     const imageParts = [];
 
     for (const image of allImages) {
@@ -79,7 +83,7 @@ module.exports = async function handler(req, res) {
 
       totalSize += match[2].length;
 
-      if (totalSize > 3_500_000) {
+      if (totalSize > 3500000) {
         return res.status(413).json({
           success: false,
           error: "Görüntülerin toplam boyutu çok büyük. Daha küçük dosyalar dene."
@@ -89,8 +93,7 @@ module.exports = async function handler(req, res) {
       imageParts.push({
         type: "image_url",
         image_url: {
-          url: image,
-          detail: "auto"
+          url: image
         }
       });
     }
@@ -105,12 +108,12 @@ Görevlerin:
 - Açık, anlaşılır ve faydalı ol.
 - Yaratıcı fikirler üret.
 - Soruları dikkatlice analiz et.
-- Fotoğrafları inceleyerek açıklamalar yap.
+- Fotoğrafları ve videodan alınan görüntü karelerini incele.
 - Görüntülerdeki nesneleri, yazıları ve ayrıntıları tanımlamaya çalış.
 - Görmediğin ayrıntıları uydurma.
 - Emin olmadığın durumlarda bunu açıkça belirt.
 - Gereksiz uzun cevaplardan kaçın.
-- Kullanıcıya profesyonel ve yardımcı bir üslupla yaklaş.
+- Profesyonel ve yardımcı bir üslup kullan.
 
 Kendini TOZRA olarak tanıt.
       `.trim()
