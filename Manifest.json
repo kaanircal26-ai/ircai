@@ -2,7 +2,7 @@
 {
   "name": "TOZRA — Creative Intelligence",
   "short_name": "TOZRA",
-  "description": "Creative Intelligence",
+  "description": "Your Creative Intelligence Assistant",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -11,7 +11,7 @@
   "theme_color": "#f7f7f5",
   "icons": [
     {
-      "src": "/Tozro-icon.png",
+      "src": "/tozra-icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
