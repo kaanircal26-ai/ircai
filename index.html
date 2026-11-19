@@ -73,7 +73,6 @@ button:disabled{opacity:.45;cursor:not-allowed}
 .page{display:none;animation:enter .3s ease}
 .page.active{display:block}
 
-/* WORKSPACE */
 .workspace-hero{padding:22px 0 32px}
 .eyebrow{font-size:10px;letter-spacing:2px;color:var(--green);font-weight:800;margin-bottom:13px}
 .workspace-hero h1{font-size:clamp(30px,5vw,45px);letter-spacing:-1.8px;margin:0 0 12px;line-height:1.12}
@@ -105,7 +104,6 @@ button:disabled{opacity:.45;cursor:not-allowed}
 .empty-projects button{margin-top:13px}
 .workspace-footer{margin:35px 0 5px;padding:17px;border-top:1px solid var(--border);color:#66766a;font-size:11px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 
-/* PROJECT DETAIL */
 .project-header{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;margin:10px 0 25px}
 .back-button{border:1px solid var(--border);background:#101811;color:#aab7ac;padding:9px 12px;border-radius:9px;margin-bottom:18px}
 .project-header h1{font-size:clamp(25px,4vw,36px);margin:0 0 9px;overflow-wrap:anywhere}
@@ -125,7 +123,6 @@ button:disabled{opacity:.45;cursor:not-allowed}
 .small-btn{border:1px solid var(--border);background:#111a13;color:#c4d0c6;padding:9px 11px;border-radius:9px;font-size:11px}
 .small-btn:hover{border-color:var(--green);color:var(--green)}
 
-/* CHAT */
 .messages{display:flex;flex-direction:column;gap:22px;padding-bottom:25px}
 .message{display:flex;flex-direction:column;gap:8px;max-width:88%;animation:messageEnter .38s ease both}
 .message.user{align-self:flex-end;align-items:flex-end}
@@ -157,7 +154,6 @@ button:disabled{opacity:.45;cursor:not-allowed}
 .attachment img,.attachment video{display:block;width:75px;height:65px;object-fit:cover;border-radius:6px;margin-bottom:5px}
 .remove-file{border:0;background:#23432b;color:white;border-radius:50%;width:20px;height:20px;margin-left:6px}
 
-/* WELCOME / CHAT PAGE */
 .welcome{text-align:center;padding:35px 0;margin:auto}
 .welcome-logo{width:76px;height:76px;margin:0 auto 22px;border-radius:22px;background:#101a13;overflow:hidden;border:1px solid #29432f}
 .welcome h1{font-size:clamp(27px,5vw,39px);margin:0 0 12px;letter-spacing:-1.5px}
@@ -166,7 +162,6 @@ button:disabled{opacity:.45;cursor:not-allowed}
 .suggestion{background:linear-gradient(145deg,#0d160f,#0a100c);border:1px solid var(--border);padding:16px;border-radius:13px;text-align:left;color:#bdc9bf;font-size:13px}
 .suggestion:hover{border-color:var(--green);background:#101d13}
 
-/* MODALS */
 .overlay{position:fixed;inset:0;background:#000b;z-index:100;display:none;align-items:center;justify-content:center;padding:18px;backdrop-filter:blur(5px)}
 .overlay.show{display:flex;animation:enter .2s}
 .modal{background:#0c120e;border:1px solid var(--border);color:var(--text);width:100%;max-width:480px;max-height:88vh;overflow:auto;border-radius:20px;padding:25px;box-shadow:var(--shadow)}
@@ -267,8 +262,6 @@ button:disabled{opacity:.45;cursor:not-allowed}
 </header>
 
 <section class="content">
-
-<!-- ANA ÇALIŞMA ALANI -->
 <div class="page active" id="workspacePage">
  <div class="workspace-hero">
   <div class="eyebrow">TOZRA · CREATIVE INTELLIGENCE</div>
@@ -279,7 +272,6 @@ button:disabled{opacity:.45;cursor:not-allowed}
    <button class="outline-btn" id="heroChat">✳ TOZRA ile sohbet et</button>
   </div>
  </div>
-
  <div class="section-head"><h2>Yaratıcı araçlar</h2><span>Çalışma alanını keşfet</span></div>
  <div class="tool-grid">
   <button class="tool-card" data-category="Fikir geliştirme"><div class="tool-icon">✳</div><strong>Fikir geliştirme</strong><small>Fikirlerini projeye dönüştür.</small></button>
@@ -288,13 +280,11 @@ button:disabled{opacity:.45;cursor:not-allowed}
   <button class="tool-card" data-category="Video stüdyo"><div class="tool-icon">▷</div><strong>Video stüdyo</strong><small>Video fikirleri ve senaryo geliştirme.</small></button>
   <button class="tool-card" data-category="Araştırma"><div class="tool-icon">⌕</div><strong>Araştırma</strong><small>Konuları incele ve bilgi topla.</small></button>
  </div>
-
  <div class="section-head"><h2>Projelerim</h2><span id="projectCount">0 proje</span></div>
  <div class="project-grid" id="projectGrid"></div>
  <div class="workspace-footer"><span>TOZRA CREATIVE WORKSPACE</span><span>Fikirden üretime.</span></div>
 </div>
 
-<!-- PROJE DETAYI -->
 <div class="page" id="projectPage">
  <button class="back-button" id="backWorkspace">← Çalışma alanına dön</button>
  <div class="project-header">
@@ -305,7 +295,6 @@ button:disabled{opacity:.45;cursor:not-allowed}
   </div>
   <span class="project-badge">● Aktif proje</span>
  </div>
-
  <div class="project-layout">
   <div>
    <div class="panel project-chat">
@@ -329,7 +318,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
    <div class="panel">
     <h3>Proje notları</h3>
     <textarea class="notes-area" id="projectNotes" placeholder="Fikirlerini, hedeflerini, önemli notlarını buraya yaz..."></textarea>
-    <div class="notes-hint">Notların otomatik olarak kaydedilir.</div>
+    <div class="notes-hint">Notların otomatik kaydedilir ve sonraki proje sohbetlerinde kullanılır.</div>
    </div>
    <div class="panel">
     <h3>Proje bilgileri</h3>
@@ -343,7 +332,6 @@ button:disabled{opacity:.45;cursor:not-allowed}
  </div>
 </div>
 
-<!-- GENEL SOHBET -->
 <div class="page" id="chatPage">
  <button class="back-button" id="chatBack">← Çalışma alanına dön</button>
  <div class="welcome" id="welcome">
@@ -374,7 +362,6 @@ button:disabled{opacity:.45;cursor:not-allowed}
   <div class="disclaimer">TOZRA yapay zekâ tarafından desteklenmektedir. Yanıtları kontrol etmeyi unutma.</div>
  </div>
 </div>
-
 </section>
 </main>
 </div>
@@ -390,17 +377,19 @@ button:disabled{opacity:.45;cursor:not-allowed}
 </div>
 
 <script>
+"use strict";
+
 const $=id=>document.getElementById(id);
-const promptInput=$("prompt"),sendButton=$("send");
+const promptInput=$("prompt");
 let conversation=[],conversations=[],projects=[],currentProjectId=null;
 let busy=false,attachments=[],projectAttachments=[];
 
 const categories={
-"Fikir geliştirme":"✳",
-"İçerik üretimi":"▤",
-"Görsel stüdyo":"▧",
-"Video stüdyo":"▷",
-"Araştırma":"⌕"
+ "Fikir geliştirme":"✳",
+ "İçerik üretimi":"▤",
+ "Görsel stüdyo":"▧",
+ "Video stüdyo":"▷",
+ "Araştırma":"⌕"
 };
 
 function safeRead(key,fallback){
@@ -414,10 +403,20 @@ function safeSave(key,value){
   localStorage.setItem(key,JSON.stringify(value));
   return true;
  }catch(e){
+  console.error("Kayıt hatası:",e);
   alert("Tarayıcı depolama alanı dolmuş olabilir. Bazı veriler kaydedilemedi.");
   return false;
  }
 }
+function makeId(){
+ return Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+}
+function escapeHTML(value){
+ return String(value).replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ }[c]));
+}
+function escapeAttr(value){return escapeHTML(value)}
 
 /* AÇILIŞ */
 window.addEventListener("load",()=>{
@@ -443,13 +442,15 @@ function showPage(page){
  $(page+"Page").classList.add("active");
  $("navWorkspace").classList.toggle("active",page==="workspace");
  $("navChat").classList.toggle("active",page==="chat");
- $("topbarTitle").textContent=page==="workspace"?"CREATIVE WORKSPACE":page==="project"?"PROJECT WORKSPACE":"CREATIVE INTELLIGENCE";
+ $("topbarTitle").textContent=
+  page==="workspace"?"CREATIVE WORKSPACE":
+  page==="project"?"PROJECT WORKSPACE":"CREATIVE INTELLIGENCE";
  toggleMenu(true);
  window.scrollTo({top:0,behavior:"smooth"});
 }
 $("navWorkspace").onclick=()=>showPage("workspace");
 $("navProjects").onclick=()=>showPage("workspace");
-$("navChat").onclick=()=>openGeneralChat();
+$("navChat").onclick=()=>newGeneralChat();
 $("heroChat").onclick=()=>openGeneralChat();
 $("chatBack").onclick=()=>showPage("workspace");
 $("backWorkspace").onclick=()=>showPage("workspace");
@@ -463,6 +464,15 @@ function openGeneralChat(){
 function loadProjects(){
  const data=safeRead("tozra-projects",[]);
  projects=Array.isArray(data)?data:[];
+ projects.forEach(p=>{
+  p.messages=Array.isArray(p.messages)?p.messages:[];
+  p.notes=typeof p.notes==="string"?p.notes:"";
+  p.createdAt=p.createdAt||Date.now();
+  p.updatedAt=p.updatedAt||p.createdAt;
+  p.category=p.category||"Fikir geliştirme";
+  p.description=p.description||"";
+ });
+ safeSave("tozra-projects",projects);
  renderProjects();
 }
 function saveProjects(){
@@ -473,6 +483,7 @@ function renderProjects(){
  const grid=$("projectGrid");
  grid.innerHTML="";
  $("projectCount").textContent=projects.length+" proje";
+
  if(!projects.length){
   const empty=document.createElement("div");
   empty.className="empty-projects";
@@ -488,15 +499,18 @@ function renderProjects(){
   grid.appendChild(empty);
   return;
  }
+
  projects.slice().sort((a,b)=>b.updatedAt-a.updatedAt).forEach(project=>{
   const card=document.createElement("article");
   card.className="project-card";
   card.onclick=()=>openProject(project.id);
+
   const top=document.createElement("div");
   top.className="project-top";
   const symbol=document.createElement("div");
   symbol.className="project-symbol";
   symbol.textContent=categories[project.category]||"▣";
+
   const menu=document.createElement("button");
   menu.className="project-menu";
   menu.textContent="···";
@@ -506,10 +520,12 @@ function renderProjects(){
    openProjectOptions(project.id);
   };
   top.append(symbol,menu);
+
   const name=document.createElement("h3");
   name.textContent=project.name;
   const desc=document.createElement("p");
   desc.textContent=project.description||"Bu proje için henüz açıklama eklenmedi.";
+
   const meta=document.createElement("div");
   meta.className="project-meta";
   const cat=document.createElement("span");
@@ -517,6 +533,7 @@ function renderProjects(){
   const date=document.createElement("span");
   date.textContent=new Date(project.updatedAt).toLocaleDateString("tr-TR");
   meta.append(cat,date);
+
   card.append(top,name,desc,meta);
   grid.appendChild(card);
  });
@@ -536,15 +553,27 @@ function openProjectModal(id=null,category=null){
   <label class="form-label" for="projectDescriptionInput">Kısa açıklama</label>
   <textarea class="modal-input" id="projectDescriptionInput" maxlength="250" rows="3" placeholder="Bu projede ne geliştirmek istiyorsun?">${escapeHTML(existing?.description||"")}</textarea>
   <button class="primary" id="saveProjectButton">${existing?"Değişiklikleri kaydet":"Projeyi oluştur"}</button>`;
+
  $("modalOverlay").classList.add("show");
  $("saveProjectButton").onclick=()=>{
   const name=$("projectNameInput").value.trim();
   const cat=$("projectCategoryInput").value;
   const description=$("projectDescriptionInput").value.trim();
-  if(!name){alert("Lütfen proje adına bir isim yaz.");$("projectNameInput").focus();return}
+
+  if(!name){
+   alert("Lütfen proje adına bir isim yaz.");
+   $("projectNameInput").focus();
+   return;
+  }
+
   if(existing){
-   existing.name=name;existing.category=cat;existing.description=description;existing.updatedAt=Date.now();
-   saveProjects();$("modalOverlay").classList.remove("show");openProject(existing.id);
+   existing.name=name;
+   existing.category=cat;
+   existing.description=description;
+   existing.updatedAt=Date.now();
+   saveProjects();
+   $("modalOverlay").classList.remove("show");
+   openProject(existing.id);
   }else{
    const project={
     id:makeId(),name,category:cat,description,
@@ -558,29 +587,56 @@ function openProjectModal(id=null,category=null){
   }
  };
 }
-function escapeHTML(value){
- return String(value).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-}
-function escapeAttr(value){return escapeHTML(value)}
-function makeId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
 
+/* PROJE DETAYI */
 function openProject(id){
  const project=projects.find(p=>p.id===id);
  if(!project)return;
+
  currentProjectId=id;
  $("detailName").textContent=project.name;
  $("detailCategory").textContent=project.category.toUpperCase();
  $("detailDescription").textContent=project.description||"Bu projeyi TOZRA ile birlikte geliştirmeye başla.";
  $("projectNotes").value=project.notes||"";
+
+ renderProjectInfo(project);
+ renderProjectMessages();
+ showPage("project");
+}
+function getCurrentProject(){
+ return projects.find(p=>p.id===currentProjectId);
+}
+function renderProjectInfo(project){
  $("projectInfo").innerHTML=`
   <div><strong>Kategori:</strong> ${escapeHTML(project.category)}</div>
   <div><strong>Oluşturulma:</strong> ${new Date(project.createdAt).toLocaleDateString("tr-TR")}</div>
   <div><strong>Son güncelleme:</strong> ${new Date(project.updatedAt).toLocaleDateString("tr-TR")}</div>
-  <div><strong>Mesaj sayısı:</strong> ${(project.messages||[]).length}</div>`;
- renderProjectMessages();
- showPage("project");
+  <div><strong>Mesaj sayısı:</strong> ${project.messages.length}</div>`;
 }
-function getCurrentProject(){return projects.find(p=>p.id===currentProjectId)}
+
+/* PROJE HAFIZASI */
+function buildProjectContext(project){
+ return [
+  "[TOZRA PROJE HAFIZASI]",
+  "Bu istek yalnızca aşağıdaki projeye aittir.",
+  "Bu projeye ait bilgileri başka projelerle karıştırma.",
+  "",
+  "Proje adı: "+project.name,
+  "Proje kategorisi: "+project.category,
+  "Proje açıklaması: "+(project.description||"Belirtilmedi"),
+  "",
+  "[PROJE NOTLARI]",
+  project.notes||"Henüz proje notu eklenmedi.",
+  "",
+  "[HAFIZA TALİMATI]",
+  "Önceki proje konuşmalarını history alanından dikkate al.",
+  "Kullanıcının bu projeyle ilgili önceki kararlarını ve tercihlerini koru.",
+  "Yeni bilgiler önceki bilgilerle çelişirse kullanıcıya sor.",
+  "Diğer projelerin bilgilerini kullanma.",
+  "Yanıtlarını bu projenin amacına ve bağlamına göre oluştur."
+ ].join("\n");
+}
+
 $("projectNotes").addEventListener("input",()=>{
  const p=getCurrentProject();
  if(!p)return;
@@ -588,7 +644,11 @@ $("projectNotes").addEventListener("input",()=>{
  p.updatedAt=Date.now();
  safeSave("tozra-projects",projects);
 });
-$("editProject").onclick=()=>{const p=getCurrentProject();if(p)openProjectModal(p.id)};
+
+$("editProject").onclick=()=>{
+ const p=getCurrentProject();
+ if(p)openProjectModal(p.id);
+};
 $("deleteProject").onclick=()=>deleteProject(currentProjectId);
 
 function deleteProject(id){
@@ -600,6 +660,7 @@ function deleteProject(id){
  currentProjectId=null;
  showPage("workspace");
 }
+
 function openProjectOptions(id){
  const p=projects.find(x=>x.id===id);
  if(!p)return;
@@ -610,19 +671,18 @@ function openProjectOptions(id){
   <button class="secondary" id="optionEdit">Projeyi düzenle</button>
   <button class="secondary" id="optionDelete">Projeyi sil</button>`;
  $("modalOverlay").classList.add("show");
- $("optionOpen").onclick=()=>{$("modalOverlay").classList.remove("show");openProject(id)};
+ $("optionOpen").onclick=()=>{
+  $("modalOverlay").classList.remove("show");
+  openProject(id);
+ };
  $("optionEdit").onclick=()=>openProjectModal(id);
- $("optionDelete").onclick=()=>{$("modalOverlay").classList.remove("show");deleteProject(id)};
+ $("optionDelete").onclick=()=>{
+  $("modalOverlay").classList.remove("show");
+  deleteProject(id);
+ };
 }
 
-/* PROJE SOHBETİ */
-function renderProjectMessages(){
- const p=getCurrentProject();
- const area=$("projectMessages");
- area.innerHTML="";
- if(!p)return;
- (p.messages||[]).forEach(m=>addMessage(area,m.role,m.content));
-}
+/* MESAJ GÖRÜNÜMÜ */
 function addMessage(area,role,content){
  const wrap=document.createElement("div");
  wrap.className="message "+role;
@@ -633,29 +693,48 @@ function addMessage(area,role,content){
  text.className="message-text";
  text.textContent=content;
  wrap.append(label,text);
+
  if(role==="assistant"){
   const copy=document.createElement("button");
-  copy.className="copy-button";copy.textContent="Kopyala";
+  copy.className="copy-button";
+  copy.textContent="Kopyala";
   copy.onclick=async()=>{
-   try{await navigator.clipboard.writeText(content);copy.textContent="Kopyalandı"}
-   catch(e){copy.textContent="Kopyalanamadı"}
+   try{
+    await navigator.clipboard.writeText(content);
+    copy.textContent="Kopyalandı";
+   }catch(e){copy.textContent="Kopyalanamadı"}
   };
   wrap.appendChild(copy);
  }
  area.appendChild(wrap);
  wrap.scrollIntoView({behavior:"smooth",block:"end"});
 }
+
+function renderProjectMessages(){
+ const p=getCurrentProject();
+ const area=$("projectMessages");
+ area.innerHTML="";
+ if(!p)return;
+ p.messages.forEach(m=>addMessage(area,m.role,m.content));
+}
 function renderGeneralMessages(){
  $("messages").innerHTML="";
  $("welcome").style.display=conversation.length?"none":"block";
  conversation.forEach(m=>addMessage($("messages"),m.role,m.content));
 }
+
+/* GENEL SOHBET GEÇMİŞİ */
 function saveGeneralConversation(){
  if(!conversation.length)return;
  const id=conversation[0].id||Date.now();
- const item={id,title:conversation.find(m=>m.role==="user")?.content.slice(0,35)||"Yeni sohbet",messages:conversation};
+ const item={
+  id,
+  title:conversation.find(m=>m.role==="user")?.content.slice(0,35)||"Yeni sohbet",
+  messages:conversation
+ };
  const i=conversations.findIndex(x=>x.id===id);
- if(i>=0)conversations[i]=item;else conversations.unshift(item);
+ if(i>=0)conversations[i]=item;
+ else conversations.unshift(item);
  safeSave("tozra-conversations",conversations);
  renderHistory();
 }
@@ -668,7 +747,8 @@ function renderHistory(){
  $("history").innerHTML="";
  conversations.forEach(item=>{
   const el=document.createElement("div");
-  el.className="history-item";el.textContent=item.title||"Sohbet";
+  el.className="history-item";
+  el.textContent=item.title||"Sohbet";
   el.onclick=()=>{
    conversation=Array.isArray(item.messages)?item.messages:[];
    openGeneralChat();
@@ -679,47 +759,82 @@ function renderHistory(){
 
 /* DOSYA EKLERİ */
 function renderAttachmentsFor(list,areaId){
- const area=$(areaId);area.innerHTML="";
+ const area=$(areaId);
+ area.innerHTML="";
  list.forEach((a,index)=>{
-  const item=document.createElement("div");item.className="attachment";
+  const item=document.createElement("div");
+  item.className="attachment";
   if(a.kind==="image"){
-   const img=document.createElement("img");img.src=a.url;item.appendChild(img);
+   const img=document.createElement("img");
+   img.src=a.url;
+   item.appendChild(img);
   }else{
-   const video=document.createElement("video");video.src=a.url;video.muted=true;item.appendChild(video);
+   const video=document.createElement("video");
+   video.src=a.url;
+   video.muted=true;
+   item.appendChild(video);
   }
-  const name=document.createElement("span");name.textContent=a.file.name.slice(0,18);item.appendChild(name);
-  const remove=document.createElement("button");remove.className="remove-file";remove.textContent="×";
-  remove.onclick=()=>{URL.revokeObjectURL(a.url);list.splice(index,1);renderAttachmentsFor(list,areaId)};
-  item.appendChild(remove);area.appendChild(item);
+  const name=document.createElement("span");
+  name.textContent=a.file.name.slice(0,18);
+  item.appendChild(name);
+  const remove=document.createElement("button");
+  remove.className="remove-file";
+  remove.textContent="×";
+  remove.onclick=()=>{
+   URL.revokeObjectURL(a.url);
+   list.splice(index,1);
+   renderAttachmentsFor(list,areaId);
+  };
+  item.appendChild(remove);
+  area.appendChild(item);
  });
 }
 function addFiles(files,kind,list,areaId){
  const selected=Array.from(files);
- if(list.length+selected.length>3){alert("Bir mesajda en fazla 3 dosya ekleyebilirsin.");return}
+ if(list.length+selected.length>3){
+  alert("Bir mesajda en fazla 3 dosya ekleyebilirsin.");
+  return;
+ }
  for(const file of selected){
-  if(kind==="image"&&!["image/jpeg","image/png","image/webp"].includes(file.type)){alert("JPG, PNG veya WEBP fotoğraf seç.");continue}
-  if(kind==="video"&&!file.type.startsWith("video/")){alert("Geçerli bir video seç.");continue}
-  if(file.size>40*1024*1024){alert("Dosya boyutu 40 MB sınırını aşıyor.");continue}
+  if(kind==="image"&&!["image/jpeg","image/png","image/webp"].includes(file.type)){
+   alert("JPG, PNG veya WEBP fotoğraf seç.");
+   continue;
+  }
+  if(kind==="video"&&!file.type.startsWith("video/")){
+   alert("Geçerli bir video seç.");
+   continue;
+  }
+  if(file.size>40*1024*1024){
+   alert("Dosya boyutu 40 MB sınırını aşıyor.");
+   continue;
+  }
   list.push({file,kind,url:URL.createObjectURL(file)});
  }
  renderAttachmentsFor(list,areaId);
 }
 function clearFiles(list,areaId){
- list.forEach(a=>URL.revokeObjectURL(a.url));list.length=0;
+ list.forEach(a=>URL.revokeObjectURL(a.url));
+ list.length=0;
  renderAttachmentsFor(list,areaId);
 }
 function imageToDataURL(file,maxSide=1100,quality=.72){
  return new Promise((resolve,reject)=>{
-  const img=new Image(),url=URL.createObjectURL(file);
+  const img=new Image();
+  const url=URL.createObjectURL(file);
   img.onload=()=>{
    const scale=Math.min(1,maxSide/Math.max(img.width,img.height));
    const canvas=document.createElement("canvas");
    canvas.width=Math.max(1,Math.round(img.width*scale));
    canvas.height=Math.max(1,Math.round(img.height*scale));
-   const ctx=canvas.getContext("2d");ctx.drawImage(img,0,0,canvas.width,canvas.height);
-   URL.revokeObjectURL(url);resolve(canvas.toDataURL("image/jpeg",quality));
+   const ctx=canvas.getContext("2d");
+   ctx.drawImage(img,0,0,canvas.width,canvas.height);
+   URL.revokeObjectURL(url);
+   resolve(canvas.toDataURL("image/jpeg",quality));
   };
-  img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error("Fotoğraf okunamadı."))};
+  img.onerror=()=>{
+   URL.revokeObjectURL(url);
+   reject(new Error("Fotoğraf okunamadı."));
+  };
   img.src=url;
  });
 }
@@ -729,32 +844,59 @@ function formatTime(seconds){
 }
 function videoToFrames(file,count=3){
  return new Promise((resolve,reject)=>{
-  const video=document.createElement("video"),url=URL.createObjectURL(file);
-  video.preload="auto";video.muted=true;video.playsInline=true;
+  const video=document.createElement("video");
+  const url=URL.createObjectURL(file);
+  video.preload="auto";
+  video.muted=true;
+  video.playsInline=true;
   let finished=false;
+
   const finish=()=>{
-   if(finished)return;finished=true;
-   video.onloadeddata=null;video.onerror=null;
-   URL.revokeObjectURL(url);video.removeAttribute("src");video.load();
+   if(finished)return;
+   finished=true;
+   video.onloadeddata=null;
+   video.onerror=null;
+   URL.revokeObjectURL(url);
+   video.removeAttribute("src");
+   video.load();
   };
-  video.onerror=()=>{finish();reject(new Error("Video okunamadı."))};
+
+  video.onerror=()=>{
+   finish();
+   reject(new Error("Video okunamadı."));
+  };
+
   video.onloadeddata=async()=>{
    try{
     const duration=video.duration;
     if(!Number.isFinite(duration)||duration<=0)throw new Error("Video süresi okunamadı.");
     const fractions=count===1?[.5]:count===2?[.2,.8]:[.1,.5,.9];
     const frames=[];
+
     for(const f of fractions){
      const target=Math.min(duration*f,Math.max(0,duration-.05));
      await new Promise((res,rej)=>{
       let settled=false;
-      const timer=setTimeout(()=>{if(!settled){settled=true;rej(new Error("Video karesi alınamadı."))}},12000);
+      const timer=setTimeout(()=>{
+       if(!settled){settled=true;rej(new Error("Video karesi alınamadı."))}
+      },12000);
       video.addEventListener("seeked",()=>{
-       if(settled)return;settled=true;clearTimeout(timer);res();
+       if(settled)return;
+       settled=true;
+       clearTimeout(timer);
+       res();
       },{once:true});
-      try{video.currentTime=target;if(Math.abs(video.currentTime-target)<.01&&video.readyState>=2){if(!settled){settled=true;clearTimeout(timer);res()}}}
-      catch(e){clearTimeout(timer);rej(e)}
+      try{
+       video.currentTime=target;
+       if(Math.abs(video.currentTime-target)<.01&&video.readyState>=2){
+        if(!settled){settled=true;clearTimeout(timer);res()}
+       }
+      }catch(e){
+       clearTimeout(timer);
+       rej(e);
+      }
      });
+
      const scale=Math.min(1,640/Math.max(video.videoWidth,video.videoHeight));
      const canvas=document.createElement("canvas");
      canvas.width=Math.max(1,Math.round(video.videoWidth*scale));
@@ -764,52 +906,84 @@ function videoToFrames(file,count=3){
      ctx.drawImage(video,0,0,canvas.width,canvas.height);
      frames.push({data:canvas.toDataURL("image/jpeg",.55),time:target});
     }
-    finish();resolve({frames,duration,name:file.name});
-   }catch(e){finish();reject(e)}
+
+    finish();
+    resolve({frames,duration,name:file.name});
+   }catch(e){
+    finish();
+    reject(e);
+   }
   };
-  video.src=url;video.load();
+  video.src=url;
+  video.load();
  });
 }
 async function prepareMedia(list){
  const images=[],videoFrames=[],timeline=[];
- for(const item of list)if(item.kind==="image")images.push(await imageToDataURL(item.file));
- for(const item of list)if(item.kind==="video"){
-  const remaining=3-images.length-videoFrames.length;if(remaining<=0)break;
-  const result=await videoToFrames(item.file,Math.min(3,remaining));
-  timeline.push({name:result.name,duration:result.duration,frames:result.frames.map((f,i)=>({index:i+1,time:f.time}))});
-  videoFrames.push(...result.frames.map(f=>f.data));
+ for(const item of list){
+  if(item.kind==="image")images.push(await imageToDataURL(item.file));
  }
+ for(const item of list){
+  if(item.kind==="video"){
+   const remaining=3-images.length-videoFrames.length;
+   if(remaining<=0)break;
+   const result=await videoToFrames(item.file,Math.min(3,remaining));
+   timeline.push({
+    name:result.name,
+    duration:result.duration,
+    frames:result.frames.map((f,i)=>({index:i+1,time:f.time}))
+   });
+   videoFrames.push(...result.frames.map(f=>f.data));
+  }
+ }
+
  let timelineText="";
  if(timeline.length){
   timelineText="\n\n[VİDEO ANALİZİ - KRONOLOJİK KARELER]\n";
   timeline.forEach(v=>{
    timelineText+="\nVideo: "+v.name+"\nSüre: "+v.duration.toFixed(2)+" saniye\n";
-   v.frames.forEach(f=>timelineText+="Kare "+f.index+": "+formatTime(f.time)+" zamanında alınmıştır.\n");
+   v.frames.forEach(f=>{
+    timelineText+="Kare "+f.index+": "+formatTime(f.time)+" zamanında alınmıştır.\n";
+   });
   });
   timelineText+="\nKareleri zaman sırasına göre incele. Görüntüde olmayan hareketleri uydurma. Videonun sesini veya tamamını analiz ettiğini iddia etme.";
  }
  return {images,videoFrames,timelineText};
 }
 
-/* API MESAJ GÖNDERİMİ */
+/* API */
 function createTyping(area){
- const el=document.createElement("div");el.className="typing";
- const label=document.createElement("span");label.textContent="TOZRA düşünüyor";
- const dots=document.createElement("div");dots.className="typing-dots";
+ const el=document.createElement("div");
+ el.className="typing";
+ const label=document.createElement("span");
+ label.textContent="TOZRA düşünüyor";
+ const dots=document.createElement("div");
+ dots.className="typing-dots";
  for(let i=0;i<3;i++)dots.appendChild(document.createElement("span"));
- el.append(label,dots);area.appendChild(el);el.scrollIntoView({behavior:"smooth",block:"end"});
+ el.append(label,dots);
+ area.appendChild(el);
+ el.scrollIntoView({behavior:"smooth",block:"end"});
  return el;
 }
+
 async function sendToAI({text,list,area,history,onSuccess,onFailure}){
  if(busy)return;
  if(!text.trim()&&!list.length)return;
- if(!text.trim()&&list.length){alert("Dosyanı analiz edebilmem için ne yapmamı istediğini de yaz.");return}
+ if(!text.trim()&&list.length){
+  alert("Dosyanı analiz edebilmem için ne yapmamı istediğini de yaz.");
+  return;
+ }
+
  busy=true;
+ $("send").disabled=true;
+ $("projectSend").disabled=true;
  const typing=createTyping(area);
+
  try{
   const media=await prepareMedia(list);
   const response=await fetch("/api/chat",{
-   method:"POST",headers:{"Content-Type":"application/json"},
+   method:"POST",
+   headers:{"Content-Type":"application/json"},
    body:JSON.stringify({
     prompt:text+media.timelineText,
     history:history,
@@ -817,9 +991,15 @@ async function sendToAI({text,list,area,history,onSuccess,onFailure}){
     videoFrames:media.videoFrames
    })
   });
+
   let data;
-  try{data=await response.json()}catch(e){throw new Error("Sunucudan geçerli yanıt alınamadı.")}
-  if(!response.ok||!data.success)throw new Error(data.error||"Yapay zekâ yanıt veremedi.");
+  try{data=await response.json()}
+  catch(e){throw new Error("Sunucudan geçerli yanıt alınamadı.")}
+
+  if(!response.ok||!data.success){
+   throw new Error(data.error||"Yapay zekâ yanıt veremedi.");
+  }
+
   typing.remove();
   onSuccess(data.answer||"Bir yanıt oluşturulamadı.");
   clearFiles(list,list===attachments?"attachments":"projectAttachments");
@@ -834,20 +1014,27 @@ async function sendToAI({text,list,area,history,onSuccess,onFailure}){
  }
 }
 
+/* GENEL SOHBET */
 async function sendGeneralMessage(value){
  const text=(value??promptInput.value).trim();
  if((!text&&!attachments.length)||busy)return;
+
  const names=attachments.map(a=>a.file.name);
  const display=text+(names.length?"\n\nEklenen dosyalar: "+names.join(", "):"");
  const user={role:"user",content:display};
  if(!conversation.length)user.id=Date.now();
  conversation.push(user);
+
  $("welcome").style.display="none";
  addMessage($("messages"),"user",display);
- promptInput.value="";promptInput.style.height="38px";
- $("send").disabled=true;
+ promptInput.value="";
+ promptInput.style.height="38px";
+
  await sendToAI({
-  text,list:attachments,area:$("messages"),history:conversation.slice(0,-1),
+  text,
+  list:attachments,
+  area:$("messages"),
+  history:conversation.slice(0,-1),
   onSuccess:answer=>{
    conversation.push({role:"assistant",content:answer});
    addMessage($("messages"),"assistant",answer);
@@ -860,58 +1047,85 @@ async function sendGeneralMessage(value){
   }
  });
 }
+
+/* PROJE SOHBETİ VE PROJEYE ÖZEL HAFIZA */
 async function sendProjectMessage(){
- const p=getCurrentProject(),input=$("projectPrompt");
+ const p=getCurrentProject();
+ const input=$("projectPrompt");
  if(!p||busy)return;
+
  const text=input.value.trim();
  if((!text&&!projectAttachments.length)||busy)return;
+
  const names=projectAttachments.map(a=>a.file.name);
  const display=text+(names.length?"\n\nEklenen dosyalar: "+names.join(", "):"");
+
  p.messages=p.messages||[];
  p.messages.push({role:"user",content:display});
+
  addMessage($("projectMessages"),"user",display);
- input.value="";input.style.height="38px";
- $("projectSend").disabled=true;
- p.updatedAt=Date.now();saveProjects();
+ input.value="";
+ input.style.height="38px";
+
+ p.updatedAt=Date.now();
+ saveProjects();
+
+ const projectContext=buildProjectContext(p);
+ const contextualPrompt=
+  projectContext+
+  "\n\n[KULLANICININ YENİ MESAJI]\n"+
+  text;
+
  await sendToAI({
-  text,list:projectAttachments,area:$("projectMessages"),
+  text:contextualPrompt,
+  list:projectAttachments,
+  area:$("projectMessages"),
   history:p.messages.slice(0,-1),
+
   onSuccess:answer=>{
    p.messages.push({role:"assistant",content:answer});
-   p.updatedAt=Date.now();saveProjects();
+   p.updatedAt=Date.now();
+   saveProjects();
    addMessage($("projectMessages"),"assistant",answer);
-   $("projectInfo").innerHTML=`
-    <div><strong>Kategori:</strong> ${escapeHTML(p.category)}</div>
-    <div><strong>Oluşturulma:</strong> ${new Date(p.createdAt).toLocaleDateString("tr-TR")}</div>
-    <div><strong>Son güncelleme:</strong> ${new Date(p.updatedAt).toLocaleDateString("tr-TR")}</div>
-    <div><strong>Mesaj sayısı:</strong> ${p.messages.length}</div>`;
+   renderProjectInfo(p);
   },
+
   onFailure:error=>{
    p.messages.push({role:"assistant",content:error});
-   p.updatedAt=Date.now();saveProjects();
+   p.updatedAt=Date.now();
+   saveProjects();
    addMessage($("projectMessages"),"assistant",error);
+   renderProjectInfo(p);
   }
  });
 }
 
-/* SOHBET VE YENİ PROJE */
+/* YENİ SOHBET */
 function newGeneralChat(){
- conversation=[];$("messages").innerHTML="";
- $("welcome").style.display="block";promptInput.value="";
- clearFiles(attachments,"attachments");openGeneralChat();
+ conversation=[];
+ $("messages").innerHTML="";
+ $("welcome").style.display="block";
+ promptInput.value="";
+ clearFiles(attachments,"attachments");
+ openGeneralChat();
 }
-function createFromCategory(category){openProjectModal(null,category)}
+
+/* PROJE OLUŞTURMA */
+function createFromCategory(category){
+ openProjectModal(null,category);
+}
 $("newProject").onclick=()=>openProjectModal();
 $("heroNewProject").onclick=()=>openProjectModal();
+
 document.querySelectorAll(".tool-card").forEach(card=>{
  card.onclick=()=>createFromCategory(card.dataset.category);
 });
-$("heroChat").onclick=openGeneralChat;
-$("navChat").onclick=newGeneralChat;
 
 /* MODAL SİSTEMİ */
 function showModal(type){
- const title=$("modalTitle"),content=$("modalContent");
+ const title=$("modalTitle");
+ const content=$("modalContent");
+
  if(type==="plans"){
   title.textContent="TOZRA üyelik planları";
   content.innerHTML=`
@@ -922,6 +1136,7 @@ function showModal(type){
    </div>
    <div class="notice">Fiyatlar tasarım aşamasındaki planlardır. Gerçek ödeme sistemi henüz bağlı değildir.</div>`;
  }
+
  if(type==="login"){
   title.textContent="TOZRA hesabına giriş";
   content.innerHTML=`
@@ -933,9 +1148,13 @@ function showModal(type){
    </form>
    <button class="secondary" id="registerSwitch">Hesap oluştur</button>
    <div class="notice">Gerçek hesap girişi için sunucu ve kullanıcı veritabanı bağlantısı gereklidir.</div>`;
-  $("loginForm").onsubmit=e=>{e.preventDefault();alert("Üyelik sistemi henüz backend'e bağlanmadı.")};
+  $("loginForm").onsubmit=e=>{
+   e.preventDefault();
+   alert("Üyelik sistemi henüz backend'e bağlanmadı.");
+  };
   $("registerSwitch").onclick=()=>showModal("register");
  }
+
  if(type==="register"){
   title.textContent="TOZRA hesabı oluştur";
   content.innerHTML=`
@@ -947,33 +1166,58 @@ function showModal(type){
     <button class="primary">Hesap oluştur</button>
    </form>
    <div class="notice">Bu ekran şu an arayüz önizlemesidir. Bilgilerin kaydedilmez.</div>`;
-  $("registerForm").onsubmit=e=>{e.preventDefault();alert("Gerçek kayıt sistemi henüz bağlı değil.")};
+  $("registerForm").onsubmit=e=>{
+   e.preventDefault();
+   alert("Gerçek kayıt sistemi henüz bağlı değil.");
+  };
  }
+
  if(type==="profile"){
   title.textContent="Profil";
   content.innerHTML=`
-   <div style="text-align:center;padding:10px"><div class="avatar" style="margin:auto;display:grid;place-items:center">U</div><h3>Misafir kullanıcı</h3><p>TOZRA hesabın henüz oluşturulmadı.</p></div>
+   <div style="text-align:center;padding:10px">
+    <div class="avatar" style="margin:auto;display:grid;place-items:center">U</div>
+    <h3>Misafir kullanıcı</h3>
+    <p>TOZRA hesabın henüz oluşturulmadı.</p>
+   </div>
    <button class="primary" onclick="showModal('register')">Hesap oluştur</button>
    <button class="secondary" onclick="showModal('login')">Giriş yap</button>`;
  }
+
  if(type==="settings"){
   title.textContent="Ayarlar";
   content.innerHTML=`
-   <h3 style="font-size:14px">Görünüm</h3><p>TOZRA premium siyah-yeşil tema ile çalışıyor.</p>
-   <h3 style="font-size:14px">Uygulama</h3><p>TOZRA — Creative Intelligence</p><p>Sürüm 4.0</p>
+   <h3 style="font-size:14px">Görünüm</h3>
+   <p>TOZRA premium siyah-yeşil tema ile çalışıyor.</p>
+   <h3 style="font-size:14px">Uygulama</h3>
+   <p>TOZRA — Creative Intelligence</p>
+   <p>Sürüm 5.0</p>
    <div class="notice">Projeler ve sohbetler şu anda bu tarayıcıda saklanır. Hesaplar arası bulut senkronizasyonu henüz etkin değildir.</div>`;
  }
+
  $("modalOverlay").classList.add("show");
 }
-function paymentNotice(){alert("Ödeme altyapısı henüz bağlanmadı.")}
+function paymentNotice(){
+ alert("Ödeme altyapısı henüz bağlanmadı.");
+}
 
-/* BAĞLANTI */
+/* BAĞLANTI EKLEME */
 function addLink(input){
  const url=prompt("Eklemek istediğin bağlantıyı yaz:");
  if(!url)return;
+
  let parsed;
- try{parsed=new URL(url)}catch(e){alert("Lütfen geçerli bir bağlantı gir.");return}
- if(!["http:","https:"].includes(parsed.protocol)){alert("Yalnızca http veya https bağlantıları kullanılabilir.");return}
+ try{parsed=new URL(url)}
+ catch(e){
+  alert("Lütfen geçerli bir bağlantı gir.");
+  return;
+ }
+
+ if(!["http:","https:"].includes(parsed.protocol)){
+  alert("Yalnızca http veya https bağlantıları kullanılabilir.");
+  return;
+ }
+
  input.value+=(input.value?"\n":"")+"Bağlantı: "+parsed.href;
  input.focus();
 }
@@ -981,39 +1225,73 @@ function addLink(input){
 /* ETKİLEŞİMLER */
 $("send").onclick=()=>sendGeneralMessage();
 $("projectSend").onclick=sendProjectMessage;
-promptInput.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendGeneralMessage()}});
-$("projectPrompt").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendProjectMessage()}});
-[promptInput,$("projectPrompt")].forEach(input=>input.addEventListener("input",()=>{
- input.style.height="38px";input.style.height=Math.min(input.scrollHeight,150)+"px";
-}));
-$("newChat").onclick=newGeneralChat;
-document.querySelectorAll(".suggestion").forEach(b=>b.onclick=()=>sendGeneralMessage(b.textContent));
+
+promptInput.addEventListener("keydown",e=>{
+ if(e.key==="Enter"&&!e.shiftKey){
+  e.preventDefault();
+  sendGeneralMessage();
+ }
+});
+$("projectPrompt").addEventListener("keydown",e=>{
+ if(e.key==="Enter"&&!e.shiftKey){
+  e.preventDefault();
+  sendProjectMessage();
+ }
+});
+
+[promptInput,$("projectPrompt")].forEach(input=>{
+ input.addEventListener("input",()=>{
+  input.style.height="38px";
+  input.style.height=Math.min(input.scrollHeight,150)+"px";
+ });
+});
+
+document.querySelectorAll(".suggestion").forEach(b=>{
+ b.onclick=()=>sendGeneralMessage(b.textContent);
+});
 
 $("imageButton").onclick=()=>$("imageInput").click();
 $("videoButton").onclick=()=>$("videoInput").click();
 $("projectImageButton").onclick=()=>$("imageInput").click();
 $("projectVideoButton").onclick=()=>$("videoInput").click();
+
 $("imageInput").onchange=e=>{
  const target=$("projectPage").classList.contains("active")?projectAttachments:attachments;
  const area=target===attachments?"attachments":"projectAttachments";
- addFiles(e.target.files,"image",target,area);e.target.value="";
+ addFiles(e.target.files,"image",target,area);
+ e.target.value="";
 };
 $("videoInput").onchange=e=>{
  const target=$("projectPage").classList.contains("active")?projectAttachments:attachments;
  const area=target===attachments?"attachments":"projectAttachments";
- addFiles(e.target.files,"video",target,area);e.target.value="";
+ addFiles(e.target.files,"video",target,area);
+ e.target.value="";
 };
+
 $("linkButton").onclick=()=>addLink(promptInput);
 $("projectLinkButton").onclick=()=>addLink($("projectPrompt"));
 
 $("plansButton").onclick=()=>showModal("plans");
-$("sidePlans").onclick=()=>{toggleMenu(true);showModal("plans")};
-$("sideSettings").onclick=()=>{toggleMenu(true);showModal("settings")};
+$("sidePlans").onclick=()=>{
+ toggleMenu(true);
+ showModal("plans");
+};
+$("sideSettings").onclick=()=>{
+ toggleMenu(true);
+ showModal("settings");
+};
 $("profileButton").onclick=()=>showModal("profile");
+
 $("closeModal").onclick=()=>$("modalOverlay").classList.remove("show");
-$("modalOverlay").onclick=e=>{if(e.target===$("modalOverlay"))$("modalOverlay").classList.remove("show")};
+$("modalOverlay").onclick=e=>{
+ if(e.target===$("modalOverlay"))$("modalOverlay").classList.remove("show");
+};
+
 document.addEventListener("keydown",e=>{
- if(e.key==="Escape"){toggleMenu(true);$("modalOverlay").classList.remove("show")}
+ if(e.key==="Escape"){
+  toggleMenu(true);
+  $("modalOverlay").classList.remove("show");
+ }
 });
 
 /* BAŞLANGIÇ */
@@ -1029,4 +1307,3 @@ if("serviceWorker" in navigator){
 </script>
 </body>
 </html>
-.
