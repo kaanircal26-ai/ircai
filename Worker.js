@@ -1,3 +1,4 @@
+
 export default {
   async fetch(request, env) {
     const cors = {
@@ -10,26 +11,31 @@ export default {
       return new Response(null, { headers: cors });
     }
 
-    if (request.method !== "POST") {
+    if (request.method === "GET") {
       return new Response("IRCAI API aktif", {
+        headers: cors
+      });
+    }
+
+    if (request.method !== "POST") {
+      return new Response("Method not allowed", {
+        status: 405,
         headers: cors
       });
     }
 
     try {
       if (!env.GEMINI_API_KEY) {
-        throw new Error("API anahtarı bulunamadı.");
+        throw new Error("GEMINI_API_KEY Secret bulunamadı.");
       }
 
       const { prompt } = await request.json();
 
       if (!prompt || typeof prompt !== "string") {
-        return new Response(JSON.stringify({
-          error: "Bir mesaj gerekli."
-        }), {
-          status: 400,
-          headers: { ...cors, "Content-Type": "application/json" }
-        });
+        return Response.json(
+          { error: "Bir mesaj gerekli." },
+          { status: 400, headers: cors }
+        );
       }
 
       const response = await fetch(
@@ -61,30 +67,23 @@ export default {
       const data = await response.json();
 
       if (!response.ok) {
-        return new Response(JSON.stringify({
-          error: data.error?.message || "Gemini bağlantı hatası."
-        }), {
-          status: response.status,
-          headers: { ...cors, "Content-Type": "application/json" }
-        });
+        return Response.json(
+          { error: data.error?.message || "Gemini bağlantı hatası." },
+          { status: response.status, headers: cors }
+        );
       }
 
-      const answer =
-        data.candidates?.[0]?.content?.parts
-          ?.map(part => part.text || "")
-          .join("") || "Yanıt oluşturulamadı.";
+      const answer = data.candidates?.[0]?.content?.parts
+        ?.map(part => part.text || "")
+        .join("") || "Yanıt oluşturulamadı.";
 
-      return new Response(JSON.stringify({ answer }), {
-        headers: { ...cors, "Content-Type": "application/json" }
-      });
+      return Response.json({ answer }, { headers: cors });
 
     } catch (error) {
-      return new Response(JSON.stringify({
-        error: error.message || "Bir hata oluştu."
-      }), {
-        status: 500,
-        headers: { ...cors, "Content-Type": "application/json" }
-      });
+      return Response.json(
+        { error: error.message || "Bir hata oluştu." },
+        { status: 500, headers: cors }
+      );
     }
   }
 };
