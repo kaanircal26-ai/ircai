@@ -7,6 +7,8 @@ module.exports = async function handler(req, res) {
     });
   }
 
+  const MODEL = "qwen/qwen3.8-27b";
+
   try {
     const {
       prompt,
@@ -15,10 +17,18 @@ module.exports = async function handler(req, res) {
       videoFrames = []
     } = req.body || {};
 
+    // Mesaj kontrolü
     if (typeof prompt !== "string" || !prompt.trim()) {
       return res.status(400).json({
         success: false,
         error: "Lütfen bir mesaj yaz."
+      });
+    }
+
+    if (prompt.length > 50000) {
+      return res.status(413).json({
+        success: false,
+        error: "Mesaj çok uzun."
       });
     }
 
@@ -31,7 +41,7 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    // Sohbet geçmişini güvenli biçime dönüştür.
+    // Sohbet geçmişini temizle
     const safeHistory = Array.isArray(history)
       ? history
           .filter(item =>
@@ -39,24 +49,24 @@ module.exports = async function handler(req, res) {
             ["user", "assistant"].includes(item.role) &&
             typeof item.content === "string"
           )
-          .slice(-10)
+          .slice(-12)
           .map(item => ({
             role: item.role,
-            content: item.content
+            content: item.content.slice(0, 12000)
           }))
       : [];
 
-    // Fotoğrafları ve videodan çıkarılan kareleri birleştir.
+    // Görselleri birleştir
     const allImages = [
       ...(Array.isArray(images) ? images : []),
       ...(Array.isArray(videoFrames) ? videoFrames : [])
     ];
 
-    // En fazla 15 görüntü kabul et.
-    if (allImages.length > 15) {
+    // Qwen 3.8 en fazla 3 görsel kabul eder
+    if (allImages.length > 3) {
       return res.status(400).json({
         success: false,
-        error: "Bir istekte en fazla 15 görüntü gönderebilirsin."
+        error: "Bir istekte en fazla 3 görüntü gönderebilirsin. Video karelerini azaltıp tekrar dene."
       });
     }
 
@@ -84,11 +94,10 @@ module.exports = async function handler(req, res) {
 
       totalSize += match[2].length;
 
-      // Toplam görüntü boyutunu sınırla.
       if (totalSize > 3500000) {
         return res.status(413).json({
           success: false,
-          error: "Görüntülerin toplam boyutu çok büyük. Daha küçük görüntüler dene."
+          error: "Görüntülerin toplam boyutu çok büyük."
         });
       }
 
@@ -100,33 +109,72 @@ module.exports = async function handler(req, res) {
       });
     }
 
+    // TOZRA ana yapay zekâ kimliği
     const systemMessage = {
       role: "system",
       content: `
-Sen TOZRA adında gelişmiş bir yapay zekâ asistanısın.
+Sen TOZRA'sın.
 
-GENEL GÖREVLERİN:
-- Kullanıcıya Türkçe cevap ver.
-- Açık, anlaşılır ve faydalı ol.
-- Yaratıcı fikirler üret.
-- Soruları dikkatlice analiz et.
-- Fotoğrafları ve videodan alınan görüntü karelerini incele.
-- Görüntülerdeki nesneleri, yazıları ve ayrıntıları tanımlamaya çalış.
+TOZRA, fikirleri geliştiren, analiz eden ve dijital projelere
+dönüştüren gelişmiş bir yapay zekâ platformudur.
+
+TEMEL DAVRANIŞLARIN:
+
+1. Kullanıcıyla Türkçe konuş.
+2. Soruları dikkatlice analiz et.
+3. Karmaşık problemleri mantıklı parçalara ayır.
+4. Gerektiğinde alternatif çözümler üret.
+5. Eksik bilgileri fark et.
+6. Bilmediğin bilgileri uydurma.
+7. Yanlış bir varsayım üzerine kesin konuşma.
+8. Gereksiz uzun cevaplardan kaçın.
+9. Kullanıcının mevcut hedefini ve konuşma bağlamını koru.
+10. Önceki mesajlarla çelişen cevaplar verme.
+
+YARATICI ZEKA:
+
+- Fikirleri geliştir.
+- Marka ve ürün konseptleri oluştur.
+- İçerik stratejileri hazırla.
+- Projeleri aşamalara ayır.
+- Gerektiğinde profesyonel öneriler sun.
+- Sıradan fikirleri daha özgün hâle getirmeye çalış.
+- Kullanıcının istemediği özellikleri kendiliğinden ekleme.
+
+PROJE GELİŞTİRME:
+
+- Proje konuşmalarındaki bilgileri dikkate al.
+- Proje hedeflerini takip et.
+- Kullanıcının verdiği talimatları koru.
+- Bir projeye ait bilgileri başka bir projeye taşıma.
+- Önceki proje kararlarıyla uyumlu öneriler üret.
+
+KODLAMA:
+
+- Kodları eksiksiz ve çalışabilir hazırlamaya çalış.
+- Mevcut altyapıyı gereksiz yere bozma.
+- Güvenlik ve hata kontrolünü önemse.
+- Kullanıcı tam kod istediğinde parçalı kod verme.
+- Bilmediğin dosya veya altyapı ayrıntılarını uydurma.
+
+GÖRSEL ANALİZ:
+
+- Görsellerdeki nesneleri, yazıları ve ayrıntıları incele.
 - Görmediğin ayrıntıları uydurma.
-- Emin olmadığın durumlarda bunu açıkça belirt.
-- Profesyonel ve yardımcı bir üslup kullan.
+- Emin olmadığın noktaları belirt.
+- Birden fazla görsel gönderildiğinde karşılaştır.
 
 VİDEO ANALİZİ:
-- Sana bir videodan farklı zamanlarda alınmış görüntü kareleri gönderilebilir.
-- Kullanıcı zaman damgaları verdiyse bunları dikkate al.
-- Kareleri mümkün olduğunca kronolojik sırayla incele.
-- Başlangıç, orta ve son bölümlerdeki görsel farklılıkları karşılaştır.
-- Nesnelerin konumlarını, sahne değişimlerini ve kamera hareketlerini incele.
-- Birbirine benzeyen kareleri otomatik olarak farklı sahneler gibi anlatma.
-- Görüntüler arasında belirgin bir değişiklik yoksa bunu açıkça söyle.
-- Sadece gönderilen karelere dayanarak videonun tamamı hakkında kesin hüküm verme.
-- İncelenemeyen zaman aralıkları varsa bunu belirt.
-- Kullanıcı kronolojik özet istediğinde olayları zaman sırasına göre açıkla.
+
+- Gönderilen kareleri kronolojik sırayla değerlendir.
+- Zaman damgalarını dikkate al.
+- Görsel değişiklikleri karşılaştır.
+- Benzer kareleri farklı sahneler gibi anlatma.
+- Yalnızca gönderilen karelere dayanarak videonun tamamı hakkında kesin hüküm verme.
+
+YANIT KALİTESİ:
+
+Her cevapta doğruluk, fayda, açıklık ve tutarlılığı önceliklendir.
 
 Kendini TOZRA olarak tanıt.
       `.trim()
@@ -149,22 +197,47 @@ Kendini TOZRA olarak tanıt.
       }
     ];
 
-    const response = await fetch(
-      "https://api.groq.com/openai/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${apiKey}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          model: "qwen/qwen3.8-27b",
-          messages,
-          temperature: 0.7,
-          max_completion_tokens: 2048
-        })
-      }
-    );
+    // API isteği
+    const controller = new AbortController();
+
+    const timeout = setTimeout(() => {
+      controller.abort();
+    }, 60000);
+
+    let response;
+
+    try {
+      response = await fetch(
+        "https://api.groq.com/openai/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${apiKey}`,
+            "Content-Type": "application/json"
+          },
+          signal: controller.signal,
+          body: JSON.stringify({
+            model: MODEL,
+            messages,
+
+            // Gelişmiş akıl yürütme
+            reasoning_effort: "high",
+            reasoning_format: "hidden",
+
+            // Yanıt kalitesi
+            temperature: 0.6,
+            top_p: 0.95,
+
+            // Daha kapsamlı cevaplar
+            max_completion_tokens: 8192,
+
+            stream: false
+          })
+        }
+      );
+    } finally {
+      clearTimeout(timeout);
+    }
 
     const data = await response.json();
 
@@ -173,13 +246,13 @@ Kendini TOZRA olarak tanıt.
 
       return res.status(response.status).json({
         success: false,
-        error: data.error?.message || "Groq API bağlantı hatası."
+        error: data.error?.message || "Yapay zekâ bağlantı hatası."
       });
     }
 
     const answer = data.choices?.[0]?.message?.content;
 
-    if (!answer) {
+    if (!answer || typeof answer !== "string") {
       return res.status(502).json({
         success: false,
         error: "Yapay zekâ cevap oluşturamadı."
@@ -188,11 +261,20 @@ Kendini TOZRA olarak tanıt.
 
     return res.status(200).json({
       success: true,
-      answer
+      answer,
+      model: MODEL,
+      usage: data.usage || null
     });
 
   } catch (error) {
     console.error("TOZRA server error:", error);
+
+    if (error.name === "AbortError") {
+      return res.status(504).json({
+        success: false,
+        error: "Yapay zekâ isteği zaman aşımına uğradı. Tekrar dene."
+      });
+    }
 
     return res.status(500).json({
       success: false,
