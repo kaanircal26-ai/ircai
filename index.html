@@ -4,470 +4,383 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#f7f7f5">
-<title>TÖZRA AI — Creative Intelligence</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<meta name="theme-color" content="#ffffff">
+<title>Tozra — Yapay Zekâ</title>
+
 <style>
-:root{--bg:#f7f7f5;--white:#fff;--text:#202124;--muted:#858585;--line:#e9e9e6;--soft:#f2f2ef}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-button,input,textarea{font:inherit}
-button{cursor:pointer}
-.hidden{display:none!important}
-#authScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
-.auth-card{width:100%;max-width:420px;background:#fff;border:1px solid var(--line);border-radius:22px;padding:38px;box-shadow:0 12px 50px #00000008}
-.logo{font-size:25px;font-weight:800;letter-spacing:-1.4px}
-.logo span{color:#999}
-.auth-sub{color:var(--muted);font-size:14px;margin:10px 0 30px}
-.auth-card h2{font-size:23px;margin:0 0 8px}
-.field{margin:16px 0}
-.field label{display:block;font-size:13px;font-weight:600;margin-bottom:8px}
-.field input{width:100%;padding:14px;border:1px solid var(--line);border-radius:11px;outline:none;background:#fff}
-.field input:focus,textarea:focus{border-color:#999}
-.primary{border:0;background:#222;color:#fff;border-radius:11px;padding:14px 18px;font-weight:650;width:100%}
-.primary:disabled{opacity:.5;cursor:not-allowed}
-.auth-links{display:flex;justify-content:space-between;gap:10px;margin-top:20px;font-size:13px}
-.link-btn{background:none;border:0;color:#555;text-decoration:underline;padding:0}
-#authMessage{font-size:13px;line-height:1.5;margin-top:16px;color:#666}
-#app{min-height:100vh;display:flex}
-.sidebar{width:250px;background:#fff;border-right:1px solid var(--line);padding:25px 16px;display:flex;flex-direction:column;position:fixed;inset:0 auto 0 0;z-index:5}
-.side-logo{padding:0 12px 28px}
-.nav-label{color:#aaa;font-size:10px;font-weight:700;letter-spacing:1.2px;padding:15px 12px 8px}
-.nav-btn{border:0;background:transparent;width:100%;text-align:left;padding:12px;border-radius:10px;color:#666;font-size:14px;margin:2px 0}
-.nav-btn:hover,.nav-btn.active{background:#f2f2ef;color:#222}
-.sidebar-bottom{margin-top:auto;border-top:1px solid var(--line);padding-top:16px}
-.user-email{font-size:12px;color:#888;padding:8px 12px;overflow-wrap:anywhere}
-.main{margin-left:250px;width:calc(100% - 250px);padding:36px 5%}
-.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:34px}
-.topbar h1{font-size:25px;letter-spacing:-.7px;margin:0}
-.status{font-size:12px;color:#777}
-.content{max-width:1050px;margin:auto}
-.welcome{background:#fff;border:1px solid var(--line);border-radius:20px;padding:30px;margin-bottom:22px}
-.welcome h2{font-size:27px;letter-spacing:-1px;margin:0 0 9px}
-.welcome p{color:#888;margin:0;font-size:14px}
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;min-height:125px}
-.card h3{font-size:15px;margin:0 0 9px}
-.card p{font-size:13px;color:#888;line-height:1.6;margin:0}
-.section{display:none}
-.section.active{display:block}
-.panel{background:#fff;border:1px solid var(--line);border-radius:17px;padding:22px;margin-bottom:18px}
-.panel h2{font-size:19px;margin:0 0 16px}
-textarea{width:100%;min-height:110px;resize:vertical;padding:14px;border:1px solid var(--line);border-radius:12px;outline:none}
-.action-row{display:flex;justify-content:flex-end;margin-top:12px}
-.small-btn{background:#222;color:#fff;border:0;border-radius:10px;padding:11px 17px;font-size:13px;font-weight:600}
-.output{white-space:pre-wrap;line-height:1.7;font-size:14px;color:#444;margin-top:18px;overflow-wrap:anywhere}
-.chat-layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:16px;height:calc(100vh - 150px);min-height:500px}
-.chat-list,.chat-window{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-height:0}
-.chat-list-head{padding:15px;border-bottom:1px solid var(--line)}
-.chat-list-head button{width:100%}
-.chat-items{overflow-y:auto;padding:8px}
-.chat-item{padding:12px;border-radius:9px;font-size:13px;cursor:pointer;color:#666;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.chat-item.active,.chat-item:hover{background:#f2f2ef;color:#222}
-.chat-head{padding:17px;border-bottom:1px solid var(--line);font-weight:650}
-.messages{flex:1;overflow-y:auto;padding:20px}
-.message{margin:0 0 20px;display:flex;flex-direction:column;gap:6px}
-.message-role{font-size:11px;color:#999;font-weight:700}
-.message-content{white-space:pre-wrap;line-height:1.7;font-size:14px;overflow-wrap:anywhere}
-.message.user .message-content{background:#f3f3f0;border-radius:12px;padding:12px 14px;align-self:flex-end;max-width:90%}
-.message.assistant .message-content{max-width:95%}
-.chat-compose{padding:14px;border-top:1px solid var(--line);display:flex;gap:10px;align-items:flex-end}
-.chat-compose textarea{min-height:48px;max-height:130px;flex:1}
-.chat-compose button{height:46px}
-.empty{color:#aaa;font-size:13px;text-align:center;padding:35px 10px}
-.project-item{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:15px 0;border-bottom:1px solid var(--line)}
-.project-item:last-child{border:0}
-.project-item strong{font-size:14px}
-.project-item p{font-size:12px;color:#999;margin:5px 0 0}
-.delete-btn{background:none;border:0;color:#999;font-size:12px}
-.mobile-menu{display:none}
-@media(max-width:800px){
-.sidebar{width:220px;transform:translateX(-100%);transition:.2s}
-.sidebar.open{transform:translateX(0)}
-.main{margin-left:0;width:100%;padding:22px 16px}
-.mobile-menu{display:block;border:0;background:white;padding:9px 12px;border-radius:9px}
-.cards{grid-template-columns:1fr}
-.chat-layout{grid-template-columns:1fr;height:auto;min-height:70vh}
-.chat-list{max-height:160px}
-.chat-window{height:65vh}
-.auth-card{padding:27px 22px}
+:root {
+  --bg: #ffffff;
+  --surface: #f8f9fb;
+  --border: #e9eaf0;
+  --text: #17181c;
+  --muted: #858894;
+  --accent: #635bff;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.app {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 260px;
+  border-right: 1px solid var(--border);
+  padding: 25px 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  font-size: 25px;
+  font-weight: 750;
+  letter-spacing: -1.3px;
+  margin-bottom: 35px;
+}
+
+.logo span {
+  color: var(--accent);
+}
+
+.new-chat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 13px;
+  border-radius: 12px;
+  font-size: 14px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.sidebar-bottom {
+  margin-top: auto;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.topbar {
+  height: 70px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+}
+
+.topbar-title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.status {
+  color: #159b69;
+  font-size: 12px;
+}
+
+.chat-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 35px 20px;
+}
+
+.welcome {
+  max-width: 680px;
+  margin: 12vh auto 0;
+  text-align: center;
+}
+
+.welcome h1 {
+  font-size: clamp(30px, 5vw, 43px);
+  letter-spacing: -2px;
+  margin-bottom: 12px;
+}
+
+.welcome h1 span {
+  color: var(--accent);
+}
+
+.welcome p {
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.messages {
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.message {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  line-height: 1.7;
+  font-size: 15px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.message.user {
+  align-items: flex-end;
+}
+
+.message.user .content {
+  background: #f0efff;
+  padding: 12px 17px;
+  border-radius: 16px;
+  max-width: 85%;
+}
+
+.message.assistant .content {
+  max-width: 100%;
+}
+
+.message-label {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.composer-wrap {
+  padding: 15px 20px 25px;
+}
+
+.composer {
+  max-width: 760px;
+  margin: auto;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 13px;
+  box-shadow: 0 5px 25px rgba(0,0,0,.04);
+}
+
+.composer textarea {
+  width: 100%;
+  resize: none;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: 15px;
+  min-height: 45px;
+  max-height: 150px;
+  padding: 8px;
+  color: var(--text);
+}
+
+.composer-bottom {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.send {
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 11px;
+  padding: 10px 18px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.send:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.disclaimer {
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 12px;
+}
+
+@media(max-width:700px) {
+  .sidebar { display: none; }
+  .topbar { padding: 0 18px; }
+  .chat-area { padding: 20px 15px; }
+  .welcome { margin-top: 15vh; }
+  .composer-wrap { padding: 12px; }
 }
 </style>
 </head>
+
 <body>
 
-<div id="authScreen">
-<div class="auth-card">
-<div class="logo">TÖZRA AI<span>.</span></div>
-<p class="auth-sub">Creative Intelligence Platform</p>
+<div class="app">
 
-<div id="loginForm">
-<h2>Tekrar hoş geldin.</h2>
-<p class="auth-sub">TÖZRA AI hesabına giriş yap.</p>
-<div class="field"><label>E-posta</label><input id="loginEmail" type="email" placeholder="E-posta adresin"></div>
-<div class="field"><label>Şifre</label><input id="loginPassword" type="password" placeholder="Şifren"></div>
-<button class="primary" id="loginBtn" onclick="login()">Giriş Yap</button>
-<div class="auth-links">
-<button class="link-btn" onclick="showAuth('register')">Hesap oluştur</button>
-<button class="link-btn" onclick="showAuth('reset')">Şifremi unuttum</button>
-</div>
-</div>
+  <aside class="sidebar">
+    <div class="logo">tozra<span>.</span></div>
+    <button class="new-chat" onclick="newChat()">
+      + Yeni sohbet
+    </button>
+    <div class="sidebar-bottom">
+      Tozra AI · Creative Intelligence
+    </div>
+  </aside>
 
-<div id="registerForm" class="hidden">
-<h2>TÖZRA AI'ye katıl.</h2>
-<p class="auth-sub">Yeni hesabını oluştur.</p>
-<div class="field"><label>E-posta</label><input id="registerEmail" type="email" placeholder="E-posta adresin"></div>
-<div class="field"><label>Şifre</label><input id="registerPassword" type="password" placeholder="En az 8 karakter"></div>
-<button class="primary" id="registerBtn" onclick="register()">Hesap Oluştur</button>
-<div class="auth-links"><button class="link-btn" onclick="showAuth('login')">Giriş ekranına dön</button></div>
-</div>
+  <main class="main">
 
-<div id="resetForm" class="hidden">
-<h2>Şifreni yenile.</h2>
-<p class="auth-sub">E-posta adresine sıfırlama bağlantısı gönderelim.</p>
-<div class="field"><label>E-posta</label><input id="resetEmail" type="email" placeholder="E-posta adresin"></div>
-<button class="primary" onclick="resetPassword()">Bağlantı Gönder</button>
-<div class="auth-links"><button class="link-btn" onclick="showAuth('login')">Giriş ekranına dön</button></div>
-</div>
-<div id="authMessage"></div>
-</div>
-</div>
+    <header class="topbar">
+      <div class="topbar-title">Tozra AI</div>
+      <div class="status">● Sistem hazır</div>
+    </header>
 
-<div id="app" class="hidden">
-<aside class="sidebar" id="sidebar">
-<div class="side-logo"><div class="logo">TÖZRA AI<span>.</span></div></div>
-<div class="nav-label">ÇALIŞMA ALANI</div>
-<button class="nav-btn active" onclick="navigate('home',this)">⌂ &nbsp; Genel Bakış</button>
-<button class="nav-btn" onclick="navigate('chat',this)">◉ &nbsp; AI Sohbet</button>
-<button class="nav-btn" onclick="navigate('analysis',this)">⌕ &nbsp; Fikir Analizi</button>
-<button class="nav-btn" onclick="navigate('lab',this)">✳ &nbsp; Proje Laboratuvarı</button>
-<button class="nav-btn" onclick="navigate('content',this)">▤ &nbsp; İçerik Atölyesi</button>
-<button class="nav-btn" onclick="navigate('projects',this)">▣ &nbsp; Projelerim</button>
-<div class="sidebar-bottom">
-<div class="user-email" id="userEmail"></div>
-<button class="nav-btn" onclick="logout()">↪ &nbsp; Çıkış Yap</button>
-</div>
-</aside>
+    <section class="chat-area" id="chatArea">
 
-<main class="main">
-<div class="topbar">
-<div style="display:flex;align-items:center;gap:12px">
-<button class="mobile-menu" onclick="toggleMenu()">☰</button>
-<h1 id="pageTitle">Genel Bakış</h1>
-</div>
-<div class="status">● TÖZRA AI çevrimiçi</div>
-</div>
+      <div class="welcome" id="welcome">
+        <h1>Merhaba, <span>nasıl yardımcı olabilirim?</span></h1>
+        <p>Fikirlerini geliştir. Sorularını sor. Yeni şeyler keşfet.</p>
+      </div>
 
-<div class="content">
-<section id="home" class="section active">
-<div class="welcome"><h2>Fikirlerini projelere dönüştür.</h2><p>Yaratıcılığını geliştir. Analiz et. Üret. Gerçekleştir.</p></div>
-<div class="cards">
-<div class="card"><h3>AI Sohbet</h3><p>TÖZRA AI ile fikirlerini konuş ve yeni çözümler geliştir.</p></div>
-<div class="card"><h3>Fikir Analizi</h3><p>Fikirlerini güçlü ve geliştirilebilir yönleriyle değerlendir.</p></div>
-<div class="card"><h3>Proje Laboratuvarı</h3><p>Yeni projeler oluştur ve planlarını geliştir.</p></div>
-</div>
-<div class="panel" style="margin-top:18px"><h2>Başlangıç</h2><p style="font-size:14px;color:#888">TÖZRA AI ile çalışmaya başlamak için AI Sohbet bölümünü açabilirsin.</p><button class="small-btn" onclick="navigate('chat')">Sohbete Başla</button></div>
-</section>
+      <div class="messages" id="messages"></div>
 
-<section id="chat" class="section">
-<div class="chat-layout">
-<div class="chat-list">
-<div class="chat-list-head"><button class="small-btn" onclick="newChat()">+ Yeni Sohbet</button></div>
-<div class="chat-items" id="chatItems"></div>
-</div>
-<div class="chat-window">
-<div class="chat-head" id="chatTitle">Yeni sohbet</div>
-<div class="messages" id="messages"><div class="empty">TÖZRA AI'ye merhaba de ve başlayalım.</div></div>
-<div class="chat-compose">
-<textarea id="chatInput" placeholder="TÖZRA AI'ye bir şey sor..." onkeydown="chatKeydown(event)"></textarea>
-<button class="small-btn" id="sendBtn" onclick="sendMessage()">Gönder</button>
-</div>
-</div>
-</div>
-</section>
+    </section>
 
-<section id="analysis" class="section">
-<div class="panel">
-<h2>Fikir Analizi</h2>
-<p style="color:#888;font-size:13px">Fikrini yaz. TÖZRA AI güçlü yönleri, fırsatları ve geliştirme alanlarını değerlendirsin.</p>
-<textarea id="analysisInput" placeholder="Fikrini buraya yaz..."></textarea>
-<div class="action-row"><button class="small-btn" onclick="runTool('analysisInput','analysisOutput','Bu fikri güçlü yönler, zayıf yönler, fırsatlar, riskler ve geliştirme önerileri açısından analiz et: ')">Analiz Et</button></div>
-<div class="output" id="analysisOutput"></div>
-</div>
-</section>
+    <div class="composer-wrap">
 
-<section id="lab" class="section">
-<div class="panel">
-<h2>Proje Laboratuvarı</h2>
-<p style="color:#888;font-size:13px">Bir proje fikri gir. TÖZRA AI senin için yol haritası oluştursun.</p>
-<textarea id="labInput" placeholder="Nasıl bir proje geliştirmek istiyorsun?"></textarea>
-<div class="action-row"><button class="small-btn" onclick="runTool('labInput','labOutput','Bu proje için amaç, hedef kitle, temel özellikler, aşamalar ve uygulanabilir bir yol haritası hazırla: ')">Proje Oluştur</button></div>
-<div class="output" id="labOutput"></div>
-<button class="small-btn hidden" id="saveLabBtn" onclick="saveProject('labOutput')">Projelerime Kaydet</button>
-</div>
-</section>
+      <div class="composer">
+        <textarea
+          id="prompt"
+          placeholder="Tozra'ya bir şey sor..."
+          rows="1"
+        ></textarea>
 
-<section id="content" class="section">
-<div class="panel">
-<h2>İçerik Atölyesi</h2>
-<p style="color:#888;font-size:13px">Sosyal medya, video ve dijital içerik fikirleri üret.</p>
-<textarea id="contentInput" placeholder="Platformu, konuyu ve istediğin içerik türünü yaz..."></textarea>
-<div class="action-row"><button class="small-btn" onclick="runTool('contentInput','contentOutput','Bu brief doğrultusunda yaratıcı, özgün ve uygulanabilir bir dijital içerik hazırla: ')">İçerik Üret</button></div>
-<div class="output" id="contentOutput"></div>
-</div>
-</section>
+        <div class="composer-bottom">
+          <button class="send" id="sendButton" onclick="sendMessage()">
+            Gönder ↑
+          </button>
+        </div>
+      </div>
 
-<section id="projects" class="section">
-<div class="panel"><h2>Projelerim</h2><p style="color:#888;font-size:13px">Kaydettiğin projeler burada saklanır.</p><div id="projectList"><div class="empty">Projeler yükleniyor...</div></div></div>
-</section>
-</div>
-</main>
+      <div class="disclaimer">
+        Tozra yapay zekâ tarafından oluşturulan cevaplarda hata yapabilir.
+      </div>
+
+    </div>
+
+  </main>
 </div>
 
 <script>
-// SUPABASE BAĞLANTISI
-const SUPABASE_URL = "https://plqlwihdktfrotvcwuzi.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_DJ9lH2r58tCvIXThanK0kA_QmOd1U-E";
+const promptInput = document.getElementById("prompt");
+const messages = document.getElementById("messages");
+const welcome = document.getElementById("welcome");
+const chatArea = document.getElementById("chatArea");
+const sendButton = document.getElementById("sendButton");
 
-const db = window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+let history = [];
+let busy = false;
 
-let currentUser=null;
-let chats=[];
-let projects=[];
-let activeChatId=null;
-let busy=false;
+function addMessage(role, text) {
+  welcome.style.display = "none";
 
-function showAuth(type){
-["loginForm","registerForm","resetForm"].forEach(id=>document.getElementById(id).classList.add("hidden"));
-document.getElementById(type+"Form").classList.remove("hidden");
-document.getElementById("authMessage").textContent="";
-}
-function authMessage(message){document.getElementById("authMessage").textContent=message;}
+  const message = document.createElement("div");
+  message.className = "message " + role;
 
-async function login(){
-const email=document.getElementById("loginEmail").value.trim();
-const password=document.getElementById("loginPassword").value;
-if(!email||!password)return authMessage("E-posta ve şifreni gir.");
-const btn=document.getElementById("loginBtn");
-btn.disabled=true;btn.textContent="Giriş yapılıyor...";
-const {data,error}=await db.auth.signInWithPassword({email,password});
-btn.disabled=false;btn.textContent="Giriş Yap";
-if(error)return authMessage(error.message);
-currentUser=data.user;await enterApp();
-}
+  const label = document.createElement("div");
+  label.className = "message-label";
+  label.textContent = role === "user" ? "Sen" : "Tozra";
 
-async function register(){
-const email=document.getElementById("registerEmail").value.trim();
-const password=document.getElementById("registerPassword").value;
-if(!email||!password)return authMessage("E-posta ve şifreni gir.");
-if(password.length<8)return authMessage("Şifre en az 8 karakter olmalı.");
-const btn=document.getElementById("registerBtn");
-btn.disabled=true;btn.textContent="Hesap oluşturuluyor...";
-const {data,error}=await db.auth.signUp({email,password,options:{emailRedirectTo:window.location.origin}});
-btn.disabled=false;btn.textContent="Hesap Oluştur";
-if(error)return authMessage(error.message);
-if(data.session){currentUser=data.user;await enterApp();}
-else{showAuth("login");authMessage("Kayıt başarılı. E-posta doğrulama bağlantısını aç, ardından giriş yap.");}
+  const content = document.createElement("div");
+  content.className = "content";
+  content.textContent = text;
+
+  message.appendChild(label);
+  message.appendChild(content);
+  messages.appendChild(message);
+
+  chatArea.scrollTop = chatArea.scrollHeight;
+
+  return content;
 }
 
-async function resetPassword(){
-const email=document.getElementById("resetEmail").value.trim();
-if(!email)return authMessage("E-posta adresini gir.");
-const {error}=await db.auth.resetPasswordForEmail(email,{redirectTo:window.location.origin});
-if(error)return authMessage(error.message);
-authMessage("Şifre sıfırlama bağlantısı gönderildi. E-postanı kontrol et.");
+async function sendMessage() {
+  const prompt = promptInput.value.trim();
+
+  if (!prompt || busy) return;
+
+  busy = true;
+  sendButton.disabled = true;
+
+  addMessage("user", prompt);
+  promptInput.value = "";
+
+  const answer = addMessage("assistant", "Yanıt hazırlanıyor...");
+
+  try {
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        prompt,
+        history
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Sunucu hatası.");
+    }
+
+    if (!data.answer) {
+      throw new Error("Yapay zekâ boş yanıt verdi.");
+    }
+
+    answer.textContent = data.answer;
+
+    history.push(
+      { role: "user", content: prompt },
+      { role: "assistant", content: data.answer }
+    );
+
+  } catch (error) {
+    answer.textContent = "Bağlantı hatası: " + error.message;
+  }
+
+  busy = false;
+  sendButton.disabled = false;
+  promptInput.focus();
 }
 
-async function logout(){
-await db.auth.signOut();
-currentUser=null;chats=[];projects=[];activeChatId=null;
-document.getElementById("app").classList.add("hidden");
-document.getElementById("authScreen").classList.remove("hidden");
-showAuth("login");
+function newChat() {
+  history = [];
+  messages.innerHTML = "";
+  welcome.style.display = "block";
+  promptInput.value = "";
 }
 
-async function enterApp(){
-if(!currentUser)return;
-document.getElementById("authScreen").classList.add("hidden");
-document.getElementById("app").classList.remove("hidden");
-document.getElementById("userEmail").textContent=currentUser.email||"";
-await loadChats();await loadProjects();navigate("home");
-}
-
-async function init(){
-const {data}=await db.auth.getSession();
-if(data.session){currentUser=data.session.user;await enterApp();}
-else showAuth("login");
-db.auth.onAuthStateChange(async(event,session)=>{
-if(event==="PASSWORD_RECOVERY"){
-const newPassword=prompt("Yeni şifreni gir (en az 8 karakter):");
-if(newPassword&&newPassword.length>=8){
-const {error}=await db.auth.updateUser({password:newPassword});
-alert(error?error.message:"Şifren güncellendi.");
-}
-}
-if(event==="SIGNED_OUT")currentUser=null;
+promptInput.addEventListener("keydown", function(event) {
+  if (event.key === "Enter" && !event.shiftKey) {
+    event.preventDefault();
+    sendMessage();
+  }
 });
-}
-
-function navigate(page,button){
-document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
-document.getElementById(page).classList.add("active");
-document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
-if(button)button.classList.add("active");
-else{
-const match=[...document.querySelectorAll(".nav-btn")].find(b=>b.getAttribute("onclick")?.includes("'"+page+"'"));
-if(match)match.classList.add("active");
-}
-const titles={home:"Genel Bakış",chat:"AI Sohbet",analysis:"Fikir Analizi",lab:"Proje Laboratuvarı",content:"İçerik Atölyesi",projects:"Projelerim"};
-document.getElementById("pageTitle").textContent=titles[page]||"TÖZRA AI";
-document.getElementById("sidebar").classList.remove("open");
-}
-function toggleMenu(){document.getElementById("sidebar").classList.toggle("open");}
-
-async function loadChats(){
-const {data,error}=await db.from("ircai_chats").select("*").order("updated_at",{ascending:false});
-if(error){console.error(error);return;}
-chats=data||[];renderChatList();
-if(chats.length)selectChat(chats[0].id);else await newChat(false);
-}
-function renderChatList(){
-const list=document.getElementById("chatItems");list.innerHTML="";
-chats.forEach(chat=>{
-const item=document.createElement("div");
-item.className="chat-item"+(chat.id===activeChatId?" active":"");
-item.textContent=chat.title||"Yeni sohbet";
-item.onclick=()=>selectChat(chat.id);
-list.appendChild(item);
-});
-}
-async function newChat(save=true){
-const id=crypto.randomUUID();
-const chat={id,user_id:currentUser.id,title:"Yeni sohbet",messages:[],created_at:new Date().toISOString(),updated_at:new Date().toISOString()};
-chats.unshift(chat);activeChatId=id;renderChatList();renderMessages();
-if(save){
-const {error}=await db.from("ircai_chats").insert(chat);
-if(error){console.error(error);alert("Yeni sohbet kaydedilemedi: "+error.message);}
-}
-}
-function selectChat(id){activeChatId=id;renderChatList();renderMessages();}
-function activeChat(){return chats.find(c=>c.id===activeChatId);}
-
-function renderMessages(){
-const chat=activeChat();const box=document.getElementById("messages");
-document.getElementById("chatTitle").textContent=chat?.title||"Yeni sohbet";
-box.innerHTML="";
-if(!chat||!chat.messages?.length){box.innerHTML='<div class="empty">TÖZRA AI’ye merhaba de ve başlayalım.</div>';return;}
-chat.messages.forEach(message=>{
-const wrapper=document.createElement("div");wrapper.className="message "+message.role;
-const role=document.createElement("div");role.className="message-role";role.textContent=message.role==="user"?"SEN":"TÖZRA AI";
-const content=document.createElement("div");content.className="message-content";content.textContent=message.content;
-wrapper.append(role,content);box.appendChild(wrapper);
-});
-box.scrollTop=box.scrollHeight;
-}
-
-async function saveActiveChat(){
-const chat=activeChat();if(!chat)return;
-chat.updated_at=new Date().toISOString();
-const {error}=await db.from("ircai_chats").upsert({
-id:chat.id,user_id:currentUser.id,title:chat.title,messages:chat.messages,updated_at:chat.updated_at
-});
-if(error)console.error("Sohbet kaydetme hatası:",error);
-chats.sort((a,b)=>new Date(b.updated_at)-new Date(a.updated_at));renderChatList();
-}
-
-function chatKeydown(event){
-if(event.key==="Enter"&&!event.shiftKey){event.preventDefault();sendMessage();}
-}
-
-async function sendMessage(){
-if(busy)return;
-const input=document.getElementById("chatInput");
-const prompt=input.value.trim();const chat=activeChat();
-if(!prompt||!chat)return;
-busy=true;document.getElementById("sendBtn").disabled=true;input.value="";
-chat.messages.push({role:"user",content:prompt});
-if(chat.messages.length===1)chat.title=prompt.slice(0,42);
-renderMessages();
-const pending=document.createElement("div");pending.className="empty";pending.textContent="TÖZRA AI düşünüyor...";pending.id="pendingMessage";
-document.getElementById("messages").appendChild(pending);
-try{
-const {data}=await db.auth.getSession();const token=data.session?.access_token;
-if(!token)throw new Error("Oturum bulunamadı. Tekrar giriş yap.");
-const history=chat.messages.slice(0,-1).map(m=>({role:m.role,content:m.content}));
-const response=await fetch("/api/chat",{
-method:"POST",
-headers:{"Content-Type":"application/json","Authorization":"Bearer "+token},
-body:JSON.stringify({prompt,history})
-});
-const result=await response.json();
-if(!response.ok||!result.success)throw new Error(result.error||"TÖZRA AI yanıt veremedi.");
-chat.messages.push({role:"assistant",content:result.answer});
-}catch(error){
-chat.messages.push({role:"assistant",content:"Bir hata oluştu: "+error.message});
-}finally{
-busy=false;document.getElementById("sendBtn").disabled=false;
-renderMessages();await saveActiveChat();
-}
-}
-
-async function askAI(prompt){
-const {data}=await db.auth.getSession();const token=data.session?.access_token;
-if(!token)throw new Error("Oturum bulunamadı.");
-const response=await fetch("/api/chat",{
-method:"POST",
-headers:{"Content-Type":"application/json","Authorization":"Bearer "+token},
-body:JSON.stringify({prompt,history:[]})
-});
-const result=await response.json();
-if(!response.ok||!result.success)throw new Error(result.error||"İstek başarısız.");
-return result.answer;
-}
-
-async function runTool(inputId,outputId,prefix){
-const input=document.getElementById(inputId);const output=document.getElementById(outputId);
-const prompt=input.value.trim();if(!prompt)return alert("Önce bir metin gir.");
-output.textContent="TÖZRA AI çalışıyor...";
-try{
-const answer=await askAI(prefix+prompt);output.textContent=answer;
-if(outputId==="labOutput")document.getElementById("saveLabBtn").classList.remove("hidden");
-}catch(error){output.textContent="Hata: "+error.message;}
-}
-
-async function loadProjects(){
-const {data,error}=await db.from("ircai_projects").select("*").order("updated_at",{ascending:false});
-if(error){console.error(error);return;}
-projects=data||[];renderProjects();
-}
-async function saveProject(outputId){
-const content=document.getElementById(outputId).textContent.trim();if(!content)return;
-const title=document.getElementById("labInput").value.trim().slice(0,80)||"Yeni proje";
-const project={id:crypto.randomUUID(),user_id:currentUser.id,title,content:{description:content},created_at:new Date().toISOString(),updated_at:new Date().toISOString()};
-const {error}=await db.from("ircai_projects").insert(project);
-if(error){alert("Proje kaydedilemedi: "+error.message);return;}
-projects.unshift(project);renderProjects();alert("Projen kaydedildi.");
-}
-function renderProjects(){
-const list=document.getElementById("projectList");list.innerHTML="";
-if(!projects.length){list.innerHTML='<div class="empty">Henüz kaydedilmiş projen yok.</div>';return;}
-projects.forEach(project=>{
-const row=document.createElement("div");row.className="project-item";
-const info=document.createElement("div");const name=document.createElement("strong");name.textContent=project.title;
-const date=document.createElement("p");date.textContent=new Date(project.updated_at).toLocaleDateString("tr-TR");
-info.append(name,date);
-const del=document.createElement("button");del.className="delete-btn";del.textContent="Sil";del.onclick=()=>deleteProject(project.id);
-row.append(info,del);list.appendChild(row);
-});
-}
-async function deleteProject(id){
-if(!confirm("Bu projeyi silmek istiyor musun?"))return;
-const {error}=await db.from("ircai_projects").delete().eq("id",id);
-if(error)return alert("Silinemedi: "+error.message);
-projects=projects.filter(p=>p.id!==id);renderProjects();
-}
-
-init();
 </script>
+
 </body>
 </html>
