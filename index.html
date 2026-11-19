@@ -240,7 +240,7 @@ let conversation=[],conversations=[],busy=false,attachments=[];
 
 function saveConversation(){
   if(!conversation.length)return;
-  const id=conversation[0].id;
+  const id=conversation[0].id||Date.now();
   const item={
     id,
     title:conversation.find(m=>m.role==="user")?.content.slice(0,35)||"Yeni sohbet",
@@ -344,6 +344,7 @@ function addFiles(files,kind){
     alert("Bir mesajda en fazla 3 dosya ekleyebilirsin.");
     return;
   }
+
   for(const file of selected){
     if(kind==="image"&&!["image/jpeg","image/png","image/webp"].includes(file.type)){
       alert("JPG, PNG veya WEBP fotoğraf seç.");
@@ -368,39 +369,60 @@ function clearAttachments(){
   renderAttachments();
 }
 
-// Fotoğrafı küçültüp API'ye uygun Base64 formatına dönüştürür.
+// Fotoğrafı küçültüp Base64 formatına dönüştürür.
 function imageToDataURL(file,maxSide=1100,quality=.72){
   return new Promise((resolve,reject)=>{
     const img=new Image();
     const url=URL.createObjectURL(file);
+
     img.onload=()=>{
       const scale=Math.min(1,maxSide/Math.max(img.width,img.height));
       const canvas=document.createElement("canvas");
-      canvas.width=Math.round(img.width*scale);
-      canvas.height=Math.round(img.height*scale);
+      canvas.width=Math.max(1,Math.round(img.width*scale));
+      canvas.height=Math.max(1,Math.round(img.height*scale));
+
       const ctx=canvas.getContext("2d");
       ctx.drawImage(img,0,0,canvas.width,canvas.height);
+
       URL.revokeObjectURL(url);
       resolve(canvas.toDataURL("image/jpeg",quality));
     };
+
     img.onerror=()=>{
       URL.revokeObjectURL(url);
       reject(new Error("Fotoğraf okunamadı."));
     };
+
     img.src=url;
   });
 }
 
-// Videodan seçilen zamanlarda örnek kareler çıkarır.
-function videoToFrames(file,count=2){
+// Saniyeyi dakika:saniye biçimine dönüştürür.
+function formatTime(seconds){
+  const safe=Math.max(0,Math.floor(seconds));
+  const minutes=Math.floor(safe/60);
+  const remaining=safe%60;
+  return String(minutes).padStart(2,"0")+":"+String(remaining).padStart(2,"0");
+}
+
+// Videodan kronolojik sırayla 3 örnek kare çıkarır.
+function videoToFrames(file,count=3){
   return new Promise((resolve,reject)=>{
     const video=document.createElement("video");
     const url=URL.createObjectURL(file);
-    video.preload="metadata";
+
+    video.preload="auto";
     video.muted=true;
     video.playsInline=true;
 
+    let finished=false;
+
     const finish=()=>{
+      if(finished)return;
+      finished=true;
+      video.onloadeddata=null;
+      video.onseeked=null;
+      video.onerror=null;
       URL.revokeObjectURL(url);
       video.removeAttribute("src");
       video.load();
@@ -408,48 +430,125 @@ function videoToFrames(file,count=2){
 
     video.onerror=()=>{
       finish();
-      reject(new Error("Video okunamadı."));
+      reject(new Error("Video okunamadı. Başka bir video dosyası dene."));
     };
 
-    video.onloadedmetadata=async()=>{
+    video.onloadeddata=async()=>{
       try{
-        if(!Number.isFinite(video.duration)||video.duration<=0){
+        const duration=video.duration;
+
+        if(!Number.isFinite(duration)||duration<=0){
           throw new Error("Video süresi okunamadı.");
         }
 
-        const times=count===1?[video.duration*.5]:
-          [video.duration*.25,video.duration*.75];
+        const fractions=count===1
+          ?[0.5]
+          :count===2
+            ?[0.2,0.8]
+            :[0.1,0.5,0.9];
+
+        const times=[];
+        for(const fraction of fractions){
+          const target=Math.min(
+            duration* fraction,
+            Math.max(0,duration-0.05)
+          );
+
+          if(!times.some(t=>Math.abs(t-target)<0.05)){
+            times.push(target);
+          }
+        }
 
         const frames=[];
 
-        for(const time of times){
+        for(const target of times){
           await new Promise((resolveSeek,rejectSeek)=>{
-            video.onseeked=resolveSeek;
-            video.currentTime=Math.min(time,Math.max(0,video.duration-.1));
-            setTimeout(()=>rejectSeek(new Error("Video karesi alınamadı.")),10000);
+            let settled=false;
+
+            const cleanup=()=>{
+              clearTimeout(timer);
+              video.removeEventListener("seeked",onSeeked);
+            };
+
+            const done=()=>{
+              if(settled)return;
+              settled=true;
+              cleanup();
+              resolveSeek();
+            };
+
+            const fail=()=>{
+              if(settled)return;
+              settled=true;
+              cleanup();
+              rejectSeek(new Error("Video karesi alınamadı."));
+            };
+
+            const onSeeked=()=>done();
+            const timer=setTimeout(fail,12000);
+
+            video.addEventListener("seeked",onSeeked,{once:true});
+
+            try{
+              video.currentTime=target;
+              if(Math.abs(video.currentTime-target)<0.01&&video.readyState>=2){
+                done();
+              }
+            }catch(error){
+              fail();
+            }
           });
 
-          const scale=Math.min(1,640/Math.max(video.videoWidth,video.videoHeight));
+          if(!video.videoWidth||!video.videoHeight){
+            throw new Error("Videonun görüntü boyutları okunamadı.");
+          }
+
+          const scale=Math.min(
+            1,
+            640/Math.max(video.videoWidth,video.videoHeight)
+          );
+
           const canvas=document.createElement("canvas");
           canvas.width=Math.max(1,Math.round(video.videoWidth*scale));
           canvas.height=Math.max(1,Math.round(video.videoHeight*scale));
-          canvas.getContext("2d").drawImage(video,0,0,canvas.width,canvas.height);
-          frames.push(canvas.toDataURL("image/jpeg",.55));
+
+          const ctx=canvas.getContext("2d");
+          if(!ctx)throw new Error("Video karesi işlenemedi.");
+
+          ctx.drawImage(video,0,0,canvas.width,canvas.height);
+
+          frames.push({
+            data:canvas.toDataURL("image/jpeg",.55),
+            time:target
+          });
         }
 
         finish();
-        resolve(frames);
+
+        resolve({
+          frames,
+          duration,
+          name:file.name
+        });
+
       }catch(error){
         finish();
         reject(error);
       }
     };
+
     video.src=url;
+    video.load();
   });
 }
 
+// Fotoğraf ve videoları hazırlar.
+// Video karelerinin zaman bilgilerini analiz metnine ekler.
 async function prepareMedia(){
-  const images=[],videoFrames=[];
+  const images=[];
+  const videoFrames=[];
+  const timeline=[];
+
   for(const item of attachments){
     if(item.kind==="image"){
       images.push(await imageToDataURL(item.file));
@@ -459,9 +558,24 @@ async function prepareMedia(){
   for(const item of attachments){
     if(item.kind==="video"){
       const remaining=3-images.length-videoFrames.length;
+
       if(remaining<=0)break;
-      const frames=await videoToFrames(item.file,Math.min(2,remaining));
-      videoFrames.push(...frames);
+
+      const result=await videoToFrames(
+        item.file,
+        Math.min(3,remaining)
+      );
+
+      timeline.push({
+        name:result.name,
+        duration:result.duration,
+        frames:result.frames.map((frame,index)=>({
+          index:index+1,
+          time:frame.time
+        }))
+      });
+
+      videoFrames.push(...result.frames.map(frame=>frame.data));
     }
   }
 
@@ -469,11 +583,49 @@ async function prepareMedia(){
     throw new Error("Bir istekte en fazla 3 görüntü gönderilebilir.");
   }
 
-  return {images,videoFrames};
+  let timelineText="";
+
+  if(timeline.length){
+    timelineText="\n\n[VİDEO ANALİZİ - KRONOLOJİK KARELER]\n";
+
+    timeline.forEach(video=>{
+      timelineText+=
+        "\nVideo dosyası: "+video.name+
+        "\nVideo süresi: "+video.duration.toFixed(2)+" saniye\n";
+
+      video.frames.forEach(frame=>{
+        timelineText+=
+          "Kare "+frame.index+
+          ": "+formatTime(frame.time)+
+          " zamanında alınmıştır.\n";
+      });
+    });
+
+    timelineText+=`
+    
+ANALİZ TALİMATI:
+- Kareleri yukarıdaki zaman sırasına göre incele.
+- İlk kareyi başlangıç, sonraki kareleri gelişim ve son kareyi videonun ilerleyen bölümü olarak değerlendir.
+- Kareler arasında görülebilen değişimleri karşılaştır.
+- Nesnelerin veya kişilerin konum değişikliklerini yalnızca görüntüden anlaşılabildiği ölçüde açıkla.
+- Olayların muhtemel sırasını kronolojik olarak anlat.
+- Görüntülerde bulunmayan hareketleri veya olayları uydurma.
+- Sadece örnek karelerin gösterdiği bilgileri kullan.
+- Videonun tamamını veya sesini analiz ettiğini iddia etme.
+- Sonunda kısa ve anlaşılır bir video özeti oluştur.
+`;
+  }
+
+  return {
+    images,
+    videoFrames,
+    timelineText
+  };
 }
 
 async function sendMessage(value){
   const text=(value??promptInput.value).trim();
+
   if((!text&&!attachments.length)||busy)return;
 
   if(!text&&attachments.length){
@@ -486,31 +638,42 @@ async function sendMessage(value){
   welcomeEl.style.display="none";
 
   const fileNames=attachments.map(a=>a.file.name);
-  const displayText=text+(fileNames.length?"\n\nEklenen dosyalar: "+fileNames.join(", "):"");
+  const displayText=text+
+    (fileNames.length?"\n\nEklenen dosyalar: "+fileNames.join(", "):"");
 
   if(!conversation.length){
-    conversation.push({id:Date.now(),role:"user",content:displayText});
+    conversation.push({
+      id:Date.now(),
+      role:"user",
+      content:displayText
+    });
   }else{
-    conversation.push({role:"user",content:displayText});
+    conversation.push({
+      role:"user",
+      content:displayText
+    });
   }
 
   addMessageToScreen("user",displayText);
+
   promptInput.value="";
   promptInput.style.height="38px";
 
   const typing=document.createElement("div");
   typing.className="typing";
-  typing.textContent="TOZRA analiz ediyor...";
+  typing.textContent="TOZRA görüntüleri analiz ediyor...";
   messagesEl.appendChild(typing);
 
   try{
     const media=await prepareMedia();
 
+    const analysisPrompt=text+media.timelineText;
+
     const response=await fetch("/api/chat",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({
-        prompt:text,
+        prompt:analysisPrompt,
         history:conversation.slice(0,-1),
         images:media.images,
         videoFrames:media.videoFrames
@@ -518,15 +681,24 @@ async function sendMessage(value){
     });
 
     let data;
-    try{data=await response.json();}
-    catch(e){throw new Error("Sunucudan geçerli yanıt alınamadı.");}
+
+    try{
+      data=await response.json();
+    }catch(e){
+      throw new Error("Sunucudan geçerli yanıt alınamadı.");
+    }
 
     if(!response.ok||!data.success){
       throw new Error(data.error||"Yapay zekâ yanıt veremedi.");
     }
 
     const answer=data.answer||"Bir yanıt oluşturulamadı.";
-    conversation.push({role:"assistant",content:answer});
+
+    conversation.push({
+      role:"assistant",
+      content:answer
+    });
+
     typing.remove();
     addMessageToScreen("assistant",answer);
     saveConversation();
@@ -534,11 +706,20 @@ async function sendMessage(value){
 
   }catch(error){
     typing.remove();
-    const message="İstek tamamlanamadı: "+(error.message||"Bir bağlantı sorunu oluştu.");
-    conversation.push({role:"assistant",content:message});
+
+    const message=
+      "İstek tamamlanamadı: "+
+      (error.message||"Bir bağlantı sorunu oluştu.");
+
+    conversation.push({
+      role:"assistant",
+      content:message
+    });
+
     addMessageToScreen("assistant",message);
     saveConversation();
     console.error(error);
+
   }finally{
     busy=false;
     sendButton.disabled=false;
@@ -585,10 +766,12 @@ function showModal(type){
       </form>
       <button class="secondary" id="registerSwitch">Hesap oluştur</button>
       <div class="notice">Gerçek hesap girişi için sunucu ve kullanıcı veritabanı bağlantısı gereklidir.</div>`;
+
     $("loginForm").onsubmit=e=>{
       e.preventDefault();
       alert("Üyelik sistemi henüz backend'e bağlanmadı.");
     };
+
     $("registerSwitch").onclick=()=>showModal("register");
   }
 
@@ -603,6 +786,7 @@ function showModal(type){
         <button class="primary" type="submit">Hesap oluştur</button>
       </form>
       <div class="notice">Bu ekran şu an arayüz önizlemesidir. Bilgilerin kaydedilmez.</div>`;
+
     $("registerForm").onsubmit=e=>{
       e.preventDefault();
       alert("Gerçek kayıt sistemi henüz bağlı değil.");
@@ -628,7 +812,7 @@ function showModal(type){
       <p>TOZRA şu anda premium açık tema ile çalışıyor.</p>
       <h3 style="font-size:14px">Uygulama</h3>
       <p>TOZRA — Creative Intelligence</p>
-      <p>Sürüm 2.1</p>
+      <p>Sürüm 2.2</p>
       <div class="notice">Hesap, veri senkronizasyonu ve kişiselleştirme özellikleri sonraki backend aşamasında eklenecek.</div>`;
   }
 
@@ -642,52 +826,76 @@ function paymentNotice(){
 function addLink(){
   const url=prompt("Eklemek istediğin bağlantıyı yaz:");
   if(!url)return;
+
   let parsed;
-  try{parsed=new URL(url);}
-  catch(e){alert("Lütfen geçerli bir bağlantı gir.");return;}
+
+  try{
+    parsed=new URL(url);
+  }catch(e){
+    alert("Lütfen geçerli bir bağlantı gir.");
+    return;
+  }
+
   if(!["http:","https:"].includes(parsed.protocol)){
     alert("Yalnızca http veya https bağlantıları kullanılabilir.");
     return;
   }
-  promptInput.value+=(promptInput.value?"\n":"")+"Bağlantı: "+parsed.href;
+
+  promptInput.value+=
+    (promptInput.value?"\n":"")+"Bağlantı: "+parsed.href;
+
   promptInput.focus();
+
   alert("Bağlantı mesajına eklendi. Bağlantı içeriğinin okunması için ayrıca backend desteği gerekir.");
 }
 
 $("send").onclick=()=>sendMessage();
+
 promptInput.addEventListener("keydown",e=>{
   if(e.key==="Enter"&&!e.shiftKey){
     e.preventDefault();
     sendMessage();
   }
 });
+
 promptInput.addEventListener("input",()=>{
   promptInput.style.height="38px";
-  promptInput.style.height=Math.min(promptInput.scrollHeight,150)+"px";
+  promptInput.style.height=
+    Math.min(promptInput.scrollHeight,150)+"px";
 });
+
 $("newChat").onclick=newChat;
+
 document.querySelectorAll(".suggestion").forEach(button=>{
   button.onclick=()=>sendMessage(button.textContent);
 });
+
 $("imageButton").onclick=()=>$("imageInput").click();
 $("videoButton").onclick=()=>$("videoInput").click();
+
 $("imageInput").onchange=e=>{
   addFiles(e.target.files,"image");
   e.target.value="";
 };
+
 $("videoInput").onchange=e=>{
   addFiles(e.target.files,"video");
   e.target.value="";
 };
+
 $("linkButton").onclick=addLink;
 $("plansButton").onclick=()=>showModal("plans");
 $("sidePlans").onclick=()=>showModal("plans");
 $("sideSettings").onclick=()=>showModal("settings");
 $("profileButton").onclick=()=>showModal("profile");
 $("closeModal").onclick=()=>$("modalOverlay").classList.remove("show");
+
 $("modalOverlay").onclick=e=>{
-  if(e.target===$("modalOverlay"))$("modalOverlay").classList.remove("show");
+  if(e.target===$("modalOverlay")){
+    $("modalOverlay").classList.remove("show");
+  }
 };
+
 $("menuButton").onclick=()=>$("sidebar").classList.toggle("open");
 
 loadHistory();
