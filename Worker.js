@@ -1,44 +1,81 @@
 
+const SYSTEM_PROMPT = `
+Sen IRCAI adlı yaratıcı dijital proje platformunun yapay zekâ asistanısın.
+
+Görevin:
+- Kullanıcının fikirlerini analiz etmek.
+- Dijital projeler geliştirmek.
+- İçerik fikirleri üretmek.
+- Marka ve strateji önerileri sunmak.
+- Profesyonel, yaratıcı ve uygulanabilir cevaplar vermek.
+
+Her zaman Türkçe konuş.
+Cevaplarını açık, düzenli ve anlaşılır hazırla.
+`;
+
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS, GET",
+  "Access-Control-Allow-Headers": "Content-Type",
+  "Content-Type": "application/json; charset=UTF-8"
+};
+
+function json(data, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: CORS_HEADERS
+  });
+}
+
 export default {
   async fetch(request, env) {
-    const cors = {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type"
-    };
-
     if (request.method === "OPTIONS") {
-      return new Response(null, { headers: cors });
+      return new Response(null, {
+        status: 204,
+        headers: CORS_HEADERS
+      });
     }
 
     if (request.method === "GET") {
-      return new Response("IRCAI API aktif", {
-        headers: cors
+      return json({
+        status: "online",
+        service: "IRCAI API",
+        message: "IRCAI API aktif."
       });
     }
 
     if (request.method !== "POST") {
-      return new Response("Method not allowed", {
-        status: 405,
-        headers: cors
-      });
+      return json({
+        error: "Desteklenmeyen istek yöntemi."
+      }, 405);
     }
 
     try {
       if (!env.GEMINI_API_KEY) {
-        throw new Error("GEMINI_API_KEY Secret bulunamadı.");
+        return json({
+          error: "GEMINI_API_KEY bulunamadı. Cloudflare Secret ayarını kontrol et."
+        }, 500);
       }
 
-      const { prompt } = await request.json();
+      const body = await request.json();
+      const prompt = body.prompt;
 
-      if (!prompt || typeof prompt !== "string") {
-        return Response.json(
-          { error: "Bir mesaj gerekli." },
-          { status: 400, headers: cors }
-        );
+      if (
+        typeof prompt !== "string" ||
+        prompt.trim().length === 0
+      ) {
+        return json({
+          error: "Lütfen IRCAI'a bir mesaj yaz."
+        }, 400);
       }
 
-      const response = await fetch(
+      if (prompt.length > 12000) {
+        return json({
+          error: "Mesaj çok uzun. Lütfen kısalt."
+        }, 400);
+      }
+
+      const geminiResponse = await fetch(
         "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
         {
           method: "POST",
@@ -48,42 +85,55 @@ export default {
           },
           body: JSON.stringify({
             systemInstruction: {
-              parts: [{
-                text: "Sen IRCAI adlı yaratıcı dijital proje platformunun yapay zekâ asistanısın. Türkçe konuş. Kullanıcının fikirlerini analiz et, geliştir ve uygulanabilir projelere dönüştür. Açık, yaratıcı ve profesyonel ol."
-              }]
+              parts: [
+                { text: SYSTEM_PROMPT }
+              ]
             },
-            contents: [{
-              role: "user",
-              parts: [{ text: prompt }]
-            }],
+            contents: [
+              {
+                role: "user",
+                parts: [
+                  { text: prompt.trim() }
+                ]
+              }
+            ],
             generationConfig: {
               temperature: 0.7,
-              maxOutputTokens: 1200
+              maxOutputTokens: 1500
             }
           })
         }
       );
 
-      const data = await response.json();
+      const result = await geminiResponse.json();
 
-      if (!response.ok) {
-        return Response.json(
-          { error: data.error?.message || "Gemini bağlantı hatası." },
-          { status: response.status, headers: cors }
-        );
+      if (!geminiResponse.ok) {
+        return json({
+          error: result.error?.message || "Gemini API isteği başarısız.",
+          status: geminiResponse.status
+        }, 502);
       }
 
-      const answer = data.candidates?.[0]?.content?.parts
+      const answer = result.candidates?.[0]?.content?.parts
         ?.map(part => part.text || "")
-        .join("") || "Yanıt oluşturulamadı.";
+        .join("")
+        .trim();
 
-      return Response.json({ answer }, { headers: cors });
+      if (!answer) {
+        return json({
+          error: "Gemini boş yanıt döndürdü. Tekrar deneyebilirsin."
+        }, 502);
+      }
+
+      return json({
+        success: true,
+        answer
+      });
 
     } catch (error) {
-      return Response.json(
-        { error: error.message || "Bir hata oluştu." },
-        { status: 500, headers: cors }
-      );
+      return json({
+        error: error.message || "Beklenmeyen bir sunucu hatası oluştu."
+      }, 500);
     }
   }
 };
