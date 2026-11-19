@@ -4,339 +4,743 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#f8f8f6">
+<meta name="theme-color" content="#f7f7f5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="TOZRA">
 <title>TOZRA — Creative Intelligence</title>
+
+<link rel="icon" href="/logo.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/logo.svg">
+
 <style>
 :root {
-  --bg:#f8f8f6;
-  --surface:#fff;
-  --soft:#f1f1ee;
-  --border:#e8e8e4;
-  --text:#20201e;
-  --muted:#92928c;
-  --accent:#242422;
+  --bg:#f7f7f5;
+  --surface:#ffffff;
+  --text:#171717;
+  --muted:#858585;
+  --line:#e9e9e6;
+  --soft:#f0f0ed;
+  --accent:#222222;
+  --sidebar:260px;
 }
-* {box-sizing:border-box;margin:0;padding:0}
+
+* {
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
 body {
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   background:var(--bg);
   color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  height:100dvh;
-  overflow:hidden;
+  min-height:100dvh;
 }
-button,textarea {font:inherit}
-.app {display:flex;height:100dvh}
-.sidebar {
-  width:255px;
-  padding:30px 20px;
-  border-right:1px solid var(--border);
+
+button,textarea {
+  font:inherit;
+}
+
+button {
+  cursor:pointer;
+}
+
+#splash {
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  background:var(--bg);
   display:flex;
   flex-direction:column;
-  background:var(--bg);
+  justify-content:center;
+  align-items:center;
+  gap:18px;
+  transition:opacity .5s ease,visibility .5s ease;
 }
-.logo {
-  font-size:25px;
+
+#splash.hide {
+  opacity:0;
+  visibility:hidden;
+}
+
+.splash-logo {
+  width:76px;
+  height:76px;
+  animation:appear .7s ease both;
+}
+
+.splash-name {
+  font-size:24px;
   font-weight:750;
-  letter-spacing:-1.5px;
-  margin-bottom:42px;
+  letter-spacing:7px;
+  animation:appear .8s ease both;
 }
-.logo span {font-weight:400}
+
+.splash-tag {
+  color:var(--muted);
+  font-size:10px;
+  letter-spacing:3px;
+}
+
+@keyframes appear {
+  from {opacity:0;transform:translateY(12px)}
+  to {opacity:1;transform:translateY(0)}
+}
+
+.app {
+  display:flex;
+  min-height:100dvh;
+}
+
+.sidebar {
+  width:var(--sidebar);
+  background:#fff;
+  border-right:1px solid var(--line);
+  padding:26px 18px;
+  display:flex;
+  flex-direction:column;
+  flex-shrink:0;
+}
+
+.brand {
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:0 8px 30px;
+}
+
+.brand-mark {
+  width:34px;
+  height:34px;
+}
+
+.brand-name {
+  font-size:19px;
+  font-weight:750;
+  letter-spacing:3px;
+}
+
 .new-chat {
-  background:var(--surface);
-  border:1px solid var(--border);
+  border:1px solid var(--line);
+  background:#fff;
+  padding:13px 14px;
   border-radius:12px;
-  padding:13px 15px;
   text-align:left;
-  cursor:pointer;
+  font-size:13px;
   color:var(--text);
   transition:.2s;
 }
-.new-chat:hover {background:var(--soft)}
+
+.new-chat:hover {
+  background:var(--soft);
+}
+
+.side-label {
+  color:#aaa;
+  font-size:10px;
+  letter-spacing:1.5px;
+  margin:32px 8px 12px;
+}
+
+.side-note {
+  color:#aaa;
+  font-size:12px;
+  line-height:1.7;
+  padding:0 8px;
+}
+
 .sidebar-bottom {
   margin-top:auto;
-  color:var(--muted);
-  font-size:12px;
-}
-.main {flex:1;min-width:0;display:flex;flex-direction:column}
-.topbar {
-  height:67px;
-  padding:0 32px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  border-bottom:1px solid var(--border);
-}
-.topbar-title {font-size:14px;font-weight:650;letter-spacing:-.2px}
-.status {font-size:11px;color:#77776f}
-.chat-area {
-  flex:1;
-  overflow-y:auto;
-  padding:30px 22px;
-  scroll-behavior:smooth;
-}
-.welcome {
-  max-width:680px;
-  margin:14vh auto 0;
-  text-align:center;
-}
-.welcome .eyebrow {
-  color:var(--muted);
+  border-top:1px solid var(--line);
+  padding:18px 8px 0;
+  color:#999;
   font-size:11px;
-  letter-spacing:3px;
-  margin-bottom:24px;
+  line-height:1.7;
 }
+
+.main {
+  flex:1;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  min-height:100dvh;
+}
+
+.topbar {
+  height:68px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 34px;
+  border-bottom:1px solid var(--line);
+  background:rgba(255,255,255,.55);
+}
+
+.topbar-title {
+  font-size:13px;
+  font-weight:600;
+}
+
+.status {
+  display:flex;
+  align-items:center;
+  gap:7px;
+  font-size:11px;
+  color:#777;
+}
+
+.status-dot {
+  width:7px;
+  height:7px;
+  background:#63a77c;
+  border-radius:50%;
+}
+
+.mobile-brand {
+  display:none;
+  align-items:center;
+  gap:8px;
+  font-weight:750;
+  letter-spacing:2px;
+}
+
+.content {
+  width:100%;
+  max-width:900px;
+  margin:0 auto;
+  padding:50px 35px 30px;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+
+.welcome {
+  text-align:center;
+  margin:auto auto 35px;
+  padding-top:30px;
+  width:100%;
+}
+
+.welcome-mark {
+  width:54px;
+  height:54px;
+  margin:0 auto 25px;
+}
+
 .welcome h1 {
-  font-size:clamp(32px,5vw,49px);
-  letter-spacing:-2.8px;
-  line-height:1.12;
+  font-size:clamp(27px,4vw,39px);
+  letter-spacing:-1.5px;
   font-weight:650;
+  margin-bottom:13px;
 }
-.welcome h1 span {color:#999991}
+
 .welcome p {
   color:var(--muted);
   font-size:14px;
-  margin-top:18px;
+  line-height:1.7;
 }
+
 .suggestions {
   display:flex;
-  justify-content:center;
   flex-wrap:wrap;
+  justify-content:center;
   gap:9px;
-  margin-top:35px;
+  margin-top:29px;
 }
+
 .suggestion {
-  background:var(--surface);
-  border:1px solid var(--border);
+  background:#fff;
+  border:1px solid var(--line);
+  padding:11px 15px;
   border-radius:30px;
-  padding:10px 15px;
-  color:#66665f;
   font-size:12px;
-  cursor:pointer;
+  color:#555;
+  transition:.2s;
 }
-.suggestion:hover {background:var(--soft)}
+
+.suggestion:hover {
+  background:var(--soft);
+  border-color:#d5d5d0;
+}
+
 .messages {
-  max-width:760px;
-  margin:0 auto;
   display:flex;
   flex-direction:column;
-  gap:27px;
+  gap:24px;
+  width:100%;
+  padding-bottom:30px;
 }
+
 .message {
   display:flex;
-  flex-direction:column;
-  gap:8px;
-  font-size:15px;
-  line-height:1.75;
+  gap:13px;
+  align-items:flex-start;
+  animation:appear .25s ease;
+}
+
+.message.user {
+  justify-content:flex-end;
+}
+
+.message-content {
+  max-width:min(75%,680px);
+  font-size:14px;
+  line-height:1.8;
   white-space:pre-wrap;
   overflow-wrap:anywhere;
 }
-.message.user {align-items:flex-end}
-.message.user .content {
-  background:#eeeee9;
-  padding:12px 17px;
-  border-radius:17px;
-  max-width:85%;
+
+.user .message-content {
+  background:#eaeae6;
+  padding:13px 17px;
+  border-radius:17px 17px 4px 17px;
 }
-.message.assistant .content {max-width:100%}
-.message-label {
-  color:var(--muted);
+
+.assistant .message-content {
+  padding:5px 0;
+}
+
+.avatar {
+  width:30px;
+  height:30px;
+  border-radius:10px;
+  background:#191919;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  flex-shrink:0;
+}
+
+.avatar svg {
+  width:19px;
+  height:19px;
+}
+
+.message-actions {
+  display:flex;
+  gap:8px;
+  margin-top:9px;
+}
+
+.message-actions button {
+  border:0;
+  background:transparent;
+  color:#999;
   font-size:11px;
-  font-weight:600;
 }
-.composer-wrap {
-  padding:15px 22px calc(20px + env(safe-area-inset-bottom));
+
+.message-actions button:hover {
+  color:#222;
 }
+
+.typing {
+  color:#999;
+  font-size:12px;
+  padding:8px 0;
+}
+
+.composer-area {
+  width:100%;
+  max-width:900px;
+  margin:0 auto;
+  padding:0 35px 22px;
+}
+
 .composer {
-  max-width:760px;
-  margin:auto;
-  background:var(--surface);
-  border:1px solid #e3e3de;
-  border-radius:19px;
-  padding:12px 14px;
-  box-shadow:0 7px 25px rgba(0,0,0,.035);
+  background:#fff;
+  border:1px solid #e4e4e0;
+  border-radius:18px;
+  padding:13px 14px 11px;
+  box-shadow:0 5px 25px rgba(0,0,0,.035);
 }
+
 .composer textarea {
   display:block;
   width:100%;
-  resize:none;
   border:0;
   outline:0;
+  resize:none;
+  min-height:43px;
+  max-height:180px;
+  padding:8px 5px;
   background:transparent;
   color:var(--text);
-  font-size:15px;
-  min-height:46px;
-  max-height:150px;
-  padding:9px 7px;
+  font-size:14px;
+  line-height:1.6;
 }
-.composer textarea::placeholder {color:#aaa9a2}
+
+.composer textarea::placeholder {
+  color:#aaa;
+}
+
 .composer-bottom {
   display:flex;
   align-items:center;
   justify-content:space-between;
+  padding:5px 2px 0;
 }
-.input-hint {font-size:10px;color:#aaa9a2;padding-left:7px}
-.send {
-  background:#242422;
-  color:white;
+
+.composer-hint {
+  color:#aaa;
+  font-size:10px;
+}
+
+.send-btn {
+  width:36px;
+  height:36px;
   border:0;
   border-radius:11px;
-  padding:10px 17px;
-  cursor:pointer;
-  font-size:13px;
-  font-weight:600;
+  background:#191919;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:.2s;
 }
-.send:disabled {opacity:.4;cursor:not-allowed}
-.disclaimer {
+
+.send-btn:hover {
+  background:#444;
+  transform:translateY(-1px);
+}
+
+.send-btn:disabled {
+  opacity:.35;
+  cursor:not-allowed;
+}
+
+.send-btn svg {
+  width:17px;
+  height:17px;
+}
+
+.footer {
   text-align:center;
-  color:#aaa9a2;
+  color:#aaa;
   font-size:10px;
-  margin-top:11px;
+  padding:0 10px 15px;
 }
+
+.error {
+  color:#b44;
+  font-size:13px;
+}
+
 @media(max-width:700px) {
   .sidebar {display:none}
-  .topbar {height:58px;padding:0 19px}
-  .chat-area {padding:20px 15px}
-  .welcome {margin-top:15vh}
-  .welcome h1 {letter-spacing:-1.8px}
-  .composer-wrap {padding:10px 12px calc(14px + env(safe-area-inset-bottom))}
-  .suggestions {gap:7px;margin-top:27px}
-  .suggestion {font-size:11px;padding:9px 12px}
+  .topbar {
+    height:58px;
+    padding:0 18px;
+  }
+  .topbar-title {display:none}
+  .mobile-brand {display:flex}
+  .content {
+    padding:28px 19px 20px;
+  }
+  .welcome {
+    padding-top:15px;
+    margin-bottom:30px;
+  }
+  .welcome h1 {
+    font-size:29px;
+  }
+  .welcome p {
+    font-size:13px;
+  }
+  .suggestions {
+    gap:8px;
+    margin-top:24px;
+  }
+  .suggestion {
+    font-size:11px;
+    padding:10px 12px;
+  }
+  .composer-area {
+    padding:0 13px 12px;
+  }
+  .message-content {
+    max-width:85%;
+    font-size:13px;
+  }
+  .footer {
+    font-size:9px;
+    padding-bottom:10px;
+  }
 }
 </style>
 </head>
+
 <body>
+
+<div id="splash">
+  <svg class="splash-logo" viewBox="0 0 100 100" aria-label="TOZRA">
+    <rect width="100" height="100" rx="24" fill="#171717"/>
+    <path d="M19 23H81V39H58V78H42V39H19Z" fill="#fff"/>
+  </svg>
+  <div class="splash-name">TOZRA</div>
+  <div class="splash-tag">CREATIVE INTELLIGENCE</div>
+</div>
+
 <div class="app">
+
   <aside class="sidebar">
-    <div class="logo">TOZRA<span>.</span></div>
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 100 100">
+        <rect width="100" height="100" rx="23" fill="#171717"/>
+        <path d="M19 23H81V39H58V78H42V39H19Z" fill="#fff"/>
+      </svg>
+      <span class="brand-name">TOZRA</span>
+    </div>
+
     <button class="new-chat" onclick="newChat()">＋ &nbsp; Yeni sohbet</button>
-    <div class="sidebar-bottom">TOZRA · Creative Intelligence</div>
+
+    <div class="side-label">ÇALIŞMA ALANI</div>
+    <div class="side-note">
+      Fikirlerini geliştir.<br>
+      Yeni projeler oluştur.<br>
+      Yaratıcılığını keşfet.
+    </div>
+
+    <div class="sidebar-bottom">
+      TOZRA<br>
+      Creative Intelligence
+    </div>
   </aside>
 
   <main class="main">
+
     <header class="topbar">
-      <div class="topbar-title">TOZRA</div>
-      <div class="status">● Sistem hazır</div>
+      <div class="mobile-brand">
+        <svg width="25" height="25" viewBox="0 0 100 100">
+          <rect width="100" height="100" rx="23" fill="#171717"/>
+          <path d="M19 23H81V39H58V78H42V39H19Z" fill="#fff"/>
+        </svg>
+        TOZRA
+      </div>
+      <div class="topbar-title">Yeni sohbet</div>
+      <div class="status">
+        <span class="status-dot"></span>
+        Hazır
+      </div>
     </header>
 
-    <section class="chat-area" id="chatArea">
+    <section class="content">
+
       <div class="welcome" id="welcome">
-        <div class="eyebrow">CREATIVE INTELLIGENCE</div>
-        <h1>Fikrini keşfet.<br><span>Gerisini birlikte geliştirelim.</span></h1>
-        <p>Düşüncelerini paylaş. Yeni fikirler keşfet. Üretmeye başla.</p>
+        <svg class="welcome-mark" viewBox="0 0 100 100">
+          <rect width="100" height="100" rx="23" fill="#171717"/>
+          <path d="M19 23H81V39H58V78H42V39H19Z" fill="#fff"/>
+        </svg>
+
+        <h1>Fikrini hayata geçir.</h1>
+        <p>
+          Merak ettiğin şeyleri sor, fikirlerini geliştir<br>
+          ve yeni projeler keşfet.
+        </p>
+
         <div class="suggestions">
-          <button class="suggestion" onclick="useSuggestion('Bana yaratıcı bir proje fikri öner.')">Bir fikir geliştir</button>
-          <button class="suggestion" onclick="useSuggestion('Bana bir içerik planı hazırla.')">İçerik oluştur</button>
-          <button class="suggestion" onclick="useSuggestion('Bu konuyu detaylı açıkla.')">Bir konu keşfet</button>
+          <button class="suggestion" onclick="useSuggestion('Bana yaratıcı bir proje fikri üret.')">Yaratıcı fikir üret</button>
+          <button class="suggestion" onclick="useSuggestion('Yeni bir marka oluşturmak istiyorum. Bana yardımcı ol.')">Marka oluştur</button>
+          <button class="suggestion" onclick="useSuggestion('Bana içerik önerileri sun.')">İçerik fikirleri</button>
         </div>
       </div>
+
       <div class="messages" id="messages"></div>
+
     </section>
 
-    <div class="composer-wrap">
+    <div class="composer-area">
       <div class="composer">
-        <textarea id="prompt" placeholder="TOZRA'ya bir şey sor..." rows="1"></textarea>
+        <textarea
+          id="prompt"
+          placeholder="TOZRA'ya bir şey sor..."
+          rows="1"
+          oninput="resizeInput()"
+          onkeydown="handleKey(event)"
+        ></textarea>
+
         <div class="composer-bottom">
-          <span class="input-hint">Enter ile gönder · Shift + Enter ile yeni satır</span>
-          <button class="send" id="sendButton" onclick="sendMessage()">Gönder ↑</button>
+          <span class="composer-hint">Enter ile gönder · Shift + Enter ile yeni satır</span>
+          <button class="send-btn" id="sendBtn" onclick="sendMessage()" aria-label="Mesaj gönder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 19V5M5 12l7-7 7 7"/>
+            </svg>
+          </button>
         </div>
       </div>
-      <div class="disclaimer">TOZRA yanıtlarında hata yapabilir. Önemli bilgileri kontrol et.</div>
     </div>
+
+    <div class="footer">
+      TOZRA yapay zekâ tarafından oluşturulan yanıtlar hata içerebilir.
+    </div>
+
   </main>
 </div>
 
 <script>
-const promptInput=document.getElementById("prompt");
-const messages=document.getElementById("messages");
-const welcome=document.getElementById("welcome");
-const chatArea=document.getElementById("chatArea");
-const sendButton=document.getElementById("sendButton");
+let history = [];
+let busy = false;
 
-let history=[];
-let busy=false;
+const promptInput = document.getElementById("prompt");
+const messages = document.getElementById("messages");
+const welcome = document.getElementById("welcome");
+const sendBtn = document.getElementById("sendBtn");
 
-function addMessage(role,text) {
-  welcome.style.display="none";
-  const message=document.createElement("div");
-  message.className="message "+role;
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    document.getElementById("splash").classList.add("hide");
+  }, 1100);
+});
 
-  const label=document.createElement("div");
-  label.className="message-label";
-  label.textContent=role==="user"?"SEN":"TOZRA";
-
-  const content=document.createElement("div");
-  content.className="content";
-  content.textContent=text;
-
-  message.append(label,content);
-  messages.appendChild(message);
-  chatArea.scrollTop=chatArea.scrollHeight;
-  return content;
+function resizeInput() {
+  promptInput.style.height = "auto";
+  promptInput.style.height =
+    Math.min(promptInput.scrollHeight, 180) + "px";
 }
 
-async function sendMessage() {
-  const prompt=promptInput.value.trim();
-  if(!prompt||busy)return;
-
-  busy=true;
-  sendButton.disabled=true;
-  addMessage("user",prompt);
-  promptInput.value="";
-  promptInput.style.height="46px";
-
-  const answer=addMessage("assistant","Yanıt hazırlanıyor...");
-
-  try {
-    const response=await fetch("/api/chat",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({prompt,history})
-    });
-
-    const data=await response.json();
-    if(!response.ok)throw new Error(data.error||"Sunucu hatası.");
-    if(!data.answer)throw new Error("Boş yanıt alındı.");
-
-    answer.textContent=data.answer;
-    history.push(
-      {role:"user",content:prompt},
-      {role:"assistant",content:data.answer}
-    );
-  } catch(error) {
-    answer.textContent="Bağlantı hatası: "+error.message;
-  }
-
-  busy=false;
-  sendButton.disabled=false;
-  promptInput.focus();
-  chatArea.scrollTop=chatArea.scrollHeight;
-}
-
-function newChat() {
-  if(busy)return;
-  history=[];
-  messages.innerHTML="";
-  welcome.style.display="block";
-  promptInput.value="";
-  promptInput.focus();
-}
-
-function useSuggestion(text) {
-  promptInput.value=text;
-  sendMessage();
-}
-
-promptInput.addEventListener("keydown",event=>{
-  if(event.key==="Enter"&&!event.shiftKey) {
+function handleKey(event) {
+  if (event.key === "Enter" && !event.shiftKey) {
     event.preventDefault();
     sendMessage();
   }
-});
+}
 
-promptInput.addEventListener("input",()=>{
-  promptInput.style.height="46px";
-  promptInput.style.height=Math.min(promptInput.scrollHeight,150)+"px";
-});
+function useSuggestion(value) {
+  promptInput.value = value;
+  resizeInput();
+  sendMessage();
+}
+
+function newChat() {
+  history = [];
+  messages.innerHTML = "";
+  welcome.style.display = "";
+  document.querySelector(".topbar-title").textContent = "Yeni sohbet";
+  promptInput.value = "";
+  resizeInput();
+}
+
+function addMessage(role, text) {
+  const item = document.createElement("div");
+  item.className = "message " + role;
+
+  if (role === "user") {
+    const bubble = document.createElement("div");
+    bubble.className = "message-content";
+    bubble.textContent = text;
+    item.appendChild(bubble);
+  } else {
+    const avatar = document.createElement("div");
+    avatar.className = "avatar";
+    avatar.innerHTML = `
+      <svg viewBox="0 0 100 100">
+        <path d="M19 23H81V39H58V78H42V39H19Z" fill="white"/>
+      </svg>
+    `;
+
+    const wrapper = document.createElement("div");
+    wrapper.style.minWidth = "0";
+
+    const bubble = document.createElement("div");
+    bubble.className = "message-content";
+    bubble.textContent = text;
+
+    const actions = document.createElement("div");
+    actions.className = "message-actions";
+
+    const copy = document.createElement("button");
+    copy.textContent = "Kopyala";
+    copy.onclick = async () => {
+      try {
+        await navigator.clipboard.writeText(text);
+        copy.textContent = "Kopyalandı";
+        setTimeout(() => copy.textContent = "Kopyala", 1500);
+      } catch {
+        copy.textContent = "Kopyalanamadı";
+      }
+    };
+
+    actions.appendChild(copy);
+    wrapper.appendChild(bubble);
+    wrapper.appendChild(actions);
+    item.appendChild(avatar);
+    item.appendChild(wrapper);
+  }
+
+  messages.appendChild(item);
+  item.scrollIntoView({behavior:"smooth", block:"end"});
+  return item;
+}
+
+async function sendMessage() {
+  const prompt = promptInput.value.trim();
+
+  if (!prompt || busy) return;
+
+  busy = true;
+  sendBtn.disabled = true;
+  welcome.style.display = "none";
+
+  document.querySelector(".topbar-title").textContent = "Sohbet";
+
+  addMessage("user", prompt);
+
+  promptInput.value = "";
+  resizeInput();
+
+  const typing = document.createElement("div");
+  typing.className = "typing";
+  typing.textContent = "TOZRA yanıt hazırlıyor...";
+  messages.appendChild(typing);
+
+  try {
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        prompt: prompt,
+        history: history
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Sunucu isteği başarısız oldu.");
+    }
+
+    const answer = data.answer;
+
+    if (typeof answer !== "string" || !answer.trim()) {
+      throw new Error("Sunucudan geçerli bir yanıt alınamadı.");
+    }
+
+    typing.remove();
+
+    addMessage("assistant", answer);
+
+    history.push(
+      {role:"user", content:prompt},
+      {role:"assistant", content:answer}
+    );
+
+  } catch (error) {
+    typing.remove();
+    const errorItem = addMessage(
+      "assistant",
+      "Bir hata oluştu: " + error.message
+    );
+    errorItem.querySelector(".message-content").classList.add("error");
+  }
+
+  busy = false;
+  sendBtn.disabled = false;
+  promptInput.focus();
+}
 </script>
+
 </body>
 </html>
