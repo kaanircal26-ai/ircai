@@ -16,9 +16,9 @@
 
 <style>
 :root{
-  --bg:#f7f7f5;--surface:#fff;--text:#20201f;
-  --muted:#858580;--border:#e9e9e5;--soft:#f0f0ed;
-  --dark:#222220;--shadow:0 12px 35px rgba(0,0,0,.06)
+--bg:#f7f7f5;--surface:#fff;--text:#20201f;
+--muted:#858580;--border:#e9e9e5;--soft:#f0f0ed;
+--dark:#222220;--shadow:0 12px 35px rgba(0,0,0,.06)
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);
@@ -132,25 +132,21 @@ border-radius:11px;background:white;margin-top:9px}
 color:white;padding:11px;border-radius:9px;font-size:12px}
 .notice{background:#f5f5f2;border-radius:11px;padding:12px;
 font-size:11px;color:#777;line-height:1.6;margin-top:12px}
-.link-row{display:flex;gap:8px}
-.link-row input{min-width:0;flex:1}
-.link-row button{border:0;background:#222;color:white;border-radius:10px;padding:0 14px}
 .mobile-menu{display:none}
 @media(max-width:700px){
- .sidebar{display:none;position:fixed;left:0;top:0;bottom:0;width:275px;
- box-shadow:var(--shadow)}
- .sidebar.open{display:flex}
- .topbar{height:58px;padding:0 14px}
- .mobile-brand{display:flex;align-items:center;gap:8px;font-weight:800;letter-spacing:1.3px}
- .mobile-brand .brand-icon{width:30px;height:30px}
- .topbar-title{display:none}
- .mobile-menu{display:block;border:0;background:transparent;font-size:21px;margin-right:8px}
- .content{padding:20px 15px 10px}
- .welcome{padding:20px 0}
- .suggestions{grid-template-columns:1fr;margin-top:24px}
- .message{max-width:95%}
- .top-button{padding:8px;font-size:11px}
- .plan-grid{grid-template-columns:1fr}
+.sidebar{display:none;position:fixed;left:0;top:0;bottom:0;width:275px;box-shadow:var(--shadow)}
+.sidebar.open{display:flex}
+.topbar{height:58px;padding:0 14px}
+.mobile-brand{display:flex;align-items:center;gap:8px;font-weight:800;letter-spacing:1.3px}
+.mobile-brand .brand-icon{width:30px;height:30px}
+.topbar-title{display:none}
+.mobile-menu{display:block;border:0;background:transparent;font-size:21px;margin-right:8px}
+.content{padding:20px 15px 10px}
+.welcome{padding:20px 0}
+.suggestions{grid-template-columns:1fr;margin-top:24px}
+.message{max-width:95%}
+.top-button{padding:8px;font-size:11px}
+.plan-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -221,7 +217,7 @@ font-size:11px;color:#777;line-height:1.6;margin-top:12px}
 </main>
 </div>
 
-<input type="file" id="imageInput" accept="image/*" multiple hidden>
+<input type="file" id="imageInput" accept="image/jpeg,image/png,image/webp" multiple hidden>
 <input type="file" id="videoInput" accept="video/*" multiple hidden>
 
 <div class="overlay" id="modalOverlay">
@@ -239,6 +235,7 @@ const $=id=>document.getElementById(id);
 const promptInput=$("prompt"),sendButton=$("send");
 const messagesEl=$("messages"),welcomeEl=$("welcome");
 const historyEl=$("history");
+
 let conversation=[],conversations=[],busy=false,attachments=[];
 
 function saveConversation(){
@@ -312,62 +309,6 @@ function addMessageToScreen(role,content){
   wrapper.scrollIntoView({behavior:"smooth",block:"end"});
 }
 
-async function sendMessage(value){
-  const text=(value??promptInput.value).trim();
-  if(!text||busy)return;
-  busy=true;
-  sendButton.disabled=true;
-  welcomeEl.style.display="none";
-
-  if(!conversation.length){
-    conversation.push({id:Date.now(),role:"user",content:text});
-  }else{
-    conversation.push({role:"user",content:text});
-  }
-  addMessageToScreen("user",text);
-  promptInput.value="";
-  promptInput.style.height="38px";
-
-  const typing=document.createElement("div");
-  typing.className="typing";
-  typing.textContent="TOZRA yanıt hazırlıyor...";
-  messagesEl.appendChild(typing);
-
-  try{
-    const response=await fetch("/api/chat",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
-        prompt:text,
-        history:conversation.slice(0,-1)
-      })
-    });
-    const data=await response.json();
-    typing.remove();
-    if(!response.ok||!data.success)throw new Error(data.error||"Yanıt alınamadı.");
-    const answer=data.answer||"Bir yanıt oluşturulamadı.";
-    conversation.push({role:"assistant",content:answer});
-    addMessageToScreen("assistant",answer);
-    saveConversation();
-  }catch(error){
-    typing.remove();
-    const message="Bağlantı sorunu oluştu. Lütfen tekrar dene.";
-    conversation.push({role:"assistant",content:message});
-    addMessageToScreen("assistant",message);
-    saveConversation();
-    console.error(error);
-  }finally{
-    busy=false;
-    sendButton.disabled=false;
-  }
-}
-
-function clearAttachments(){
-  attachments.forEach(a=>URL.revokeObjectURL(a.url));
-  attachments=[];
-  renderAttachments();
-}
-
 function renderAttachments(){
   const area=$("attachments");
   area.innerHTML="";
@@ -398,10 +339,210 @@ function renderAttachments(){
 }
 
 function addFiles(files,kind){
-  Array.from(files).forEach(file=>{
+  const selected=Array.from(files);
+  if(attachments.length+selected.length>3){
+    alert("Bir mesajda en fazla 3 dosya ekleyebilirsin.");
+    return;
+  }
+  for(const file of selected){
+    if(kind==="image"&&!["image/jpeg","image/png","image/webp"].includes(file.type)){
+      alert("JPG, PNG veya WEBP fotoğraf seç.");
+      continue;
+    }
+    if(kind==="video"&&!file.type.startsWith("video/")){
+      alert("Geçerli bir video seç.");
+      continue;
+    }
+    if(file.size>40*1024*1024){
+      alert("Dosya boyutu 40 MB sınırını aşıyor.");
+      continue;
+    }
     attachments.push({file,kind,url:URL.createObjectURL(file)});
-  });
+  }
   renderAttachments();
+}
+
+function clearAttachments(){
+  attachments.forEach(a=>URL.revokeObjectURL(a.url));
+  attachments=[];
+  renderAttachments();
+}
+
+// Fotoğrafı küçültüp API'ye uygun Base64 formatına dönüştürür.
+function imageToDataURL(file,maxSide=1100,quality=.72){
+  return new Promise((resolve,reject)=>{
+    const img=new Image();
+    const url=URL.createObjectURL(file);
+    img.onload=()=>{
+      const scale=Math.min(1,maxSide/Math.max(img.width,img.height));
+      const canvas=document.createElement("canvas");
+      canvas.width=Math.round(img.width*scale);
+      canvas.height=Math.round(img.height*scale);
+      const ctx=canvas.getContext("2d");
+      ctx.drawImage(img,0,0,canvas.width,canvas.height);
+      URL.revokeObjectURL(url);
+      resolve(canvas.toDataURL("image/jpeg",quality));
+    };
+    img.onerror=()=>{
+      URL.revokeObjectURL(url);
+      reject(new Error("Fotoğraf okunamadı."));
+    };
+    img.src=url;
+  });
+}
+
+// Videodan seçilen zamanlarda örnek kareler çıkarır.
+function videoToFrames(file,count=2){
+  return new Promise((resolve,reject)=>{
+    const video=document.createElement("video");
+    const url=URL.createObjectURL(file);
+    video.preload="metadata";
+    video.muted=true;
+    video.playsInline=true;
+
+    const finish=()=>{
+      URL.revokeObjectURL(url);
+      video.removeAttribute("src");
+      video.load();
+    };
+
+    video.onerror=()=>{
+      finish();
+      reject(new Error("Video okunamadı."));
+    };
+
+    video.onloadedmetadata=async()=>{
+      try{
+        if(!Number.isFinite(video.duration)||video.duration<=0){
+          throw new Error("Video süresi okunamadı.");
+        }
+
+        const times=count===1?[video.duration*.5]:
+          [video.duration*.25,video.duration*.75];
+
+        const frames=[];
+
+        for(const time of times){
+          await new Promise((resolveSeek,rejectSeek)=>{
+            video.onseeked=resolveSeek;
+            video.currentTime=Math.min(time,Math.max(0,video.duration-.1));
+            setTimeout(()=>rejectSeek(new Error("Video karesi alınamadı.")),10000);
+          });
+
+          const scale=Math.min(1,640/Math.max(video.videoWidth,video.videoHeight));
+          const canvas=document.createElement("canvas");
+          canvas.width=Math.max(1,Math.round(video.videoWidth*scale));
+          canvas.height=Math.max(1,Math.round(video.videoHeight*scale));
+          canvas.getContext("2d").drawImage(video,0,0,canvas.width,canvas.height);
+          frames.push(canvas.toDataURL("image/jpeg",.55));
+        }
+
+        finish();
+        resolve(frames);
+      }catch(error){
+        finish();
+        reject(error);
+      }
+    };
+    video.src=url;
+  });
+}
+
+async function prepareMedia(){
+  const images=[],videoFrames=[];
+  for(const item of attachments){
+    if(item.kind==="image"){
+      images.push(await imageToDataURL(item.file));
+    }
+  }
+
+  for(const item of attachments){
+    if(item.kind==="video"){
+      const remaining=3-images.length-videoFrames.length;
+      if(remaining<=0)break;
+      const frames=await videoToFrames(item.file,Math.min(2,remaining));
+      videoFrames.push(...frames);
+    }
+  }
+
+  if(images.length+videoFrames.length>3){
+    throw new Error("Bir istekte en fazla 3 görüntü gönderilebilir.");
+  }
+
+  return {images,videoFrames};
+}
+
+async function sendMessage(value){
+  const text=(value??promptInput.value).trim();
+  if((!text&&!attachments.length)||busy)return;
+
+  if(!text&&attachments.length){
+    alert("Dosyanı analiz edebilmem için ne yapmamı istediğini de yaz.");
+    return;
+  }
+
+  busy=true;
+  sendButton.disabled=true;
+  welcomeEl.style.display="none";
+
+  const fileNames=attachments.map(a=>a.file.name);
+  const displayText=text+(fileNames.length?"\n\nEklenen dosyalar: "+fileNames.join(", "):"");
+
+  if(!conversation.length){
+    conversation.push({id:Date.now(),role:"user",content:displayText});
+  }else{
+    conversation.push({role:"user",content:displayText});
+  }
+
+  addMessageToScreen("user",displayText);
+  promptInput.value="";
+  promptInput.style.height="38px";
+
+  const typing=document.createElement("div");
+  typing.className="typing";
+  typing.textContent="TOZRA analiz ediyor...";
+  messagesEl.appendChild(typing);
+
+  try{
+    const media=await prepareMedia();
+
+    const response=await fetch("/api/chat",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        prompt:text,
+        history:conversation.slice(0,-1),
+        images:media.images,
+        videoFrames:media.videoFrames
+      })
+    });
+
+    let data;
+    try{data=await response.json();}
+    catch(e){throw new Error("Sunucudan geçerli yanıt alınamadı.");}
+
+    if(!response.ok||!data.success){
+      throw new Error(data.error||"Yapay zekâ yanıt veremedi.");
+    }
+
+    const answer=data.answer||"Bir yanıt oluşturulamadı.";
+    conversation.push({role:"assistant",content:answer});
+    typing.remove();
+    addMessageToScreen("assistant",answer);
+    saveConversation();
+    clearAttachments();
+
+  }catch(error){
+    typing.remove();
+    const message="İstek tamamlanamadı: "+(error.message||"Bir bağlantı sorunu oluştu.");
+    conversation.push({role:"assistant",content:message});
+    addMessageToScreen("assistant",message);
+    saveConversation();
+    console.error(error);
+  }finally{
+    busy=false;
+    sendButton.disabled=false;
+  }
 }
 
 function newChat(){
@@ -415,26 +556,24 @@ function newChat(){
 
 function showModal(type){
   const title=$("modalTitle"),content=$("modalContent");
+
   if(type==="plans"){
     title.textContent="TOZRA üyelik planları";
     content.innerHTML=`
       <p>TOZRA deneyimini genişletmek için üyelik seçenekleri.</p>
       <div class="plan-grid">
         <div class="plan">
-          <h3>Aylık üyelik</h3>
-          <div class="price">₺200</div>
-          <small>Her ay</small>
+          <h3>Aylık üyelik</h3><div class="price">₺200</div><small>Her ay</small>
           <button onclick="paymentNotice()">Planı seç</button>
         </div>
         <div class="plan">
-          <h3>Yıllık üyelik</h3>
-          <div class="price">₺1.000</div>
-          <small>Yıllık ödeme</small>
+          <h3>Yıllık üyelik</h3><div class="price">₺1.000</div><small>Yıllık ödeme</small>
           <button onclick="paymentNotice()">Planı seç</button>
         </div>
       </div>
-      <div class="notice">Bu fiyatlar tasarım aşamasındaki planlardır. Gerçek ödeme sistemi henüz bağlı değildir.</div>`;
+      <div class="notice">Fiyatlar tasarım aşamasındaki planlardır. Gerçek ödeme sistemi henüz bağlı değildir.</div>`;
   }
+
   if(type==="login"){
     title.textContent="TOZRA hesabına giriş";
     content.innerHTML=`
@@ -452,6 +591,7 @@ function showModal(type){
     };
     $("registerSwitch").onclick=()=>showModal("register");
   }
+
   if(type==="register"){
     title.textContent="TOZRA hesabı oluştur";
     content.innerHTML=`
@@ -468,6 +608,7 @@ function showModal(type){
       alert("Gerçek kayıt sistemi henüz bağlı değil.");
     };
   }
+
   if(type==="profile"){
     title.textContent="Profil";
     content.innerHTML=`
@@ -479,6 +620,7 @@ function showModal(type){
       <button class="primary" onclick="showModal('register')">Hesap oluştur</button>
       <button class="secondary" onclick="showModal('login')">Giriş yap</button>`;
   }
+
   if(type==="settings"){
     title.textContent="Ayarlar";
     content.innerHTML=`
@@ -486,37 +628,37 @@ function showModal(type){
       <p>TOZRA şu anda premium açık tema ile çalışıyor.</p>
       <h3 style="font-size:14px">Uygulama</h3>
       <p>TOZRA — Creative Intelligence</p>
-      <p>Sürüm 2.0 arayüz önizlemesi</p>
-      <div class="notice">Hesap, veri senkronizasyonu ve gelişmiş kişiselleştirme özellikleri sonraki backend aşamasında eklenecek.</div>`;
+      <p>Sürüm 2.1</p>
+      <div class="notice">Hesap, veri senkronizasyonu ve kişiselleştirme özellikleri sonraki backend aşamasında eklenecek.</div>`;
   }
+
   $("modalOverlay").classList.add("show");
 }
 
 function paymentNotice(){
-  alert("Ödeme altyapısı henüz bağlanmadı. Bu bölüm daha sonra etkinleştirilecek.");
+  alert("Ödeme altyapısı henüz bağlanmadı.");
 }
 
 function addLink(){
   const url=prompt("Eklemek istediğin bağlantıyı yaz:");
   if(!url)return;
   let parsed;
-  try{parsed=new URL(url)}catch(e){
-    alert("Lütfen geçerli bir bağlantı gir.");
-    return;
-  }
+  try{parsed=new URL(url);}
+  catch(e){alert("Lütfen geçerli bir bağlantı gir.");return;}
   if(!["http:","https:"].includes(parsed.protocol)){
     alert("Yalnızca http veya https bağlantıları kullanılabilir.");
     return;
   }
   promptInput.value+=(promptInput.value?"\n":"")+"Bağlantı: "+parsed.href;
   promptInput.focus();
-  alert("Bağlantı mesajına eklendi. Mevcut API bağlantı içeriğini otomatik analiz etmez; bunun için backend geliştirmesi gerekir.");
+  alert("Bağlantı mesajına eklendi. Bağlantı içeriğinin okunması için ayrıca backend desteği gerekir.");
 }
 
 $("send").onclick=()=>sendMessage();
 promptInput.addEventListener("keydown",e=>{
   if(e.key==="Enter"&&!e.shiftKey){
-    e.preventDefault();sendMessage();
+    e.preventDefault();
+    sendMessage();
   }
 });
 promptInput.addEventListener("input",()=>{
@@ -529,8 +671,14 @@ document.querySelectorAll(".suggestion").forEach(button=>{
 });
 $("imageButton").onclick=()=>$("imageInput").click();
 $("videoButton").onclick=()=>$("videoInput").click();
-$("imageInput").onchange=e=>addFiles(e.target.files,"image");
-$("videoInput").onchange=e=>addFiles(e.target.files,"video");
+$("imageInput").onchange=e=>{
+  addFiles(e.target.files,"image");
+  e.target.value="";
+};
+$("videoInput").onchange=e=>{
+  addFiles(e.target.files,"video");
+  e.target.value="";
+};
 $("linkButton").onclick=addLink;
 $("plansButton").onclick=()=>showModal("plans");
 $("sidePlans").onclick=()=>showModal("plans");
