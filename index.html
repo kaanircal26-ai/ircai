@@ -476,6 +476,7 @@ function scopedStorageKey(key) {
  const id = TozraAuth.userId();
  return id === "guest" ? `tozra-guest:${key}` : `tozra-user:${id}:${key}`;
 }
+window.tozraStorageKey = scopedStorageKey;
 
 const promptInput=$("prompt");
 let conversation=[],conversations=[],projects=[],currentProjectId=null;
@@ -1620,8 +1621,7 @@ if("serviceWorker" in navigator){
  });
 }
 </script>
-<script src="/voice.js?v=2"></script>
-</body>
-</html>
+<script src="/memory.js?v=2"></script>
+<script src="/voice.js?v=3"></script>
 </body>
 </html>
