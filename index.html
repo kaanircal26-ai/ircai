@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#050806">
-<meta name="description" content="TOZRA — Creative Intelligence">
+<meta name="theme-color" content="#f2f0e9">
+<meta name="description" content="TOZRA — Creative Studio & Intelligence">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="TOZRA">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>TOZRA — Creative Intelligence</title>
+<title>TOZRA — Creative Studio</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="icon" href="/apple-touch-icon.PNG">
 <link rel="apple-touch-icon" href="/apple-touch-icon.PNG">
@@ -246,7 +246,212 @@ button:disabled{opacity:.45;cursor:not-allowed}
 .smart-command-hint{font-size:10px;color:#718075;margin:9px 2px 0}
 @media(max-width:700px){.smart-command{padding:8px 8px 8px 12px;gap:6px}.smart-command input{font-size:13px}.smart-command button{padding:11px 12px;font-size:12px}}
 
+
+
+/* =========================================================
+   TOZRA / EDITORIAL FUTURE — interface refresh v1
+   Keeps existing DOM IDs and application logic intact.
+   ========================================================= */
+:root{
+ --bg:#f2f0e9;
+ --surface:#fbfaf6;
+ --surface2:#e9e6dc;
+ --text:#191b18;
+ --muted:#77776f;
+ --border:#dedbd1;
+ --green:#d65b35;
+ --green2:#b94325;
+ --shadow:0 18px 55px rgba(32,29,23,.09);
+}
+html,body{background:var(--bg);color:var(--text)}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:-.01em}
+::selection{background:#f2a58d;color:#21130f}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #d65b35;outline-offset:3px}
+.splash{background:#171916;color:#f4f0e7}
+.splash-logo{background:#292c26;box-shadow:0 0 65px #d65b3528}
+.splash-name{letter-spacing:.32em;font-size:24px}
+.splash-tagline{color:#aaa99f;letter-spacing:.22em}
+.loader{background:#34372f}.loader-bar{background:#e16a43;box-shadow:0 0 14px #e16a43}
+.app{background:var(--bg)}
+.sidebar{
+ width:248px;background:#e9e6dc;border-right:1px solid #d8d4c9;
+ padding:25px 17px 18px;color:#1b1d19
+}
+.brand{font-size:18px;letter-spacing:.19em;color:#171a16;margin:3px 7px 38px}
+.brand-icon{width:34px;height:34px;border-radius:9px;background:#1b201a;border:0}
+.new-chat{
+ background:#1a1d19;color:#f7f4eb;border:1px solid #1a1d19;border-radius:4px;
+ padding:14px 15px;font-size:12px;letter-spacing:.01em;margin-bottom:22px
+}
+.new-chat:hover{background:#d65b35;border-color:#d65b35;color:white}
+.nav-label,.history-title{color:#969187;font-size:9px;letter-spacing:.2em;margin:23px 10px 9px}
+.nav-item{color:#6d6c64;border-radius:3px;padding:12px 11px;font-size:12px;margin-bottom:3px}
+.nav-item:hover,.nav-item.active{background:#dcd8cd;color:#b64b2c}
+.history{max-height:32vh}
+.history-item{color:#77766d;border-radius:3px;font-size:12px}
+.history-item:hover{background:#dedbd1;color:#191b18}
+.side-action{color:#69685f;border-radius:3px;font-size:12px;padding:11px}
+.side-action:hover{background:#dedbd1;color:#b64b2c;border-color:transparent}
+.sidebar-footer{color:#9a968c;font-size:9px;letter-spacing:.16em}
+.main{background:#f5f3ed}
+.topbar{
+ height:68px;padding:0 4.2%;background:rgba(245,243,237,.93);
+ border-bottom:1px solid #e2dfd6;backdrop-filter:blur(18px)
+}
+.topbar-title{font-size:9px;letter-spacing:.22em;color:#8a877d}
+.top-actions{gap:13px}
+.status{color:#8a877d;font-size:10px}
+.status:before{background:#d65b35;box-shadow:none;width:6px;height:6px}
+.top-button{background:transparent;color:#292b26;border:1px solid #d8d4c9;border-radius:3px;padding:9px 15px;font-size:11px}
+.top-button:hover{border-color:#d65b35;color:#b64b2c}
+.avatar{background:#1a1d19;color:#f6f2e9;border:0;border-radius:3px;width:34px;height:34px}
+.content{max-width:1360px;padding:34px clamp(20px,4.2vw,66px) 35px}
+.workspace-hero{padding:8px 0 30px}
+.hero-shell{
+ border:0;border-radius:3px;padding:clamp(28px,5vw,66px);
+ min-height:350px;color:#f4f0e7;
+ background:
+ radial-gradient(ellipse at 84% 20%,rgba(214,91,53,.28),transparent 32%),
+ linear-gradient(115deg,#1a1d19 0%,#242720 58%,#171a16 100%);
+ box-shadow:0 24px 55px rgba(32,29,23,.13);
+}
+.hero-shell:before{
+ content:"TOZRA / STUDIO";position:absolute;right:36px;bottom:28px;
+ color:rgba(245,241,230,.24);font-size:9px;letter-spacing:.25em;font-weight:700
+}
+.hero-shell:after{
+ width:330px;height:330px;right:-95px;top:-135px;border:1px solid rgba(230,113,77,.23);
+ box-shadow:0 0 0 34px rgba(230,113,77,.035),0 0 0 70px rgba(230,113,77,.025)
+}
+.hero-greeting{color:#b9b7ad;font-size:11px;letter-spacing:.02em;margin-bottom:22px}
+.eyebrow{color:#e47a57;font-size:9px;letter-spacing:.24em;margin-bottom:17px}
+.workspace-hero h1{font-size:clamp(38px,6vw,76px);line-height:.99;letter-spacing:-.065em;max-width:760px;margin:0 0 18px;font-weight:650}
+.workspace-hero p{color:#b9b8ae;font-size:13px;line-height:1.8;max-width:480px}
+.hero-actions{margin-top:28px;gap:9px}
+.primary-btn{background:#e16a43;color:#fff;border-radius:3px;padding:14px 18px;font-size:11px;letter-spacing:.01em}
+.primary-btn:hover{background:#c84e2b;box-shadow:0 8px 22px #d65b3530}
+.outline-btn{background:transparent;border:1px solid #64665d;color:#f3f0e8;border-radius:3px;padding:13px 17px;font-size:11px}
+.outline-btn:hover{border-color:#e16a43;color:#f3a184}
+.smart-command{background:#f7f5ef;border:1px solid #f7f5ef;border-radius:3px;padding:6px;margin-top:30px;max-width:690px;display:flex;gap:8px}
+.smart-command input{background:transparent;color:#22241f;padding:12px 13px;font-size:12px}
+.smart-command input::placeholder{color:#99968d}
+.smart-command button{background:#1b1e19;color:#f8f5ed;border-radius:2px;padding:0 18px;font-size:11px}
+.smart-command button:hover{background:#d65b35}
+.smart-command-hint{color:#9d9a90;font-size:10px;margin-top:10px}
+.dashboard-stats{gap:0;margin:2px 0 35px;border-top:1px solid #dedbd1;border-bottom:1px solid #dedbd1}
+.stat-card{background:transparent;border:0;border-right:1px solid #dedbd1;border-radius:0;padding:19px 22px}
+.stat-card:first-child{padding-left:0}
+.stat-card:last-child{border-right:0}
+.stat-card span{color:#8b887e;font-size:9px;letter-spacing:.13em;text-transform:uppercase}
+.stat-card strong{color:#1c1e19;font-size:28px;font-weight:600;letter-spacing:-.06em}
+.stat-card small{color:#a09c92;font-size:10px}
+.section-head{margin:30px 0 15px}
+.section-head h2{font-size:15px;font-weight:650;letter-spacing:-.03em;color:#22241f}
+.section-head span{font-size:10px;color:#9b978d}
+.quick-start{gap:10px;margin-bottom:32px}
+.quick-card{
+ background:#ebe8df;border:1px solid #e1ddd2;border-radius:3px;color:#20221d;
+ padding:16px;min-height:88px;transition:transform .2s,border-color .2s,background .2s
+}
+.quick-card:hover{border-color:#d65b35;background:#f1eee6;transform:translateY(-2px)}
+.quick-card strong{font-size:11px;font-weight:650}
+.quick-card small{color:#8d897f;font-size:10px}
+.tool-icon{background:#dedacf;border:0;border-radius:3px;color:#c65332;font-size:17px;width:36px;height:36px}
+.tool-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.tool-card{
+ background:#ebe8df;border:1px solid #e1ddd2;border-radius:3px;color:#22241f;
+ min-height:148px;padding:17px;transition:.2s
+}
+.tool-card:hover{background:#f6f3ec;border-color:#d65b35;transform:translateY(-3px)}
+.tool-card strong{font-size:12px;font-weight:650}
+.tool-card small{font-size:10px;color:#8e8a80}
+.project-grid{gap:10px}
+.project-card{background:#ebe8df;border:1px solid #e1ddd2;border-radius:3px;min-height:160px;padding:18px}
+.project-card:hover{background:#f6f3ec;border-color:#d65b35;transform:translateY(-2px)}
+.project-symbol{background:#dedacf;border:0;border-radius:3px;color:#c65332}
+.project-menu{color:#88847a}
+.project-card h3{font-size:14px;color:#22241f}
+.project-card p{color:#858177;font-size:11px}
+.project-meta{color:#a19d92}
+.empty-projects{border:1px dashed #c9c4b8;border-radius:3px;color:#8c887e}
+.empty-projects strong{color:#242620}
+.workspace-footer{border-color:#dedbd1;color:#aaa69c;font-size:9px;letter-spacing:.12em}
+.page{animation:editorialEnter .32s ease}
+@keyframes editorialEnter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Chat and project surfaces */
+.back-button{color:#8a867c;border-radius:2px;font-size:11px}
+.back-button:hover{color:#c65332}
+.welcome h1{color:#20221d;font-size:clamp(30px,4vw,48px);letter-spacing:-.055em}
+.welcome p{color:#88847a}
+.welcome-logo{background:#1a1d19;border-radius:4px}
+.suggestions{gap:8px}
+.suggestion{background:#ebe8df;border:1px solid #dfdbd0;color:#5f5d55;border-radius:3px;font-size:11px}
+.suggestion:hover{border-color:#d65b35;color:#b64b2c}
+.messages{color:#242620}
+.message.user .message-bubble{background:#e7e3d9;color:#22241f;border-radius:4px}
+.message.assistant .message-bubble{background:#fbfaf6;border:1px solid #e4e0d6;color:#252720;border-radius:4px}
+.composer,.panel{background:#fbfaf6;border:1px solid #e0dcd1;border-radius:4px;box-shadow:0 10px 35px rgba(34,31,24,.045)}
+.composer textarea,.notes-area{color:#22241f}
+.composer textarea::placeholder,.notes-area::placeholder{color:#a19c91}
+.tool-button{background:#f0eee7;border:1px solid #e4e0d6;color:#77736a;border-radius:3px;font-size:10px}
+.tool-button:hover{border-color:#d65b35;color:#b64b2c}
+.send{background:#1b1e19;border-radius:3px;color:#fff}
+.send:hover{background:#d65b35}
+.disclaimer,.voice-status{color:#a09b90}
+.project-header h1{color:#20221d;letter-spacing:-.05em}
+.project-header p{color:#89857b}
+.project-badge{background:#e9e5db;color:#b64b2c;border-radius:3px}
+.project-info{color:#77736a}
+.small-btn{background:#efede6;border:1px solid #dedacf;color:#666258;border-radius:3px}
+.small-btn:hover{border-color:#d65b35;color:#b64b2c}
+.notes-hint{color:#9b978d}
+.modal{background:#f8f6f0;color:#20221d;border:1px solid #ddd8cc;border-radius:4px}
+.modal-head{border-color:#e3dfd5}
+.modal-head h2{color:#20221d}
+.close{color:#77736a}
+.form-label{color:#77736a}
+.modal-input,.modal-select{background:#fffdf8;border:1px solid #dedacf;color:#22241f;border-radius:3px}
+.primary{background:#d65b35;color:#fff;border-radius:3px}
+.overlay{background:rgba(24,26,22,.55);backdrop-filter:blur(7px)}
+.menu-backdrop{background:rgba(24,26,22,.45)}
+/* responsive refinements */
+@media(max-width:1050px){
+ .tool-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .sidebar{width:230px}
+}
+@media(max-width:760px){
+ .sidebar{background:#e9e6dc}
+ .topbar{padding:0 16px}
+ .topbar-title{display:none}
+ .content{padding:18px 15px 25px}
+ .hero-shell{padding:27px 22px;min-height:0}
+ .hero-shell:before{right:18px;bottom:15px;font-size:8px}
+ .workspace-hero h1{font-size:clamp(37px,10vw,54px)}
+ .dashboard-stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .stat-card{padding:14px 10px}
+ .stat-card:first-child{padding-left:0}
+ .stat-card strong{font-size:22px}
+ .stat-card span{font-size:8px;letter-spacing:.08em}
+ .stat-card small{font-size:9px}
+ .quick-start{grid-template-columns:1fr}
+ .quick-card{min-height:74px}
+ .tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .project-grid{grid-template-columns:1fr}
+ .smart-command{gap:4px}
+ .smart-command button{padding:0 12px}
+ .top-actions{gap:7px}
+ .status{display:none}
+}
+@media(max-width:390px){
+ .dashboard-stats{grid-template-columns:1fr}
+ .stat-card,.stat-card:first-child{padding:12px 0;border-right:0;border-bottom:1px solid #dedbd1}
+ .stat-card:last-child{border-bottom:0}
+ .tool-grid{grid-template-columns:1fr}
+}
+
 </style>
+<!-- TOZRA EDITORIAL FUTURE BUILD v1 -->
 </head>
 
 <body>
