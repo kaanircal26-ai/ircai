@@ -2606,6 +2606,7 @@ async function refreshAccountData(){
 window.addEventListener("load", async ()=>{
  await TozraAuth.init();
  await refreshAccountData();
+ if(window.TozraAssistant) await window.TozraAssistant.init();
  if(!TozraAuth.getSession()) showModal("login");
 });
 
@@ -2625,10 +2626,113 @@ window.addEventListener("load", async ()=>{
   try{const v=JSON.parse(localStorage.getItem(key(name))||"null");return v??fallback;}
   catch(e){return fallback;}
  };
+ let cloudReady=false, cloudRowId=null, cloudData={};
+ let cloudSaveTimer=null, cloudBusy=false, cloudQueued=false;
+ const syncLabel=(message)=>{
+  const el=byId("assistantWeekSaved");
+  if(el)el.textContent=message;
+ };
+ const localSnapshot=()=>({
+  tasks,
+  weeklyPlans,
+  notes:byId("assistantNotes")?.value||""
+ });
  const write=(name,value)=>{
   try{localStorage.setItem(key(name),JSON.stringify(value));}
   catch(e){console.warn("TOZRA assistant storage:",e);}
+  if(cloudReady)queueCloudSave();
  };
+ async function loadCloudData(){
+  const client=TozraAuth.getClient();
+  const user=TozraAuth.getSession()?.user;
+  if(user?.id){
+   ["tasks","weeklyPlans","notes"].forEach(name=>{
+    const target=key(name);
+    const legacy="tozra-assistant:local:"+name;
+    if(localStorage.getItem(target)===null&&localStorage.getItem(legacy)!==null){
+     localStorage.setItem(target,localStorage.getItem(legacy));
+    }
+   });
+   tasks=read("tasks",tasks);
+   weeklyPlans=read("weeklyPlans",weeklyPlans);
+   const localNotes=read("notes",null);
+   if(localNotes!==null)byId("assistantNotes").value=localNotes;
+  }
+  if(!client||!user?.id){
+   cloudReady=false;
+   syncLabel("Yerel kayıt · Hesap oturumu bulunamadı");
+   return;
+  }
+  try{
+   syncLabel("Bulut verileri yükleniyor…");
+   const {data,error}=await client.from("user_data")
+    .select("id,data")
+    .eq("user_id",user.id)
+    .maybeSingle();
+   if(error)throw error;
+   cloudRowId=data?.id||null;
+   cloudData=(data?.data&&typeof data.data==="object"&&!Array.isArray(data.data))?data.data:{};
+   const remote=cloudData.tozra_assistant;
+   if(remote&&typeof remote==="object"){
+    if(Array.isArray(remote.tasks))tasks=remote.tasks;
+    if(remote.weeklyPlans&&typeof remote.weeklyPlans==="object")weeklyPlans=remote.weeklyPlans;
+    if(typeof remote.notes==="string")byId("assistantNotes").value=remote.notes;
+    // Cloud wins when an account already has saved assistant data.
+    writeLocalSnapshot();
+   }else{
+    // First sync: migrate this browser's existing assistant data into the signed-in account.
+    cloudReady=true;
+    await saveCloudData(true);
+   }
+   cloudReady=true;
+   syncLabel("Bulutla senkronize · "+new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"}));
+  }catch(error){
+   cloudReady=false;
+   console.error("TOZRA cloud sync load:",error);
+   syncLabel("Bulut senkronizasyonu kurulamadı · Yerel kayıt devam ediyor");
+  }
+ }
+ function writeLocalSnapshot(){
+  try{
+   localStorage.setItem(key("tasks"),JSON.stringify(tasks));
+   localStorage.setItem(key("weeklyPlans"),JSON.stringify(weeklyPlans));
+   localStorage.setItem(key("notes"),JSON.stringify(byId("assistantNotes")?.value||""));
+  }catch(e){console.warn("TOZRA local snapshot:",e);}
+ }
+ async function saveCloudData(force=false){
+  const client=TozraAuth.getClient();
+  const user=TozraAuth.getSession()?.user;
+  if(!client||!user?.id)return;
+  if(cloudBusy){cloudQueued=true;return;}
+  cloudBusy=true;
+  try{
+   const payload={...cloudData,tozra_assistant:{...localSnapshot(),schemaVersion:1,updatedAt:new Date().toISOString()}};
+   let result;
+   if(cloudRowId){
+    result=await client.from("user_data").update({data:payload,updated_at:new Date().toISOString()})
+     .eq("id",cloudRowId).eq("user_id",user.id);
+   }else{
+    result=await client.from("user_data").insert({user_id:user.id,data:payload,updated_at:new Date().toISOString()})
+     .select("id").single();
+    if(!result.error)cloudRowId=result.data?.id||null;
+   }
+   if(result.error)throw result.error;
+   cloudData=payload;
+   syncLabel("Bulutla senkronize · "+new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"}));
+  }catch(error){
+   console.error("TOZRA cloud sync save:",error);
+   syncLabel("Buluta kaydedilemedi · Yerel kayıt korunuyor");
+  }finally{
+   cloudBusy=false;
+   if(cloudQueued){cloudQueued=false;saveCloudData(true);}
+  }
+ }
+ function queueCloudSave(){
+  if(!cloudReady)return;
+  clearTimeout(cloudSaveTimer);
+  syncLabel("Buluta kaydediliyor…");
+  cloudSaveTimer=setTimeout(()=>saveCloudData(),700);
+ }
  const fmtDue=value=>{
   if(!value)return "";
   const d=new Date(value);
@@ -2722,15 +2826,20 @@ window.addEventListener("load", async ()=>{
   }
   const status=byId("assistantWeekSaved");if(status)status.textContent="Bu haftanın programı otomatik kaydedilir ve aynı tarayıcıda saklanır.";
  }
- function init(){
+ async function init(){
   const now=new Date();
   byId("assistantToday").textContent=now.toLocaleDateString("tr-TR",{weekday:"long",day:"numeric",month:"long"});
   const hour=now.getHours();
   byId("assistantGreeting").textContent=hour<12?"Günaydın. Bugün neyi hallediyoruz?":hour<18?"İyi günler. Planlarını birlikte düzenleyelim.":"İyi akşamlar. Gününü toparlayalım.";
   tasks=read("tasks",[]);if(!Array.isArray(tasks))tasks=[];
   tasks=tasks.map(t=>({...t,priority:t.priority||"medium"}));
-  weeklyPlans=read("weeklyPlans",{});if(!weeklyPlans||typeof weeklyPlans!=="object")weeklyPlans={};
+  weeklyPlans=read("weeklyPlans",{});
+  if(!weeklyPlans||typeof weeklyPlans!=="object")weeklyPlans={};
   byId("assistantNotes").value=read("notes","");
+  await loadCloudData();
+  if(!Array.isArray(tasks))tasks=[];
+  tasks=tasks.map(t=>({...t,priority:t.priority||"medium"}));
+  if(!weeklyPlans||typeof weeklyPlans!=="object")weeklyPlans={};
   const weekInput=byId("assistantWeekStart");if(weekInput)weekInput.value=isoDate(mondayOf(now));
   render();renderWeek();
   byId("assistantWeekStart").addEventListener("change",renderWeek);
@@ -2757,7 +2866,7 @@ window.addEventListener("load", async ()=>{
   }));
   setInterval(checkReminders,30000);checkReminders();
  }
- if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
+ window.TozraAssistant={init};
 })();
 
 /* SERVICE WORKER */
