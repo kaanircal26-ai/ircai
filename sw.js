@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "tozra-v7";
+const CACHE_NAME = "tozra-v9";
 
 const APP_FILES = [
   "/",

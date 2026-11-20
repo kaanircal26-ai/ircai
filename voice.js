@@ -545,7 +545,8 @@
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            ...(await TozraAuth.authHeaders())
           },
           body: JSON.stringify({
             history,

@@ -15,12 +15,29 @@
     /kredi kartı/i
   ];
 
+  function storageKey() {
+    return typeof window.tozraStorageKey === "function"
+      ? window.tozraStorageKey(STORAGE_KEY)
+      : `tozra-guest:${STORAGE_KEY}`;
+  }
+
   function read() {
     try {
-      const data = JSON.parse(
-        localStorage.getItem(STORAGE_KEY) || "[]"
-      );
+      const key = storageKey();
+      let raw = localStorage.getItem(key);
 
+      // Eski, hesaba bağlı olmayan hafızayı yalnızca ilk oturum açan
+      // hesaba bir kez aktar; sonraki hesaplar bu veriyi göremez.
+      if (raw === null && key.startsWith("tozra-user:")) {
+        const legacy = localStorage.getItem(STORAGE_KEY);
+        if (legacy !== null) {
+          raw = legacy;
+          localStorage.setItem(key, legacy);
+          localStorage.removeItem(STORAGE_KEY);
+        }
+      }
+
+      const data = JSON.parse(raw || "[]");
       return Array.isArray(data) ? data : [];
     } catch {
       return [];
@@ -29,10 +46,7 @@
 
   function write(memories) {
     try {
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify(memories)
-      );
+      localStorage.setItem(storageKey(), JSON.stringify(memories));
       return true;
     } catch (error) {
       console.error("TOZRA hafıza kayıt hatası:", error);
