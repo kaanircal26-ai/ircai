@@ -2282,148 +2282,87 @@ function addLink(input){
 }
 
 
-/* SESLİ SOHBET */
-let activeRecorder=null;
-let activeStream=null;
+/* ÜCRETSİZ TARAYICI SES SİSTEMİ — API / REALTIME KULLANMAZ */
+let activeRecognition=null;
 let activeVoiceButton=null;
-let activeVoiceInput=null;
 let activeVoiceStatus=null;
-let recordedChunks=[];
-
-function setVoiceStatus(message, target=activeVoiceStatus){
- if(target) target.textContent=message||"";
-}
-
-function speakText(text, button){
- if(!("speechSynthesis" in window)){
-  alert("Bu tarayıcı sesli yanıt özelliğini desteklemiyor.");
-  return;
- }
- if(window.speechSynthesis.speaking){
-  window.speechSynthesis.cancel();
-  if(button) button.textContent="🔊 Sesli dinle";
-  return;
- }
- const utterance=new SpeechSynthesisUtterance(String(text||""));
- utterance.lang="tr-TR";
- utterance.rate=1;
- utterance.pitch=1;
- utterance.onstart=()=>{if(button)button.textContent="■ Durdur";};
- utterance.onend=()=>{if(button)button.textContent="🔊 Sesli dinle";};
- utterance.onerror=()=>{if(button)button.textContent="🔊 Sesli dinle";};
- window.speechSynthesis.cancel();
- window.speechSynthesis.speak(utterance);
-}
 
 function stopVoiceCapture(){
- if(activeRecorder && activeRecorder.state!=="inactive"){
-  activeRecorder.stop();
- }
- if(activeStream){
-  activeStream.getTracks().forEach(track=>track.stop());
-  activeStream=null;
+ if(activeRecognition){
+  const current=activeRecognition;
+  activeRecognition=null;
+  try{current.stop();}catch(error){}
  }
  if(activeVoiceButton){
   activeVoiceButton.classList.remove("recording");
   activeVoiceButton.textContent="🎙 Konuş";
  }
+ activeVoiceButton=null;
+ activeVoiceStatus=null;
 }
 
-function blobToBase64(blob){
- return new Promise((resolve,reject)=>{
-  const reader=new FileReader();
-  reader.onload=()=>{
-   const result=String(reader.result||"");
-   resolve(result.substring(result.indexOf(",")+1));
-  };
-  reader.onerror=()=>reject(new Error("Ses kaydı okunamadı."));
-  reader.readAsDataURL(blob);
- });
-}
-
-async function startVoiceCapture(button, input, status){
- if(activeRecorder && activeRecorder.state!=="inactive"){
+function startVoiceCapture(button,input,status){
+ if(activeRecognition){
   stopVoiceCapture();
+  status.textContent="Konuşma durduruldu.";
   return;
  }
- if(!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder){
-  status.textContent="Bu tarayıcı mikrofon kaydını desteklemiyor. Güncel Safari veya Chrome kullan.";
+ const Recognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!Recognition){
+  status.textContent="Bu tarayıcı konuşma tanımayı desteklemiyor. Güncel Chrome veya Edge deneyebilirsin.";
   return;
  }
- try{
-  if(window.speechSynthesis) window.speechSynthesis.cancel();
-  activeVoiceButton=button;
-  activeVoiceInput=input;
-  activeVoiceStatus=status;
-  status.textContent="Mikrofon izni bekleniyor…";
-  activeStream=await navigator.mediaDevices.getUserMedia({audio:true});
-  const mimeCandidates=["audio/webm;codecs=opus","audio/webm","audio/mp4","audio/ogg;codecs=opus"];
-  const mimeType=mimeCandidates.find(type=>MediaRecorder.isTypeSupported(type));
-  activeRecorder=mimeType?new MediaRecorder(activeStream,{mimeType}):new MediaRecorder(activeStream);
-  recordedChunks=[];
-  activeRecorder.ondataavailable=event=>{
-   if(event.data && event.data.size) recordedChunks.push(event.data);
-  };
-  activeRecorder.onerror=()=>{
-   status.textContent="Ses kaydı sırasında bir hata oluştu.";
-   stopVoiceCapture();
-  };
-  activeRecorder.onstop=async()=>{
-   const recorder=activeRecorder;
-   activeRecorder=null;
-   if(activeStream){
-    activeStream.getTracks().forEach(track=>track.stop());
-    activeStream=null;
-   }
-   button.classList.remove("recording");
-   button.textContent="🎙 Konuş";
-   try{
-    const blob=new Blob(recordedChunks,{type:recorder?.mimeType||"audio/webm"});
-    recordedChunks=[];
-    if(blob.size<1200){
-     status.textContent="Kayıt çok kısa. Tekrar deneyebilirsin.";
-     return;
-    }
-    if(blob.size>4*1024*1024){
-     status.textContent="Kayıt 4 MB sınırını geçti. Daha kısa konuşmayı dene.";
-     return;
-    }
-    status.textContent="Konuşman yazıya dönüştürülüyor…";
-    const audio=await blobToBase64(blob);
-    const response=await fetch("/api/transcribe",{
-     method:"POST",
-     headers:{"Content-Type":"application/json", ...(await TozraAuth.authHeaders())},
-     body:JSON.stringify({
-      audio,
-      mimeType:blob.type||"audio/webm"
-     })
-    });
-    const data=await response.json().catch(()=>({}));
-    if(!response.ok || !data.success) throw new Error(data.error||"Ses çözümlenemedi.");
-    const transcript=String(data.text||"").trim();
-    if(!transcript) throw new Error("Konuşmandan metin çıkarılamadı.");
-    input.value=(input.value.trim()?input.value.trim()+" ":"")+transcript;
-    input.dispatchEvent(new Event("input",{bubbles:true}));
-    input.focus();
-    status.textContent="Konuşman metne eklendi. Göndermek için oka bas.";
-   }catch(error){
-    status.textContent="Ses işlenemedi: "+(error.message||"Tekrar dene.");
-   }
-  };
-  activeRecorder.start(250);
-  button.classList.add("recording");
-  button.textContent="■ Bitir";
-  status.textContent="Dinliyorum… Bitirmek için tekrar dokun.";
- }catch(error){
-  if(activeStream){
-   activeStream.getTracks().forEach(track=>track.stop());
-   activeStream=null;
+ if(window.speechSynthesis)window.speechSynthesis.cancel();
+ const recognition=new Recognition();
+ let finalText="";
+ recognition.lang="tr-TR";
+ recognition.continuous=false;
+ recognition.interimResults=true;
+ recognition.maxAlternatives=1;
+ activeRecognition=recognition;
+ activeVoiceButton=button;
+ activeVoiceStatus=status;
+ button.classList.add("recording");
+ button.textContent="■ Bitir";
+ status.textContent="Dinliyorum… Konuşmanı bitirince metne aktaracağım.";
+ recognition.onresult=event=>{
+  let interim="";
+  for(let i=event.resultIndex;i<event.results.length;i++){
+   const value=event.results[i][0]?.transcript||"";
+   if(event.results[i].isFinal)finalText+=value;
+   else interim+=value;
   }
+  if(interim)status.textContent="Duyulan: "+interim;
+ };
+ recognition.onerror=event=>{
+  const messages={
+   "not-allowed":"Mikrofon izni verilmedi. Tarayıcı ayarlarından mikrofon iznini aç.",
+   "service-not-allowed":"Tarayıcı konuşma tanıma servisine izin vermedi.",
+   "no-speech":"Ses algılanmadı. Tekrar deneyebilirsin.",
+   "audio-capture":"Mikrofon bulunamadı veya kullanılamıyor.",
+   "network":"Tarayıcının konuşma tanıma servisine bağlanılamadı."
+  };
+  status.textContent=messages[event.error]||("Konuşma tanınamadı: "+event.error);
+ };
+ recognition.onend=()=>{
+  const transcript=finalText.trim();
+  if(transcript){
+   input.value=(input.value.trim()?input.value.trim()+" ":"")+transcript;
+   input.dispatchEvent(new Event("input",{bubbles:true}));
+   input.focus();
+   status.textContent="Konuşman yazıya aktarıldı. Göndermek için oka bas.";
+  }else if(!status.textContent.includes("izin")&&!status.textContent.includes("desteklemiyor")&&!status.textContent.includes("bağlanılamadı")){
+   status.textContent="Konuşma algılanmadı. Tekrar deneyebilirsin.";
+  }
+  if(activeRecognition===recognition)activeRecognition=null;
   button.classList.remove("recording");
   button.textContent="🎙 Konuş";
-  status.textContent=error.name==="NotAllowedError"
-   ?"Mikrofon izni verilmedi. Tarayıcı ayarlarından mikrofon iznini aç."
-   :"Mikrofon başlatılamadı: "+(error.message||"Bilinmeyen hata");
+  if(activeVoiceButton===button){activeVoiceButton=null;activeVoiceStatus=null;}
+ };
+ try{recognition.start();}
+ catch(error){
+  status.textContent="Mikrofon başlatılamadı: "+(error.message||"Tekrar dene.");
+  stopVoiceCapture();
  }
 }
 
