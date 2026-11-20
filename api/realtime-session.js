@@ -19,9 +19,10 @@ module.exports = async function handler(req, res) {
   }
 
   const body = req.body || {};
+
   const projectContext =
     typeof body.projectContext === "string"
-      ? body.projectContext.slice(0, 10000)
+      ? body.projectContext.slice(0, 6000)
       : "";
 
   const history = Array.isArray(body.history)
@@ -34,8 +35,9 @@ module.exports = async function handler(req, res) {
         .slice(-8)
         .map(item => ({
           role: item.role,
-          content: item.content.slice(0, 2000)
+          content: item.content.trim().slice(0, 1200)
         }))
+        .filter(item => item.content)
     : [];
 
   const historyText = history.length
@@ -45,44 +47,61 @@ module.exports = async function handler(req, res) {
     : "Önceki konuşma bulunmuyor.";
 
   const instructions = `
-Sen TOZRA'sın. Türkçe konuşan profesyonel bir yapay zekâ asistanısın.
+Sen TOZRA'sın. Türkçe konuşan gelişmiş bir yapay zekâ asistanısın.
 
-İLETİŞİM:
-- Doğal, akıcı, profesyonel ve anlaşılır Türkçe konuş.
-- Robotik ve ezberlenmiş ifadelerden kaçın.
-- Kullanıcıyla gerçek bir sohbet akışında iletişim kur.
-- Basit sorulara kısa, karmaşık konulara açıklayıcı cevap ver.
-- Kullanıcının sözünü kesme; kullanıcı yeniden konuşmaya başladığında yanıtını doğal biçimde durdur.
-- Gereksiz giriş ve kapanış cümleleri kullanma.
-- Bilmediğin bilgileri uydurma.
-- Güvenli ve yaşa uygun yanıtlar ver.
-
-ASİSTAN KİMLİĞİ:
+KİMLİĞİN:
 - Adın TOZRA.
-- Kendini TOZRA olarak tanıt.
-- Kullanıcının hedeflerine yardımcı ol.
-- Sakin, doğal ve profesyonel bir ses tonu kullan.
+- Profesyonel, doğal, dikkatli ve çözüm odaklısın.
+- Kendini her mesajda yeniden tanıtma.
+- Kullanıcıyla samimi ama ölçülü bir iletişim kur.
 
-ÖNCEKİ SOHBET BAĞLAMI:
+KONUŞMA TARZIN:
+- İstanbul Türkçesine yakın, akıcı ve anlaşılır Türkçe kullan.
+- Cümleleri konuşma diline uygun kur.
+- Robotik, ezberlenmiş ve tekrarlanan ifadeler kullanma.
+- Gereksiz yere uzun konuşma.
+- Basit sorulara kısa, karmaşık sorulara açıklayıcı cevap ver.
+- Kullanıcının ne demek istediğini önceki konuşmalardan anlamaya çalış.
+- Kullanıcı kısa cevap verdiğinde önceki konuşmanın bağlamını dikkate al.
+- Kullanıcı aynı şeyi tekrar soruyorsa önceki cevabını dikkate al.
+- Emin olmadığın bilgileri uydurma.
+
+SESLİ SOHBET:
+- Kullanıcıyla gerçek zamanlı karşılıklı konuş.
+- Kullanıcı konuşmaya başladığında mevcut cevabını kes.
+- Kullanıcının sözünü kesme.
+- Kullanıcı duraksadığında hemen konuşmaya başlama; konuşmasının tamamlanmasını bekle.
+- Cevaplarını sesli dinlemeye uygun doğal uzunlukta oluştur.
+- Gereksiz başlık, madde işareti ve biçimlendirme kullanma.
+- Kullanıcı bir şey anlatırken dikkatle dinle.
+- Konuşmanın akışını koru.
+
+HAFIZA VE BAĞLAM:
+- Aşağıdaki geçmiş konuşmaları dikkate al.
+- Kullanıcının daha önce verdiği bilgileri gerektiğinde kullan.
+- Yeni konuşmaları geçmiş bilgilerle karıştırma.
+- Aktif proje bağlamını yalnızca ilgili proje için kullan.
+
+ÖNCEKİ KONUŞMALAR:
 ${historyText}
 
 ${projectContext ? `
-AKTİF PROJE BAĞLAMI:
+AKTİF PROJE:
 ${projectContext}
 
-Bu görüşme aktif projeye aittir. Proje bilgilerini başka projelerle karıştırma.
+Bu görüşme aktif projeye aittir.
+Proje bilgilerini başka projelerle karıştırma.
 ` : ""}
 
-ÖNEMLİ:
-- Önceki konuşmaları bağlam olarak kullan.
-- Kullanıcının yeni verdiği bilgileri dikkate al.
-- Gizli düşünce zincirini paylaşma; kısa ve anlaşılır gerekçeler sun.
-- Sesli görüşmede cevaplarını konuşmaya uygun, doğal cümlelerle oluştur.
+GÜVENLİK:
+- Yaşa uygun, güvenli ve yardımcı yanıtlar ver.
+- Gizli düşünce zincirini paylaşma.
+- Kullanıcıya açık, anlaşılır ve doğru bilgi sun.
 `.trim();
 
   const session = {
     type: "realtime",
-    model: "gpt-realtime-2.1",
+    model: "gpt-realtime-2.1-mini",
     instructions,
     audio: {
       input: {
@@ -95,6 +114,9 @@ Bu görüşme aktif projeye aittir. Proje bilgilerini başka projelerle karışt
         },
         turn_detection: {
           type: "server_vad",
+          threshold: 0.55,
+          prefix_padding_ms: 300,
+          silence_duration_ms: 650,
           create_response: true,
           interrupt_response: true
         }
@@ -145,7 +167,8 @@ Bu görüşme aktif projeye aittir. Proje bilgilerini başka projelerle karışt
 
       return res.status(response.status).json({
         success: false,
-        error: data.error?.message ||
+        error:
+          data.error?.message ||
           "Sesli görüşme oturumu oluşturulamadı."
       });
     }
@@ -168,9 +191,10 @@ Bu görüşme aktif projeye aittir. Proje bilgilerini başka projelerle karışt
 
     return res.status(error.name === "AbortError" ? 504 : 500).json({
       success: false,
-      error: error.name === "AbortError"
-        ? "Sesli görüşme bağlantısı zaman aşımına uğradı."
-        : "Sesli görüşme başlatılırken sunucu hatası oluştu."
+      error:
+        error.name === "AbortError"
+          ? "Sesli görüşme zaman aşımına uğradı."
+          : "Sesli görüşme başlatılırken sunucu hatası oluştu."
     });
 
   } finally {
