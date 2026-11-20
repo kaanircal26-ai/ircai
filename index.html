@@ -2626,7 +2626,7 @@ window.addEventListener("load", async ()=>{
   try{const v=JSON.parse(localStorage.getItem(key(name))||"null");return v??fallback;}
   catch(e){return fallback;}
  };
- let cloudReady=false, cloudRowId=null, cloudData={};
+ let cloudReady=false, cloudRowExists=false, cloudData={};
  let cloudSaveTimer=null, cloudBusy=false, cloudQueued=false;
  const syncLabel=(message)=>{
   const el=byId("assistantWeekSaved");
@@ -2666,11 +2666,11 @@ window.addEventListener("load", async ()=>{
   try{
    syncLabel("Bulut verileri yükleniyor…");
    const {data,error}=await client.from("user_data")
-    .select("id,data")
+    .select("user_id,data")
     .eq("user_id",user.id)
     .maybeSingle();
    if(error)throw error;
-   cloudRowId=data?.id||null;
+   cloudRowExists=!!data;
    cloudData=(data?.data&&typeof data.data==="object"&&!Array.isArray(data.data))?data.data:{};
    const remote=cloudData.tozra_assistant;
    if(remote&&typeof remote==="object"){
@@ -2708,13 +2708,13 @@ window.addEventListener("load", async ()=>{
   try{
    const payload={...cloudData,tozra_assistant:{...localSnapshot(),schemaVersion:1,updatedAt:new Date().toISOString()}};
    let result;
-   if(cloudRowId){
-    result=await client.from("user_data").update({data:payload,updated_at:new Date().toISOString()})
-     .eq("id",cloudRowId).eq("user_id",user.id);
+   const row={user_id:user.id,data:payload,updated_at:new Date().toISOString()};
+   if(cloudRowExists){
+    result=await client.from("user_data").update({data:payload,updated_at:row.updated_at})
+     .eq("user_id",user.id);
    }else{
-    result=await client.from("user_data").insert({user_id:user.id,data:payload,updated_at:new Date().toISOString()})
-     .select("id").single();
-    if(!result.error)cloudRowId=result.data?.id||null;
+    result=await client.from("user_data").insert(row);
+    if(!result.error)cloudRowExists=true;
    }
    if(result.error)throw result.error;
    cloudData=payload;
@@ -2824,7 +2824,8 @@ window.addEventListener("load", async ()=>{
    });
    card.append(head,dateLabel,area);grid.appendChild(card);
   }
-  const status=byId("assistantWeekSaved");if(status)status.textContent="Bu haftanın programı otomatik kaydedilir ve aynı tarayıcıda saklanır.";
+  const status=byId("assistantWeekSaved");
+  if(status&&!cloudReady)status.textContent="Bu haftanın programı otomatik kaydedilir.";
  }
  async function init(){
   const now=new Date();
