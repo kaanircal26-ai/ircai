@@ -202,6 +202,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
 .project-layout{grid-template-columns:1fr}
 }
 @media(max-width:700px){
+.hero-shell .workspace-hero h1{font-size:clamp(27px,8vw,36px)}
 .sidebar{display:flex;position:fixed;left:0;top:0;bottom:0;width:275px;max-width:85vw;box-shadow:var(--shadow);transform:translateX(-105%);visibility:hidden;transition:transform .32s,visibility .32s}
 .sidebar.open{transform:translateX(0);visibility:visible}
 .topbar{height:58px;padding:0 14px}
@@ -235,6 +236,16 @@ button:disabled{opacity:.45;cursor:not-allowed}
 .speak-button:hover{border-color:var(--green);color:var(--green)}
 .voice-status{font-size:11px;color:#a8e9b8;margin:6px 2px;min-height:15px}
 
+
+/* TOZRA 2.0 — akıllı komut alanı */
+.smart-command{display:flex;align-items:center;gap:10px;margin-top:25px;max-width:760px;padding:9px 10px 9px 16px;border:1px solid #31523a;border-radius:15px;background:#080f0a;box-shadow:inset 0 1px 0 #ffffff08,0 10px 30px #0003}
+.smart-command:focus-within{border-color:#42e477;box-shadow:0 0 0 3px #42e47712}
+.smart-command input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--text);font-size:14px;padding:9px 0}
+.smart-command input::placeholder{color:#718075}
+.smart-command button{border:0;border-radius:10px;background:linear-gradient(135deg,#61f18b,#28d963);color:#061009;font-weight:800;padding:12px 16px;white-space:nowrap}
+.smart-command-hint{font-size:10px;color:#718075;margin:9px 2px 0}
+@media(max-width:700px){.smart-command{padding:8px 8px 8px 12px;gap:6px}.smart-command input{font-size:13px}.smart-command button{padding:11px 12px;font-size:12px}}
+
 </style>
 </head>
 
@@ -261,7 +272,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
  <div style="margin-top:auto">
   <button class="side-action" id="sidePlans">◇ Üyelik planları</button>
   <button class="side-action" id="sideSettings">⚙ Ayarlar</button>
-  <div class="sidebar-footer">TOZRA 2.0 · CREATIVE INTELLIGENCE</div>
+  <div class="sidebar-footer">TOZRA · CREATIVE INTELLIGENCE</div>
  </div>
 </aside>
 
@@ -292,6 +303,11 @@ button:disabled{opacity:.45;cursor:not-allowed}
    <button class="primary-btn" id="heroNewProject">＋ Yeni proje oluştur</button>
    <button class="outline-btn" id="heroChat">✳ TOZRA ile sohbet et</button>
   </div>
+  <form class="smart-command" id="smartCommandForm">
+   <input id="smartCommandInput" type="text" maxlength="2000" autocomplete="off" placeholder="TOZRA'ya ne yapmak istediğini anlat..." aria-label="TOZRA komut alanı">
+   <button type="submit">Başlat ↗</button>
+  </form>
+  <div class="smart-command-hint">Fikir geliştir, içerik üret, araştır veya projen için yardım iste.</div>
  </div>
  <div class="dashboard-stats">
   <div class="stat-card"><span>Toplam proje</span><strong id="statProjects">0</strong><small>Çalışma alanındaki projelerin</small></div>
@@ -314,7 +330,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
  </div>
  <div class="section-head"><h2>Projelerim</h2><span id="projectCount">0 proje</span></div>
  <div class="project-grid" id="projectGrid"></div>
- <div class="workspace-footer"><span>TOZRA 2.0 · CREATIVE WORKSPACE</span><span>Fikirden üretime.</span></div>
+ <div class="workspace-footer"><span>TOZRA CREATIVE WORKSPACE</span><span>Fikirden üretime.</span></div>
 </div>
 
 <div class="page" id="projectPage">
@@ -596,9 +612,9 @@ $("navWorkspace").onclick=()=>showPage("workspace");
 $("navProjects").onclick=()=>showPage("workspace");
 $("navChat").onclick=()=>newGeneralChat();
 $("heroChat").onclick=()=>openGeneralChat();
-$("quickIdea").onclick=()=>createFromCategory("Fikir geliştirme");
-$("quickContent").onclick=()=>createFromCategory("İçerik üretimi");
-$("quickResearch").onclick=()=>createFromCategory("Araştırma");
+$("quickIdea").onclick=()=>startChatWithPrompt("Bir fikrim var. Önce fikrimi netleştirmeme yardım et, ardından uygulanabilir bir yol haritası oluştur.");
+$("quickContent").onclick=()=>startChatWithPrompt("Bir içerik üretmek istiyorum. Bana hedef kitle, format ve içerik fikrini netleştirmemde yardımcı ol.");
+$("quickResearch").onclick=()=>startChatWithPrompt("Bir araştırma başlatmak istiyorum. Konuyu kapsamlandırmama ve araştırma soruları oluşturmama yardım et.");
 $("chatBack").onclick=()=>showPage("workspace");
 $("backWorkspace").onclick=()=>showPage("workspace");
 
@@ -606,6 +622,24 @@ function openGeneralChat(){
  showPage("chat");
  renderGeneralMessages();
 }
+
+/* AKILLI KARŞILAMA KOMUTU */
+function startChatWithPrompt(value){
+ const prompt=String(value||"").trim();
+ openGeneralChat();
+ if(prompt){
+  promptInput.value=prompt;
+  promptInput.dispatchEvent(new Event("input",{bubbles:true}));
+  promptInput.focus();
+ }
+}
+$("smartCommandForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ const value=$("smartCommandInput").value.trim();
+ if(!value){$("smartCommandInput").focus();return;}
+ $("smartCommandInput").value="";
+ startChatWithPrompt(value);
+});
 
 /* PROJE SİSTEMİ */
 function updateDashboardStats(){
@@ -916,6 +950,7 @@ function renderHistory(){
   };
   $("history").appendChild(el);
  });
+ updateDashboardStats();
 }
 
 /* DOSYA EKLERİ */
