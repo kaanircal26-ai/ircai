@@ -1,7 +1,7 @@
 
 "use strict";
 
-/* TOZRA REALTIME VOICE v2 */
+/* TOZRA REALTIME VOICE v3 - PERSONAL MEMORY */
 (() => {
   let voiceSession = null;
 
@@ -46,6 +46,33 @@
           : [],
       projectContext: ""
     };
+  }
+
+  function getPersonalMemory() {
+    try {
+      if (
+        window.TozraMemory &&
+        typeof window.TozraMemory.getAll === "function"
+      ) {
+        return window.TozraMemory.getAll()
+          .filter(item =>
+            item &&
+            typeof item.content === "string"
+          )
+          .slice(-30)
+          .map(item => ({
+            category:
+              typeof item.category === "string"
+                ? item.category.slice(0, 60)
+                : "genel",
+            content: item.content.slice(0, 1500)
+          }));
+      }
+    } catch (error) {
+      console.warn("TOZRA hafızası okunamadı:", error);
+    }
+
+    return [];
   }
 
   function updateButton(target, active) {
@@ -505,6 +532,14 @@
           item.content.trim()
         );
 
+      /*
+       * Kişisel hafıza kayıtlarını al.
+       */
+      const personalMemory = getPersonalMemory();
+
+      /*
+       * Oturum anahtarını al.
+       */
       const tokenResponse = await fetch(
         "/api/realtime-session",
         {
@@ -514,7 +549,8 @@
           },
           body: JSON.stringify({
             history,
-            projectContext: target.projectContext
+            projectContext: target.projectContext,
+            personalMemory
           })
         }
       );
