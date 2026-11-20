@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#050907">
+<meta name="theme-color" content="#f7f5f1">
 <meta name="description" content="TOZRA — Creative Intelligence">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="TOZRA">
@@ -231,16 +231,6 @@ button:disabled{opacity:.45;cursor:not-allowed}
 
 .voice-button{border-color:#285b37;color:#a9f2bd}
 .voice-button.recording{background:#3a1717;border-color:#ff6666;color:#ffd0d0;animation:voicePulse 1.2s infinite}
-.voice-conversation-button{border-color:#315b70;color:#b9e6ff}
-.voice-conversation-button.active{background:#3a1717;border-color:#ff6666;color:#ffd0d0;animation:voicePulse 1.2s infinite}
- .voice-interrupt-button{border-color:#9a6530;color:#ffd39b;background:#21180f}
- .voice-interrupt-button:hover{border-color:#ffc078;color:#fff0dc}
- .voice-status{transition:color .18s ease,opacity .18s ease}
- .voice-status.voice-listening{color:#8ee6ae}
- .voice-status.voice-speaking{color:#a9dfff}
- .voice-status.voice-thinking{color:#e8d49a}
- .voice-status.voice-idle{color:#a8b2aa}
- [hidden]{display:none!important}
 @keyframes voicePulse{50%{box-shadow:0 0 0 5px rgba(255,90,90,.12)}}
 .speak-button{display:inline-flex;align-items:center;gap:6px;margin:10px 8px 0 0;padding:7px 10px;border:1px solid var(--border);border-radius:9px;background:#101811;color:#b8c8bb;font-size:11px}
 .speak-button:hover{border-color:var(--green);color:var(--green)}
@@ -782,446 +772,61 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
   -webkit-text-fill-color: #173321 !important;
 }
 
-
-/* TOZRA PERSONAL ASSISTANT — minimal home */
-.assistant-home{max-width:980px;margin:0 auto;padding:26px 0 42px;color:#24231f}
-.assistant-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin:8px 0 24px}
-.assistant-eyebrow{font-size:9px;letter-spacing:.18em;color:#9a8e7d;font-weight:750;text-transform:uppercase;margin-bottom:10px}
-.assistant-head h1{font-size:clamp(29px,4vw,42px);letter-spacing:-.065em;font-weight:620;margin:0 0 8px;color:#25241f}
-.assistant-head p{font-size:12px;line-height:1.6;color:#8c877e;margin:0}
-.assistant-date{font-size:10px;color:#8d877d;background:#f0ede7;border:1px solid #e8e3db;border-radius:30px;padding:9px 12px;white-space:nowrap}
-.assistant-command{display:flex;align-items:center;gap:10px;padding:9px 10px 9px 17px;background:#fffdfa;border:1px solid #e8e3db;border-radius:12px;box-shadow:0 8px 28px rgba(45,37,25,.035);margin-bottom:23px}
-.assistant-command input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:#292821;font-size:13px;padding:9px 0}
-.assistant-command input::placeholder{color:#aaa398}
-.assistant-command button{border:0;border-radius:9px;background:#26251f;color:#fff;padding:11px 15px;font-size:11px;font-weight:650}
-.assistant-command button:hover{background:#48463d}
-.assistant-shortcuts{display:flex;gap:8px;flex-wrap:wrap;margin:-8px 0 26px}
-.assistant-shortcut{border:1px solid #e8e3db;background:#f8f6f1;color:#777166;border-radius:30px;padding:8px 12px;font-size:10px}
-.assistant-shortcut:hover{border-color:#c9bda9;color:#36342d;background:#fffdfa}
-.assistant-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(240px,.75fr);gap:15px;align-items:start}
-.assistant-panel{background:#fffdfa;border:1px solid #e9e4dc;border-radius:12px;padding:17px}
-.assistant-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px}
-.assistant-panel-head h2{font-size:13px;font-weight:700;color:#35332c;margin:0}
-.assistant-panel-head span{font-size:9px;color:#aaa195}
-.assistant-task-form{display:grid;grid-template-columns:minmax(0,1fr) 155px 125px auto;gap:7px;margin-bottom:14px}
-.assistant-task-form input{width:100%;min-width:0;border:1px solid #e8e3db;border-radius:8px;background:#faf8f4;color:#34322c;padding:10px;font-size:11px;outline:none}
-.assistant-task-form input:focus{border-color:#b6a58d}
-.assistant-task-form select{min-width:0;border:1px solid #e8e3db;border-radius:8px;background:#faf8f4;color:#625d53;padding:9px 7px;font-size:10px;outline:none}.assistant-task-form button{border:0;border-radius:8px;background:#26251f;color:#fff;padding:0 13px;font-size:10px;font-weight:650}
-.assistant-task-list{display:flex;flex-direction:column;gap:7px}
-.assistant-empty{padding:25px 12px;text-align:center;color:#aaa398;font-size:11px;border:1px dashed #e7e1d8;border-radius:9px}
-.assistant-task{display:flex;align-items:center;gap:10px;padding:10px 9px;border:1px solid #efebe5;border-radius:9px;background:#fff}
-.assistant-task input[type=checkbox]{accent-color:#49473e;width:15px;height:15px;flex-shrink:0}
-.assistant-task-main{flex:1;min-width:0}
-.assistant-task-title{font-size:11px;color:#38362f;overflow-wrap:anywhere}
-.assistant-task.done .assistant-task-title{text-decoration:line-through;color:#aaa398}
-.assistant-task-due{font-size:9px;color:#a49b8e;margin-top:4px}.assistant-task-priority{display:inline-flex;margin-top:5px;padding:3px 6px;border-radius:20px;font-size:8px;background:#f1eee8;color:#827969}.assistant-task-priority.high{background:#f7e9e5;color:#a45d4f}.assistant-task-priority.medium{background:#f4efe2;color:#917744}.assistant-task-priority.low{background:#eaf0e8;color:#657b61}
-.assistant-task-delete{border:0;background:transparent;color:#b3aa9e;font-size:15px;padding:3px 5px}
-.assistant-task-delete:hover{color:#9c594c}
-.assistant-side{display:flex;flex-direction:column;gap:12px}
-.assistant-note{width:100%;min-height:150px;resize:vertical;border:1px solid #eee9e1;background:#faf8f4;border-radius:8px;padding:11px;color:#39372f;font-family:inherit;font-size:11px;line-height:1.7;outline:none}
-.assistant-note:focus{border-color:#c9bda9}
-.assistant-note-hint{font-size:9px;color:#aaa195;line-height:1.5;margin-top:8px}
-.assistant-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-.assistant-summary-card{background:#f7f4ee;border:1px solid #eee9e1;border-radius:9px;padding:12px}
-.assistant-summary-card strong{display:block;font-size:19px;color:#34322c;font-weight:650}
-.assistant-summary-card span{font-size:9px;color:#9b9488}
-.assistant-weekly{margin-top:15px}.assistant-week-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}.assistant-week-controls{display:flex;align-items:center;gap:7px}.assistant-week-controls button{border:1px solid #e8e3db;background:#f8f6f1;color:#625d53;border-radius:8px;padding:8px 10px;font-size:10px}.assistant-week-controls input{border:1px solid #e8e3db;background:#faf8f4;color:#4b473f;border-radius:8px;padding:7px;font:inherit;font-size:10px;max-width:145px}.assistant-week-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}.assistant-week-day{min-width:0;border:1px solid #eee9e1;background:#fff;border-radius:9px;padding:9px}.assistant-week-day-head{font-size:10px;font-weight:700;color:#4b473f;margin-bottom:3px}.assistant-week-day-date{font-size:8px;color:#aaa195;margin-bottom:8px}.assistant-week-day textarea{width:100%;min-height:126px;resize:vertical;border:0;outline:0;background:#faf8f4;border-radius:6px;padding:8px;color:#514d44;font:inherit;font-size:9px;line-height:1.6}.assistant-week-saved{font-size:9px;color:#a49b8e;margin-top:10px}.assistant-footer{font-size:9px;color:#b0a99f;text-align:center;margin-top:22px}
-@media(max-width:760px){
- .assistant-home{padding:17px 0 30px}
- .assistant-head{margin:5px 0 18px;display:block}
- .assistant-date{display:inline-block;margin-top:12px}
- .assistant-command{padding:7px 7px 7px 12px}
- .assistant-command button{padding:10px 12px}
- .assistant-grid{grid-template-columns:1fr}
- .assistant-task-form{grid-template-columns:minmax(0,1fr) minmax(110px,132px)}
- .assistant-task-form select{grid-column:1/-1;padding:10px}
- .assistant-task-form button{grid-column:1/-1;padding:11px}
- .assistant-week-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
- .assistant-week-day textarea{min-height:105px}
- .assistant-panel{padding:13px}
-}
-
-
-/* ===== TOZRA PREMIUM EXPERIENCE: HOME + SPLASH ===== */
-:root{
- --bg:#050907;--surface:#0b120e;--surface2:#101a14;
- --text:#eef5ef;--muted:#91a096;--border:rgba(133,178,145,.16);
- --green:#58e58a;--green2:#1ebc67;--shadow:0 24px 70px rgba(0,0,0,.42);
-}
-html,body{background:#050907;color:#eef5ef}
-.topbar{background:rgba(5,10,7,.88);border-bottom-color:rgba(125,173,138,.13);backdrop-filter:blur(24px)}
-.topbar-title{color:#b5c8ba}
-.top-button{background:linear-gradient(145deg,#101b14,#0a100c);border-color:rgba(121,174,136,.2)}
-.avatar{background:linear-gradient(145deg,#183b27,#0d2116);border-color:#397b50;color:#a5ffc0}
-.sidebar{background:linear-gradient(180deg,#080f0b,#060a08);border-right-color:rgba(125,173,138,.13)}
-.brand-wordmark small{color:#748b7b}
-
-/* Full-screen premium loading */
-.splash{
- background:
-  radial-gradient(ellipse at 50% 42%,rgba(39,132,76,.19),transparent 33%),
-  radial-gradient(ellipse at 50% 100%,rgba(18,72,42,.17),transparent 42%),
-  #030705;
- overflow:hidden;
-}
-.splash:before,.splash:after{
- content:"";position:absolute;left:50%;top:43%;border:1px solid rgba(106,229,146,.13);
- width:min(72vw,560px);height:min(72vw,560px);border-radius:50%;
- transform:translate(-50%,-50%);box-shadow:0 0 0 34px rgba(81,197,119,.025),0 0 0 72px rgba(81,197,119,.018);
- animation:tozraOrbit 9s linear infinite;
-}
-.splash:after{width:min(53vw,410px);height:min(53vw,410px);border-style:dashed;border-color:rgba(106,229,146,.18);animation-direction:reverse;animation-duration:24s}
-.splash-inner{position:relative;z-index:1;display:flex;align-items:center;flex-direction:column;animation:premiumEnter 1s cubic-bezier(.2,.75,.25,1) both}
-.splash-mark{
- width:86px;height:86px;margin:0 0 26px;border-radius:27px;
- display:grid;place-items:center;position:relative;
- color:#d9ffe4;font-size:42px;font-weight:800;letter-spacing:-.1em;
- background:linear-gradient(145deg,rgba(35,89,54,.96),rgba(8,22,13,.98));
- border:1px solid rgba(124,241,160,.35);
- box-shadow:0 0 0 8px rgba(84,222,129,.045),0 18px 65px rgba(41,194,99,.18),inset 0 1px rgba(255,255,255,.12);
-}
-.splash-mark:before{content:"";position:absolute;inset:-8px;border:1px solid rgba(104,230,147,.22);border-radius:32px}
-.splash-name{margin:0;color:#f0fff3;font-size:31px;font-weight:800;letter-spacing:.34em;padding-left:.34em;text-shadow:0 0 28px rgba(90,225,139,.2)}
-.splash-tagline{margin-top:12px;color:#789483;font-size:9px;font-weight:700;letter-spacing:.32em}
-.splash-caption{margin-top:45px;color:#668071;font-size:9px;letter-spacing:.16em;text-transform:uppercase}
-.loader{width:190px;height:3px;margin-top:15px;border-radius:20px;background:rgba(125,175,139,.13);overflow:hidden}
-.loader-bar{height:100%;width:0;background:linear-gradient(90deg,#228e50,#a0ffc0);box-shadow:0 0 18px rgba(87,235,139,.85);animation:loading 2.4s cubic-bezier(.2,.7,.2,1) forwards}
-@keyframes tozraOrbit{to{transform:translate(-50%,-50%) rotate(360deg)}}
-@keyframes premiumEnter{from{opacity:0;transform:translateY(18px) scale(.97);filter:blur(5px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
-
-/* Premium personal-assistant home */
-.content{max-width:1450px}
-#personalAssistantPage{position:relative;isolation:isolate}
-#personalAssistantPage:before{
- content:"";position:absolute;z-index:-1;pointer-events:none;
- width:680px;height:520px;right:-250px;top:-100px;
- background:radial-gradient(ellipse,rgba(33,126,68,.11),transparent 68%);
-}
-.assistant-home{max-width:1180px;padding:32px 0 54px;color:#edf5ef}
-.assistant-head{
- position:relative;overflow:hidden;align-items:center;min-height:205px;
- padding:32px 34px;margin:0 0 20px;border-radius:24px;
- border:1px solid rgba(120,198,142,.2);
- background:
-  radial-gradient(ellipse at 87% 12%,rgba(62,190,103,.22),transparent 36%),
-  radial-gradient(ellipse at 0% 100%,rgba(25,106,57,.18),transparent 42%),
-  linear-gradient(125deg,#101d15 0%,#0a120d 55%,#0b1710 100%);
- box-shadow:0 24px 70px rgba(0,0,0,.23),inset 0 1px rgba(255,255,255,.035);
-}
-.assistant-head:after{
- content:"T";position:absolute;right:7%;top:50%;transform:translateY(-54%);
- font-size:clamp(130px,19vw,225px);line-height:1;font-weight:900;letter-spacing:-.12em;
- color:rgba(116,235,151,.045);pointer-events:none;text-shadow:0 0 60px rgba(72,210,116,.07)
-}
-.assistant-head>div{position:relative;z-index:1}
-.assistant-eyebrow{color:#75c991;font-size:9px;letter-spacing:.24em;margin-bottom:15px}
-.assistant-head h1{color:#f0fff3;font-size:clamp(32px,4.4vw,49px);font-weight:760;letter-spacing:-.065em;margin:0 0 10px}
-.assistant-head p{color:#9aafa0;font-size:13px;max-width:490px}
-.assistant-date{position:relative;z-index:1;background:rgba(4,13,8,.5);border:1px solid rgba(139,204,155,.2);color:#c5dfcc;border-radius:30px;padding:10px 14px}
-.assistant-command{
- padding:10px 11px 10px 20px;margin:0 0 17px;
- background:linear-gradient(145deg,#101a13,#0a110c);
- border:1px solid rgba(119,176,133,.24);border-radius:15px;
- box-shadow:0 14px 38px rgba(0,0,0,.2)
-}
-.assistant-command input{color:#eaf6ed;font-size:13px}
-.assistant-command input::placeholder{color:#6f8174}
-.assistant-command button{background:linear-gradient(135deg,#8cf2aa,#39cb76);color:#06140a;border-radius:10px;font-weight:800;padding:12px 18px}
-.assistant-command button:hover{background:#a3ffc0;box-shadow:0 8px 24px rgba(70,215,121,.2)}
-.assistant-shortcuts{margin:0 0 23px;gap:9px}
-.assistant-shortcut{background:rgba(13,24,16,.78);border:1px solid rgba(119,176,133,.17);color:#a9bcae;border-radius:30px;padding:9px 14px;transition:.2s}
-.assistant-shortcut:hover{background:#14281a;border-color:#4eaa6b;color:#eaffef;transform:translateY(-1px)}
-.assistant-grid{gap:16px}
-.assistant-panel{
- background:linear-gradient(150deg,rgba(15,25,18,.98),rgba(9,15,11,.98));
- border:1px solid rgba(119,176,133,.16);border-radius:17px;padding:19px;
- box-shadow:0 14px 36px rgba(0,0,0,.16)
-}
-.assistant-panel-head h2{color:#e7f4e9;font-size:13px}
-.assistant-panel-head span{color:#718779}
-.assistant-task-form input,.assistant-task-form select{
- background:#080f0a;border:1px solid rgba(119,176,133,.18);color:#dcebe0;border-radius:9px
-}
-.assistant-task-form input::placeholder{color:#65786a}
-.assistant-task-form input:focus{border-color:#4aab69}
-.assistant-task-form button{background:linear-gradient(135deg,#79e99a,#35c772);color:#06140a;border-radius:9px;font-weight:800}
-.assistant-task{background:rgba(5,12,8,.72);border:1px solid rgba(119,176,133,.12);border-radius:10px}
-.assistant-task-title{color:#e3eee5}
-.assistant-task input[type=checkbox]{accent-color:#5ce58b}
-.assistant-task-priority{background:#14271a;color:#9fc5a9}
-.assistant-task-priority.high{background:#38201e;color:#ffb1a3}
-.assistant-task-priority.medium{background:#332b18;color:#e7cb84}
-.assistant-task-priority.low{background:#14271b;color:#a2d7ad}
-.assistant-task-delete{color:#789080}
-.assistant-empty{color:#718477;border-color:rgba(119,176,133,.2)}
-.assistant-note{background:#080f0a;border:1px solid rgba(119,176,133,.17);color:#dcebe0;border-radius:10px}
-.assistant-note::placeholder{color:#65786a}
-.assistant-note:focus{border-color:#4aab69}
-.assistant-note-hint{color:#6d8172}
-.assistant-summary-card{background:linear-gradient(145deg,#12231a,#0b150f);border:1px solid rgba(119,176,133,.14);border-radius:11px}
-.assistant-summary-card strong{color:#9df3b4}
-.assistant-summary-card span{color:#829889}
-.assistant-weekly{margin-top:16px}
-.assistant-week-head{margin-bottom:17px}
-.assistant-week-controls button,.assistant-week-controls input{
- background:#0a130d;border:1px solid rgba(119,176,133,.2);color:#cce0d1;border-radius:9px
-}
-.assistant-week-day{background:rgba(7,14,9,.8);border:1px solid rgba(119,176,133,.15);border-radius:11px}
-.assistant-week-day-head{color:#d9eadc}
-.assistant-week-day-date{color:#708477}
-.assistant-week-day textarea{background:#0d1811;color:#dcebe0;border-radius:8px}
-.assistant-week-day textarea:focus{box-shadow:inset 0 0 0 1px rgba(84,211,122,.4)}
-.assistant-week-saved{color:#789080}
-.assistant-footer{color:#587061;letter-spacing:.12em}
-@media(max-width:760px){
- .assistant-home{padding:18px 0 32px}
- .assistant-head{padding:25px 21px;min-height:0;border-radius:19px;gap:10px}
- .assistant-head:after{right:3%;font-size:140px}
- .assistant-head h1{font-size:34px}
- .assistant-head p{max-width:280px;font-size:12px}
- .assistant-date{margin-top:17px}
- .assistant-command{padding:7px 7px 7px 13px}
- .assistant-command button{padding:11px 12px}
- .assistant-panel{padding:15px}
- .splash-mark{width:76px;height:76px;border-radius:24px}
- .splash-name{font-size:27px}
- .splash-caption{margin-top:38px}
- .splash:before{width:82vw;height:82vw}
- .splash:after{width:62vw;height:62vw}
-}
-@media(prefers-reduced-motion:reduce){
- .splash:before,.splash:after,.splash-inner,.loader-bar{animation:none!important}
-}
-
-
-/* ===== TOZRA LAYOUT REFINEMENT ===== */
-.sidebar{width:274px;padding:25px 17px 18px;gap:0}
-.brand{margin:0 7px 30px}
-.new-chat{min-height:46px;margin:0 0 25px;border-radius:11px;justify-content:center;letter-spacing:.01em}
-.nav-label{margin:0 10px 9px;color:#708777;font-size:9px;font-weight:800;letter-spacing:.2em}
-.nav-item{height:44px;margin:2px 0;border-radius:10px;padding:0 12px;transition:background .18s,border-color .18s,color .18s}
-.nav-item.active{background:linear-gradient(100deg,rgba(70,183,105,.17),rgba(70,183,105,.055));color:#b8f4c8;box-shadow:inset 2px 0 #5be18a}
-.nav-item.active .nav-symbol{color:#70e99a}
-.studio-label{margin-top:26px;padding-top:20px;border-top:1px solid rgba(125,173,138,.12)}
-.studio-links{margin:2px 0 8px 12px;padding-left:12px;border-left:1px solid rgba(125,173,138,.15);gap:2px}
-.studio-link{min-height:36px;border-radius:8px;padding:0 10px;color:#8fa295}
-.studio-link:hover{background:rgba(70,183,105,.09);color:#d7f4df}
-.history-title{margin:22px 10px 9px;padding-top:18px;border-top:1px solid rgba(125,173,138,.12);font-size:9px;letter-spacing:.2em;color:#708777}
-.sidebar-bottom{padding-top:15px}
-.assistant-home{max-width:1160px;padding-top:25px}
-.assistant-head{min-height:190px;margin-bottom:17px}
-.assistant-command{margin-bottom:13px}
-.assistant-shortcuts{margin-bottom:18px}
-.assistant-overview{display:flex;align-items:center;justify-content:space-between;gap:20px;margin:0 0 17px;padding:13px 17px;border:1px solid rgba(119,176,133,.15);border-radius:14px;background:linear-gradient(100deg,rgba(13,24,16,.96),rgba(9,15,11,.92));box-shadow:0 10px 28px rgba(0,0,0,.12)}
-.assistant-overview-label{display:flex;align-items:center;gap:9px;color:#829b89;font-size:9px;font-weight:800;letter-spacing:.18em;white-space:nowrap}
-.overview-dot{width:7px;height:7px;border-radius:50%;background:#5de58d;box-shadow:0 0 12px rgba(93,229,141,.65)}
-.assistant-overview .assistant-summary{display:flex;align-items:center;gap:9px;min-width:min(100%,420px)}
-.assistant-overview .assistant-summary-card{flex:1;display:flex;align-items:center;gap:10px;padding:7px 12px;background:rgba(18,35,26,.8);border-color:rgba(119,176,133,.13);border-radius:9px}
-.assistant-overview .assistant-summary-card strong{font-size:20px;min-width:22px}
-.assistant-overview .assistant-summary-card span{font-size:9px;line-height:1.35}
-.assistant-grid{grid-template-columns:minmax(0,1.45fr) minmax(270px,.8fr);gap:16px}
-.assistant-panel{border-radius:15px;padding:19px}
-.assistant-side{gap:0}
-.assistant-side .assistant-panel{height:100%;display:flex;flex-direction:column}
-.assistant-note{flex:1;min-height:210px;resize:vertical}
-.assistant-weekly{margin-top:16px}
-.assistant-week-grid{gap:9px}
-.assistant-week-day{padding:11px}
-@media(max-width:760px){
- .sidebar{width:280px;padding:20px 15px 16px}
- .assistant-home{padding-top:15px}
- .assistant-overview{align-items:flex-start;flex-direction:column;gap:10px;padding:13px}
- .assistant-overview .assistant-summary{width:100%;min-width:0}
- .assistant-overview .assistant-summary-card{padding:8px 9px;gap:7px}
- .assistant-overview .assistant-summary-card strong{font-size:18px}
- .assistant-grid{grid-template-columns:1fr}
- .assistant-side .assistant-panel{height:auto}
- .assistant-note{min-height:145px}
-}
-@media(max-width:420px){
- .assistant-overview .assistant-summary-card span{font-size:8px}
- .assistant-panel{padding:13px}
-}
-
-/* TOZRA TOTAL REDESIGN — editorial light interface */
-:root{
- --bg:#f3f5fa!important;--surface:#ffffff!important;--surface2:#f7f8fc!important;
- --text:#172033!important;--muted:#7c8497!important;--border:#e4e8f1!important;
- --green:#625bff!important;--green2:#4d46e8!important;--shadow:0 18px 55px rgba(31,42,75,.09)!important;
- --ink:#172033;--sidebar:#fff;
-}
-html,body{background:#f3f5fa!important;color:#172033!important}
-body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif!important;letter-spacing:-.01em}
-button,input,textarea,select{font-family:inherit}
-/* New cinematic launch screen */
-.splash{background:radial-gradient(ellipse at 50% 42%,#25336a 0%,#141d42 36%,#0b1026 72%,#080c1c 100%)!important;color:#fff;overflow:hidden}
-.splash:before,.splash:after{content:"";position:absolute;left:50%;top:43%;border:1px solid rgba(173,184,255,.18);border-radius:50%;transform:translate(-50%,-50%);pointer-events:none}
-.splash:before{width:min(78vw,680px);height:min(78vw,680px);box-shadow:0 0 0 42px rgba(140,155,255,.035),0 0 0 90px rgba(140,155,255,.025);animation:launchOrbit 18s linear infinite}
-.splash:after{width:min(55vw,470px);height:min(55vw,470px);border-style:dashed;border-color:rgba(157,169,255,.25);animation:launchOrbit 30s linear infinite reverse}
-.splash-inner{position:relative;z-index:1;animation:launchIn 1s cubic-bezier(.2,.8,.2,1) both}
-.splash-mark{width:94px!important;height:94px!important;display:grid;place-items:center;border-radius:29px!important;background:linear-gradient(145deg,#a9b5ff,#655cff 58%,#4942d6)!important;color:#fff!important;font-size:57px!important;font-weight:900!important;letter-spacing:-.12em!important;padding-right:6px;box-shadow:0 20px 65px rgba(96,91,255,.42),inset 0 1px rgba(255,255,255,.55)!important;border:1px solid rgba(255,255,255,.35)!important}
-.splash-mark:before{inset:-10px!important;border:1px solid rgba(177,185,255,.34)!important;border-radius:35px!important}
-.splash-name{font-size:30px!important;letter-spacing:.34em!important;font-weight:850!important;margin-top:26px!important;color:#fff!important}
-.splash-tagline{font-size:9px!important;letter-spacing:.38em!important;color:#aeb9ef!important;margin-top:12px!important}
-.splash-caption{margin-top:18px!important;color:#d0d6f6!important;font-size:11px!important;letter-spacing:.12em!important;text-transform:none!important}
-.loader{width:170px!important;height:3px!important;background:rgba(255,255,255,.14)!important;margin-top:36px!important}
-.loader-bar{background:linear-gradient(90deg,#8da0ff,#fff)!important;box-shadow:0 0 18px #8997ff!important}
-@keyframes launchOrbit{to{transform:translate(-50%,-50%) rotate(360deg)}}
-@keyframes launchIn{from{opacity:0;transform:translateY(20px) scale(.96);filter:blur(8px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
-/* App frame */
-.app{background:#f3f5fa!important}
-.sidebar{width:268px!important;padding:25px 17px 18px!important;background:#fff!important;border-right:1px solid #e8ebf3!important;box-shadow:8px 0 35px rgba(32,43,76,.025);color:#202943!important}
-.brand{margin:2px 7px 30px!important;gap:12px!important;color:#18213b!important}
-.brand-icon{width:39px!important;height:39px!important;border-radius:13px!important;background:#eff0ff!important;border:1px solid #e1e3ff!important;box-shadow:0 5px 16px rgba(87,83,225,.12)}
-.brand-wordmark span{color:#1d2540!important;letter-spacing:.13em!important;font-weight:900!important}
-.brand-wordmark small{color:#8a90a8!important;letter-spacing:.16em!important}
-.new-chat{border:0!important;background:linear-gradient(115deg,#6f68ff,#5149e8)!important;color:#fff!important;border-radius:13px!important;box-shadow:0 9px 22px rgba(91,83,238,.2)!important;padding:14px!important;margin-bottom:25px!important}
-.new-chat:hover{background:linear-gradient(115deg,#5e57f3,#4038d3)!important;transform:translateY(-1px)}
-.nav-label,.history-title{color:#9ba2b5!important;font-size:9px!important;font-weight:800!important;letter-spacing:.2em!important;margin:22px 10px 9px!important}
-.nav-item{height:43px!important;border-radius:11px!important;margin:2px 0!important;padding:0 12px!important;color:#707990!important;font-size:12px!important;transition:.2s!important}
-.nav-symbol{color:#9ba4bb!important}
-.nav-item:hover{background:#f4f5ff!important;color:#4f49db!important}
-.nav-item.active{background:#efefff!important;color:#4e48df!important;box-shadow:inset 3px 0 #625bff!important;font-weight:750!important}
-.nav-item.active .nav-symbol{color:#625bff!important}
-.studio-label{border-top:1px solid #edf0f6!important;padding-top:18px!important;margin-top:20px!important}
-.studio-links{border-left:1px solid #e8eaf3!important;margin:2px 0 8px 12px!important;padding-left:10px!important}
-.studio-link{color:#8b93a7!important;border-radius:9px!important}
-.studio-link span{color:#7770f5!important}
-.studio-link:hover{background:#f4f4ff!important;color:#514be0!important}
-.history-title{border-top:1px solid #edf0f6!important;padding-top:17px!important}
-.history-item{color:#8b93a7!important;border-radius:9px!important}
-.history-item:hover{background:#f5f6fb!important;color:#3d4660!important}
-.pro-card{background:linear-gradient(145deg,#f0efff,#f8f8ff)!important;border:1px solid #e5e3ff!important;border-radius:15px!important;padding:15px!important}
-.pro-title{color:#514bd9!important}.pro-card p{color:#7e849d!important}.pro-card button{background:#625bff!important;color:white!important;border-radius:9px!important}
-.side-action{color:#778097!important}.side-action:hover{background:#f4f5fb!important;color:#514be0!important}
-.sidebar-footer{color:#a6adbd!important}
-/* Header + canvas */
-.main{background:#f3f5fa!important}
-.topbar{height:70px!important;padding:0 34px!important;background:rgba(255,255,255,.88)!important;border-bottom:1px solid #e7eaf2!important;backdrop-filter:blur(18px)!important}
-.topbar-title{color:#8a91a5!important;font-size:10px!important;letter-spacing:.2em!important}
-.top-button{background:#fff!important;border:1px solid #e5e8f1!important;color:#5e6680!important;border-radius:10px!important}
-.top-button:hover{border-color:#c7c5ff!important;color:#514be0!important}
-.avatar{background:#eeefff!important;color:#5751e7!important;border:1px solid #dedcff!important}
-.status{color:#7b8498!important}.status:before{background:#32bd89!important;box-shadow:0 0 8px #32bd8966!important}
-.content{max-width:1480px!important;padding:35px 42px 28px!important}
-.page{animation:launchIn .35s ease both}
-/* Personal assistant — completely new hierarchy */
-#personalAssistantPage:before{background:radial-gradient(ellipse,rgba(102,96,255,.08),transparent 70%)!important}
-.assistant-home{max-width:1240px!important;padding:12px 0 55px!important;color:#202943!important}
-.assistant-head{min-height:225px!important;padding:36px 40px!important;margin:0 0 20px!important;border:1px solid #e2e4ff!important;border-radius:25px!important;background:linear-gradient(112deg,#f4f3ff 0%,#f8f9ff 53%,#e9f0ff 100%)!important;box-shadow:0 20px 50px rgba(66,70,150,.08)!important;align-items:center!important}
-.assistant-head:after{content:"T"!important;color:rgba(91,85,230,.055)!important;text-shadow:none!important;font-size:clamp(180px,24vw,280px)!important;right:9%!important}
-.assistant-eyebrow{color:#716cf0!important;font-size:9px!important;letter-spacing:.23em!important;font-weight:850!important}
-.assistant-head h1{color:#1c2540!important;font-size:clamp(35px,4.5vw,53px)!important;font-weight:780!important;letter-spacing:-.065em!important}
-.assistant-head p{color:#7b849d!important;font-size:13px!important}
-.assistant-date{background:rgba(255,255,255,.72)!important;border:1px solid #e0e3f4!important;color:#66708d!important;border-radius:12px!important;padding:11px 14px!important}
-.assistant-command{padding:11px 12px 11px 21px!important;margin:0 0 13px!important;background:#fff!important;border:1px solid #e3e7f1!important;border-radius:16px!important;box-shadow:0 12px 32px rgba(34,45,79,.055)!important}
-.assistant-command input{color:#202943!important;font-size:13px!important}.assistant-command input::placeholder{color:#a4aabe!important}
-.assistant-command button{background:linear-gradient(120deg,#706aff,#5149e6)!important;color:white!important;border-radius:11px!important;padding:13px 20px!important;box-shadow:0 7px 18px rgba(91,83,238,.18)!important}
-.assistant-command button:hover{background:#5149e6!important}
-.assistant-shortcuts{margin:0 0 24px!important;gap:8px!important}
-.assistant-shortcut{background:#fff!important;border:1px solid #e6e9f2!important;color:#788199!important;border-radius:10px!important;padding:9px 13px!important}
-.assistant-shortcut:hover{background:#f4f3ff!important;border-color:#d9d7ff!important;color:#5a54e5!important}
-.assistant-overview{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:20px!important;padding:16px 20px!important;margin:0 0 16px!important;background:#fff!important;border:1px solid #e7eaf2!important;border-radius:16px!important;box-shadow:0 8px 25px rgba(34,45,79,.035)!important}
-.assistant-overview-label{color:#8790a6!important;font-size:9px!important;font-weight:850!important;letter-spacing:.18em!important}
-.overview-dot{background:#625bff!important;box-shadow:0 0 0 4px #625bff18!important}
-.assistant-summary{display:flex!important;gap:10px!important}
-.assistant-summary-card{min-width:145px!important;background:#f7f8fc!important;border:1px solid #edf0f6!important;border-radius:11px!important;padding:10px 13px!important}
-.assistant-summary-card strong{color:#514be0!important;font-size:21px!important}.assistant-summary-card span{color:#8b93a8!important}
-.assistant-grid{grid-template-columns:minmax(0,1.45fr) minmax(270px,.75fr)!important;gap:17px!important}
-.assistant-panel{background:#fff!important;border:1px solid #e6e9f2!important;border-radius:17px!important;padding:20px!important;box-shadow:0 9px 28px rgba(34,45,79,.035)!important}
-.assistant-panel-head h2{color:#26304b!important;font-size:14px!important;font-weight:780!important}
-.assistant-panel-head span{color:#9aa2b5!important}
-.assistant-task-form input,.assistant-task-form select{background:#f8f9fc!important;border:1px solid #e6e9f2!important;color:#4b5570!important;border-radius:9px!important}
-.assistant-task-form input::placeholder{color:#a4aabe!important}
-.assistant-task-form input:focus{border-color:#9d99ff!important;box-shadow:0 0 0 3px #625bff12!important}
-.assistant-task-form button{background:#625bff!important;color:#fff!important;border-radius:9px!important}
-.assistant-task{background:#fbfcff!important;border:1px solid #edf0f6!important;border-radius:11px!important;padding:12px!important}
-.assistant-task-title{color:#36415c!important}.assistant-task input[type=checkbox]{accent-color:#625bff!important}
-.assistant-task-priority{background:#f0f1ff!important;color:#6862dc!important}
-.assistant-task-priority.high{background:#fff0ef!important;color:#c76c65!important}.assistant-task-priority.medium{background:#fff7e8!important;color:#aa8544!important}.assistant-task-priority.low{background:#eaf8f2!important;color:#398c70!important}
-.assistant-task-delete{color:#a5adbf!important}.assistant-task-delete:hover{color:#d16c75!important}
-.assistant-empty{color:#9aa2b5!important;border-color:#e5e8f1!important;background:#fafbfe!important}
-.assistant-note{background:#f8f9fc!important;border:1px solid #e7eaf2!important;color:#39445f!important;border-radius:11px!important;min-height:210px!important}
-.assistant-note::placeholder{color:#a4aabe!important}.assistant-note:focus{border-color:#a19dff!important}
-.assistant-note-hint{color:#9aa2b5!important}
-.assistant-weekly{margin-top:17px!important}
-.assistant-week-head{margin-bottom:17px!important}
-.assistant-week-controls button,.assistant-week-controls input{background:#f8f9fc!important;border:1px solid #e5e8f1!important;color:#69738c!important;border-radius:9px!important}
-.assistant-week-day{background:#fbfcff!important;border:1px solid #e8ebf3!important;border-radius:11px!important;padding:10px!important}
-.assistant-week-day-head{color:#424d68!important}.assistant-week-day-date{color:#a0a8b9!important}
-.assistant-week-day textarea{background:#f5f6fb!important;color:#4d5872!important;border-radius:8px!important}
-.assistant-week-day textarea:focus{box-shadow:inset 0 0 0 1px #a29eff!important}
-.assistant-week-saved{color:#9aa2b5!important}.assistant-footer{color:#a8afbf!important}
-/* Other workspace pages, chat, projects, creative studio */
-.workspace-hero,.hero-shell{background:linear-gradient(120deg,#f0f1ff,#f8f9ff 65%,#eaf1ff)!important;border:1px solid #e1e4ff!important;border-radius:23px!important;box-shadow:0 16px 40px rgba(62,69,145,.07)!important;color:#202943!important}
-.hero-greeting,.workspace-hero p{color:#7c849d!important}.workspace-hero h1{color:#202943!important}
-.eyebrow{color:#625bff!important}
-.dashboard-stats .stat-card,.stat-card{background:#fff!important;border:1px solid #e7eaf2!important;border-radius:15px!important;box-shadow:0 7px 22px rgba(34,45,79,.035)!important}
-.stat-card span,.stat-card small{color:#929bb0!important}.stat-card strong{color:#293451!important}
-.quick-card,.tool-card,.project-card{background:#fff!important;border:1px solid #e6e9f2!important;border-radius:15px!important;color:#293451!important;box-shadow:0 8px 24px rgba(34,45,79,.035)!important}
-.quick-card:hover,.tool-card:hover,.project-card:hover{border-color:#c9c7ff!important;background:#fcfcff!important;box-shadow:0 14px 30px rgba(72,70,170,.09)!important}
-.quick-card small,.tool-card small,.project-card p{color:#8790a6!important}
-.tool-icon,.project-symbol{background:#f0efff!important;border:1px solid #e1dfff!important;color:#625bff!important;border-radius:11px!important}
-.section-head h2,.project-card h3{color:#26304b!important}.section-head span,.project-meta{color:#939bb0!important}
-.workspace-footer{border-color:#e6e9f1!important;color:#9ba3b5!important}
-.panel,.modal{background:#fff!important;border:1px solid #e6e9f2!important;color:#27314c!important;box-shadow:0 18px 50px rgba(34,45,79,.09)!important}
-.panel h3,.modal-head h2{color:#27314c!important}
-.notes-area,.assistant-note,.composer,.composer textarea,.notes-area{background:#f8f9fc!important;color:#36415c!important;border-color:#e6e9f2!important}
-.back-button,.small-btn,.outline-btn,.tool-button,.top-button{background:#fff!important;border:1px solid #e4e8f1!important;color:#66708a!important}
-.primary-btn,.send{background:linear-gradient(120deg,#706aff,#5149e6)!important;color:#fff!important}
-.composer{border:1px solid #e2e6f0!important;box-shadow:0 8px 25px rgba(34,45,79,.06)!important}
-.composer textarea::placeholder{color:#a4aabe!important}
-.user .message-text{background:#eeedff!important;border:1px solid #dedcff!important;color:#3f3a9e!important}
-.assistant .message-text{background:#fff!important;border:1px solid #e7eaf2!important;color:#35405a!important}
-.message-label,.disclaimer{color:#9ba3b5!important}
-.typing{background:#fff!important;border:1px solid #e7eaf2!important;color:#66708a!important}.typing-dots span{background:#625bff!important}
-.welcome h1{color:#202943!important}.welcome p{color:#8790a6!important}.welcome-logo{background:#efefff!important;border-color:#dfddff!important}
-.suggestion{background:#fff!important;border:1px solid #e6e9f2!important;color:#66708a!important;border-radius:13px!important}
-.suggestion:hover{background:#f6f5ff!important;border-color:#d6d3ff!important;color:#514be0!important}
-.overlay{background:rgba(19,25,47,.48)!important;backdrop-filter:blur(8px)!important}
-input,textarea,select{accent-color:#625bff}
-/* Mobile polish */
-@media(max-width:900px){.content{padding:25px 24px!important}.assistant-grid{grid-template-columns:1fr!important}.assistant-side{display:grid;grid-template-columns:1fr}}
-@media(max-width:760px){
- .sidebar{background:#fff!important;box-shadow:18px 0 55px rgba(26,34,65,.14)!important}
- .topbar{padding:0 15px!important;background:rgba(255,255,255,.95)!important}
- .content{padding:16px 14px 25px!important}
- .assistant-home{padding:8px 0 32px!important}
- .assistant-head{padding:25px 21px!important;min-height:190px!important;border-radius:19px!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important}
- .assistant-head h1{font-size:34px!important}.assistant-head p{font-size:12px!important;max-width:270px!important}
- .assistant-head:after{right:3%!important;font-size:145px!important}
- .assistant-date{margin-top:4px!important}
- .assistant-overview{align-items:flex-start!important;flex-direction:column!important;gap:12px!important;padding:14px!important}
- .assistant-summary{width:100%!important}.assistant-summary-card{min-width:0!important;flex:1!important}
- .assistant-task-form{grid-template-columns:1fr 1fr!important}
- .assistant-task-form input:first-child{grid-column:1/-1}
- .assistant-task-form button{min-height:39px}
- .assistant-grid{grid-template-columns:1fr!important}
- .assistant-week-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
- .assistant-week-day:last-child{grid-column:1/-1}
- .assistant-week-day textarea{min-height:90px!important}
- .assistant-week-head{align-items:flex-start!important;flex-direction:column!important}
- .assistant-command{padding:8px 8px 8px 13px!important}
- .assistant-command button{padding:11px 13px!important}
- .assistant-panel{padding:15px!important}
- .splash-mark{width:82px!important;height:82px!important;font-size:49px!important}
- .splash-name{font-size:27px!important}
- .splash:before{width:88vw;height:88vw}.splash:after{width:65vw;height:65vw}
- .project-grid,.tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-}
-@media(max-width:420px){.assistant-task-form{grid-template-columns:1fr!important}.assistant-task-form input:first-child{grid-column:auto}.assistant-week-grid{grid-template-columns:1fr!important}.assistant-week-day:last-child{grid-column:auto}.assistant-summary-card{padding:9px!important}.project-grid,.tool-grid{grid-template-columns:1fr!important}}
-@media(prefers-reduced-motion:reduce){.splash:before,.splash:after,.splash-inner{animation:none!important}}
-
+</style>
+<style id="tozra-personal-home">
+:root{--personal-ink:#17221b;--personal-muted:#718076;--personal-line:#e5ece6;--personal-green:#16864b;--personal-green2:#dff5e7;--personal-card:#ffffff}
+#personalHome{grid-column:1/-1;display:grid;gap:17px;margin:2px 0 30px;color:var(--personal-ink)}
+#personalHome .ph-hero{position:relative;overflow:hidden;border-radius:25px;padding:26px 25px 22px;background:radial-gradient(circle at 92% 0%,rgba(65,183,112,.19),transparent 35%),linear-gradient(135deg,#f6fbf7,#edf6ef 58%,#e5f2e8);border:1px solid #e0ece2;box-shadow:0 16px 42px rgba(24,65,39,.07)}
+#personalHome .ph-brand{display:flex;align-items:center;gap:10px;margin-bottom:23px}
+#personalHome .ph-mark{width:38px;height:38px;border-radius:13px;background:linear-gradient(145deg,#20a35e,#0b6738);display:grid;place-items:center;color:#fff;font-size:23px;font-weight:850;box-shadow:0 7px 18px #13834735}
+#personalHome .ph-brand-name{font-weight:850;letter-spacing:2px;font-size:14px;color:#15281c}
+#personalHome .ph-brand-sub{font-size:8px;letter-spacing:1.7px;color:#738579;margin-top:2px}
+#personalHome .ph-kicker{font-size:10px;letter-spacing:1.8px;font-weight:800;color:#43805a;margin-bottom:9px}
+#personalHome .ph-title{font-size:clamp(28px,4vw,39px);line-height:1.12;letter-spacing:-1.5px;color:#17291e;margin:0 0 9px;font-weight:760}
+#personalHome .ph-desc{font-size:13px;line-height:1.65;color:#65766a;margin:0;max-width:540px}
+#personalHome .ph-ask{display:flex;align-items:center;gap:11px;width:100%;margin-top:20px;padding:13px 14px;border:1px solid #dce9de;border-radius:16px;background:#ffffffd9;color:#6d7c70;text-align:left;box-shadow:0 7px 22px #214d2b0c}
+#personalHome .ph-ask-icon{width:31px;height:31px;display:grid;place-items:center;border-radius:11px;background:#e5f5e9;color:#16864b;font-size:17px;flex:none}
+#personalHome .ph-ask span:nth-child(2){flex:1;font-size:12px}
+#personalHome .ph-ask-arrow{color:#16864b;font-size:20px;font-weight:800}
+#personalHome .ph-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));background:#fff;border:1px solid var(--personal-line);border-radius:18px;padding:14px 7px;box-shadow:0 7px 24px rgba(26,55,34,.035)}
+#personalHome .ph-stat{text-align:center;padding:2px 5px}
+#personalHome .ph-stat+.ph-stat{border-left:1px solid #e8eee9}
+#personalHome .ph-stat strong{display:block;font-size:23px;line-height:1.2;color:#173b26;font-weight:800}
+#personalHome .ph-stat span{display:block;margin-top:4px;font-size:8px;letter-spacing:1px;color:#839087;font-weight:750}
+#personalHome .ph-section{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:4px 2px 9px}
+#personalHome .ph-section h2{margin:0;font-size:16px;letter-spacing:-.35px;color:#1b2c21}
+#personalHome .ph-section small{font-size:9px;letter-spacing:1.1px;color:#8a998e;font-weight:750}
+#personalHome .ph-card{background:#fff;border:1px solid var(--personal-line);border-radius:18px;padding:15px;box-shadow:0 7px 24px rgba(26,55,34,.035)}
+#personalHome .ph-add{display:flex;gap:8px}
+#personalHome .ph-input,#personalHome .ph-textarea{width:100%;border:1px solid #e3ebe5;border-radius:12px;background:#f8fbf8;color:#1d2d22;padding:11px 12px;font-size:12px;outline:none}
+#personalHome .ph-input:focus,#personalHome .ph-textarea:focus{border-color:#79bd91;box-shadow:0 0 0 3px #1b98521a}
+#personalHome .ph-add button{width:42px;flex:none;border:0;border-radius:12px;background:linear-gradient(135deg,#28a864,#117a43);color:#fff;font-size:22px}
+#personalHome .ph-tasklist{display:grid;gap:0;margin-top:8px}
+#personalHome .ph-task{display:flex;align-items:center;gap:10px;padding:11px 2px;border-bottom:1px solid #eff3ef;font-size:12px;color:#334238}
+#personalHome .ph-task:last-child{border-bottom:0}
+#personalHome .ph-check{width:19px;height:19px;border:1.5px solid #c8d8cc;border-radius:7px;background:#fff;display:grid;place-items:center;color:#fff;flex:none;padding:0}
+#personalHome .ph-check.done{background:#16864b;border-color:#16864b}
+#personalHome .ph-task.done .ph-task-label{text-decoration:line-through;color:#9aa79d}
+#personalHome .ph-delete{margin-left:auto;border:0;background:transparent;color:#a6b2a9;font-size:17px;padding:3px 6px}
+#personalHome .ph-empty{padding:14px 2px 5px;color:#93a096;font-size:11px}
+#personalHome .ph-textarea{min-height:108px;resize:vertical;line-height:1.55}
+#personalHome .ph-save{font-size:9px;color:#93a096;margin-top:7px}
+#personalHome .ph-days{display:flex;gap:6px;overflow:auto;padding:1px 0 12px;scrollbar-width:none}
+#personalHome .ph-day{flex:none;min-width:39px;padding:8px 9px;border:1px solid #e5ece6;border-radius:10px;background:#f8fbf8;color:#68786c;font-size:10px;font-weight:750}
+#personalHome .ph-day.active{background:#e4f4e8;border-color:#a9d7b7;color:#137342}
+#personalHome .ph-plan-day{font-size:12px;font-weight:800;color:#314638;margin:0 0 8px}
+#personalHome .ph-plan{min-height:78px}
+#personalHome .ph-bottom{font-size:9px;color:#a0aaa2;text-align:center;padding:6px 0 3px;letter-spacing:.5px}
+@media(min-width:900px){#personalHome{grid-template-columns:minmax(0,1.1fr) minmax(280px,.9fr);align-items:start}#personalHome .ph-hero,#personalHome .ph-stats,#personalHome .ph-week{grid-column:1/-1}#personalHome .ph-tasks{grid-column:1}#personalHome .ph-notes{grid-column:2}#personalHome .ph-stats{max-width:560px}#personalHome .ph-hero{padding:28px 32px}}
+@media(max-width:760px){#personalHome{gap:13px;margin:0 0 24px}#personalHome .ph-hero{padding:20px 17px 17px;border-radius:20px}#personalHome .ph-brand{margin-bottom:20px}#personalHome .ph-title{font-size:29px}#personalHome .ph-desc{font-size:11px}#personalHome .ph-ask{margin-top:16px;padding:11px}#personalHome .ph-card{padding:13px;border-radius:16px}#personalHome .ph-section h2{font-size:15px}}
 </style>
 </head>
 
 <body>
-<div class="splash" id="splash" role="status" aria-label="TOZRA yükleniyor">
+<div class="splash" id="splash">
  <div class="splash-inner">
-  <div class="splash-mark" aria-hidden="true">T</div>
+  <div class="splash-mark" aria-label="TOZRA">T</div>
   <div class="splash-name">TOZRA</div>
-  <div class="splash-tagline">CREATIVE INTELLIGENCE</div>
-  <div class="splash-caption">Düşüncelerini harekete geçir</div>
   <div class="loader"><div class="loader-bar"></div></div>
  </div>
 </div>
@@ -1230,12 +835,11 @@ input,textarea,select{accent-color:#625bff}
 <aside class="sidebar" id="sidebar">
  <div class="brand"><div class="brand-icon"><img src="/apple-touch-icon.PNG" alt="TOZRA"></div><div class="brand-wordmark"><span>TOZRA</span><small>CREATIVE INTELLIGENCE</small></div></div>
  <button class="new-chat" id="newProject"><span class="nav-symbol">＋</span> Yeni proje oluştur</button>
- <div class="nav-label">GENEL</div>
- <button class="nav-item active" id="navAssistant"><span class="nav-symbol">◉</span> Kişisel asistan</button>
+ <div class="nav-label">WORKSPACE</div>
+ <button class="nav-item active" id="navWorkspace"><span class="nav-symbol">⌂</span> Çalışma alanı</button>
  <button class="nav-item" id="navChat"><span class="nav-symbol">▤</span> Sohbet (AI)</button>
- <button class="nav-item" id="navWorkspace"><span class="nav-symbol">⌂</span> Çalışma alanı</button>
  <button class="nav-item" id="navProjects"><span class="nav-symbol">▣</span> Projelerim</button>
- <div class="nav-label studio-label">ÜRETİM ARAÇLARI</div>
+ <div class="nav-label studio-label">CREATIVE STUDIO</div>
  <button class="nav-item" id="navCreativeStudio"><span class="nav-symbol">✳</span> Creative Studio</button>
  <div class="studio-links">
   <button class="studio-link" type="button" data-creative-mode="idea"><span>✧</span> Fikir geliştirme</button>
@@ -1269,78 +873,7 @@ input,textarea,select{accent-color:#625bff}
 </header>
 
 <section class="content">
-
-<div class="page active" id="personalAssistantPage">
- <div class="assistant-home">
-  <div class="assistant-head">
-   <div>
-    <div class="assistant-eyebrow">TOZRA / PERSONAL ASSISTANT</div>
-    <h1 id="assistantGreeting">Günün kontrolü sende.</h1>
-    <p>Planlarını düzenle, notlarını sakla ve ihtiyacın olduğunda TOZRA'ya danış.</p>
-   </div>
-   <div class="assistant-date" id="assistantToday"></div>
-  </div>
-
-  <form class="assistant-command" id="assistantAskForm">
-   <input id="assistantAskInput" type="text" maxlength="2000" autocomplete="off" placeholder="TOZRA'ya ne yapmak istediğini söyle..." aria-label="TOZRA'ya danış">
-   <button type="submit">Sor ↗</button>
-  </form>
-  <div class="assistant-shortcuts">
-   <button class="assistant-shortcut" type="button" data-assistant-prompt="Bugün yapmam gerekenleri öncelik sırasına koymama yardım et.">Bugünümü planla</button>
-   <button class="assistant-shortcut" type="button" data-assistant-prompt="Bu hafta için gerçekçi bir çalışma planı oluşturmama yardım et.">Haftalık plan</button>
-   <button class="assistant-shortcut" type="button" data-assistant-prompt="Aklımdaki işleri düzenlememe ve küçük adımlara bölmeme yardım et.">İşlerimi düzenle</button>
-  </div>
-
-  <section class="assistant-overview" aria-label="Bugünün özeti">
-   <div class="assistant-overview-label"><span class="overview-dot"></span> BUGÜNÜN ÖZETİ</div>
-   <div class="assistant-summary">
-    <div class="assistant-summary-card"><strong id="assistantOpenCount">0</strong><span>Tamamlanmamış görev</span></div>
-    <div class="assistant-summary-card"><strong id="assistantDoneCount">0</strong><span>Tamamlanan görev</span></div>
-   </div>
-  </section>
-
-  <div class="assistant-grid">
-   <section class="assistant-panel">
-    <div class="assistant-panel-head">
-     <h2>Görevlerim</h2>
-     <span id="assistantTaskCount">0 görev</span>
-    </div>
-    <form class="assistant-task-form" id="assistantTaskForm">
-     <input id="assistantTaskInput" type="text" maxlength="180" placeholder="Yeni bir görev ekle..." required>
-     <input id="assistantTaskDue" type="datetime-local" aria-label="Görev tarihi ve saati">
-     <select id="assistantTaskPriority" aria-label="Görev önceliği"><option value="high">Yüksek öncelik</option><option value="medium" selected>Orta öncelik</option><option value="low">Düşük öncelik</option></select>
-     <button type="submit">＋ Ekle</button>
-    </form>
-    <div class="assistant-task-list" id="assistantTaskList">
-     <div class="assistant-empty">Henüz görev eklemedin. İlk görevini yukarıdan oluştur.</div>
-    </div>
-   </section>
-
-   <div class="assistant-side">
-    <section class="assistant-panel">
-     <div class="assistant-panel-head"><h2>Hızlı notlar</h2><span>Otomatik kaydedilir</span></div>
-     <textarea class="assistant-note" id="assistantNotes" maxlength="5000" placeholder="Aklına gelenleri buraya yaz..."></textarea>
-     <div class="assistant-note-hint">Notların bu tarayıcıda saklanır.</div>
-    </section>
-   </div>
-  </div>
-  <section class="assistant-panel assistant-weekly">
-   <div class="assistant-week-head">
-    <div class="assistant-panel-head" style="margin:0"><h2>Haftalık programım</h2><span>Yazdıkların otomatik kaydedilir</span></div>
-    <div class="assistant-week-controls">
-     <button type="button" id="assistantWeekPrev" aria-label="Önceki hafta">←</button>
-     <input type="date" id="assistantWeekStart" aria-label="Haftanın başlangıç tarihi">
-     <button type="button" id="assistantWeekNext" aria-label="Sonraki hafta">→</button>
-    </div>
-   </div>
-   <div class="assistant-week-grid" id="assistantWeekGrid"></div>
-   <div class="assistant-week-saved" id="assistantWeekSaved">Her günün programını ilgili kutuya yaz. Değişiklikler otomatik kaydedilir.</div>
-  </section>
-  <div class="assistant-footer">TOZRA PERSONAL ASSISTANT · Sade, düzenli, odaklı.</div>
- </div>
-</div>
-
-<div class="page" id="workspacePage">
+<div class="page active" id="workspacePage">
  <div class="workspace-hero hero-shell">
   <div class="hero-greeting" id="dashboardGreeting">TOZRA çalışma alanına hoş geldin</div>
   <div class="eyebrow"><span class="eyebrow-dot"></span> TOZRA AI　/　CREATIVE WORKSPACE</div>
@@ -1355,7 +888,21 @@ input,textarea,select{accent-color:#625bff}
    <button type="submit">Başlat ↗</button>
   </form>
   <div class="smart-command-hint">Fikir geliştir, içerik üret, araştır veya projen için yardım iste.</div>
+</div>
+ <section id="personalHome" aria-label="TOZRA kişisel çalışma alanı">
+ <div class="ph-hero">
+  <div class="ph-brand"><div class="ph-mark">T</div><div><div class="ph-brand-name">TOZRA</div><div class="ph-brand-sub">CREATIVE INTELLIGENCE</div></div></div>
+  <div class="ph-kicker">KİŞİSEL ÇALIŞMA ALANIN</div>
+  <h1 class="ph-title">Merhaba, bugün<br>neler başaracağız?</h1>
+  <p class="ph-desc">Düşüncelerini düzenle, planını oluştur ve üretmeye başla.</p>
+  <button class="ph-ask" type="button" id="phAsk"><span class="ph-ask-icon">✧</span><span>TOZRA’ya bir şey sor…</span><span class="ph-ask-arrow">↑</span></button>
  </div>
+ <div class="ph-stats"><div class="ph-stat"><strong id="phTotal">0</strong><span>TOPLAM GÖREV</span></div><div class="ph-stat"><strong id="phDone">0</strong><span>TAMAMLANAN</span></div><div class="ph-stat"><strong id="phPending">0</strong><span>BEKLEYEN</span></div></div>
+ <section class="ph-tasks"><div class="ph-section"><h2>Görevlerin</h2><small>GÜNLÜK ODAK</small></div><div class="ph-card"><form class="ph-add" id="phTaskForm"><input class="ph-input" id="phTaskInput" maxlength="160" placeholder="Yeni bir görev ekle…" autocomplete="off"><button aria-label="Görev ekle" type="submit">＋</button></form><div class="ph-tasklist" id="phTaskList"><div class="ph-empty">Henüz görev yok. İlk görevini ekleyerek başla.</div></div></div></section>
+ <section class="ph-notes"><div class="ph-section"><h2>Hızlı notların</h2><small>AKLINDA KALSIN</small></div><div class="ph-card"><textarea class="ph-textarea" id="phNotes" placeholder="Fikirlerini buraya yaz…"></textarea><div class="ph-save" id="phNotesStatus">Notların bu tarayıcıda otomatik saklanır.</div></div></section>
+ <section class="ph-week"><div class="ph-section"><h2>Haftalık program</h2><small>PLANINI OLUŞTUR</small></div><div class="ph-card"><div class="ph-days" id="phDays"></div><p class="ph-plan-day" id="phPlanDay">Pazartesi</p><textarea class="ph-textarea ph-plan" id="phPlan" placeholder="Bugün için planını yaz…"></textarea><div class="ph-save" id="phPlanStatus">Haftalık planın bu tarayıcıda otomatik saklanır.</div></div></section>
+ <div class="ph-bottom">TOZRA · Fikirlerini harekete geçir.</div>
+</section>
  <aside class="workspace-rail" aria-label="Yaratıcı çalışma paneli">
   <section class="rail-panel">
    <div class="rail-heading"><span class="rail-heading-icon">◇</span><h2>Yaratıcı modlar</h2></div>
@@ -1470,8 +1017,6 @@ input,textarea,select{accent-color:#625bff}
      <button class="tool-button" id="videoButton">＋ Video</button>
      <button class="tool-button" id="linkButton">↗ Bağlantı</button>
      <button class="tool-button voice-button" id="voiceButton" aria-label="Sesli mesaj">🎙 Konuş</button>
-     <button class="tool-button voice-conversation-button" id="voiceConversationButton" type="button" aria-label="Karşılıklı sesli sohbeti başlat">🎧 Sesli sohbet</button>
-     <button class="tool-button voice-interrupt-button" id="voiceInterruptButton" type="button" aria-label="TOZRA konuşmasını kes ve araya gir" hidden>🎙 Araya gir</button>
     </div>
     <button class="send" id="send" aria-label="Gönder">↑</button>
    </div>
@@ -1771,22 +1316,17 @@ $("menuBackdrop").onclick=()=>toggleMenu(true);
 /* SAYFA GEÇİŞLERİ */
 function showPage(page){
  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
- const target=$(page+"Page");
- if(!target)return;
- target.classList.add("active");
- $("navAssistant").classList.toggle("active",page==="personalAssistant");
- $("navWorkspace").classList.toggle("active",page==="workspace"||page==="project");
+ $(page+"Page").classList.add("active");
+ $("navWorkspace").classList.toggle("active",page==="workspace");
  $("navChat").classList.toggle("active",page==="chat");
  $("navCreativeStudio").classList.toggle("active",page==="creativeStudio");
  $("topbarTitle").textContent=
-  page==="personalAssistant"?"PERSONAL ASSISTANT":
   page==="workspace"?"CREATIVE WORKSPACE":
   page==="project"?"PROJECT WORKSPACE":
   page==="creativeStudio"?"CREATIVE STUDIO":"CREATIVE INTELLIGENCE";
  toggleMenu(true);
  window.scrollTo({top:0,behavior:"smooth"});
 }
-$("navAssistant").onclick=()=>showPage("personalAssistant");
 $("navWorkspace").onclick=()=>showPage("workspace");
 $("navProjects").onclick=()=>showPage("workspace");
 $("navChat").onclick=()=>newGeneralChat();
@@ -2543,13 +2083,11 @@ async function sendGeneralMessage(value){
    conversation.push({role:"assistant",content:answer});
    addMessage($("messages"),"assistant",answer);
    saveGeneralConversation();
-   if(window.tozraVoiceConversation)window.tozraVoiceConversation.onAssistantResponse(answer);
   },
   onFailure:error=>{
    conversation.push({role:"assistant",content:error});
    addMessage($("messages"),"assistant",error);
    saveGeneralConversation();
-   if(window.tozraVoiceConversation)window.tozraVoiceConversation.onAssistantResponse(error);
   }
  });
 }
@@ -2980,269 +2518,8 @@ async function refreshAccountData(){
 window.addEventListener("load", async ()=>{
  await TozraAuth.init();
  await refreshAccountData();
- if(window.TozraAssistant) await window.TozraAssistant.init();
  if(!TozraAuth.getSession()) showModal("login");
 });
-
-
-/* TOZRA PERSONAL ASSISTANT — tasks, priorities, weekly planner and reminders */
-(function(){
- "use strict";
- const byId=id=>document.getElementById(id);
- const userKey=()=>{
-  const user=(typeof TozraAuth!=="undefined"?TozraAuth.getSession():null)?.user;
-  return user?.id||"local";
- };
- const key=suffix=>"tozra-assistant:"+userKey()+":"+suffix;
- let tasks=[];
- let weeklyPlans={};
- const read=(name,fallback)=>{
-  try{const v=JSON.parse(localStorage.getItem(key(name))||"null");return v??fallback;}
-  catch(e){return fallback;}
- };
- let cloudReady=false, cloudRowExists=false, cloudData={};
- let cloudSaveTimer=null, cloudBusy=false, cloudQueued=false;
- const syncLabel=(message)=>{
-  const el=byId("assistantWeekSaved");
-  if(el)el.textContent=message;
- };
- const localSnapshot=()=>({
-  tasks,
-  weeklyPlans,
-  notes:byId("assistantNotes")?.value||""
- });
- const write=(name,value)=>{
-  try{localStorage.setItem(key(name),JSON.stringify(value));}
-  catch(e){console.warn("TOZRA assistant storage:",e);}
-  if(cloudReady)queueCloudSave();
- };
- async function loadCloudData(){
-  const client=TozraAuth.getClient();
-  const user=TozraAuth.getSession()?.user;
-  if(user?.id){
-   ["tasks","weeklyPlans","notes"].forEach(name=>{
-    const target=key(name);
-    const legacy="tozra-assistant:local:"+name;
-    if(localStorage.getItem(target)===null&&localStorage.getItem(legacy)!==null){
-     localStorage.setItem(target,localStorage.getItem(legacy));
-    }
-   });
-   tasks=read("tasks",tasks);
-   weeklyPlans=read("weeklyPlans",weeklyPlans);
-   const localNotes=read("notes",null);
-   if(localNotes!==null)byId("assistantNotes").value=localNotes;
-  }
-  if(!client||!user?.id){
-   cloudReady=false;
-   syncLabel("Yerel kayıt · Hesap oturumu bulunamadı");
-   return;
-  }
-  try{
-   syncLabel("Bulut verileri yükleniyor…");
-   const {data,error}=await client.from("user_data")
-    .select("user_id,data")
-    .eq("user_id",user.id)
-    .maybeSingle();
-   if(error)throw error;
-   cloudRowExists=!!data;
-   cloudData=(data?.data&&typeof data.data==="object"&&!Array.isArray(data.data))?data.data:{};
-   const remote=cloudData.tozra_assistant;
-   if(remote&&typeof remote==="object"){
-    if(Array.isArray(remote.tasks))tasks=remote.tasks;
-    if(remote.weeklyPlans&&typeof remote.weeklyPlans==="object")weeklyPlans=remote.weeklyPlans;
-    if(typeof remote.notes==="string")byId("assistantNotes").value=remote.notes;
-    // Cloud wins when an account already has saved assistant data.
-    writeLocalSnapshot();
-   }else{
-    // First sync: migrate this browser's existing assistant data into the signed-in account.
-    cloudReady=true;
-    await saveCloudData(true);
-   }
-   cloudReady=true;
-   syncLabel("Bulutla senkronize · "+new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"}));
-  }catch(error){
-   cloudReady=false;
-   console.error("TOZRA cloud sync load:",error);
-   syncLabel("Bulut senkronizasyonu kurulamadı · Yerel kayıt devam ediyor");
-  }
- }
- function writeLocalSnapshot(){
-  try{
-   localStorage.setItem(key("tasks"),JSON.stringify(tasks));
-   localStorage.setItem(key("weeklyPlans"),JSON.stringify(weeklyPlans));
-   localStorage.setItem(key("notes"),JSON.stringify(byId("assistantNotes")?.value||""));
-  }catch(e){console.warn("TOZRA local snapshot:",e);}
- }
- async function saveCloudData(force=false){
-  const client=TozraAuth.getClient();
-  const user=TozraAuth.getSession()?.user;
-  if(!client||!user?.id)return;
-  if(cloudBusy){cloudQueued=true;return;}
-  cloudBusy=true;
-  try{
-   const payload={...cloudData,tozra_assistant:{...localSnapshot(),schemaVersion:1,updatedAt:new Date().toISOString()}};
-   let result;
-   const row={user_id:user.id,data:payload,updated_at:new Date().toISOString()};
-   if(cloudRowExists){
-    result=await client.from("user_data").update({data:payload,updated_at:row.updated_at})
-     .eq("user_id",user.id);
-   }else{
-    result=await client.from("user_data").insert(row);
-    if(!result.error)cloudRowExists=true;
-   }
-   if(result.error)throw result.error;
-   cloudData=payload;
-   syncLabel("Bulutla senkronize · "+new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"}));
-  }catch(error){
-   console.error("TOZRA cloud sync save:",error);
-   syncLabel("Buluta kaydedilemedi · Yerel kayıt korunuyor");
-  }finally{
-   cloudBusy=false;
-   if(cloudQueued){cloudQueued=false;saveCloudData(true);}
-  }
- }
- function queueCloudSave(){
-  if(!cloudReady)return;
-  clearTimeout(cloudSaveTimer);
-  syncLabel("Buluta kaydediliyor…");
-  cloudSaveTimer=setTimeout(()=>saveCloudData(),700);
- }
- const fmtDue=value=>{
-  if(!value)return "";
-  const d=new Date(value);
-  if(Number.isNaN(d.getTime()))return "";
-  return d.toLocaleString("tr-TR",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
- };
- const priorityRank={high:0,medium:1,low:2};
- const priorityText={high:"Yüksek öncelik",medium:"Orta öncelik",low:"Düşük öncelik"};
- function render(){
-  const list=byId("assistantTaskList");
-  if(!list)return;
-  list.innerHTML="";
-  const sorted=[...tasks].sort((a,b)=>{
-   if(a.done!==b.done)return a.done?1:-1;
-   const pr=(priorityRank[a.priority]??1)-(priorityRank[b.priority]??1);
-   if(pr)return pr;
-   if(!a.due&&!b.due)return b.created-a.created;
-   if(!a.due)return 1;if(!b.due)return -1;
-   return new Date(a.due)-new Date(b.due);
-  });
-  if(!sorted.length){
-   list.innerHTML='<div class="assistant-empty">Henüz görev eklemedin. İlk görevini yukarıdan oluştur.</div>';
-  }else{
-   sorted.forEach(task=>{
-    const row=document.createElement("div");
-    row.className="assistant-task"+(task.done?" done":"");
-    const check=document.createElement("input");
-    check.type="checkbox";check.checked=!!task.done;check.setAttribute("aria-label","Görevi tamamlandı işaretle");
-    check.addEventListener("change",()=>{task.done=check.checked;write("tasks",tasks);render();});
-    const main=document.createElement("div");main.className="assistant-task-main";
-    const title=document.createElement("div");title.className="assistant-task-title";title.textContent=task.title;
-    main.appendChild(title);
-    if(task.due){const due=document.createElement("div");due.className="assistant-task-due";due.textContent=fmtDue(task.due);main.appendChild(due);}
-    const priority=document.createElement("div");priority.className="assistant-task-priority "+(task.priority||"medium");priority.textContent=priorityText[task.priority||"medium"];main.appendChild(priority);
-    const del=document.createElement("button");del.className="assistant-task-delete";del.type="button";del.textContent="×";del.setAttribute("aria-label","Görevi sil");
-    del.addEventListener("click",()=>{tasks=tasks.filter(t=>t.id!==task.id);write("tasks",tasks);render();});
-    row.append(check,main,del);list.appendChild(row);
-   });
-  }
-  const open=tasks.filter(t=>!t.done).length,done=tasks.filter(t=>t.done).length;
-  byId("assistantTaskCount").textContent=tasks.length+" görev";
-  byId("assistantOpenCount").textContent=String(open);
-  byId("assistantDoneCount").textContent=String(done);
- }
- function addTask(title,due,priority){
-  const clean=String(title||"").trim();
-  if(!clean)return;
-  tasks.push({id:(crypto.randomUUID?crypto.randomUUID():String(Date.now()+Math.random())),title:clean,due:due||"",priority:priority||"medium",done:false,created:Date.now(),notified:false});
-  write("tasks",tasks);render();
- }
- function checkReminders(){
-  if(!("Notification" in window)||Notification.permission!=="granted")return;
-  const now=Date.now();
-  tasks.forEach(task=>{
-   if(task.done||task.notified||!task.due)return;
-   const due=new Date(task.due).getTime();
-   if(!Number.isNaN(due)&&due<=now){
-    try{new Notification("TOZRA hatırlatıcı",{body:task.title,tag:"tozra-task-"+task.id});task.notified=true;write("tasks",tasks);}
-    catch(e){}
-   }
-  });
- }
- const isoDate=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-");
- function mondayOf(date){const d=new Date(date.getFullYear(),date.getMonth(),date.getDate());const offset=(d.getDay()+6)%7;d.setDate(d.getDate()-offset);return d;}
- function shiftIsoDate(iso,days){const parts=iso.split("-").map(Number);const d=new Date(parts[0],parts[1]-1,parts[2],12);d.setDate(d.getDate()+days);return isoDate(d);}
- function renderWeek(){
-  const input=byId("assistantWeekStart"),grid=byId("assistantWeekGrid");
-  if(!input||!grid)return;
-  let start=input.value;
-  if(!start)return;
-  const baseParts=start.split("-").map(Number);
-  const base=new Date(baseParts[0],baseParts[1]-1,baseParts[2],12);
-  const monday=mondayOf(base);start=isoDate(monday);
-  if(input.value!==start)input.value=start;
-  grid.innerHTML="";
-  const dayNames=["Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi","Pazar"];
-  for(let i=0;i<7;i++){
-   const date=shiftIsoDate(start,i);
-   const parts=date.split("-").map(Number);const d=new Date(parts[0],parts[1]-1,parts[2],12);
-   const card=document.createElement("div");card.className="assistant-week-day";
-   const head=document.createElement("div");head.className="assistant-week-day-head";head.textContent=dayNames[i];
-   const dateLabel=document.createElement("div");dateLabel.className="assistant-week-day-date";dateLabel.textContent=d.toLocaleDateString("tr-TR",{day:"numeric",month:"long"});
-   const area=document.createElement("textarea");area.maxLength=3000;area.placeholder="Örn. 09.00 ders, 14.00 çalışma, 18.00 toplantı...";area.setAttribute("aria-label",dayNames[i]+" programı");area.value=(weeklyPlans[start]&&weeklyPlans[start][date])||"";
-   area.addEventListener("input",()=>{
-    if(!weeklyPlans[start])weeklyPlans[start]={};
-    weeklyPlans[start][date]=area.value;
-    write("weeklyPlans",weeklyPlans);
-    const status=byId("assistantWeekSaved");if(status)status.textContent="Kaydedildi · "+new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"});
-   });
-   card.append(head,dateLabel,area);grid.appendChild(card);
-  }
-  const status=byId("assistantWeekSaved");
-  if(status&&!cloudReady)status.textContent="Bu haftanın programı otomatik kaydedilir.";
- }
- async function init(){
-  const now=new Date();
-  byId("assistantToday").textContent=now.toLocaleDateString("tr-TR",{weekday:"long",day:"numeric",month:"long"});
-  const hour=now.getHours();
-  byId("assistantGreeting").textContent=hour<12?"Günaydın. Bugün neyi hallediyoruz?":hour<18?"İyi günler. Planlarını birlikte düzenleyelim.":"İyi akşamlar. Gününü toparlayalım.";
-  tasks=read("tasks",[]);if(!Array.isArray(tasks))tasks=[];
-  tasks=tasks.map(t=>({...t,priority:t.priority||"medium"}));
-  weeklyPlans=read("weeklyPlans",{});
-  if(!weeklyPlans||typeof weeklyPlans!=="object")weeklyPlans={};
-  byId("assistantNotes").value=read("notes","");
-  await loadCloudData();
-  if(!Array.isArray(tasks))tasks=[];
-  tasks=tasks.map(t=>({...t,priority:t.priority||"medium"}));
-  if(!weeklyPlans||typeof weeklyPlans!=="object")weeklyPlans={};
-  const weekInput=byId("assistantWeekStart");if(weekInput)weekInput.value=isoDate(mondayOf(now));
-  render();renderWeek();
-  byId("assistantWeekStart").addEventListener("change",renderWeek);
-  byId("assistantWeekPrev").addEventListener("click",()=>{weekInput.value=shiftIsoDate(weekInput.value,-7);renderWeek();});
-  byId("assistantWeekNext").addEventListener("click",()=>{weekInput.value=shiftIsoDate(weekInput.value,7);renderWeek();});
-  byId("assistantTaskForm").addEventListener("submit",async e=>{
-   e.preventDefault();
-   const title=byId("assistantTaskInput").value;
-   const due=byId("assistantTaskDue").value;
-   const priority=byId("assistantTaskPriority").value;
-   if(due&&"Notification" in window&&Notification.permission==="default"){
-    try{await Notification.requestPermission();}catch(err){}
-   }
-   addTask(title,due,priority);
-   byId("assistantTaskInput").value="";byId("assistantTaskDue").value="";byId("assistantTaskPriority").value="medium";
-  });
-  byId("assistantNotes").addEventListener("input",()=>write("notes",byId("assistantNotes").value));
-  byId("assistantAskForm").addEventListener("submit",e=>{
-   e.preventDefault();const value=byId("assistantAskInput").value.trim();if(!value)return;
-   byId("assistantAskInput").value="";if(typeof window.startChatWithPrompt==="function")window.startChatWithPrompt(value);
-  });
-  document.querySelectorAll("[data-assistant-prompt]").forEach(button=>button.addEventListener("click",()=>{
-   const prompt=button.getAttribute("data-assistant-prompt");if(typeof window.startChatWithPrompt==="function")window.startChatWithPrompt(prompt);
-  }));
-  setInterval(checkReminders,30000);checkReminders();
- }
- window.TozraAssistant={init};
-})();
 
 /* SERVICE WORKER */
 if("serviceWorker" in navigator){
@@ -3252,7 +2529,7 @@ if("serviceWorker" in navigator){
 }
 </script>
 <script src="/memory.js?v=2"></script>
-<script src="/voice.js?v=5"></script>
+<script src="/voice.js?v=3"></script>
 <script>
 (function(){
  const syncRail=()=>{
@@ -3380,5 +2657,21 @@ if("serviceWorker" in navigator){
 })();
 </script>
 
+<script id="tozra-personal-home-script">
+(()=>{
+ const root=document.getElementById('personalHome');if(!root)return;
+ const $=id=>document.getElementById(id), DAYS=['Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi','Pazar'];
+ const safeRead=(key,fallback)=>{try{const v=JSON.parse(localStorage.getItem(key));return v??fallback}catch{return fallback}};
+ let tasks=safeRead('tozra-web-home-tasks-v1',[]),week=safeRead('tozra-web-home-week-v1',{}),activeDay=0;
+ const save=(key,value)=>{try{localStorage.setItem(key,JSON.stringify(value))}catch(e){console.warn('TOZRA home storage:',e)}};
+ function renderTasks(){const list=$('phTaskList');list.innerHTML='';if(!tasks.length){list.innerHTML='<div class="ph-empty">Henüz görev yok. İlk görevini ekleyerek başla.</div>';}else tasks.forEach(task=>{const row=document.createElement('div');row.className='ph-task'+(task.done?' done':'');const check=document.createElement('button');check.className='ph-check'+(task.done?' done':'');check.type='button';check.setAttribute('aria-label',task.done?'Görevi tamamlanmadı yap':'Görevi tamamla');check.textContent=task.done?'✓':'';check.onclick=()=>{tasks=tasks.map(t=>t.id===task.id?{...t,done:!t.done}:t);save('tozra-web-home-tasks-v1',tasks);renderTasks()};const label=document.createElement('span');label.className='ph-task-label';label.textContent=task.title;const del=document.createElement('button');del.className='ph-delete';del.type='button';del.setAttribute('aria-label','Görevi sil');del.textContent='×';del.onclick=()=>{tasks=tasks.filter(t=>t.id!==task.id);save('tozra-web-home-tasks-v1',tasks);renderTasks()};row.append(check,label,del);list.append(row)});$('phTotal').textContent=tasks.length;$('phDone').textContent=tasks.filter(t=>t.done).length;$('phPending').textContent=tasks.filter(t=>!t.done).length;}
+ $('phTaskForm').addEventListener('submit',e=>{e.preventDefault();const input=$('phTaskInput'),title=input.value.trim();if(!title)return;tasks.unshift({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),title,done:false});save('tozra-web-home-tasks-v1',tasks);input.value='';renderTasks();});
+ $('phNotes').value=localStorage.getItem('tozra-web-home-notes-v1')||'';let noteTimer; $('phNotes').addEventListener('input',()=>{ $('phNotesStatus').textContent='Kaydediliyor…';clearTimeout(noteTimer);noteTimer=setTimeout(()=>{try{localStorage.setItem('tozra-web-home-notes-v1',$('phNotes').value);$('phNotesStatus').textContent='Kaydedildi · Bu tarayıcıda saklanıyor.'}catch{$('phNotesStatus').textContent='Kaydedilemedi · Tarayıcı depolama alanını kontrol et.'}},250)});
+ function renderDays(){const el=$('phDays');el.innerHTML='';DAYS.forEach((day,i)=>{const b=document.createElement('button');b.type='button';b.className='ph-day'+(i===activeDay?' active':'');b.textContent=day.slice(0,3);b.onclick=()=>{activeDay=i;renderDays();$('phPlanDay').textContent=day;$('phPlan').value=week[i]||''};el.append(b)});$('phPlanDay').textContent=DAYS[activeDay];$('phPlan').value=week[activeDay]||'';}
+ let planTimer;$('phPlan').addEventListener('input',()=>{week[activeDay]=$('phPlan').value;$('phPlanStatus').textContent='Kaydediliyor…';clearTimeout(planTimer);planTimer=setTimeout(()=>{save('tozra-web-home-week-v1',week);$('phPlanStatus').textContent='Haftalık planın kaydedildi.'},250)});
+ $('phAsk').addEventListener('click',()=>{const chat=document.getElementById('navChat');if(chat)chat.click();else document.getElementById('heroChat')?.click()});
+ renderTasks();renderDays();
+})();
+</script>
 </body>
 </html>
