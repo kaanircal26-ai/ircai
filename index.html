@@ -9,6 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="TOZRA">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>TOZRA — Creative Intelligence</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="icon" href="/apple-touch-icon.PNG">
 <link rel="apple-touch-icon" href="/apple-touch-icon.PNG">
 <link rel="manifest" href="/manifest.json">
@@ -391,6 +392,91 @@ button:disabled{opacity:.45;cursor:not-allowed}
 "use strict";
 
 const $=id=>document.getElementById(id);
+
+const TozraAuth = (() => {
+ let client = null;
+ let session = null;
+ let initialized = false;
+ let configError = "";
+
+ async function init() {
+  if (initialized) return session;
+  initialized = true;
+  try {
+   if (!window.supabase?.createClient) throw new Error("Supabase istemcisi yüklenemedi.");
+   const response = await fetch("/api/config", { cache: "no-store" });
+   const config = await response.json();
+   if (!response.ok || !config.success) throw new Error(config.error || "Supabase yapılandırması okunamadı.");
+   client = window.supabase.createClient(config.supabaseUrl, config.supabaseKey, {
+    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+   });
+   const result = await client.auth.getSession();
+   if (result.error) throw result.error;
+   session = result.data.session || null;
+   client.auth.onAuthStateChange((_event, nextSession) => {
+    session = nextSession || null;
+    updateAccountUI();
+   });
+  } catch (error) {
+   configError = error.message || "Hesap servisine bağlanılamadı.";
+   console.error("TOZRA auth:", error);
+  }
+  updateAccountUI();
+  return session;
+ }
+
+ function updateAccountUI() {
+  const button = document.getElementById("profileButton");
+  if (button) {
+   button.textContent = session?.user?.email
+    ? session.user.email.slice(0, 1).toUpperCase()
+    : "U";
+   button.title = session?.user?.email || "Hesap";
+  }
+ }
+
+ function userId() { return session?.user?.id || "guest"; }
+ function getClient() { return client; }
+ function getSession() { return session; }
+ function getError() { return configError; }
+ async function signUp(name, email, password) {
+  if (!client) throw new Error(configError || "Supabase bağlantısı hazır değil.");
+  const { data, error } = await client.auth.signUp({
+   email: email.trim(),
+   password,
+   options: { data: { full_name: name.trim() } }
+  });
+  if (error) throw error;
+  session = data.session || null;
+  return data;
+ }
+ async function signIn(email, password) {
+  if (!client) throw new Error(configError || "Supabase bağlantısı hazır değil.");
+  const { data, error } = await client.auth.signInWithPassword({
+   email: email.trim(), password
+  });
+  if (error) throw error;
+  session = data.session || null;
+  return data;
+ }
+ async function signOut() {
+  if (!client) return;
+  const { error } = await client.auth.signOut();
+  if (error) throw error;
+  session = null;
+ }
+ async function authHeaders() {
+  if (!session?.access_token) throw new Error("Oturum bulunamadı. Lütfen yeniden giriş yap.");
+  return { Authorization: `Bearer ${session.access_token}` };
+ }
+ return { init, userId, getClient, getSession, getError, signUp, signIn, signOut, authHeaders, updateAccountUI };
+})();
+
+function scopedStorageKey(key) {
+ const id = TozraAuth.userId();
+ return id === "guest" ? `tozra-guest:${key}` : `tozra-user:${id}:${key}`;
+}
+
 const promptInput=$("prompt");
 let conversation=[],conversations=[],projects=[],currentProjectId=null;
 let busy=false,attachments=[],projectAttachments=[];
@@ -405,13 +491,19 @@ const categories={
 
 function safeRead(key,fallback){
  try{
-  const value=JSON.parse(localStorage.getItem(key)||"null");
+  const scopedKey=scopedStorageKey(key);
+  let raw=localStorage.getItem(scopedKey);
+  if(raw===null && TozraAuth.userId()!=="guest"){
+   const legacy=localStorage.getItem(key);
+   if(legacy!==null){raw=legacy;localStorage.setItem(scopedKey,legacy);localStorage.removeItem(key);}
+  }
+  const value=JSON.parse(raw||"null");
   return value===null?fallback:value;
  }catch(e){return fallback}
 }
 function safeSave(key,value){
  try{
-  localStorage.setItem(key,JSON.stringify(value));
+  localStorage.setItem(scopedStorageKey(key),JSON.stringify(value));
   return true;
  }catch(e){
   console.error("Kayıt hatası:",e);
@@ -999,7 +1091,7 @@ async function sendToAI({text,list,area,history,onSuccess,onFailure}){
   const media=await prepareMedia(list);
   const response=await fetch("/api/chat",{
    method:"POST",
-   headers:{"Content-Type":"application/json"},
+   headers:{ "Content-Type":"application/json", ...(await TozraAuth.authHeaders()) },
    body:JSON.stringify({
     prompt:text+media.timelineText,
     history:history,
@@ -1158,15 +1250,25 @@ function showModal(type){
   content.innerHTML=`
    <p>Hesabına giriş yaparak TOZRA deneyimine devam et.</p>
    <form id="loginForm">
-    <input class="modal-input" type="email" placeholder="E-posta adresin" required>
-    <input class="modal-input" type="password" placeholder="Şifren" required>
-    <button class="primary">Giriş yap</button>
+    <input class="modal-input" id="loginEmail" type="email" placeholder="E-posta adresin" autocomplete="email" required>
+    <input class="modal-input" id="loginPassword" type="password" placeholder="Şifren" autocomplete="current-password" required>
+    <button class="primary" id="loginSubmit">Giriş yap</button>
    </form>
    <button class="secondary" id="registerSwitch">Hesap oluştur</button>
-   <div class="notice">Gerçek hesap girişi için sunucu ve kullanıcı veritabanı bağlantısı gereklidir.</div>`;
-  $("loginForm").onsubmit=e=>{
+   <div class="notice" id="authNotice">${escapeHTML(TozraAuth.getError() || "Güvenli giriş Supabase üzerinden yapılır.")}</div>`;
+  $("loginForm").onsubmit=async e=>{
    e.preventDefault();
-   alert("Üyelik sistemi henüz backend'e bağlanmadı.");
+   const button=$("loginSubmit"), notice=$("authNotice");
+   button.disabled=true; button.textContent="Giriş yapılıyor…";
+   try{
+    await TozraAuth.signIn($("loginEmail").value,$("loginPassword").value);
+    await refreshAccountData();
+    $("modalOverlay").classList.remove("show");
+   }catch(error){
+    notice.textContent=error.message||"Giriş yapılamadı.";
+   }finally{
+    button.disabled=false; button.textContent="Giriş yap";
+   }
   };
   $("registerSwitch").onclick=()=>showModal("register");
  }
@@ -1176,28 +1278,62 @@ function showModal(type){
   content.innerHTML=`
    <p>TOZRA dünyasına katıl.</p>
    <form id="registerForm">
-    <input class="modal-input" placeholder="Adın" required>
-    <input class="modal-input" type="email" placeholder="E-posta adresin" required>
-    <input class="modal-input" type="password" placeholder="Şifre oluştur" required>
-    <button class="primary">Hesap oluştur</button>
+    <input class="modal-input" id="registerName" placeholder="Adın" autocomplete="name" maxlength="80" required>
+    <input class="modal-input" id="registerEmail" type="email" placeholder="E-posta adresin" autocomplete="email" required>
+    <input class="modal-input" id="registerPassword" type="password" placeholder="En az 8 karakterli şifre" autocomplete="new-password" minlength="8" required>
+    <button class="primary" id="registerSubmit">Hesap oluştur</button>
    </form>
-   <div class="notice">Bu ekran şu an arayüz önizlemesidir. Bilgilerin kaydedilmez.</div>`;
-  $("registerForm").onsubmit=e=>{
+   <button class="secondary" id="loginSwitch">Zaten hesabım var</button>
+   <div class="notice" id="authNotice">${escapeHTML(TozraAuth.getError() || "Kayıt ve e-posta doğrulaması Supabase tarafından yönetilir.")}</div>`;
+  $("registerForm").onsubmit=async e=>{
    e.preventDefault();
-   alert("Gerçek kayıt sistemi henüz bağlı değil.");
+   const button=$("registerSubmit"), notice=$("authNotice");
+   button.disabled=true; button.textContent="Hesap oluşturuluyor…";
+   try{
+    const data=await TozraAuth.signUp($("registerName").value,$("registerEmail").value,$("registerPassword").value);
+    if(data.session){
+     await refreshAccountData();
+     $("modalOverlay").classList.remove("show");
+    }else{
+     notice.textContent="Kayıt oluşturuldu. Giriş yapmadan önce e-posta adresine gönderilen doğrulama bağlantısına tıkla.";
+     button.textContent="E-posta gönderildi";
+    }
+   }catch(error){
+    notice.textContent=error.message||"Kayıt oluşturulamadı.";
+    button.disabled=false; button.textContent="Hesap oluştur";
+   }
   };
+  $("loginSwitch").onclick=()=>showModal("login");
  }
 
  if(type==="profile"){
   title.textContent="Profil";
-  content.innerHTML=`
+  const user=TozraAuth.getSession()?.user;
+  content.innerHTML=user?`
+   <div style="text-align:center;padding:10px">
+    <div class="avatar" style="margin:auto;display:grid;place-items:center">${escapeHTML((user.email||"U").slice(0,1).toUpperCase())}</div>
+    <h3>${escapeHTML(user.user_metadata?.full_name||"TOZRA kullanıcısı")}</h3>
+    <p>${escapeHTML(user.email||"")}</p>
+   </div>
+   <button class="secondary" id="logoutButton">Çıkış yap</button>`:`
    <div style="text-align:center;padding:10px">
     <div class="avatar" style="margin:auto;display:grid;place-items:center">U</div>
     <h3>Misafir kullanıcı</h3>
-    <p>TOZRA hesabın henüz oluşturulmadı.</p>
+    <p>Projelerini hesabına bağlamak için giriş yap.</p>
    </div>
    <button class="primary" onclick="showModal('register')">Hesap oluştur</button>
    <button class="secondary" onclick="showModal('login')">Giriş yap</button>`;
+  if(user){
+   $("logoutButton").onclick=async()=>{
+    try{
+     await TozraAuth.signOut();
+     projects=[]; conversations=[]; conversation=[];
+     renderProjects(); renderHistory(); renderGeneralMessages();
+     $("modalOverlay").classList.remove("show");
+     showModal("login");
+    }catch(error){alert(error.message||"Çıkış yapılamadı.");}
+   };
+  }
  }
 
  if(type==="settings"){
@@ -1208,7 +1344,7 @@ function showModal(type){
    <h3 style="font-size:14px">Uygulama</h3>
    <p>TOZRA — Creative Intelligence</p>
    <p>Sürüm 5.0</p>
-   <div class="notice">Projeler ve sohbetler şu anda bu tarayıcıda saklanır. Hesaplar arası bulut senkronizasyonu henüz etkin değildir.</div>`;
+   <div class="notice">Hesap girişi Supabase ile korunur. Projeler ve sohbetler bu sürümde kullanıcı hesabına özel olarak cihazında saklanır; bulut senkronizasyonu sonraki aşamadır.</div>`;
  }
 
  $("modalOverlay").classList.add("show");
@@ -1349,7 +1485,7 @@ async function startVoiceCapture(button, input, status){
     const audio=await blobToBase64(blob);
     const response=await fetch("/api/transcribe",{
      method:"POST",
-     headers:{"Content-Type":"application/json"},
+     headers:{"Content-Type":"application/json", ...(await TozraAuth.authHeaders())},
      body:JSON.stringify({
       audio,
       mimeType:blob.type||"audio/webm"
@@ -1465,8 +1601,17 @@ document.addEventListener("keydown",e=>{
 });
 
 /* BAŞLANGIÇ */
-loadHistory();
-loadProjects();
+async function refreshAccountData(){
+ conversation=[]; conversations=[]; projects=[];
+ loadHistory();
+ loadProjects();
+ TozraAuth.updateAccountUI();
+}
+window.addEventListener("load", async ()=>{
+ await TozraAuth.init();
+ await refreshAccountData();
+ if(!TozraAuth.getSession()) showModal("login");
+});
 
 /* SERVICE WORKER */
 if("serviceWorker" in navigator){
