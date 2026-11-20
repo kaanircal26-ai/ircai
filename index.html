@@ -1660,6 +1660,61 @@ function openProjectOptions(id){
 }
 
 /* MESAJ GÖRÜNÜMÜ */
+function speakText(text, button){
+ const cleanText=String(text||"").replace(/\s+/g," ").trim();
+ if(!cleanText){
+  if(button)button.textContent="🔊 Sesli dinle";
+  return;
+ }
+ const synth=window.speechSynthesis;
+ if(!synth || typeof window.SpeechSynthesisUtterance!=="function"){
+  alert("Tarayıcın metni seslendirme özelliğini desteklemiyor. Güncel Chrome veya Edge kullan.");
+  return;
+ }
+ if(button && button.dataset.speaking==="true"){
+  synth.cancel();
+  button.dataset.speaking="false";
+  button.textContent="🔊 Sesli dinle";
+  return;
+ }
+ synth.cancel();
+ const utterance=new SpeechSynthesisUtterance(cleanText);
+ utterance.lang="tr-TR";
+ utterance.rate=0.95;
+ utterance.pitch=1;
+ utterance.volume=1;
+ const chooseVoice=()=>{
+  const voices=synth.getVoices ? synth.getVoices() : [];
+  const trVoice=voices.find(v=>/^tr([-_]|$)/i.test(v.lang)) ||
+                voices.find(v=>(v.lang||"").toLowerCase().includes("tr"));
+  if(trVoice)utterance.voice=trVoice;
+ };
+ chooseVoice();
+ utterance.onstart=()=>{
+  if(button){button.dataset.speaking="true";button.textContent="■ Durdur";}
+ };
+ utterance.onend=()=>{
+  if(button){button.dataset.speaking="false";button.textContent="🔊 Sesli dinle";}
+ };
+ utterance.onerror=(event)=>{
+  console.error("TOZRA seslendirme hatası:",event.error,event);
+  if(button){button.dataset.speaking="false";button.textContent="🔊 Sesli dinle";}
+  if(event.error && event.error!=="canceled" && event.error!=="interrupted"){
+   alert("Seslendirme başlatılamadı: "+event.error+". Tarayıcı sekmesinin sesini ve ses çıkış aygıtını kontrol et.");
+  }
+ };
+ // Bazı Chromium sürümlerinde cancel() sonrasında hemen speak() çağrısı yutulabiliyor.
+ window.setTimeout(()=>{
+  chooseVoice();
+  try{ synth.speak(utterance); }
+  catch(error){
+   console.error("TOZRA speak() hatası:",error);
+   if(button){button.dataset.speaking="false";button.textContent="🔊 Sesli dinle";}
+   alert("Seslendirme başlatılamadı: "+(error.message||error));
+  }
+ },120);
+}
+
 function addMessage(area,role,content){
  const wrap=document.createElement("div");
  wrap.className="message "+role;
