@@ -1,0 +1,27 @@
+TOZRA CREATIVE STUDIO — ENTEGRASYON NOTLARI
+
+Bu paket, yüklediğiniz ircai-main ZIP dosyasının mevcut proje yapısını korur.
+Ana uygulama giriş dosyası olan /index.html güncellenmiştir.
+
+EKLENENLER
+- Creative Studio için bağımsız ana sayfa
+- Idea Lab, Image Studio, Video Studio, Design Studio, Writing Studio ve Campaign Lab çalışma alanları
+- Yaratıcı brief formu (çalışma adı, brief, hedef kitle, yaklaşım)
+- Brief'i mevcut TOZRA AI sohbetine aktarma
+- Brief'i mevcut proje sistemine kaydetme
+- Mobil uyumlu tasarım
+
+ÖNEMLİ SINIRLAR
+- Bu sürüm, mevcut API'yi kullanarak fikir, metin, konsept, storyboard, tasarım brief'i ve görsel üretim prompt'u hazırlar.
+- Doğrudan görsel veya video dosyası render eden bir üretim servisi bu ZIP'te bulunmadığından, Image/Video Studio gerçek medya render'ı yaptığını iddia etmez.
+- Creative Studio'da "Projelerime kaydet" mevcut uygulamanın proje saklama mekanizmasını kullanır.
+- Yüklenen kaynakta ayarlar metni sohbet ve projelerin cihazda saklandığını belirtmektedir; bu sürüm Supabase bulut senkronizasyonu eklemez.
+- Orijinal dosyalar korunmuştur. İç içe gelen /ircai-main/ircai-main/ kopyası değiştirilmemiştir; dağıtımın kullandığı üst düzey /index.html güncellenmiştir.
+
+KURULUM
+1. Önce GitHub deposunun mevcut halini yedekleyin.
+2. ZIP'i açın.
+3. Paketteki üst düzey index.html dosyasını GitHub deposunun kök dizinindeki index.html ile değiştirin.
+4. Diğer dosyaları silmeyin veya taşımayın.
+5. Commit & push yaptıktan sonra Vercel/hosting deployment'ının tamamlanmasını bekleyin.
+6. Uygulamayı önbelleği yenileyerek açın (Ctrl+Shift+R).
