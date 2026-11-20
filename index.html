@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#f7f5f1">
+<meta name="theme-color" content="#050907">
 <meta name="description" content="TOZRA — Creative Intelligence">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="TOZRA">
@@ -841,14 +841,168 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
  .assistant-panel{padding:13px}
 }
 
+
+/* ===== TOZRA PREMIUM EXPERIENCE: HOME + SPLASH ===== */
+:root{
+ --bg:#050907;--surface:#0b120e;--surface2:#101a14;
+ --text:#eef5ef;--muted:#91a096;--border:rgba(133,178,145,.16);
+ --green:#58e58a;--green2:#1ebc67;--shadow:0 24px 70px rgba(0,0,0,.42);
+}
+html,body{background:#050907;color:#eef5ef}
+.topbar{background:rgba(5,10,7,.88);border-bottom-color:rgba(125,173,138,.13);backdrop-filter:blur(24px)}
+.topbar-title{color:#b5c8ba}
+.top-button{background:linear-gradient(145deg,#101b14,#0a100c);border-color:rgba(121,174,136,.2)}
+.avatar{background:linear-gradient(145deg,#183b27,#0d2116);border-color:#397b50;color:#a5ffc0}
+.sidebar{background:linear-gradient(180deg,#080f0b,#060a08);border-right-color:rgba(125,173,138,.13)}
+.brand-wordmark small{color:#748b7b}
+
+/* Full-screen premium loading */
+.splash{
+ background:
+  radial-gradient(ellipse at 50% 42%,rgba(39,132,76,.19),transparent 33%),
+  radial-gradient(ellipse at 50% 100%,rgba(18,72,42,.17),transparent 42%),
+  #030705;
+ overflow:hidden;
+}
+.splash:before,.splash:after{
+ content:"";position:absolute;left:50%;top:43%;border:1px solid rgba(106,229,146,.13);
+ width:min(72vw,560px);height:min(72vw,560px);border-radius:50%;
+ transform:translate(-50%,-50%);box-shadow:0 0 0 34px rgba(81,197,119,.025),0 0 0 72px rgba(81,197,119,.018);
+ animation:tozraOrbit 9s linear infinite;
+}
+.splash:after{width:min(53vw,410px);height:min(53vw,410px);border-style:dashed;border-color:rgba(106,229,146,.18);animation-direction:reverse;animation-duration:24s}
+.splash-inner{position:relative;z-index:1;display:flex;align-items:center;flex-direction:column;animation:premiumEnter 1s cubic-bezier(.2,.75,.25,1) both}
+.splash-mark{
+ width:86px;height:86px;margin:0 0 26px;border-radius:27px;
+ display:grid;place-items:center;position:relative;
+ color:#d9ffe4;font-size:42px;font-weight:800;letter-spacing:-.1em;
+ background:linear-gradient(145deg,rgba(35,89,54,.96),rgba(8,22,13,.98));
+ border:1px solid rgba(124,241,160,.35);
+ box-shadow:0 0 0 8px rgba(84,222,129,.045),0 18px 65px rgba(41,194,99,.18),inset 0 1px rgba(255,255,255,.12);
+}
+.splash-mark:before{content:"";position:absolute;inset:-8px;border:1px solid rgba(104,230,147,.22);border-radius:32px}
+.splash-name{margin:0;color:#f0fff3;font-size:31px;font-weight:800;letter-spacing:.34em;padding-left:.34em;text-shadow:0 0 28px rgba(90,225,139,.2)}
+.splash-tagline{margin-top:12px;color:#789483;font-size:9px;font-weight:700;letter-spacing:.32em}
+.splash-caption{margin-top:45px;color:#668071;font-size:9px;letter-spacing:.16em;text-transform:uppercase}
+.loader{width:190px;height:3px;margin-top:15px;border-radius:20px;background:rgba(125,175,139,.13);overflow:hidden}
+.loader-bar{height:100%;width:0;background:linear-gradient(90deg,#228e50,#a0ffc0);box-shadow:0 0 18px rgba(87,235,139,.85);animation:loading 2.4s cubic-bezier(.2,.7,.2,1) forwards}
+@keyframes tozraOrbit{to{transform:translate(-50%,-50%) rotate(360deg)}}
+@keyframes premiumEnter{from{opacity:0;transform:translateY(18px) scale(.97);filter:blur(5px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+
+/* Premium personal-assistant home */
+.content{max-width:1450px}
+#personalAssistantPage{position:relative;isolation:isolate}
+#personalAssistantPage:before{
+ content:"";position:absolute;z-index:-1;pointer-events:none;
+ width:680px;height:520px;right:-250px;top:-100px;
+ background:radial-gradient(ellipse,rgba(33,126,68,.11),transparent 68%);
+}
+.assistant-home{max-width:1180px;padding:32px 0 54px;color:#edf5ef}
+.assistant-head{
+ position:relative;overflow:hidden;align-items:center;min-height:205px;
+ padding:32px 34px;margin:0 0 20px;border-radius:24px;
+ border:1px solid rgba(120,198,142,.2);
+ background:
+  radial-gradient(ellipse at 87% 12%,rgba(62,190,103,.22),transparent 36%),
+  radial-gradient(ellipse at 0% 100%,rgba(25,106,57,.18),transparent 42%),
+  linear-gradient(125deg,#101d15 0%,#0a120d 55%,#0b1710 100%);
+ box-shadow:0 24px 70px rgba(0,0,0,.23),inset 0 1px rgba(255,255,255,.035);
+}
+.assistant-head:after{
+ content:"T";position:absolute;right:7%;top:50%;transform:translateY(-54%);
+ font-size:clamp(130px,19vw,225px);line-height:1;font-weight:900;letter-spacing:-.12em;
+ color:rgba(116,235,151,.045);pointer-events:none;text-shadow:0 0 60px rgba(72,210,116,.07)
+}
+.assistant-head>div{position:relative;z-index:1}
+.assistant-eyebrow{color:#75c991;font-size:9px;letter-spacing:.24em;margin-bottom:15px}
+.assistant-head h1{color:#f0fff3;font-size:clamp(32px,4.4vw,49px);font-weight:760;letter-spacing:-.065em;margin:0 0 10px}
+.assistant-head p{color:#9aafa0;font-size:13px;max-width:490px}
+.assistant-date{position:relative;z-index:1;background:rgba(4,13,8,.5);border:1px solid rgba(139,204,155,.2);color:#c5dfcc;border-radius:30px;padding:10px 14px}
+.assistant-command{
+ padding:10px 11px 10px 20px;margin:0 0 17px;
+ background:linear-gradient(145deg,#101a13,#0a110c);
+ border:1px solid rgba(119,176,133,.24);border-radius:15px;
+ box-shadow:0 14px 38px rgba(0,0,0,.2)
+}
+.assistant-command input{color:#eaf6ed;font-size:13px}
+.assistant-command input::placeholder{color:#6f8174}
+.assistant-command button{background:linear-gradient(135deg,#8cf2aa,#39cb76);color:#06140a;border-radius:10px;font-weight:800;padding:12px 18px}
+.assistant-command button:hover{background:#a3ffc0;box-shadow:0 8px 24px rgba(70,215,121,.2)}
+.assistant-shortcuts{margin:0 0 23px;gap:9px}
+.assistant-shortcut{background:rgba(13,24,16,.78);border:1px solid rgba(119,176,133,.17);color:#a9bcae;border-radius:30px;padding:9px 14px;transition:.2s}
+.assistant-shortcut:hover{background:#14281a;border-color:#4eaa6b;color:#eaffef;transform:translateY(-1px)}
+.assistant-grid{gap:16px}
+.assistant-panel{
+ background:linear-gradient(150deg,rgba(15,25,18,.98),rgba(9,15,11,.98));
+ border:1px solid rgba(119,176,133,.16);border-radius:17px;padding:19px;
+ box-shadow:0 14px 36px rgba(0,0,0,.16)
+}
+.assistant-panel-head h2{color:#e7f4e9;font-size:13px}
+.assistant-panel-head span{color:#718779}
+.assistant-task-form input,.assistant-task-form select{
+ background:#080f0a;border:1px solid rgba(119,176,133,.18);color:#dcebe0;border-radius:9px
+}
+.assistant-task-form input::placeholder{color:#65786a}
+.assistant-task-form input:focus{border-color:#4aab69}
+.assistant-task-form button{background:linear-gradient(135deg,#79e99a,#35c772);color:#06140a;border-radius:9px;font-weight:800}
+.assistant-task{background:rgba(5,12,8,.72);border:1px solid rgba(119,176,133,.12);border-radius:10px}
+.assistant-task-title{color:#e3eee5}
+.assistant-task input[type=checkbox]{accent-color:#5ce58b}
+.assistant-task-priority{background:#14271a;color:#9fc5a9}
+.assistant-task-priority.high{background:#38201e;color:#ffb1a3}
+.assistant-task-priority.medium{background:#332b18;color:#e7cb84}
+.assistant-task-priority.low{background:#14271b;color:#a2d7ad}
+.assistant-task-delete{color:#789080}
+.assistant-empty{color:#718477;border-color:rgba(119,176,133,.2)}
+.assistant-note{background:#080f0a;border:1px solid rgba(119,176,133,.17);color:#dcebe0;border-radius:10px}
+.assistant-note::placeholder{color:#65786a}
+.assistant-note:focus{border-color:#4aab69}
+.assistant-note-hint{color:#6d8172}
+.assistant-summary-card{background:linear-gradient(145deg,#12231a,#0b150f);border:1px solid rgba(119,176,133,.14);border-radius:11px}
+.assistant-summary-card strong{color:#9df3b4}
+.assistant-summary-card span{color:#829889}
+.assistant-weekly{margin-top:16px}
+.assistant-week-head{margin-bottom:17px}
+.assistant-week-controls button,.assistant-week-controls input{
+ background:#0a130d;border:1px solid rgba(119,176,133,.2);color:#cce0d1;border-radius:9px
+}
+.assistant-week-day{background:rgba(7,14,9,.8);border:1px solid rgba(119,176,133,.15);border-radius:11px}
+.assistant-week-day-head{color:#d9eadc}
+.assistant-week-day-date{color:#708477}
+.assistant-week-day textarea{background:#0d1811;color:#dcebe0;border-radius:8px}
+.assistant-week-day textarea:focus{box-shadow:inset 0 0 0 1px rgba(84,211,122,.4)}
+.assistant-week-saved{color:#789080}
+.assistant-footer{color:#587061;letter-spacing:.12em}
+@media(max-width:760px){
+ .assistant-home{padding:18px 0 32px}
+ .assistant-head{padding:25px 21px;min-height:0;border-radius:19px;gap:10px}
+ .assistant-head:after{right:3%;font-size:140px}
+ .assistant-head h1{font-size:34px}
+ .assistant-head p{max-width:280px;font-size:12px}
+ .assistant-date{margin-top:17px}
+ .assistant-command{padding:7px 7px 7px 13px}
+ .assistant-command button{padding:11px 12px}
+ .assistant-panel{padding:15px}
+ .splash-mark{width:76px;height:76px;border-radius:24px}
+ .splash-name{font-size:27px}
+ .splash-caption{margin-top:38px}
+ .splash:before{width:82vw;height:82vw}
+ .splash:after{width:62vw;height:62vw}
+}
+@media(prefers-reduced-motion:reduce){
+ .splash:before,.splash:after,.splash-inner,.loader-bar{animation:none!important}
+}
+
 </style>
 </head>
 
 <body>
-<div class="splash" id="splash">
+<div class="splash" id="splash" role="status" aria-label="TOZRA yükleniyor">
  <div class="splash-inner">
-  <div class="splash-mark" aria-label="TOZRA">T</div>
+  <div class="splash-mark" aria-hidden="true">T</div>
   <div class="splash-name">TOZRA</div>
+  <div class="splash-tagline">CREATIVE INTELLIGENCE</div>
+  <div class="splash-caption">Düşüncelerini harekete geçir</div>
   <div class="loader"><div class="loader-bar"></div></div>
  </div>
 </div>
