@@ -1,4 +1,9 @@
+const { requireUser } = require("./_auth");
+
 module.exports = async function handler(req, res) {
+  const user = await requireUser(req, res);
+  if (!user) return;
+
   if (req.method !== "POST") {
     return res.status(405).json({
       success: false,
