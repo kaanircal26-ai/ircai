@@ -1,10 +1,10 @@
 
-const CACHE_NAME = "tozra-v6";
+const CACHE_NAME = "tozra-v7";
 
 const APP_FILES = [
   "/",
   "/manifest.json",
-  "/apple-touch-icon.png"
+  "/apple-touch-icon.PNG"
 ];
 
 self.addEventListener("install", event => {
