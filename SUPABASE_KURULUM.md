@@ -11,13 +11,21 @@ Mevcut AI servis anahtarları (`GROQ_API_KEY`, `TAVILY_API_KEY`, `OPENAI_API_KEY
 
 ## Supabase Auth
 Supabase → Authentication → URL Configuration:
-- Site URL: `https://ircai.vercel.app`
-- Redirect URL: `https://ircai.vercel.app/**`
+- Site URL: `https://tozra.com.tr`
+- Redirect URL: `https://tozra.com.tr/**`
 
 Authentication → Providers → Email açık olmalı. E-posta doğrulaması açıksa kayıt sonrası gelen doğrulama bağlantısına tıklanmalıdır.
 
+## E-posta doğrulama ve şifre yenileme
+- Supabase → Authentication → URL Configuration bölümünde Site URL `https://tozra.com.tr` olmalı.
+- Redirect URLs listesine `https://tozra.com.tr/**` eklenmeli.
+- E-posta doğrulaması açıksa kullanıcı kayıt sonrası e-postadaki bağlantıyla hesabını doğrular.
+- Şifre yenileme bağlantısı da aynı domain köküne yönlendirilir.
+- E-posta gönderimi için sağlayıcının SPF/DKIM kayıtları doğru yapılandırılmış olmalı.
+
 ## Bu sürümde neler var?
 - E-posta/şifre ile gerçek Supabase kayıt ve giriş
+- Doğrulama e-postasını tekrar gönderme ve şifre sıfırlama
 - Oturumun tarayıcıda korunması ve otomatik token yenileme
 - Çıkış yapma
 - `/api/chat`, `/api/transcribe`, `/api/realtime-session` için sunucu tarafında Supabase kullanıcı doğrulaması

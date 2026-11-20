@@ -73,7 +73,18 @@ button:disabled{opacity:.45;cursor:not-allowed}
 .page{display:none;animation:enter .3s ease}
 .page.active{display:block}
 
-.workspace-hero{padding:22px 0 32px}
+.workspace-hero{padding:22px 0 28px}
+.hero-shell{position:relative;overflow:hidden;padding:30px;border:1px solid #25402c;border-radius:22px;background:radial-gradient(ellipse at 88% 10%,#1d633326,transparent 42%),linear-gradient(135deg,#101b13,#080e0a 72%);box-shadow:0 18px 50px #0003}
+.hero-shell:after{content:"";position:absolute;width:250px;height:250px;border:1px solid #42e47718;border-radius:50%;right:-95px;top:-130px;box-shadow:0 0 0 28px #42e47708,0 0 0 58px #42e47705;pointer-events:none}
+.hero-greeting{color:#9daf9f;font-size:12px;letter-spacing:.5px;margin-bottom:12px}
+.hero-shell .workspace-hero h1{max-width:700px}
+.dashboard-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:5px 0 28px}
+.stat-card{border:1px solid var(--border);background:linear-gradient(145deg,#101811,#0a100c);border-radius:14px;padding:15px 17px}
+.stat-card span{display:block;color:#819084;font-size:11px;margin-bottom:8px}.stat-card strong{font-size:23px;letter-spacing:-.7px;color:#eaf4eb}.stat-card small{display:block;color:#68776c;font-size:10px;margin-top:4px}
+.home-section-note{font-size:11px;color:#718075}
+.quick-start{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin:0 0 24px}
+.quick-card{display:flex;align-items:center;gap:12px;text-align:left;padding:14px;border:1px solid var(--border);border-radius:13px;background:#0d160f;color:var(--text);transition:.2s}
+.quick-card:hover{border-color:#398c4e;transform:translateY(-2px)}.quick-card .tool-icon{margin:0;flex-shrink:0}.quick-card strong{display:block;font-size:12px;margin-bottom:4px}.quick-card small{display:block;color:var(--muted);font-size:10px;line-height:1.4}
 .eyebrow{font-size:10px;letter-spacing:2px;color:var(--green);font-weight:800;margin-bottom:13px}
 .workspace-hero h1{font-size:clamp(30px,5vw,45px);letter-spacing:-1.8px;margin:0 0 12px;line-height:1.12}
 .workspace-hero p{color:var(--muted);font-size:14px;line-height:1.7;margin:0;max-width:580px}
@@ -208,6 +219,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
 .message{max-width:95%}
 .top-button{padding:8px;font-size:11px}
 .plan-grid{grid-template-columns:1fr}
+.dashboard-stats{gap:8px}.stat-card{padding:12px}.stat-card strong{font-size:20px}.hero-shell{padding:22px 17px}.quick-start{grid-template-columns:1fr}
 .tool-button{padding:8px;font-size:11px}
 .disclaimer{font-size:9px}
 .project-layout{gap:5px}
@@ -271,7 +283,8 @@ button:disabled{opacity:.45;cursor:not-allowed}
 
 <section class="content">
 <div class="page active" id="workspacePage">
- <div class="workspace-hero">
+ <div class="workspace-hero hero-shell">
+  <div class="hero-greeting" id="dashboardGreeting">TOZRA çalışma alanına hoş geldin</div>
   <div class="eyebrow">TOZRA · CREATIVE INTELLIGENCE</div>
   <h1>Fikirlerini projelere dönüştür.</h1>
   <p>Fikirlerini keşfet, geliştir ve üret. Tüm yaratıcı çalışmalarını tek bir çalışma alanında yönet.</p>
@@ -279,6 +292,17 @@ button:disabled{opacity:.45;cursor:not-allowed}
    <button class="primary-btn" id="heroNewProject">＋ Yeni proje oluştur</button>
    <button class="outline-btn" id="heroChat">✳ TOZRA ile sohbet et</button>
   </div>
+ </div>
+ <div class="dashboard-stats">
+  <div class="stat-card"><span>Toplam proje</span><strong id="statProjects">0</strong><small>Çalışma alanındaki projelerin</small></div>
+  <div class="stat-card"><span>Sohbet geçmişi</span><strong id="statChats">0</strong><small>TOZRA ile çalışmaların</small></div>
+  <div class="stat-card"><span>Üretim alanı</span><strong>5</strong><small>Yaratıcı araç kategorisi</small></div>
+ </div>
+ <div class="section-head"><h2>Hızlı başlangıç</h2><span class="home-section-note">Nereden başlamak istersin?</span></div>
+ <div class="quick-start">
+  <button class="quick-card" id="quickIdea"><div class="tool-icon">✳</div><div><strong>Bir fikri geliştir</strong><small>Fikrini netleştir ve yol haritası çıkar.</small></div></button>
+  <button class="quick-card" id="quickContent"><div class="tool-icon">▤</div><div><strong>İçerik üret</strong><small>Metin, senaryo veya sosyal medya içeriği.</small></div></button>
+  <button class="quick-card" id="quickResearch"><div class="tool-icon">⌕</div><div><strong>Araştırma başlat</strong><small>Bir konuyu incele ve özetle.</small></div></button>
  </div>
  <div class="section-head"><h2>Yaratıcı araçlar</h2><span>Çalışma alanını keşfet</span></div>
  <div class="tool-grid">
@@ -413,9 +437,10 @@ const TozraAuth = (() => {
    const result = await client.auth.getSession();
    if (result.error) throw result.error;
    session = result.data.session || null;
-   client.auth.onAuthStateChange((_event, nextSession) => {
+   client.auth.onAuthStateChange((event, nextSession) => {
     session = nextSession || null;
     updateAccountUI();
+    if(event === "PASSWORD_RECOVERY") showModal("updatePassword");
    });
   } catch (error) {
    configError = error.message || "Hesap servisine bağlanılamadı.";
@@ -442,9 +467,9 @@ const TozraAuth = (() => {
  async function signUp(name, email, password) {
   if (!client) throw new Error(configError || "Supabase bağlantısı hazır değil.");
   const { data, error } = await client.auth.signUp({
-   email: email.trim(),
+   email: email.trim().toLowerCase(),
    password,
-   options: { data: { full_name: name.trim() } }
+   options: { data: { full_name: name.trim() }, emailRedirectTo: `${window.location.origin}/` }
   });
   if (error) throw error;
   session = data.session || null;
@@ -453,11 +478,26 @@ const TozraAuth = (() => {
  async function signIn(email, password) {
   if (!client) throw new Error(configError || "Supabase bağlantısı hazır değil.");
   const { data, error } = await client.auth.signInWithPassword({
-   email: email.trim(), password
+   email: email.trim().toLowerCase(), password
   });
   if (error) throw error;
   session = data.session || null;
   return data;
+ }
+ async function resetPassword(email) {
+  if (!client) throw new Error(configError || "Supabase bağlantısı hazır değil.");
+  const { error } = await client.auth.resetPasswordForEmail(email.trim().toLowerCase(), { redirectTo: `${window.location.origin}/` });
+  if (error) throw error;
+ }
+ async function resendConfirmation(email) {
+  if (!client) throw new Error(configError || "Supabase bağlantısı hazır değil.");
+  const { error } = await client.auth.resend({ type: "signup", email: email.trim().toLowerCase(), options: { emailRedirectTo: `${window.location.origin}/` } });
+  if (error) throw error;
+ }
+ async function updatePassword(password) {
+  if (!client) throw new Error(configError || "Supabase bağlantısı hazır değil.");
+  const { error } = await client.auth.updateUser({ password });
+  if (error) throw error;
  }
  async function signOut() {
   if (!client) return;
@@ -469,7 +509,7 @@ const TozraAuth = (() => {
   if (!session?.access_token) throw new Error("Oturum bulunamadı. Lütfen yeniden giriş yap.");
   return { Authorization: `Bearer ${session.access_token}` };
  }
- return { init, userId, getClient, getSession, getError, signUp, signIn, signOut, authHeaders, updateAccountUI };
+ return { init, userId, getClient, getSession, getError, signUp, signIn, resetPassword, resendConfirmation, updatePassword, signOut, authHeaders, updateAccountUI };
 })();
 
 function scopedStorageKey(key) {
@@ -556,6 +596,9 @@ $("navWorkspace").onclick=()=>showPage("workspace");
 $("navProjects").onclick=()=>showPage("workspace");
 $("navChat").onclick=()=>newGeneralChat();
 $("heroChat").onclick=()=>openGeneralChat();
+$("quickIdea").onclick=()=>createFromCategory("Fikir geliştirme");
+$("quickContent").onclick=()=>createFromCategory("İçerik üretimi");
+$("quickResearch").onclick=()=>createFromCategory("Araştırma");
 $("chatBack").onclick=()=>showPage("workspace");
 $("backWorkspace").onclick=()=>showPage("workspace");
 
@@ -565,6 +608,14 @@ function openGeneralChat(){
 }
 
 /* PROJE SİSTEMİ */
+function updateDashboardStats(){
+ if($("statChats"))$("statChats").textContent=String(Array.isArray(conversations)?conversations.length:0);
+ if($("statProjects"))$("statProjects").textContent=String(projects.length);
+ const user=TozraAuth.getSession()?.user;
+ const name=user?.user_metadata?.full_name?.trim()?.split(/\s+/)[0];
+ const hour=new Date().getHours(), greeting=hour<12?"Günaydın":hour<18?"İyi günler":"İyi akşamlar";
+ if($("dashboardGreeting"))$("dashboardGreeting").textContent=name?`${greeting}, ${name}. Bugün ne üretmek istersin?`:`${greeting}. TOZRA çalışma alanına hoş geldin.`;
+}
 function loadProjects(){
  const data=safeRead("tozra-projects",[]);
  projects=Array.isArray(data)?data:[];
@@ -587,6 +638,7 @@ function renderProjects(){
  const grid=$("projectGrid");
  grid.innerHTML="";
  $("projectCount").textContent=projects.length+" proje";
+ if($("statProjects"))$("statProjects").textContent=String(projects.length);
 
  if(!projects.length){
   const empty=document.createElement("div");
@@ -1249,62 +1301,94 @@ function showModal(type){
  if(type==="login"){
   title.textContent="TOZRA hesabına giriş";
   content.innerHTML=`
-   <p>Hesabına giriş yaparak TOZRA deneyimine devam et.</p>
+   <p>Çalışma alanına güvenli şekilde devam et.</p>
    <form id="loginForm">
-    <input class="modal-input" id="loginEmail" type="email" placeholder="E-posta adresin" autocomplete="email" required>
+    <label class="form-label" for="loginEmail">E-posta adresi</label>
+    <input class="modal-input" id="loginEmail" type="email" placeholder="ornek@eposta.com" autocomplete="email" required>
+    <label class="form-label" for="loginPassword">Şifre</label>
     <input class="modal-input" id="loginPassword" type="password" placeholder="Şifren" autocomplete="current-password" required>
     <button class="primary" id="loginSubmit">Giriş yap</button>
    </form>
-   <button class="secondary" id="registerSwitch">Hesap oluştur</button>
-   <div class="notice" id="authNotice">${escapeHTML(TozraAuth.getError() || "Güvenli giriş Supabase üzerinden yapılır.")}</div>`;
+   <button class="secondary" id="forgotPassword">Şifremi unuttum</button>
+   <button class="secondary" id="registerSwitch">Yeni hesap oluştur</button>
+   <div class="notice" id="authNotice">${escapeHTML(TozraAuth.getError() || "Hesabına e-posta adresin ve şifrenle giriş yap.")}</div>`;
   $("loginForm").onsubmit=async e=>{
-   e.preventDefault();
-   const button=$("loginSubmit"), notice=$("authNotice");
+   e.preventDefault(); const button=$("loginSubmit"), notice=$("authNotice");
    button.disabled=true; button.textContent="Giriş yapılıyor…";
-   try{
-    await TozraAuth.signIn($("loginEmail").value,$("loginPassword").value);
-    await refreshAccountData();
-    $("modalOverlay").classList.remove("show");
-   }catch(error){
-    notice.textContent=error.message||"Giriş yapılamadı.";
-   }finally{
-    button.disabled=false; button.textContent="Giriş yap";
-   }
+   try{await TozraAuth.signIn($("loginEmail").value,$("loginPassword").value);await refreshAccountData();$("modalOverlay").classList.remove("show");}
+   catch(error){notice.textContent=error.message||"Giriş yapılamadı.";}
+   finally{button.disabled=false;button.textContent="Giriş yap";}
+  };
+  $("forgotPassword").onclick=async()=>{
+   const email=$("loginEmail").value.trim(), notice=$("authNotice"), button=$("forgotPassword");
+   if(!email){notice.textContent="Şifre sıfırlama bağlantısı için önce e-posta adresini yaz.";$("loginEmail").focus();return;}
+   button.disabled=true;button.textContent="Gönderiliyor…";
+   try{await TozraAuth.resetPassword(email);notice.textContent="Şifre yenileme bağlantısı e-posta adresine gönderildi.";}
+   catch(error){notice.textContent=error.message||"Bağlantı gönderilemedi.";}
+   finally{button.disabled=false;button.textContent="Şifremi unuttum";}
   };
   $("registerSwitch").onclick=()=>showModal("register");
  }
-
  if(type==="register"){
   title.textContent="TOZRA hesabı oluştur";
   content.innerHTML=`
-   <p>TOZRA dünyasına katıl.</p>
+   <p>Hesabını oluştur; fikirlerini ve projelerini tek bir çalışma alanında yönet.</p>
    <form id="registerForm">
-    <input class="modal-input" id="registerName" placeholder="Adın" autocomplete="name" maxlength="80" required>
-    <input class="modal-input" id="registerEmail" type="email" placeholder="E-posta adresin" autocomplete="email" required>
-    <input class="modal-input" id="registerPassword" type="password" placeholder="En az 8 karakterli şifre" autocomplete="new-password" minlength="8" required>
-    <button class="primary" id="registerSubmit">Hesap oluştur</button>
+    <label class="form-label" for="registerName">Adın</label>
+    <input class="modal-input" id="registerName" placeholder="Adın soyadın" autocomplete="name" maxlength="80" required>
+    <label class="form-label" for="registerEmail">E-posta adresi</label>
+    <input class="modal-input" id="registerEmail" type="email" placeholder="ornek@eposta.com" autocomplete="email" required>
+    <label class="form-label" for="registerPassword">Şifre</label>
+    <input class="modal-input" id="registerPassword" type="password" placeholder="En az 8 karakter" autocomplete="new-password" minlength="8" required>
+    <small style="display:block;color:#758478;font-size:10px;margin:-4px 0 10px">En az 8 karakter kullan. E-posta doğrulaması gerekebilir.</small>
+    <button class="primary" id="registerSubmit">Ücretsiz hesap oluştur</button>
    </form>
    <button class="secondary" id="loginSwitch">Zaten hesabım var</button>
-   <div class="notice" id="authNotice">${escapeHTML(TozraAuth.getError() || "Kayıt ve e-posta doğrulaması Supabase tarafından yönetilir.")}</div>`;
+   <button class="secondary" id="resendConfirmation" type="button">Doğrulama e-postasını tekrar gönder</button>
+   <div class="notice" id="authNotice">${escapeHTML(TozraAuth.getError() || "Kayıt sonrası doğrulama bağlantısını e-postandan açarak hesabını etkinleştir.")}</div>`;
   $("registerForm").onsubmit=async e=>{
-   e.preventDefault();
-   const button=$("registerSubmit"), notice=$("authNotice");
-   button.disabled=true; button.textContent="Hesap oluşturuluyor…";
+   e.preventDefault(); const button=$("registerSubmit"), notice=$("authNotice");
+   const name=$("registerName").value.trim(), email=$("registerEmail").value.trim(), password=$("registerPassword").value;
+   if(name.length<2){notice.textContent="Lütfen adını en az 2 karakter olacak şekilde gir.";return;}
+   if(password.length<8){notice.textContent="Şifren en az 8 karakter olmalı.";return;}
+   button.disabled=true;button.textContent="Hesap oluşturuluyor…";
    try{
-    const data=await TozraAuth.signUp($("registerName").value,$("registerEmail").value,$("registerPassword").value);
-    if(data.session){
-     await refreshAccountData();
-     $("modalOverlay").classList.remove("show");
-    }else{
-     notice.textContent="Kayıt oluşturuldu. Giriş yapmadan önce e-posta adresine gönderilen doğrulama bağlantısına tıkla.";
-     button.textContent="E-posta gönderildi";
-    }
-   }catch(error){
-    notice.textContent=error.message||"Kayıt oluşturulamadı.";
-    button.disabled=false; button.textContent="Hesap oluştur";
-   }
+    const data=await TozraAuth.signUp(name,email,password);
+    if(data.session){await refreshAccountData();$("modalOverlay").classList.remove("show");}
+    else{notice.textContent="Hesabın oluşturuldu. E-posta adresine gönderilen doğrulama bağlantısını aç, ardından giriş yap.";button.textContent="E-posta gönderildi";}
+   }catch(error){notice.textContent=error.message||"Kayıt oluşturulamadı.";button.disabled=false;button.textContent="Ücretsiz hesap oluştur";}
+  };
+  $("resendConfirmation").onclick=async()=>{
+   const email=$("registerEmail").value.trim(), notice=$("authNotice"), button=$("resendConfirmation");
+   if(!email){notice.textContent="Önce e-posta adresini gir.";$("registerEmail").focus();return;}
+   button.disabled=true;button.textContent="Gönderiliyor…";
+   try{await TozraAuth.resendConfirmation(email);notice.textContent="Doğrulama e-postası yeniden gönderildi. Gelen kutunu ve spam klasörünü kontrol et.";}
+   catch(error){notice.textContent=error.message||"Doğrulama e-postası gönderilemedi.";}
+   finally{button.disabled=false;button.textContent="Doğrulama e-postasını tekrar gönder";}
   };
   $("loginSwitch").onclick=()=>showModal("login");
+ }
+
+ if(type==="updatePassword"){
+  title.textContent="Yeni şifre belirle";
+  content.innerHTML=`
+   <p>Hesabın için yeni bir şifre oluştur.</p>
+   <form id="updatePasswordForm">
+    <label class="form-label" for="newPassword">Yeni şifre</label>
+    <input class="modal-input" id="newPassword" type="password" minlength="8" autocomplete="new-password" placeholder="En az 8 karakter" required>
+    <label class="form-label" for="confirmNewPassword">Yeni şifreyi tekrar gir</label>
+    <input class="modal-input" id="confirmNewPassword" type="password" minlength="8" autocomplete="new-password" placeholder="Şifreni tekrar yaz" required>
+    <button class="primary" id="updatePasswordSubmit">Şifreyi güncelle</button>
+   </form>
+   <div class="notice" id="authNotice">Yeni şifren en az 8 karakter olmalı.</div>`;
+  $("updatePasswordForm").onsubmit=async e=>{
+   e.preventDefault(); const password=$("newPassword").value, confirm=$("confirmNewPassword").value, button=$("updatePasswordSubmit"), notice=$("authNotice");
+   if(password.length<8){notice.textContent="Şifren en az 8 karakter olmalı.";return;}
+   if(password!==confirm){notice.textContent="Girdiğin şifreler eşleşmiyor.";return;}
+   button.disabled=true;button.textContent="Güncelleniyor…";
+   try{await TozraAuth.updatePassword(password);notice.textContent="Şifren başarıyla güncellendi.";button.textContent="Güncellendi";setTimeout(()=>$("modalOverlay").classList.remove("show"),900);}
+   catch(error){notice.textContent=error.message||"Şifre güncellenemedi.";button.disabled=false;button.textContent="Şifreyi güncelle";}
+  };
  }
 
  if(type==="profile"){
@@ -1344,7 +1428,7 @@ function showModal(type){
    <p>TOZRA premium siyah-yeşil tema ile çalışıyor.</p>
    <h3 style="font-size:14px">Uygulama</h3>
    <p>TOZRA — Creative Intelligence</p>
-   <p>Sürüm 5.0</p>
+   <p>Sürüm 5.1</p>
    <div class="notice">Hesap girişi Supabase ile korunur. Projeler ve sohbetler bu sürümde kullanıcı hesabına özel olarak cihazında saklanır; bulut senkronizasyonu sonraki aşamadır.</div>`;
  }
 
@@ -1607,6 +1691,7 @@ async function refreshAccountData(){
  loadHistory();
  loadProjects();
  TozraAuth.updateAccountUI();
+ updateDashboardStats();
 }
 window.addEventListener("load", async ()=>{
  await TozraAuth.init();
