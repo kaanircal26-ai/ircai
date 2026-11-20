@@ -803,10 +803,10 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
 .assistant-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px}
 .assistant-panel-head h2{font-size:13px;font-weight:700;color:#35332c;margin:0}
 .assistant-panel-head span{font-size:9px;color:#aaa195}
-.assistant-task-form{display:grid;grid-template-columns:minmax(0,1fr) 165px auto;gap:7px;margin-bottom:14px}
+.assistant-task-form{display:grid;grid-template-columns:minmax(0,1fr) 155px 125px auto;gap:7px;margin-bottom:14px}
 .assistant-task-form input{width:100%;min-width:0;border:1px solid #e8e3db;border-radius:8px;background:#faf8f4;color:#34322c;padding:10px;font-size:11px;outline:none}
 .assistant-task-form input:focus{border-color:#b6a58d}
-.assistant-task-form button{border:0;border-radius:8px;background:#26251f;color:#fff;padding:0 13px;font-size:10px;font-weight:650}
+.assistant-task-form select{min-width:0;border:1px solid #e8e3db;border-radius:8px;background:#faf8f4;color:#625d53;padding:9px 7px;font-size:10px;outline:none}.assistant-task-form button{border:0;border-radius:8px;background:#26251f;color:#fff;padding:0 13px;font-size:10px;font-weight:650}
 .assistant-task-list{display:flex;flex-direction:column;gap:7px}
 .assistant-empty{padding:25px 12px;text-align:center;color:#aaa398;font-size:11px;border:1px dashed #e7e1d8;border-radius:9px}
 .assistant-task{display:flex;align-items:center;gap:10px;padding:10px 9px;border:1px solid #efebe5;border-radius:9px;background:#fff}
@@ -814,7 +814,7 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
 .assistant-task-main{flex:1;min-width:0}
 .assistant-task-title{font-size:11px;color:#38362f;overflow-wrap:anywhere}
 .assistant-task.done .assistant-task-title{text-decoration:line-through;color:#aaa398}
-.assistant-task-due{font-size:9px;color:#a49b8e;margin-top:4px}
+.assistant-task-due{font-size:9px;color:#a49b8e;margin-top:4px}.assistant-task-priority{display:inline-flex;margin-top:5px;padding:3px 6px;border-radius:20px;font-size:8px;background:#f1eee8;color:#827969}.assistant-task-priority.high{background:#f7e9e5;color:#a45d4f}.assistant-task-priority.medium{background:#f4efe2;color:#917744}.assistant-task-priority.low{background:#eaf0e8;color:#657b61}
 .assistant-task-delete{border:0;background:transparent;color:#b3aa9e;font-size:15px;padding:3px 5px}
 .assistant-task-delete:hover{color:#9c594c}
 .assistant-side{display:flex;flex-direction:column;gap:12px}
@@ -825,7 +825,7 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
 .assistant-summary-card{background:#f7f4ee;border:1px solid #eee9e1;border-radius:9px;padding:12px}
 .assistant-summary-card strong{display:block;font-size:19px;color:#34322c;font-weight:650}
 .assistant-summary-card span{font-size:9px;color:#9b9488}
-.assistant-footer{font-size:9px;color:#b0a99f;text-align:center;margin-top:22px}
+.assistant-weekly{margin-top:15px}.assistant-week-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}.assistant-week-controls{display:flex;align-items:center;gap:7px}.assistant-week-controls button{border:1px solid #e8e3db;background:#f8f6f1;color:#625d53;border-radius:8px;padding:8px 10px;font-size:10px}.assistant-week-controls input{border:1px solid #e8e3db;background:#faf8f4;color:#4b473f;border-radius:8px;padding:7px;font:inherit;font-size:10px;max-width:145px}.assistant-week-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}.assistant-week-day{min-width:0;border:1px solid #eee9e1;background:#fff;border-radius:9px;padding:9px}.assistant-week-day-head{font-size:10px;font-weight:700;color:#4b473f;margin-bottom:3px}.assistant-week-day-date{font-size:8px;color:#aaa195;margin-bottom:8px}.assistant-week-day textarea{width:100%;min-height:126px;resize:vertical;border:0;outline:0;background:#faf8f4;border-radius:6px;padding:8px;color:#514d44;font:inherit;font-size:9px;line-height:1.6}.assistant-week-saved{font-size:9px;color:#a49b8e;margin-top:10px}.assistant-footer{font-size:9px;color:#b0a99f;text-align:center;margin-top:22px}
 @media(max-width:760px){
  .assistant-home{padding:17px 0 30px}
  .assistant-head{margin:5px 0 18px;display:block}
@@ -833,8 +833,11 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
  .assistant-command{padding:7px 7px 7px 12px}
  .assistant-command button{padding:10px 12px}
  .assistant-grid{grid-template-columns:1fr}
- .assistant-task-form{grid-template-columns:minmax(0,1fr) 132px}
+ .assistant-task-form{grid-template-columns:minmax(0,1fr) minmax(110px,132px)}
+ .assistant-task-form select{grid-column:1/-1;padding:10px}
  .assistant-task-form button{grid-column:1/-1;padding:11px}
+ .assistant-week-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .assistant-week-day textarea{min-height:105px}
  .assistant-panel{padding:13px}
 }
 
@@ -924,6 +927,7 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
     <form class="assistant-task-form" id="assistantTaskForm">
      <input id="assistantTaskInput" type="text" maxlength="180" placeholder="Yeni bir görev ekle..." required>
      <input id="assistantTaskDue" type="datetime-local" aria-label="Görev tarihi ve saati">
+     <select id="assistantTaskPriority" aria-label="Görev önceliği"><option value="high">Yüksek öncelik</option><option value="medium" selected>Orta öncelik</option><option value="low">Düşük öncelik</option></select>
      <button type="submit">＋ Ekle</button>
     </form>
     <div class="assistant-task-list" id="assistantTaskList">
@@ -946,6 +950,18 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
     </section>
    </div>
   </div>
+  <section class="assistant-panel assistant-weekly">
+   <div class="assistant-week-head">
+    <div class="assistant-panel-head" style="margin:0"><h2>Haftalık programım</h2><span>Yazdıkların otomatik kaydedilir</span></div>
+    <div class="assistant-week-controls">
+     <button type="button" id="assistantWeekPrev" aria-label="Önceki hafta">←</button>
+     <input type="date" id="assistantWeekStart" aria-label="Haftanın başlangıç tarihi">
+     <button type="button" id="assistantWeekNext" aria-label="Sonraki hafta">→</button>
+    </div>
+   </div>
+   <div class="assistant-week-grid" id="assistantWeekGrid"></div>
+   <div class="assistant-week-saved" id="assistantWeekSaved">Her günün programını ilgili kutuya yaz. Değişiklikler otomatik kaydedilir.</div>
+  </section>
   <div class="assistant-footer">TOZRA PERSONAL ASSISTANT · Sade, düzenli, odaklı.</div>
  </div>
 </div>
@@ -2594,7 +2610,7 @@ window.addEventListener("load", async ()=>{
 });
 
 
-/* TOZRA PERSONAL ASSISTANT — tasks, notes and in-page reminders */
+/* TOZRA PERSONAL ASSISTANT — tasks, priorities, weekly planner and reminders */
 (function(){
  "use strict";
  const byId=id=>document.getElementById(id);
@@ -2604,6 +2620,7 @@ window.addEventListener("load", async ()=>{
  };
  const key=suffix=>"tozra-assistant:"+userKey()+":"+suffix;
  let tasks=[];
+ let weeklyPlans={};
  const read=(name,fallback)=>{
   try{const v=JSON.parse(localStorage.getItem(key(name))||"null");return v??fallback;}
   catch(e){return fallback;}
@@ -2618,12 +2635,16 @@ window.addEventListener("load", async ()=>{
   if(Number.isNaN(d.getTime()))return "";
   return d.toLocaleString("tr-TR",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
  };
+ const priorityRank={high:0,medium:1,low:2};
+ const priorityText={high:"Yüksek öncelik",medium:"Orta öncelik",low:"Düşük öncelik"};
  function render(){
   const list=byId("assistantTaskList");
   if(!list)return;
   list.innerHTML="";
   const sorted=[...tasks].sort((a,b)=>{
    if(a.done!==b.done)return a.done?1:-1;
+   const pr=(priorityRank[a.priority]??1)-(priorityRank[b.priority]??1);
+   if(pr)return pr;
    if(!a.due&&!b.due)return b.created-a.created;
    if(!a.due)return 1;if(!b.due)return -1;
    return new Date(a.due)-new Date(b.due);
@@ -2641,6 +2662,7 @@ window.addEventListener("load", async ()=>{
     const title=document.createElement("div");title.className="assistant-task-title";title.textContent=task.title;
     main.appendChild(title);
     if(task.due){const due=document.createElement("div");due.className="assistant-task-due";due.textContent=fmtDue(task.due);main.appendChild(due);}
+    const priority=document.createElement("div");priority.className="assistant-task-priority "+(task.priority||"medium");priority.textContent=priorityText[task.priority||"medium"];main.appendChild(priority);
     const del=document.createElement("button");del.className="assistant-task-delete";del.type="button";del.textContent="×";del.setAttribute("aria-label","Görevi sil");
     del.addEventListener("click",()=>{tasks=tasks.filter(t=>t.id!==task.id);write("tasks",tasks);render();});
     row.append(check,main,del);list.appendChild(row);
@@ -2651,10 +2673,10 @@ window.addEventListener("load", async ()=>{
   byId("assistantOpenCount").textContent=String(open);
   byId("assistantDoneCount").textContent=String(done);
  }
- function addTask(title,due){
+ function addTask(title,due,priority){
   const clean=String(title||"").trim();
   if(!clean)return;
-  tasks.push({id:(crypto.randomUUID?crypto.randomUUID():String(Date.now()+Math.random())),title:clean,due:due||"",done:false,created:Date.now(),notified:false});
+  tasks.push({id:(crypto.randomUUID?crypto.randomUUID():String(Date.now()+Math.random())),title:clean,due:due||"",priority:priority||"medium",done:false,created:Date.now(),notified:false});
   write("tasks",tasks);render();
  }
  function checkReminders(){
@@ -2669,45 +2691,73 @@ window.addEventListener("load", async ()=>{
    }
   });
  }
+ const isoDate=d=>[d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-");
+ function mondayOf(date){const d=new Date(date.getFullYear(),date.getMonth(),date.getDate());const offset=(d.getDay()+6)%7;d.setDate(d.getDate()-offset);return d;}
+ function shiftIsoDate(iso,days){const parts=iso.split("-").map(Number);const d=new Date(parts[0],parts[1]-1,parts[2],12);d.setDate(d.getDate()+days);return isoDate(d);}
+ function renderWeek(){
+  const input=byId("assistantWeekStart"),grid=byId("assistantWeekGrid");
+  if(!input||!grid)return;
+  let start=input.value;
+  if(!start)return;
+  const baseParts=start.split("-").map(Number);
+  const base=new Date(baseParts[0],baseParts[1]-1,baseParts[2],12);
+  const monday=mondayOf(base);start=isoDate(monday);
+  if(input.value!==start)input.value=start;
+  grid.innerHTML="";
+  const dayNames=["Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi","Pazar"];
+  for(let i=0;i<7;i++){
+   const date=shiftIsoDate(start,i);
+   const parts=date.split("-").map(Number);const d=new Date(parts[0],parts[1]-1,parts[2],12);
+   const card=document.createElement("div");card.className="assistant-week-day";
+   const head=document.createElement("div");head.className="assistant-week-day-head";head.textContent=dayNames[i];
+   const dateLabel=document.createElement("div");dateLabel.className="assistant-week-day-date";dateLabel.textContent=d.toLocaleDateString("tr-TR",{day:"numeric",month:"long"});
+   const area=document.createElement("textarea");area.maxLength=3000;area.placeholder="Örn. 09.00 ders, 14.00 çalışma, 18.00 toplantı...";area.setAttribute("aria-label",dayNames[i]+" programı");area.value=(weeklyPlans[start]&&weeklyPlans[start][date])||"";
+   area.addEventListener("input",()=>{
+    if(!weeklyPlans[start])weeklyPlans[start]={};
+    weeklyPlans[start][date]=area.value;
+    write("weeklyPlans",weeklyPlans);
+    const status=byId("assistantWeekSaved");if(status)status.textContent="Kaydedildi · "+new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"});
+   });
+   card.append(head,dateLabel,area);grid.appendChild(card);
+  }
+  const status=byId("assistantWeekSaved");if(status)status.textContent="Bu haftanın programı otomatik kaydedilir ve aynı tarayıcıda saklanır.";
+ }
  function init(){
   const now=new Date();
   byId("assistantToday").textContent=now.toLocaleDateString("tr-TR",{weekday:"long",day:"numeric",month:"long"});
   const hour=now.getHours();
   byId("assistantGreeting").textContent=hour<12?"Günaydın. Bugün neyi hallediyoruz?":hour<18?"İyi günler. Planlarını birlikte düzenleyelim.":"İyi akşamlar. Gününü toparlayalım.";
-  tasks=read("tasks",[]);
-  if(!Array.isArray(tasks))tasks=[];
+  tasks=read("tasks",[]);if(!Array.isArray(tasks))tasks=[];
+  tasks=tasks.map(t=>({...t,priority:t.priority||"medium"}));
+  weeklyPlans=read("weeklyPlans",{});if(!weeklyPlans||typeof weeklyPlans!=="object")weeklyPlans={};
   byId("assistantNotes").value=read("notes","");
-  render();
+  const weekInput=byId("assistantWeekStart");if(weekInput)weekInput.value=isoDate(mondayOf(now));
+  render();renderWeek();
+  byId("assistantWeekStart").addEventListener("change",renderWeek);
+  byId("assistantWeekPrev").addEventListener("click",()=>{weekInput.value=shiftIsoDate(weekInput.value,-7);renderWeek();});
+  byId("assistantWeekNext").addEventListener("click",()=>{weekInput.value=shiftIsoDate(weekInput.value,7);renderWeek();});
   byId("assistantTaskForm").addEventListener("submit",async e=>{
    e.preventDefault();
    const title=byId("assistantTaskInput").value;
    const due=byId("assistantTaskDue").value;
+   const priority=byId("assistantTaskPriority").value;
    if(due&&"Notification" in window&&Notification.permission==="default"){
     try{await Notification.requestPermission();}catch(err){}
    }
-   addTask(title,due);
-   byId("assistantTaskInput").value="";
-   byId("assistantTaskDue").value="";
+   addTask(title,due,priority);
+   byId("assistantTaskInput").value="";byId("assistantTaskDue").value="";byId("assistantTaskPriority").value="medium";
   });
   byId("assistantNotes").addEventListener("input",()=>write("notes",byId("assistantNotes").value));
   byId("assistantAskForm").addEventListener("submit",e=>{
-   e.preventDefault();
-   const value=byId("assistantAskInput").value.trim();
-   if(!value)return;
-   byId("assistantAskInput").value="";
-   if(typeof window.startChatWithPrompt==="function")window.startChatWithPrompt(value);
+   e.preventDefault();const value=byId("assistantAskInput").value.trim();if(!value)return;
+   byId("assistantAskInput").value="";if(typeof window.startChatWithPrompt==="function")window.startChatWithPrompt(value);
   });
-  document.querySelectorAll("[data-assistant-prompt]").forEach(button=>{
-   button.addEventListener("click",()=>{
-    const prompt=button.getAttribute("data-assistant-prompt");
-    if(typeof window.startChatWithPrompt==="function")window.startChatWithPrompt(prompt);
-   });
-  });
-  setInterval(checkReminders,30000);
-  checkReminders();
+  document.querySelectorAll("[data-assistant-prompt]").forEach(button=>button.addEventListener("click",()=>{
+   const prompt=button.getAttribute("data-assistant-prompt");if(typeof window.startChatWithPrompt==="function")window.startChatWithPrompt(prompt);
+  }));
+  setInterval(checkReminders,30000);checkReminders();
  }
- if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});
- else init();
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
 })();
 
 /* SERVICE WORKER */
