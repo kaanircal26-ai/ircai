@@ -782,6 +782,62 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
   -webkit-text-fill-color: #173321 !important;
 }
 
+
+/* TOZRA PERSONAL ASSISTANT — minimal home */
+.assistant-home{max-width:980px;margin:0 auto;padding:26px 0 42px;color:#24231f}
+.assistant-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin:8px 0 24px}
+.assistant-eyebrow{font-size:9px;letter-spacing:.18em;color:#9a8e7d;font-weight:750;text-transform:uppercase;margin-bottom:10px}
+.assistant-head h1{font-size:clamp(29px,4vw,42px);letter-spacing:-.065em;font-weight:620;margin:0 0 8px;color:#25241f}
+.assistant-head p{font-size:12px;line-height:1.6;color:#8c877e;margin:0}
+.assistant-date{font-size:10px;color:#8d877d;background:#f0ede7;border:1px solid #e8e3db;border-radius:30px;padding:9px 12px;white-space:nowrap}
+.assistant-command{display:flex;align-items:center;gap:10px;padding:9px 10px 9px 17px;background:#fffdfa;border:1px solid #e8e3db;border-radius:12px;box-shadow:0 8px 28px rgba(45,37,25,.035);margin-bottom:23px}
+.assistant-command input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:#292821;font-size:13px;padding:9px 0}
+.assistant-command input::placeholder{color:#aaa398}
+.assistant-command button{border:0;border-radius:9px;background:#26251f;color:#fff;padding:11px 15px;font-size:11px;font-weight:650}
+.assistant-command button:hover{background:#48463d}
+.assistant-shortcuts{display:flex;gap:8px;flex-wrap:wrap;margin:-8px 0 26px}
+.assistant-shortcut{border:1px solid #e8e3db;background:#f8f6f1;color:#777166;border-radius:30px;padding:8px 12px;font-size:10px}
+.assistant-shortcut:hover{border-color:#c9bda9;color:#36342d;background:#fffdfa}
+.assistant-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(240px,.75fr);gap:15px;align-items:start}
+.assistant-panel{background:#fffdfa;border:1px solid #e9e4dc;border-radius:12px;padding:17px}
+.assistant-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:15px}
+.assistant-panel-head h2{font-size:13px;font-weight:700;color:#35332c;margin:0}
+.assistant-panel-head span{font-size:9px;color:#aaa195}
+.assistant-task-form{display:grid;grid-template-columns:minmax(0,1fr) 165px auto;gap:7px;margin-bottom:14px}
+.assistant-task-form input{width:100%;min-width:0;border:1px solid #e8e3db;border-radius:8px;background:#faf8f4;color:#34322c;padding:10px;font-size:11px;outline:none}
+.assistant-task-form input:focus{border-color:#b6a58d}
+.assistant-task-form button{border:0;border-radius:8px;background:#26251f;color:#fff;padding:0 13px;font-size:10px;font-weight:650}
+.assistant-task-list{display:flex;flex-direction:column;gap:7px}
+.assistant-empty{padding:25px 12px;text-align:center;color:#aaa398;font-size:11px;border:1px dashed #e7e1d8;border-radius:9px}
+.assistant-task{display:flex;align-items:center;gap:10px;padding:10px 9px;border:1px solid #efebe5;border-radius:9px;background:#fff}
+.assistant-task input[type=checkbox]{accent-color:#49473e;width:15px;height:15px;flex-shrink:0}
+.assistant-task-main{flex:1;min-width:0}
+.assistant-task-title{font-size:11px;color:#38362f;overflow-wrap:anywhere}
+.assistant-task.done .assistant-task-title{text-decoration:line-through;color:#aaa398}
+.assistant-task-due{font-size:9px;color:#a49b8e;margin-top:4px}
+.assistant-task-delete{border:0;background:transparent;color:#b3aa9e;font-size:15px;padding:3px 5px}
+.assistant-task-delete:hover{color:#9c594c}
+.assistant-side{display:flex;flex-direction:column;gap:12px}
+.assistant-note{width:100%;min-height:150px;resize:vertical;border:1px solid #eee9e1;background:#faf8f4;border-radius:8px;padding:11px;color:#39372f;font-family:inherit;font-size:11px;line-height:1.7;outline:none}
+.assistant-note:focus{border-color:#c9bda9}
+.assistant-note-hint{font-size:9px;color:#aaa195;line-height:1.5;margin-top:8px}
+.assistant-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.assistant-summary-card{background:#f7f4ee;border:1px solid #eee9e1;border-radius:9px;padding:12px}
+.assistant-summary-card strong{display:block;font-size:19px;color:#34322c;font-weight:650}
+.assistant-summary-card span{font-size:9px;color:#9b9488}
+.assistant-footer{font-size:9px;color:#b0a99f;text-align:center;margin-top:22px}
+@media(max-width:760px){
+ .assistant-home{padding:17px 0 30px}
+ .assistant-head{margin:5px 0 18px;display:block}
+ .assistant-date{display:inline-block;margin-top:12px}
+ .assistant-command{padding:7px 7px 7px 12px}
+ .assistant-command button{padding:10px 12px}
+ .assistant-grid{grid-template-columns:1fr}
+ .assistant-task-form{grid-template-columns:minmax(0,1fr) 132px}
+ .assistant-task-form button{grid-column:1/-1;padding:11px}
+ .assistant-panel{padding:13px}
+}
+
 </style>
 </head>
 
@@ -799,7 +855,8 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
  <div class="brand"><div class="brand-icon"><img src="/apple-touch-icon.PNG" alt="TOZRA"></div><div class="brand-wordmark"><span>TOZRA</span><small>CREATIVE INTELLIGENCE</small></div></div>
  <button class="new-chat" id="newProject"><span class="nav-symbol">＋</span> Yeni proje oluştur</button>
  <div class="nav-label">WORKSPACE</div>
- <button class="nav-item active" id="navWorkspace"><span class="nav-symbol">⌂</span> Çalışma alanı</button>
+ <button class="nav-item active" id="navAssistant"><span class="nav-symbol">◉</span> Kişisel asistan</button>
+ <button class="nav-item" id="navWorkspace"><span class="nav-symbol">⌂</span> Çalışma alanı</button>
  <button class="nav-item" id="navChat"><span class="nav-symbol">▤</span> Sohbet (AI)</button>
  <button class="nav-item" id="navProjects"><span class="nav-symbol">▣</span> Projelerim</button>
  <div class="nav-label studio-label">CREATIVE STUDIO</div>
@@ -836,7 +893,64 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
 </header>
 
 <section class="content">
-<div class="page active" id="workspacePage">
+
+<div class="page active" id="personalAssistantPage">
+ <div class="assistant-home">
+  <div class="assistant-head">
+   <div>
+    <div class="assistant-eyebrow">TOZRA / PERSONAL ASSISTANT</div>
+    <h1 id="assistantGreeting">Günün kontrolü sende.</h1>
+    <p>Planlarını düzenle, notlarını sakla ve ihtiyacın olduğunda TOZRA'ya danış.</p>
+   </div>
+   <div class="assistant-date" id="assistantToday"></div>
+  </div>
+
+  <form class="assistant-command" id="assistantAskForm">
+   <input id="assistantAskInput" type="text" maxlength="2000" autocomplete="off" placeholder="TOZRA'ya ne yapmak istediğini söyle..." aria-label="TOZRA'ya danış">
+   <button type="submit">Sor ↗</button>
+  </form>
+  <div class="assistant-shortcuts">
+   <button class="assistant-shortcut" type="button" data-assistant-prompt="Bugün yapmam gerekenleri öncelik sırasına koymama yardım et.">Bugünümü planla</button>
+   <button class="assistant-shortcut" type="button" data-assistant-prompt="Bu hafta için gerçekçi bir çalışma planı oluşturmama yardım et.">Haftalık plan</button>
+   <button class="assistant-shortcut" type="button" data-assistant-prompt="Aklımdaki işleri düzenlememe ve küçük adımlara bölmeme yardım et.">İşlerimi düzenle</button>
+  </div>
+
+  <div class="assistant-grid">
+   <section class="assistant-panel">
+    <div class="assistant-panel-head">
+     <h2>Görevlerim</h2>
+     <span id="assistantTaskCount">0 görev</span>
+    </div>
+    <form class="assistant-task-form" id="assistantTaskForm">
+     <input id="assistantTaskInput" type="text" maxlength="180" placeholder="Yeni bir görev ekle..." required>
+     <input id="assistantTaskDue" type="datetime-local" aria-label="Görev tarihi ve saati">
+     <button type="submit">＋ Ekle</button>
+    </form>
+    <div class="assistant-task-list" id="assistantTaskList">
+     <div class="assistant-empty">Henüz görev eklemedin. İlk görevini yukarıdan oluştur.</div>
+    </div>
+   </section>
+
+   <div class="assistant-side">
+    <section class="assistant-panel">
+     <div class="assistant-panel-head"><h2>Hızlı notlar</h2><span>Otomatik kaydedilir</span></div>
+     <textarea class="assistant-note" id="assistantNotes" maxlength="5000" placeholder="Aklına gelenleri buraya yaz..."></textarea>
+     <div class="assistant-note-hint">Notların bu tarayıcıda saklanır.</div>
+    </section>
+    <section class="assistant-panel">
+     <div class="assistant-panel-head"><h2>Bugünün özeti</h2><span>Canlı</span></div>
+     <div class="assistant-summary">
+      <div class="assistant-summary-card"><strong id="assistantOpenCount">0</strong><span>Tamamlanmamış</span></div>
+      <div class="assistant-summary-card"><strong id="assistantDoneCount">0</strong><span>Tamamlanan</span></div>
+     </div>
+    </section>
+   </div>
+  </div>
+  <div class="assistant-footer">TOZRA PERSONAL ASSISTANT · Sade, düzenli, odaklı.</div>
+ </div>
+</div>
+
+<div class="page" id="workspacePage">
  <div class="workspace-hero hero-shell">
   <div class="hero-greeting" id="dashboardGreeting">TOZRA çalışma alanına hoş geldin</div>
   <div class="eyebrow"><span class="eyebrow-dot"></span> TOZRA AI　/　CREATIVE WORKSPACE</div>
@@ -1267,17 +1381,22 @@ $("menuBackdrop").onclick=()=>toggleMenu(true);
 /* SAYFA GEÇİŞLERİ */
 function showPage(page){
  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
- $(page+"Page").classList.add("active");
- $("navWorkspace").classList.toggle("active",page==="workspace");
+ const target=$(page+"Page");
+ if(!target)return;
+ target.classList.add("active");
+ $("navAssistant").classList.toggle("active",page==="personalAssistant");
+ $("navWorkspace").classList.toggle("active",page==="workspace"||page==="project");
  $("navChat").classList.toggle("active",page==="chat");
  $("navCreativeStudio").classList.toggle("active",page==="creativeStudio");
  $("topbarTitle").textContent=
+  page==="personalAssistant"?"PERSONAL ASSISTANT":
   page==="workspace"?"CREATIVE WORKSPACE":
   page==="project"?"PROJECT WORKSPACE":
   page==="creativeStudio"?"CREATIVE STUDIO":"CREATIVE INTELLIGENCE";
  toggleMenu(true);
  window.scrollTo({top:0,behavior:"smooth"});
 }
+$("navAssistant").onclick=()=>showPage("personalAssistant");
 $("navWorkspace").onclick=()=>showPage("workspace");
 $("navProjects").onclick=()=>showPage("workspace");
 $("navChat").onclick=()=>newGeneralChat();
@@ -2473,6 +2592,123 @@ window.addEventListener("load", async ()=>{
  await refreshAccountData();
  if(!TozraAuth.getSession()) showModal("login");
 });
+
+
+/* TOZRA PERSONAL ASSISTANT — tasks, notes and in-page reminders */
+(function(){
+ "use strict";
+ const byId=id=>document.getElementById(id);
+ const userKey=()=>{
+  const user=(typeof TozraAuth!=="undefined"?TozraAuth.getSession():null)?.user;
+  return user?.id||"local";
+ };
+ const key=suffix=>"tozra-assistant:"+userKey()+":"+suffix;
+ let tasks=[];
+ const read=(name,fallback)=>{
+  try{const v=JSON.parse(localStorage.getItem(key(name))||"null");return v??fallback;}
+  catch(e){return fallback;}
+ };
+ const write=(name,value)=>{
+  try{localStorage.setItem(key(name),JSON.stringify(value));}
+  catch(e){console.warn("TOZRA assistant storage:",e);}
+ };
+ const fmtDue=value=>{
+  if(!value)return "";
+  const d=new Date(value);
+  if(Number.isNaN(d.getTime()))return "";
+  return d.toLocaleString("tr-TR",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
+ };
+ function render(){
+  const list=byId("assistantTaskList");
+  if(!list)return;
+  list.innerHTML="";
+  const sorted=[...tasks].sort((a,b)=>{
+   if(a.done!==b.done)return a.done?1:-1;
+   if(!a.due&&!b.due)return b.created-a.created;
+   if(!a.due)return 1;if(!b.due)return -1;
+   return new Date(a.due)-new Date(b.due);
+  });
+  if(!sorted.length){
+   list.innerHTML='<div class="assistant-empty">Henüz görev eklemedin. İlk görevini yukarıdan oluştur.</div>';
+  }else{
+   sorted.forEach(task=>{
+    const row=document.createElement("div");
+    row.className="assistant-task"+(task.done?" done":"");
+    const check=document.createElement("input");
+    check.type="checkbox";check.checked=!!task.done;check.setAttribute("aria-label","Görevi tamamlandı işaretle");
+    check.addEventListener("change",()=>{task.done=check.checked;write("tasks",tasks);render();});
+    const main=document.createElement("div");main.className="assistant-task-main";
+    const title=document.createElement("div");title.className="assistant-task-title";title.textContent=task.title;
+    main.appendChild(title);
+    if(task.due){const due=document.createElement("div");due.className="assistant-task-due";due.textContent=fmtDue(task.due);main.appendChild(due);}
+    const del=document.createElement("button");del.className="assistant-task-delete";del.type="button";del.textContent="×";del.setAttribute("aria-label","Görevi sil");
+    del.addEventListener("click",()=>{tasks=tasks.filter(t=>t.id!==task.id);write("tasks",tasks);render();});
+    row.append(check,main,del);list.appendChild(row);
+   });
+  }
+  const open=tasks.filter(t=>!t.done).length,done=tasks.filter(t=>t.done).length;
+  byId("assistantTaskCount").textContent=tasks.length+" görev";
+  byId("assistantOpenCount").textContent=String(open);
+  byId("assistantDoneCount").textContent=String(done);
+ }
+ function addTask(title,due){
+  const clean=String(title||"").trim();
+  if(!clean)return;
+  tasks.push({id:(crypto.randomUUID?crypto.randomUUID():String(Date.now()+Math.random())),title:clean,due:due||"",done:false,created:Date.now(),notified:false});
+  write("tasks",tasks);render();
+ }
+ function checkReminders(){
+  if(!("Notification" in window)||Notification.permission!=="granted")return;
+  const now=Date.now();
+  tasks.forEach(task=>{
+   if(task.done||task.notified||!task.due)return;
+   const due=new Date(task.due).getTime();
+   if(!Number.isNaN(due)&&due<=now){
+    try{new Notification("TOZRA hatırlatıcı",{body:task.title,tag:"tozra-task-"+task.id});task.notified=true;write("tasks",tasks);}
+    catch(e){}
+   }
+  });
+ }
+ function init(){
+  const now=new Date();
+  byId("assistantToday").textContent=now.toLocaleDateString("tr-TR",{weekday:"long",day:"numeric",month:"long"});
+  const hour=now.getHours();
+  byId("assistantGreeting").textContent=hour<12?"Günaydın. Bugün neyi hallediyoruz?":hour<18?"İyi günler. Planlarını birlikte düzenleyelim.":"İyi akşamlar. Gününü toparlayalım.";
+  tasks=read("tasks",[]);
+  if(!Array.isArray(tasks))tasks=[];
+  byId("assistantNotes").value=read("notes","");
+  render();
+  byId("assistantTaskForm").addEventListener("submit",async e=>{
+   e.preventDefault();
+   const title=byId("assistantTaskInput").value;
+   const due=byId("assistantTaskDue").value;
+   if(due&&"Notification" in window&&Notification.permission==="default"){
+    try{await Notification.requestPermission();}catch(err){}
+   }
+   addTask(title,due);
+   byId("assistantTaskInput").value="";
+   byId("assistantTaskDue").value="";
+  });
+  byId("assistantNotes").addEventListener("input",()=>write("notes",byId("assistantNotes").value));
+  byId("assistantAskForm").addEventListener("submit",e=>{
+   e.preventDefault();
+   const value=byId("assistantAskInput").value.trim();
+   if(!value)return;
+   byId("assistantAskInput").value="";
+   if(typeof window.startChatWithPrompt==="function")window.startChatWithPrompt(value);
+  });
+  document.querySelectorAll("[data-assistant-prompt]").forEach(button=>{
+   button.addEventListener("click",()=>{
+    const prompt=button.getAttribute("data-assistant-prompt");
+    if(typeof window.startChatWithPrompt==="function")window.startChatWithPrompt(prompt);
+   });
+  });
+  setInterval(checkReminders,30000);
+  checkReminders();
+ }
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});
+ else init();
+})();
 
 /* SERVICE WORKER */
 if("serviceWorker" in navigator){
