@@ -1446,6 +1446,22 @@ body{background:var(--cc-paper)!important;color:var(--cc-ink)!important}
  .page{padding-bottom:105px!important}
 }
 </style>
+<style id="tozra-memory-page-style">
+/* DEDICATED SMART MEMORY PAGE */
+.memory-page{max-width:980px;margin:0 auto;padding:12px 4px 36px}
+.memory-page-header{padding:24px 4px 18px}
+.memory-page-header .eyebrow{color:#82945f;font-size:10px;letter-spacing:.16em;font-weight:800}
+.memory-page-header h1{margin:8px 0 7px;color:#263629;font-family:Georgia,serif;font-size:clamp(30px,4vw,42px);font-weight:500;letter-spacing:-.04em}
+.memory-page-header p{margin:0;color:#778378;font-size:13px;line-height:1.65;max-width:650px}
+.memory-page .ph-memory{display:block!important;margin:0!important;max-width:100%}
+.memory-page .ph-section{display:flex!important;align-items:center;justify-content:space-between;margin:0 0 12px!important}
+.memory-page .ph-section h2{font-size:15px!important;color:#2b392e!important}
+.memory-page .ph-card{background:#fff!important;border:1px solid #e5ebe3!important;border-radius:16px!important;padding:18px!important;box-shadow:0 7px 24px rgba(31,52,34,.04)!important}
+.memory-page .ph-memory-form{grid-template-columns:minmax(0,1fr) 140px auto}
+.memory-page .ph-memory-form input,.memory-page .ph-memory-form select{min-width:0}
+.memory-page-foot{margin-top:15px;color:#98a197;font-size:10px}
+@media(max-width:600px){.memory-page{padding:4px 0 30px}.memory-page-header{padding:15px 2px}.memory-page .ph-memory-form{grid-template-columns:1fr 110px}.memory-page .ph-memory-form input{grid-column:1/-1}.memory-page .ph-memory-form button{grid-column:1/-1}}
+</style>
 </head>
 
 <body>
@@ -1465,6 +1481,7 @@ body{background:var(--cc-paper)!important;color:var(--cc-ink)!important}
  <button class="nav-item active" id="navWorkspace"><span class="nav-symbol">⌂</span> Çalışma alanı</button>
  <button class="nav-item" id="navChat"><span class="nav-symbol">▤</span> Sohbet (AI)</button>
  <button class="nav-item" id="navProjects"><span class="nav-symbol">▣</span> Projelerim</button>
+ <button class="nav-item" id="navMemory"><span class="nav-symbol">✧</span> Akıllı Hafıza</button>
  <div class="nav-label studio-label">CREATIVE STUDIO</div>
  <button class="nav-item" id="navCreativeStudio"><span class="nav-symbol">✳</span> Creative Studio</button>
  <div class="studio-links">
@@ -1526,18 +1543,7 @@ body{background:var(--cc-paper)!important;color:var(--cc-ink)!important}
  <section class="ph-tasks"><div class="ph-section"><h2>Görevlerin</h2><small>GÜNLÜK ODAK</small></div><div class="ph-card"><form class="ph-add" id="phTaskForm"><input class="ph-input" id="phTaskInput" maxlength="160" placeholder="Yeni bir görev ekle…" autocomplete="off"><button aria-label="Görev ekle" type="submit">＋</button></form><div class="ph-tasklist" id="phTaskList"><div class="ph-empty">Henüz görev yok. İlk görevini ekleyerek başla.</div></div></div></section>
  <section class="ph-notes"><div class="ph-section"><h2>Hızlı notların</h2><small>AKLINDA KALSIN</small></div><div class="ph-card"><textarea class="ph-textarea" id="phNotes" placeholder="Fikirlerini buraya yaz…"></textarea><div class="ph-save" id="phNotesStatus">Notların bu tarayıcıda otomatik saklanır.</div></div></section>
  <section class="ph-week"><div class="ph-section"><h2>Haftalık program</h2><small>PLANINI OLUŞTUR</small></div><div class="ph-card"><div class="ph-days" id="phDays"></div><p class="ph-plan-day" id="phPlanDay">Pazartesi</p><textarea class="ph-textarea ph-plan" id="phPlan" placeholder="Bugün için planını yaz…"></textarea><div class="ph-save" id="phPlanStatus">Haftalık planın bu tarayıcıda otomatik saklanır.</div></div></section>
- <section class="ph-memory" aria-label="TOZRA akıllı hafıza">
- <div class="ph-section"><h2>TOZRA hafızası</h2><small>ÖNEMLİ BİLGİLERİN</small></div>
- <div class="ph-card ph-memory-card">
-  <p class="ph-memory-desc">TOZRA'nın sonraki sohbetlerinde kullanmasını istediğin tercihleri, hedefleri ve proje bilgilerini kaydet.</p>
-  <form id="phMemoryForm" class="ph-memory-form">
-   <input id="phMemoryInput" class="ph-input" maxlength="1500" placeholder="Örn. Tasarımlarda sade ve premium görünümü tercih ediyorum..." autocomplete="off">
-   <select id="phMemoryCategory" aria-label="Hafıza kategorisi"><option value="Tercih">Tercih</option><option value="Hedef">Hedef</option><option value="Proje">Proje</option><option value="Genel">Genel</option></select>
-   <button type="submit" aria-label="Hafızaya ekle">＋ Kaydet</button>
-  </form>
-  <div class="ph-memory-list" id="phMemoryList"><div class="ph-empty">Henüz kaydedilmiş bilgi yok.</div></div>
-  <div class="ph-save" id="phMemoryStatus">Hafıza yükleniyor… Şifre veya API anahtarı kaydetme.</div>
- </div>
+
 </section>
 <div class="ph-bottom">TOZRA · Fikirlerini harekete geçir.</div>
 </section>
@@ -1596,6 +1602,28 @@ body{background:var(--cc-paper)!important;color:var(--cc-ink)!important}
  </div>
 </section>
  <div class="workspace-footer"><span>TOZRA CREATIVE WORKSPACE</span><span>Fikirden üretime.</span></div>
+</div>
+
+<div class="page memory-page" id="memoryPage">
+ <div class="memory-page-header">
+  <div class="eyebrow">TOZRA / PERSONAL INTELLIGENCE</div>
+  <h1>Akıllı Hafıza</h1>
+  <p>TOZRA'nın sonraki sohbetlerinde kullanmasını istediğin tercihleri, hedefleri ve proje bilgilerini burada yönet.</p>
+ </div>
+ <section class="ph-memory" aria-label="TOZRA akıllı hafıza">
+ <div class="ph-section"><h2>TOZRA hafızası</h2><small>ÖNEMLİ BİLGİLERİN</small></div>
+ <div class="ph-card ph-memory-card">
+  <p class="ph-memory-desc">TOZRA'nın sonraki sohbetlerinde kullanmasını istediğin tercihleri, hedefleri ve proje bilgilerini kaydet.</p>
+  <form id="phMemoryForm" class="ph-memory-form">
+   <input id="phMemoryInput" class="ph-input" maxlength="1500" placeholder="Örn. Tasarımlarda sade ve premium görünümü tercih ediyorum..." autocomplete="off">
+   <select id="phMemoryCategory" aria-label="Hafıza kategorisi"><option value="Tercih">Tercih</option><option value="Hedef">Hedef</option><option value="Proje">Proje</option><option value="Genel">Genel</option></select>
+   <button type="submit" aria-label="Hafızaya ekle">＋ Kaydet</button>
+  </form>
+  <div class="ph-memory-list" id="phMemoryList"><div class="ph-empty">Henüz kaydedilmiş bilgi yok.</div></div>
+  <div class="ph-save">Hafıza bu tarayıcıda, hesabına özel olarak saklanır. Şifre veya API anahtarı kaydetme.</div>
+ </div>
+ </section>
+ <div class="memory-page-foot">Hafıza kayıtlarını buradan ekleyebilir, görüntüleyebilir ve silebilirsin.</div>
 </div>
 
 <div class="page" id="projectPage">
@@ -1890,9 +1918,6 @@ const TozraAuth = (() => {
    client.auth.onAuthStateChange((event, nextSession) => {
     session = nextSession || null;
     updateAccountUI();
-    if (event === "SIGNED_IN" || event === "SIGNED_OUT") {
-     window.TozraMemory?.reload?.().catch(error => console.warn("Hafıza hesap değişimi:", error));
-    }
     if(event === "PASSWORD_RECOVERY") showModal("updatePassword");
    });
   } catch (error) {
@@ -2053,10 +2078,12 @@ function showPage(page){
  $("navWorkspace").classList.toggle("active",page==="workspace");
  $("navChat").classList.toggle("active",page==="chat");
  $("navCreativeStudio").classList.toggle("active",page==="creativeStudio");
+ $("navMemory").classList.toggle("active",page==="memory");
  $("topbarTitle").textContent=
   page==="workspace"?"CREATIVE WORKSPACE":
   page==="project"?"PROJECT WORKSPACE":
-  page==="creativeStudio"?"CREATIVE STUDIO":"CREATIVE INTELLIGENCE";
+  page==="creativeStudio"?"CREATIVE STUDIO":
+  page==="memory"?"AKILLI HAFIZA":"CREATIVE INTELLIGENCE";
  toggleMenu(true);
  window.scrollTo({top:0,behavior:"smooth"});
 }
@@ -2064,6 +2091,7 @@ $("navWorkspace").onclick=()=>showPage("workspace");
 $("navProjects").onclick=()=>showPage("workspace");
 $("navChat").onclick=()=>openGeneralChat();
 $("navCreativeStudio").onclick=()=>showPage("creativeStudio");
+$("navMemory").onclick=()=>{showPage("memory");if(window.TozraMemoryUI&&typeof window.TozraMemoryUI.render==="function")window.TozraMemoryUI.render();};
 $("heroChat").onclick=()=>openGeneralChat();
 $("quickIdea").onclick=()=>startChatWithPrompt("Bir fikrim var. Önce fikrimi netleştirmeme yardım et, ardından uygulanabilir bir yol haritası oluştur.");
 $("quickContent").onclick=()=>startChatWithPrompt("Bir içerik üretmek istiyorum. Bana hedef kitle, format ve içerik fikrini netleştirmemde yardımcı ol.");
@@ -2962,11 +2990,9 @@ async function sendToAI({text,list,area,history,onSuccess,onFailure,agentMode=fa
     history:history,
     images:media.images,
     videoFrames:media.videoFrames,
-    personalMemory:window.TozraMemory && typeof window.TozraMemory.getRelevant==="function"
-     ? window.TozraMemory.getRelevant(text, 12).map(item=>({content:item.content,category:item.category}))
-     : (window.TozraMemory && typeof window.TozraMemory.getAll==="function"
-       ? window.TozraMemory.getAll().slice(-12).map(item=>({content:item.content,category:item.category}))
-       : []),
+    personalMemory:window.TozraMemory && typeof window.TozraMemory.getAll==="function"
+     ? window.TozraMemory.getAll().slice(-30).map(item=>({content:item.content,category:item.category}))
+     : [],
     agentMode:Boolean(agentMode)
    })
   });
@@ -3384,7 +3410,6 @@ async function refreshAccountData(){
 }
 window.addEventListener("load", async ()=>{
  await TozraAuth.init();
- if (window.TozraMemory?.init) await window.TozraMemory.init();
  await refreshAccountData();
  if(!TozraAuth.getSession()) showModal("login");
 });
@@ -3396,7 +3421,7 @@ if("serviceWorker" in navigator){
  });
 }
 </script>
-<script src="/memory.js?v=3"></script>
+<script src="/memory.js?v=2"></script>
 <script src="/voice.js?v=8"></script>
 <script>
 (function(){
@@ -3545,44 +3570,28 @@ if("serviceWorker" in navigator){
 /* TOZRA SMART MEMORY UI */
 (function(){
  const $=id=>document.getElementById(id);
- const form=$("phMemoryForm"), input=$("phMemoryInput"), category=$("phMemoryCategory"), list=$("phMemoryList"), status=$("phMemoryStatus");
+ const form=$("phMemoryForm"), input=$("phMemoryInput"), category=$("phMemoryCategory"), list=$("phMemoryList");
  if(!form||!input||!list)return;
  function render(){
   const api=window.TozraMemory, items=api&&api.getAll?api.getAll():[];
   list.replaceChildren();
-  if(!items.length){
-   const empty=document.createElement("div");empty.className="ph-empty";
-   empty.textContent="Henüz kaydedilmiş bilgi yok.";list.appendChild(empty);
-  } else {
-   items.slice().reverse().forEach(item=>{
-    const row=document.createElement("div");row.className="ph-memory-item";
-    const body=document.createElement("div");body.className="ph-memory-body";
-    const tag=document.createElement("span");tag.className="ph-memory-tag";tag.textContent=item.category||"Genel";
-    const content=document.createElement("p");content.textContent=item.content;body.append(tag,content);
-    const actions=document.createElement("div");actions.style.display="flex";actions.style.gap="6px";
-    const edit=document.createElement("button");edit.type="button";edit.className="ph-memory-remove";edit.textContent="Düzenle";
-    edit.addEventListener("click",()=>{
-     const next=window.prompt("Hafıza bilgisini düzenle:",item.content);
-     if(next===null)return;
-     try{api.update(item.id,next);render();}catch(error){alert(error.message||"Hafıza güncellenemedi.");}
-    });
-    const remove=document.createElement("button");remove.type="button";remove.className="ph-memory-remove";remove.textContent="Sil";
-    remove.addEventListener("click",()=>{if(api.remove(item.id))render();});
-    actions.append(edit,remove);row.append(body,actions);list.appendChild(row);
-   });
-  }
-  if(status&&api?.getStatus)status.textContent=api.getStatus().message;
+  if(!items.length){const empty=document.createElement("div");empty.className="ph-empty";empty.textContent="Henüz kaydedilmiş bilgi yok.";list.appendChild(empty);return;}
+  items.slice().reverse().forEach(item=>{
+   const row=document.createElement("div");row.className="ph-memory-item";
+   const body=document.createElement("div");body.className="ph-memory-body";
+   const tag=document.createElement("span");tag.className="ph-memory-tag";tag.textContent=item.category||"Genel";
+   const content=document.createElement("p");content.textContent=item.content;body.append(tag,content);
+   const remove=document.createElement("button");remove.type="button";remove.className="ph-memory-remove";remove.textContent="Sil";
+   remove.addEventListener("click",()=>{if(api.remove(item.id))render();});
+   row.append(body,remove);list.appendChild(row);
+  });
  }
  form.addEventListener("submit",event=>{
   event.preventDefault();const value=input.value.trim();if(!value)return;
-  try{
-   if(!window.TozraMemory)throw new Error("Hafıza sistemi yüklenemedi.");
-   const result=window.TozraMemory.add(value,category.value);
-   if(result.duplicate){alert("Bu bilgi zaten hafızada kayıtlı.");}
-   input.value="";render();
-  } catch(error){alert(error.message||"Hafızaya kaydedilemedi.");}
+  try{if(!window.TozraMemory)throw new Error("Hafıza sistemi yüklenemedi.");window.TozraMemory.add(value,category.value);input.value="";render();}
+  catch(error){alert(error.message||"Hafızaya kaydedilemedi.");}
  });
- window.addEventListener("tozra:memory-updated",render);
+ window.TozraMemoryUI={render};
  render();
 })();
 </script>
@@ -3632,7 +3641,7 @@ if("serviceWorker" in navigator){
  function syncDockToPage(){
   const active=document.querySelector(".page.active");
   if(!active)return;
-  const map={workspacePage:"home",chatPage:"chat",projectPage:"projects",creativeStudioPage:"studio"};
+  const map={workspacePage:"home",chatPage:"chat",projectPage:"projects",creativeStudioPage:"studio",memoryPage:"home"};
   const tab=map[active.id];
   if(tab)setDockTab(tab);
  }
