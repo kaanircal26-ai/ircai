@@ -149,6 +149,13 @@ button:disabled{opacity:.45;cursor:not-allowed}
 .typing-dots span:nth-child(2){animation-delay:.16s}
 .typing-dots span:nth-child(3){animation-delay:.32s}
 .composer-wrap{position:sticky;bottom:0;padding:15px 0 max(10px,env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--bg) 20%);z-index:5}
+/* AI AGENT MODE */
+.agent-mode-toggle{display:inline-flex;align-items:center;gap:8px;margin:2px 0 8px;padding:8px 11px;border:1px solid #304333;border-radius:10px;background:#101a12;color:#b8c9bb;font-size:12px;font-weight:700;cursor:pointer;transition:.2s}
+.agent-mode-toggle .agent-mode-icon{color:#7af29a;font-size:15px}
+.agent-mode-toggle small{font-size:10px;font-weight:500;color:#7e8d81;margin-left:2px}
+.agent-mode-toggle:hover{border-color:#62e887;color:#e9fff0}
+.agent-mode-toggle.active{background:linear-gradient(135deg,#153b22,#102719);border-color:#56dc7b;color:#8df6a8;box-shadow:0 0 0 2px #56dc7b16}
+.agent-mode-hint{font-size:11px;color:#8fcea0;padding:0 3px 8px}
 .composer{background:linear-gradient(145deg,#0e1710,#0a100c);border:1px solid #26382a;border-radius:18px;padding:10px 11px;box-shadow:0 5px 25px #0004;transition:.25s}
 .composer:focus-within{border-color:#3b9b53;box-shadow:0 0 0 3px #42e4770e,0 8px 30px #0005}
 .composer textarea{width:100%;resize:none;border:0;outline:none;min-height:38px;max-height:150px;padding:8px 4px;background:transparent;color:var(--text);font-size:14px}
@@ -1009,6 +1016,10 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
  <div class="messages" id="messages"></div>
  <div class="composer-wrap">
   <div class="composer">
+   <button class="agent-mode-toggle" id="agentModeToggle" type="button" aria-pressed="false">
+    <span class="agent-mode-icon">✦</span><span>AI Agent</span><small>Görev modu</small>
+   </button>
+   <div class="agent-mode-hint" id="agentModeHint" hidden>Agent modu açık · TOZRA hedefini planlayıp adımları uygulayacak.</div>
    <div class="attachments" id="attachments"></div>
    <textarea id="prompt" rows="1" placeholder="TOZRA'ya bir şey sor..."></textarea>
    <div class="composer-bottom">
@@ -1254,6 +1265,19 @@ window.tozraStorageKey = scopedStorageKey;
 const promptInput=$("prompt");
 let conversation=[],conversations=[],projects=[],currentProjectId=null;
 let busy=false,attachments=[],projectAttachments=[];
+let agentModeEnabled=false;
+const agentModeToggle=$("agentModeToggle");
+if(agentModeToggle){
+ agentModeToggle.onclick=()=>{
+  agentModeEnabled=!agentModeEnabled;
+  agentModeToggle.classList.toggle("active",agentModeEnabled);
+  agentModeToggle.setAttribute("aria-pressed",String(agentModeEnabled));
+  $("agentModeHint").hidden=!agentModeEnabled;
+  $("prompt").placeholder=agentModeEnabled
+   ?"AI Agent'e hedefini ver. Örn. Bir araştırma planla ve rapor hazırla..."
+   :"TOZRA'ya bir şey sor...";
+ };
+}
 
 const categories={
  "Fikir geliştirme":"✳",
@@ -2037,7 +2061,7 @@ function createTyping(area){
  return el;
 }
 
-async function sendToAI({text,list,area,history,onSuccess,onFailure}){
+async function sendToAI({text,list,area,history,onSuccess,onFailure,agentMode=false}){
  if(busy)return;
  if(!text.trim()&&!list.length)return;
  if(!text.trim()&&list.length){
@@ -2059,7 +2083,8 @@ async function sendToAI({text,list,area,history,onSuccess,onFailure}){
     prompt:text+media.timelineText,
     history:history,
     images:media.images,
-    videoFrames:media.videoFrames
+    videoFrames:media.videoFrames,
+    agentMode:Boolean(agentMode)
    })
   });
 
@@ -2106,6 +2131,7 @@ async function sendGeneralMessage(value){
   list:attachments,
   area:$("messages"),
   history:conversation.slice(0,-1),
+  agentMode:agentModeEnabled,
   onSuccess:answer=>{
    conversation.push({role:"assistant",content:answer});
    addMessage($("messages"),"assistant",answer);
