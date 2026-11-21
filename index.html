@@ -779,6 +779,26 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
   -webkit-text-fill-color: #173321 !important;
 }
 
+
+/* TOZRA login experience refresh — visual only; auth handlers remain unchanged */
+#modalOverlay .modal.auth-screen{background:#f6f5ef;color:#1d3026;border:1px solid rgba(42,67,52,.12);width:min(100%,500px);max-height:min(90vh,820px);padding:clamp(22px,5vw,38px);border-radius:28px;box-shadow:0 28px 90px rgba(7,20,12,.28)}
+.auth-screen .modal-head{margin-bottom:8px;align-items:center}
+.auth-screen .modal-head h2{font-size:0;line-height:0}
+.auth-screen .close{background:#e9ede4;color:#294233;border:1px solid #d9e0d5;width:38px;height:38px;border-radius:50%;font-size:15px}
+.auth-intro{padding:4px 2px 18px}
+.auth-mark{width:48px;height:48px;display:grid;place-items:center;border-radius:15px;background:#203d2d;color:#d1e2a7;font-family:Georgia,serif;font-size:27px;font-weight:700;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);margin-bottom:19px}
+.auth-kicker{font-size:9px;letter-spacing:2.2px;font-weight:800;color:#73836f;margin-bottom:12px}
+.auth-intro h3{font-family:Georgia,'Times New Roman',serif;font-size:clamp(30px,7vw,40px);line-height:1.08;letter-spacing:-1.3px;color:#203b2c;margin:0 0 10px}
+.auth-intro p{font-size:13px;line-height:1.65;color:#758176;margin:0;max-width:340px}
+.auth-screen .form-label{font-size:11px;font-weight:700;letter-spacing:.2px;color:#435849;margin:13px 0 6px}
+.auth-screen .modal-input{background:#fff;color:#21372b;border:1px solid #dce3d8;border-radius:13px;padding:15px 14px;margin:0 0 4px;min-height:49px;box-shadow:0 2px 8px rgba(28,53,36,.025)}
+.auth-screen .modal-input::placeholder{color:#a1aaa0}
+.auth-screen .modal-input:focus{border-color:#8da96c;box-shadow:0 0 0 3px rgba(166,195,126,.18)}
+.auth-screen .primary{background:#c5d99d;color:#203a2b;border-radius:14px;min-height:52px;font-size:14px;font-weight:800;margin-top:18px;box-shadow:0 7px 18px rgba(95,124,64,.13)}
+.auth-screen .secondary{background:transparent;color:#3f5848;border:1px solid #dce3d8;border-radius:13px;min-height:46px;font-size:12px;font-weight:650}
+.auth-screen .notice{background:#edf1e8;border:1px solid #dfe6d8;color:#627362;border-radius:12px;font-size:11px}
+@media(max-width:700px){#modalOverlay .modal.auth-screen{width:calc(100% - 24px);max-width:460px;max-height:calc(100dvh - 30px);padding:24px 22px;border-radius:25px}.auth-intro{padding-bottom:14px}.auth-mark{width:44px;height:44px;margin-bottom:16px}}
+
 </style>
 <style id="tozra-personal-home">
 :root{--personal-ink:#17221b;--personal-muted:#718076;--personal-line:#e5ece6;--personal-green:#16864b;--personal-green2:#dff5e7;--personal-card:#ffffff}
@@ -3080,6 +3100,8 @@ document.querySelectorAll(".tool-card").forEach(card=>{
 function showModal(type){
  const title=$("modalTitle");
  const content=$("modalContent");
+ const modal=document.querySelector("#modalOverlay .modal");
+ if(modal) modal.classList.toggle("auth-screen", type==="login");
 
  if(type==="plans"){
   title.textContent="TOZRA üyelik planları";
@@ -3095,7 +3117,12 @@ function showModal(type){
  if(type==="login"){
   title.textContent="TOZRA hesabına giriş";
   content.innerHTML=`
-   <p>Çalışma alanına güvenli şekilde devam et.</p>
+   <div class="auth-intro">
+    <div class="auth-mark" aria-hidden="true">T</div>
+    <div class="auth-kicker">TOZRA / CREATIVE INTELLIGENCE</div>
+    <h3>Yeniden hoş geldin.</h3>
+    <p>Fikirlerine kaldığın yerden devam et. Çalışma alanın seni bekliyor.</p>
+   </div>
    <form id="loginForm">
     <label class="form-label" for="loginEmail">E-posta adresi</label>
     <input class="modal-input" id="loginEmail" type="email" placeholder="ornek@eposta.com" autocomplete="email" required>
@@ -3563,8 +3590,7 @@ if("serviceWorker" in navigator){
   setDockTab(tab);
   if(tab==="home")$id("navWorkspace")?.click();
   if(tab==="chat"){
-   // Use the app's existing, already-wired chat entry point.
-   // This opens the real AI chat view and renders its messages.
+   // Open the existing AI chat entry point, preserving the app's chat logic.
    const chatEntry=$id("heroChat");
    if(chatEntry){
     chatEntry.click();
