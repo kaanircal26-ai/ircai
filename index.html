@@ -2073,8 +2073,10 @@ $("menuBackdrop").onclick=()=>toggleMenu(true);
 
 /* SAYFA GEÇİŞLERİ */
 function showPage(page){
+ const target=$(page+"Page");
+ if(!target){console.error("TOZRA: Sayfa bulunamadı:",page);return;}
  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
- $(page+"Page").classList.add("active");
+ target.classList.add("active");
  $("navWorkspace").classList.toggle("active",page==="workspace");
  $("navChat").classList.toggle("active",page==="chat");
  $("navCreativeStudio").classList.toggle("active",page==="creativeStudio");
@@ -2091,7 +2093,21 @@ $("navWorkspace").onclick=()=>showPage("workspace");
 $("navProjects").onclick=()=>showPage("workspace");
 $("navChat").onclick=()=>openGeneralChat();
 $("navCreativeStudio").onclick=()=>showPage("creativeStudio");
-$("navMemory").onclick=()=>{showPage("memory");if(window.TozraMemoryUI&&typeof window.TozraMemoryUI.render==="function")window.TozraMemoryUI.render();};
+$("navMemory").addEventListener("click",(event)=>{
+ event.preventDefault();
+ // Use a direct, defensive page switch so the memory screen still opens
+ // even if another navigation helper is unavailable or fails.
+ const target=document.getElementById("memoryPage");
+ if(!target){console.error("TOZRA: memoryPage bölümü bulunamadı.");return;}
+ document.querySelectorAll(".page").forEach(page=>page.classList.remove("active"));
+ target.classList.add("active");
+ ["navWorkspace","navChat","navCreativeStudio"].forEach(id=>document.getElementById(id)?.classList.remove("active"));
+ document.getElementById("navMemory")?.classList.add("active");
+ const title=document.getElementById("topbarTitle");if(title)title.textContent="AKILLI HAFIZA";
+ if(typeof toggleMenu==="function")toggleMenu(true);
+ window.scrollTo({top:0,behavior:"auto"});
+ if(window.TozraMemoryUI&&typeof window.TozraMemoryUI.render==="function")window.TozraMemoryUI.render();
+});
 $("heroChat").onclick=()=>openGeneralChat();
 $("quickIdea").onclick=()=>startChatWithPrompt("Bir fikrim var. Önce fikrimi netleştirmeme yardım et, ardından uygulanabilir bir yol haritası oluştur.");
 $("quickContent").onclick=()=>startChatWithPrompt("Bir içerik üretmek istiyorum. Bana hedef kitle, format ve içerik fikrini netleştirmemde yardımcı ol.");
