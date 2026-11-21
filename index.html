@@ -916,6 +916,18 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
  #workspacePage .bubble-large{min-height:70px!important}
  #workspacePage .bubble-chat-composer{margin-top:14px!important}
 }
+
+/* DESKTOP + MOBILE WORKSPACE WIDTH FIX */
+.content:has(#workspacePage){max-width:none!important;width:100%!important;margin:0!important;padding:0!important}
+#workspacePage.page.active{display:block!important;width:100%!important;max-width:none!important;min-width:0!important;margin:0!important;padding:0!important;box-sizing:border-box!important}
+#workspacePage > .tozra-bubble-home{width:100%!important;max-width:none!important;min-width:0!important;box-sizing:border-box!important}
+@media(min-width:761px){
+ .content:has(#workspacePage){padding:0!important}
+ #workspacePage > .tozra-bubble-home{min-height:calc(100vh - 76px)!important;padding:38px clamp(32px,5vw,84px)!important;justify-content:center!important}
+ #workspacePage .bubble-cloud{width:100%!important}
+ #workspacePage .bubble-large{flex:1 1 0!important;max-width:none!important}
+ #workspacePage .bubble-cloud-studio .tozra-bubble{flex:1 1 0!important;min-width:0!important}
+}
 </style>
 <style id="tozra-personal-home">
 :root{--personal-ink:#17221b;--personal-muted:#718076;--personal-line:#e5ece6;--personal-green:#16864b;--personal-green2:#dff5e7;--personal-card:#ffffff}
@@ -2318,6 +2330,8 @@ const TozraAuth = (() => {
  }
  return { init, userId, getClient, getSession, getError, signUp, signIn, resetPassword, resendConfirmation, updatePassword, signOut, authHeaders, updateAccountUI };
 })();
+const tozraAuthReady = TozraAuth.init();
+
 
 function scopedStorageKey(key) {
  const id = TozraAuth.userId();
@@ -2421,12 +2435,18 @@ $("navCreativeStudio").onclick=()=>showPage("creativeStudio");
 $("heroChat").onclick=()=>openGeneralChat();
 const homeAiPrompt=$("homeAiPrompt");
 const homeAiSend=$("homeAiSend");
-function sendHomeAiPrompt(){
+async function sendHomeAiPrompt(){
  const value=homeAiPrompt?.value.trim();
  if(!value){homeAiPrompt?.focus();return;}
+ await tozraAuthReady;
+ if(!TozraAuth.getSession()){
+  showModal("login");
+  return;
+ }
  homeAiPrompt.value="";
  openGeneralChat();
- if(typeof sendGeneralMessage==="function") sendGeneralMessage(value);
+ promptInput.value=value;
+ await sendGeneralMessage();
 }
 homeAiSend?.addEventListener("click",sendHomeAiPrompt);
 homeAiPrompt?.addEventListener("keydown",event=>{
@@ -3328,6 +3348,16 @@ function createTyping(area){
 
 async function sendToAI({text,list,area,history,onSuccess,onFailure,agentMode=false}){
  if(busy)return;
+ try{
+  await tozraAuthReady;
+  if(!TozraAuth.getSession()){
+   showModal("login");
+   throw new Error("TOZRA ile konuşmak için önce giriş yapmalısın. Giriş yaptıktan sonra mesajını yeniden gönder.");
+  }
+ }catch(authError){
+  if(typeof onFailure==="function") onFailure(authError.message||"Hesap doğrulanamadı.");
+  return;
+ }
  if(!text.trim()&&!list.length)return;
  if(!text.trim()&&list.length){
   alert("Dosyanı analiz edebilmem için ne yapmamı istediğini de yaz.");
