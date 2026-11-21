@@ -2045,17 +2045,21 @@ $("menuBackdrop").onclick=()=>toggleMenu(true);
 
 /* SAYFA GEÇİŞLERİ */
 function showPage(page){
+ const target=$(page+"Page");
+ if(!target){console.error("TOZRA: Sayfa bulunamadı:",page+"Page");return false;}
  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
- $(page+"Page").classList.add("active");
- $("navWorkspace").classList.toggle("active",page==="workspace");
- $("navChat").classList.toggle("active",page==="chat");
- $("navCreativeStudio").classList.toggle("active",page==="creativeStudio");
- $("topbarTitle").textContent=
+ target.classList.add("active");
+ $("navWorkspace")?.classList.toggle("active",page==="workspace");
+ $("navChat")?.classList.toggle("active",page==="chat");
+ $("navCreativeStudio")?.classList.toggle("active",page==="creativeStudio");
+ const title=$("topbarTitle");
+ if(title) title.textContent=
   page==="workspace"?"CREATIVE WORKSPACE":
   page==="project"?"PROJECT WORKSPACE":
   page==="creativeStudio"?"CREATIVE STUDIO":"CREATIVE INTELLIGENCE";
  toggleMenu(true);
  window.scrollTo({top:0,behavior:"smooth"});
+ return true;
 }
 $("navWorkspace").onclick=()=>showPage("workspace");
 $("navProjects").onclick=()=>showPage("workspace");
@@ -2069,8 +2073,14 @@ $("chatBack").onclick=()=>showPage("workspace");
 $("backWorkspace").onclick=()=>showPage("workspace");
 
 function openGeneralChat(){
- showPage("chat");
- renderGeneralMessages();
+ const opened=showPage("chat");
+ if(!opened)return false;
+ try{
+  if(typeof renderGeneralMessages==="function")renderGeneralMessages();
+ }catch(error){
+  console.error("TOZRA sohbet geçmişi yüklenemedi:",error);
+ }
+ return true;
 }
 window.openGeneralChat = openGeneralChat;
 window.showPage = showPage;
@@ -3592,14 +3602,22 @@ if("serviceWorker" in navigator){
   setDockTab(tab);
   if(tab==="home")$id("navWorkspace")?.click();
   if(tab==="chat"){
-   // Switch directly to the existing AI chat page; do not simulate a click
-   // on the home-page CTA and do not clear the current conversation.
-   if(typeof window.openGeneralChat === "function"){
-    window.openGeneralChat();
-   }else if(typeof window.showPage === "function"){
+   // Mobil alt menü: mevcut yapay zekâ sohbet sayfasını doğrudan aç.
+   // Sohbet verisini temizleme veya yeni sohbet başlatma.
+   const chatPage=$id("chatPage");
+   if(typeof window.showPage==="function"){
     window.showPage("chat");
+   }else if(chatPage){
+    document.querySelectorAll(".page").forEach(page=>page.classList.remove("active"));
+    chatPage.classList.add("active");
+   }
+   if(chatPage && chatPage.classList.contains("active")){
+    try{
+     if(typeof window.renderGeneralMessages==="function")window.renderGeneralMessages();
+    }catch(error){console.error("TOZRA sohbet ekranı hazırlanamadı:",error);}
+    setDockTab("chat");
    }else{
-    console.error("TOZRA: Yapay zekâ sohbet ekranı açılamadı; sayfa geçiş fonksiyonu bulunamadı.");
+    console.error("TOZRA: chatPage bulunamadı veya etkinleştirilemedi.");
    }
   }
   if(tab==="projects"){$id("navProjects")?.click();window.setTimeout(scrollToProjects,180);}
