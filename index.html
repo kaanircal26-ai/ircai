@@ -799,6 +799,13 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
 .auth-screen .notice{background:#edf1e8;border:1px solid #dfe6d8;color:#627362;border-radius:12px;font-size:11px}
 @media(max-width:700px){#modalOverlay .modal.auth-screen{width:calc(100% - 24px);max-width:460px;max-height:calc(100dvh - 30px);padding:24px 22px;border-radius:25px}.auth-intro{padding-bottom:14px}.auth-mark{width:44px;height:44px;margin-bottom:16px}}
 
+
+/* TOZRA HOME — INTERACTIVE BUBBLE HUB */
+.tozra-bubble-home{grid-column:1/-1;position:relative;overflow:hidden;margin:10px 0 34px;padding:clamp(22px,3vw,38px);border:1px solid #e5e2d8;border-radius:28px;background:radial-gradient(circle at 92% 5%,#e6edc9 0,transparent 27%),linear-gradient(145deg,#fffefa,#f4f2eb 70%);box-shadow:0 18px 55px rgba(31,48,34,.07);color:#1c2b20}
+.bubble-home-head{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:28px}.bubble-kicker{font-size:10px;letter-spacing:.19em;font-weight:800;color:#71816a}.bubble-home-head h1{font-size:clamp(27px,3vw,42px);letter-spacing:-.045em;line-height:1.08;margin:10px 0 8px;color:#17271d}.bubble-home-head p{margin:0;color:#758074;font-size:14px}.bubble-orbit{width:72px;height:72px;display:grid;place-items:center;border-radius:25px 50% 50% 50%;transform:rotate(-10deg);background:linear-gradient(145deg,#dfe9b6,#b9cf82);color:#29402b;font-size:31px;font-weight:850;box-shadow:inset 0 1px 0 #fff9,0 12px 28px #82945b24}
+.bubble-group-label{margin:23px 0 12px;color:#899184;font-size:10px;letter-spacing:.18em;font-weight:850}.bubble-cloud{display:flex;align-items:stretch;flex-wrap:wrap;gap:12px}.tozra-bubble{min-height:82px;display:flex;align-items:center;gap:13px;padding:15px 19px;border:1px solid #e6e5d9;border-radius:22px;background:#fffefa;color:#26362a;text-align:left;box-shadow:0 7px 20px rgba(35,52,38,.045);transition:transform .18s,border-color .18s,box-shadow .18s;cursor:pointer}.tozra-bubble:hover{transform:translateY(-3px);border-color:#b8ca8b;box-shadow:0 13px 28px rgba(35,52,38,.10)}.tozra-bubble strong,.tozra-ai-talk strong{display:block;font-size:14px;font-weight:780}.tozra-bubble small,.tozra-ai-talk small{display:block;margin-top:4px;color:#81897c;font-size:11px}.bubble-icon{width:43px;height:43px;display:grid;place-items:center;flex:0 0 43px;border-radius:15px;background:#eef1e4;color:#526c42;font-size:22px}.bubble-large{flex:1 1 210px;max-width:33.333%}.bubble-work{background:#edf2df;border-color:#dce6c3}.bubble-chat{background:#1b3023;color:#f8f7ed;border-color:#1b3023}.bubble-chat .bubble-icon{background:#dce9b3;color:#29402b}.bubble-chat small{color:#c2ceb8}.bubble-projects{background:#fffefa}.bubble-cloud-studio .tozra-bubble{flex:1 1 185px;min-width:175px}.bubble-studio-main{background:#e8edda;border-color:#dce5c9}.bubble-idea .bubble-icon{background:#f1edda;color:#8a7c36}.bubble-image .bubble-icon{background:#e6edf0;color:#4f7180}.bubble-video .bubble-icon{background:#eee8f2;color:#756087}.bubble-writing .bubble-icon{background:#f4e9e1;color:#956e52}
+.bubble-bottom-row{display:flex;align-items:stretch;gap:12px;margin-top:25px}.tozra-ai-talk{flex:1;display:flex;align-items:center;gap:14px;padding:17px 20px;border:1px solid #dbe4c9;border-radius:22px;background:linear-gradient(110deg,#e9efda,#f8f7ef);color:#243522;text-align:left;cursor:pointer}.ai-talk-mark{width:42px;height:42px;display:grid;place-items:center;border-radius:50%;background:#cbdc9b;color:#38512d;font-size:22px}.tozra-ai-talk small{color:#75806f}.tozra-ai-talk b{margin-left:auto;font-size:22px;color:#61764a}.bubble-new-project{padding:0 23px;border:0;border-radius:18px;background:#b9d28a;color:#25351f;font-weight:780;cursor:pointer}.bubble-new-project:hover{background:#c9dda2}.legacy-command-hidden{display:none!important}
+@media(max-width:760px){.tozra-bubble-home{margin:4px 0 25px;padding:20px 16px;border-radius:22px}.bubble-home-head{margin-bottom:18px}.bubble-orbit{width:52px;height:52px;border-radius:18px;font-size:23px}.bubble-home-head h1{font-size:27px}.bubble-home-head p{font-size:12px}.bubble-group-label{margin:19px 0 10px}.bubble-cloud{gap:9px}.bubble-large{max-width:none;flex:1 1 calc(50% - 6px);min-width:0;min-height:78px;padding:12px 10px;gap:9px}.bubble-large .bubble-icon{width:36px;height:36px;flex-basis:36px;border-radius:12px;font-size:19px}.tozra-bubble strong{font-size:12px}.tozra-bubble small{font-size:10px}.bubble-cloud-studio .tozra-bubble{min-width:calc(50% - 5px);flex:1 1 calc(50% - 5px);padding:11px 10px;gap:9px}.bubble-cloud-studio .bubble-icon{width:34px;height:34px;flex-basis:34px;border-radius:11px;font-size:18px}.bubble-bottom-row{flex-direction:column;margin-top:20px}.tozra-ai-talk{padding:14px}.bubble-new-project{min-height:48px}.bubble-orbit{display:none}}
 </style>
 <style id="tozra-personal-home">
 :root{--personal-ink:#17221b;--personal-muted:#718076;--personal-line:#e5ece6;--personal-green:#16864b;--personal-green2:#dff5e7;--personal-card:#ffffff}
@@ -1720,21 +1727,33 @@ body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 
 <section class="content">
 <div class="page active" id="workspacePage">
- <div class="workspace-hero hero-shell tozra-chat-first">
-  <div class="hero-greeting" id="dashboardGreeting">YARATICI ÇALIŞMA ALANIN</div>
-  <div class="eyebrow"><span class="eyebrow-dot"></span> TOZRA　/　CREATIVE CANVAS</div>
-  <h1>Fikrini keşfet.<br>Üretime dönüştür.</h1>
-  <p>Bir fikirle başla; TOZRA onu projeye, içeriğe ve gerçek bir üretim planına dönüştürsün.</p>
-  <form class="smart-command" id="smartCommandForm">
-   <input id="smartCommandInput" type="text" maxlength="2000" autocomplete="off" placeholder="TOZRA'ya bir şey sor veya bir hedef yaz..." aria-label="TOZRA ile sohbet et">
-   <button type="submit">Gönder ↗</button>
-  </form>
-  <div class="chat-first-hints"><span>✦ Fikir geliştir</span><span>▤ İçerik üret</span><span>⌕ Araştır</span></div>
-  <div class="hero-actions">
-   <button class="primary-btn" id="heroNewProject">＋ Yeni proje</button>
-   <button class="outline-btn" id="heroChat">Sohbeti aç　↗</button>
+ 
+ <section class="tozra-bubble-home" aria-label="TOZRA hızlı erişim alanı">
+  <div class="bubble-home-head">
+   <div><span class="bubble-kicker">TOZRA / CREATIVE WORKSPACE</span><h1>Bugün ne üretmek istersin?</h1><p>Bir alan seç, TOZRA ile üretmeye başla.</p></div>
+   <span class="bubble-orbit" aria-hidden="true">T</span>
   </div>
- </div>
+  <div class="bubble-group-label">ÇALIŞMA ALANIN</div>
+  <div class="bubble-cloud bubble-cloud-primary">
+   <button class="tozra-bubble bubble-large bubble-work" id="bubbleWorkspace" type="button" data-nav="workspace"><span class="bubble-icon">⌂</span><span><strong>Çalışma alanı</strong><small>Günlük merkezini aç</small></span></button>
+   <button class="tozra-bubble bubble-large bubble-chat" id="bubbleChat" type="button" data-nav="chat"><span class="bubble-icon">✳</span><span><strong>Sohbet (AI)</strong><small>Yapay zekâyla konuş</small></span></button>
+   <button class="tozra-bubble bubble-large bubble-projects" id="bubbleProjects" type="button" data-nav="projects"><span class="bubble-icon">▱</span><span><strong>Projelerim</strong><small>Çalışmalarına devam et</small></span></button>
+  </div>
+  <div class="bubble-group-label">CREATIVE STUDIO</div>
+  <div class="bubble-cloud bubble-cloud-studio">
+   <button class="tozra-bubble bubble-studio-main" id="bubbleCreativeStudio" type="button" data-nav="studio"><span class="bubble-icon">✧</span><span><strong>Creative Studio</strong><small>Yaratıcı üretim alanı</small></span></button>
+   <button class="tozra-bubble bubble-idea" type="button" data-mode="idea"><span class="bubble-icon">✦</span><span><strong>Fikir geliştirme</strong><small>Fikrini projeye dönüştür</small></span></button>
+   <button class="tozra-bubble bubble-image" type="button" data-mode="image"><span class="bubble-icon">▧</span><span><strong>Görsel konsept</strong><small>Görsel yönünü tasarla</small></span></button>
+   <button class="tozra-bubble bubble-video" type="button" data-mode="video"><span class="bubble-icon">▷</span><span><strong>Video planlama</strong><small>Akış ve prodüksiyon</small></span></button>
+   <button class="tozra-bubble bubble-writing" type="button" data-mode="writing"><span class="bubble-icon">✎</span><span><strong>Metin & senaryo</strong><small>Hikâyeni ve metnini yaz</small></span></button>
+  </div>
+  <div class="bubble-bottom-row">
+   <button class="tozra-ai-talk" id="heroChat" type="button"><span class="ai-talk-mark">✳</span><span><strong>Yapay zekâyla konuş</strong><small>Bir soru sor, fikrini anlat veya birlikte plan yap.</small></span><b>↗</b></button>
+   <button class="bubble-new-project" id="heroNewProject" type="button">＋ Yeni proje oluştur</button>
+  </div>
+  <form id="smartCommandForm" class="legacy-command-hidden" aria-hidden="true"><input id="smartCommandInput" type="text"></form>
+ </section>
+
  <section id="personalHome" aria-label="TOZRA kişisel çalışma alanı">
  <div class="ph-hero">
   <div class="ph-brand"><div class="ph-mark">T</div><div><div class="ph-brand-name">TOZRA</div><div class="ph-brand-sub">CREATIVE INTELLIGENCE</div></div></div>
@@ -2447,6 +2466,25 @@ $("smartCommandForm").addEventListener("submit",e=>{
  $("smartCommandInput").value="";
  startChatWithPrompt(value);
 });
+
+/* TOZRA HOME BUBBLE NAVIGATION */
+document.querySelectorAll(".tozra-bubble[data-nav]").forEach(button=>{
+ button.addEventListener("click",()=>{
+  const target=button.dataset.nav;
+  if(target==="workspace") $("navWorkspace").click();
+  else if(target==="chat") $("navChat").click();
+  else if(target==="projects") $("navProjects").click();
+  else if(target==="studio") $("navCreativeStudio").click();
+ });
+});
+document.querySelectorAll(".tozra-bubble[data-mode]").forEach(button=>{
+ button.addEventListener("click",()=>{
+  const mode=button.dataset.mode;
+  $("navCreativeStudio").click();
+  setTimeout(()=>setCreativeMode(mode),0);
+ });
+});
+
 
 /* PROJE SİSTEMİ */
 function updateDashboardStats(){
