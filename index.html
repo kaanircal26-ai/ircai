@@ -852,6 +852,36 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
  .tozra-bubble-home .bubble-icon{width:36px;height:36px;flex-basis:36px;font-size:19px}
  .tozra-bubble-home .bubble-bottom-row{margin-top:20px}
 }
+
+/* HOME SCREEN FIX: remove dead whitespace and enable direct AI chat */
+#workspacePage{padding-top:0!important}
+#workspacePage>.tozra-bubble-home{margin:0 0 24px!important;width:100%;min-height:0!important}
+#workspacePage>#personalHome,#workspacePage>.workspace-rail{display:none!important}
+#workspacePage>.workspace-footer{display:none!important}
+#workspacePage .bubble-home-head{margin-bottom:18px!important}
+#workspacePage .bubble-group-label{margin-top:15px!important}
+.bubble-chat-composer{margin-top:20px;padding:18px 20px;border:1px solid #dce5cb;border-radius:22px;background:linear-gradient(120deg,#eaf0dc,#fffefa);box-shadow:0 10px 28px rgba(35,52,38,.055)}
+.bubble-chat-heading{display:flex;align-items:center;gap:12px;margin-bottom:13px;color:#253725}
+.bubble-chat-heading strong{display:block;font-size:14px;font-weight:800}
+.bubble-chat-heading small{display:block;margin-top:3px;color:#788372;font-size:11px}
+.bubble-chat-input-row{display:flex;align-items:stretch;gap:10px;padding:8px;border:1px solid #e0e5d6;border-radius:16px;background:#fff}
+.bubble-chat-input-row textarea{display:block;flex:1;min-width:0;min-height:55px;max-height:150px;resize:vertical;border:0!important;outline:none!important;background:transparent!important;padding:10px 12px!important;color:#243326!important;font:inherit;font-size:14px!important}
+.bubble-chat-input-row textarea::placeholder{color:#929b8b}
+.bubble-chat-input-row button{align-self:flex-end;min-height:42px;padding:0 18px;border:0;border-radius:12px;background:#b9d28a;color:#26351f;font-size:12px;font-weight:800;cursor:pointer}
+.bubble-chat-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px;color:#87917f;font-size:10px}
+.bubble-chat-footer .bubble-new-project{min-height:34px;padding:0 13px;border-radius:10px;font-size:11px}
+@media(max-width:760px){
+ #workspacePage>.tozra-bubble-home{padding:17px 14px!important;margin-bottom:18px!important}
+ #workspacePage .bubble-home-head{margin-bottom:14px!important}
+ #workspacePage .bubble-home-head h1{font-size:25px!important}
+ #workspacePage .bubble-large{flex:1 1 calc(50% - 6px)!important;max-width:none!important}
+ #workspacePage .bubble-cloud-studio .tozra-bubble{flex:1 1 calc(50% - 5px)!important;min-width:0!important}
+ .bubble-chat-composer{padding:14px 12px;margin-top:15px;border-radius:17px}
+ .bubble-chat-input-row{gap:5px;padding:5px}
+ .bubble-chat-input-row textarea{font-size:13px!important;padding:8px!important}
+ .bubble-chat-input-row button{padding:0 12px;min-height:39px}
+ .bubble-chat-footer{font-size:9px}
+}
 </style>
 <style id="tozra-personal-home">
 :root{--personal-ink:#17221b;--personal-muted:#718076;--personal-line:#e5ece6;--personal-green:#16864b;--personal-green2:#dff5e7;--personal-card:#ffffff}
@@ -1793,9 +1823,10 @@ body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
    <button class="tozra-bubble bubble-video" type="button" data-mode="video"><span class="bubble-icon">▷</span><span><strong>Video planlama</strong><small>Akış ve prodüksiyon</small></span></button>
    <button class="tozra-bubble bubble-writing" type="button" data-mode="writing"><span class="bubble-icon">✎</span><span><strong>Metin & senaryo</strong><small>Hikâyeni ve metnini yaz</small></span></button>
   </div>
-  <div class="bubble-bottom-row">
-   <button class="tozra-ai-talk" id="heroChat" type="button"><span class="ai-talk-mark">✳</span><span><strong>Yapay zekâyla konuş</strong><small>Bir soru sor, fikrini anlat veya birlikte plan yap.</small></span><b>↗</b></button>
-   <button class="bubble-new-project" id="heroNewProject" type="button">＋ Yeni proje oluştur</button>
+  <div class="bubble-chat-composer">
+   <div class="bubble-chat-heading"><span class="ai-talk-mark">✳</span><span><strong>TOZRA ile konuş</strong><small>Ne düşünüyorsun? Bir soru sor veya yapmak istediğini anlat.</small></span></div>
+   <div class="bubble-chat-input-row"><textarea id="homeAiPrompt" rows="2" placeholder="TOZRA'ya mesajını yaz..."></textarea><button id="homeAiSend" type="button" aria-label="Mesajı gönder">Gönder ↗</button></div>
+   <div class="bubble-chat-footer"><span>↵ Göndermek için butona bas</span><button class="bubble-new-project" id="heroNewProject" type="button">＋ Yeni proje oluştur</button></div>
   </div>
   <form id="smartCommandForm" class="legacy-command-hidden" aria-hidden="true"><input id="smartCommandInput" type="text"></form>
  </section>
@@ -2354,6 +2385,20 @@ $("navProjects").onclick=()=>showPage("workspace");
 $("navChat").onclick=()=>openGeneralChat();
 $("navCreativeStudio").onclick=()=>showPage("creativeStudio");
 $("heroChat").onclick=()=>openGeneralChat();
+const homeAiPrompt=$("homeAiPrompt");
+const homeAiSend=$("homeAiSend");
+function sendHomeAiPrompt(){
+ const value=homeAiPrompt?.value.trim();
+ if(!value){homeAiPrompt?.focus();return;}
+ homeAiPrompt.value="";
+ startChatWithPrompt(value);
+ setTimeout(()=>$("send").click(),80);
+}
+homeAiSend?.addEventListener("click",sendHomeAiPrompt);
+homeAiPrompt?.addEventListener("keydown",event=>{
+ if(event.key==="Enter"&&!event.shiftKey){event.preventDefault();sendHomeAiPrompt();}
+});
+
 $("quickIdea").onclick=()=>startChatWithPrompt("Bir fikrim var. Önce fikrimi netleştirmeme yardım et, ardından uygulanabilir bir yol haritası oluştur.");
 $("quickContent").onclick=()=>startChatWithPrompt("Bir içerik üretmek istiyorum. Bana hedef kitle, format ve içerik fikrini netleştirmemde yardımcı ol.");
 $("quickResearch").onclick=()=>startChatWithPrompt("Bir araştırma başlatmak istiyorum. Konuyu kapsamlandırmama ve araştırma soruları oluşturmama yardım et.");
