@@ -97,6 +97,36 @@ function startVoiceCapture(button,input,status){
  }
 }
 
-$("voiceButton").onclick=()=>startVoiceCapture($("voiceButton"),promptInput,$("voiceStatus"));
-$("projectVoiceButton").onclick=()=>startVoiceCapture($("projectVoiceButton"),$("projectPrompt"),$("projectVoiceStatus"));
+/*
+ * Bu dosya index.html içindeki ana uygulama kodundan önce yükleniyor.
+ * Butonlar henüz DOM'a eklenmeden onclick ataması yapmak null hatasına
+ * ve mobilde dahil ses butonlarının tamamen tepkisiz kalmasına yol açıyordu.
+ * DOMContentLoaded sonrasında bağlayarak hem masaüstünü hem mobil tarayıcıları
+ * destekle.
+ */
+function bindTozraVoiceButtons(){
+ const voiceButton = document.getElementById("voiceButton");
+ const voiceStatus = document.getElementById("voiceStatus");
+ const projectVoiceButton = document.getElementById("projectVoiceButton");
+ const projectVoiceStatus = document.getElementById("projectVoiceStatus");
+ const projectPrompt = document.getElementById("projectPrompt");
+
+ if(voiceButton && typeof promptInput !== "undefined"){
+  voiceButton.addEventListener("click",()=>{
+   startVoiceCapture(voiceButton,promptInput,voiceStatus);
+  });
+ }
+
+ if(projectVoiceButton && projectPrompt){
+  projectVoiceButton.addEventListener("click",()=>{
+   startVoiceCapture(projectVoiceButton,projectPrompt,projectVoiceStatus);
+  });
+ }
+}
+
+if(document.readyState === "loading"){
+ document.addEventListener("DOMContentLoaded",bindTozraVoiceButtons,{once:true});
+}else{
+ bindTozraVoiceButtons();
+}
 
