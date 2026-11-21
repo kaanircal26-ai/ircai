@@ -1551,6 +1551,69 @@ body{background:var(--cc-paper)!important;color:var(--cc-ink)!important}
 }
 </style>
 
+
+<style id="ircal-calendar-readable-colors">
+/* Calendar and task editor: always use readable light surfaces */
+#tasksPage .tasks-form,
+#tasksPage .tasks-form label,
+#tasksPage .tasks-form input,
+#tasksPage .tasks-form select,
+#tasksPage .tasks-form textarea,
+#tasksPage .tasks-form option{
+ color:#263b2b!important;
+}
+#tasksPage .tasks-form{
+ background:#f3f6ed!important;
+ border-color:#d5dfca!important;
+}
+#tasksPage .tasks-form input,
+#tasksPage .tasks-form select,
+#tasksPage .tasks-form textarea{
+ background:#fffef9!important;
+ border:1px solid #cbd7c1!important;
+ color:#263b2b!important;
+ -webkit-text-fill-color:#263b2b!important;
+ caret-color:#36583a!important;
+ color-scheme:light!important;
+}
+#tasksPage .tasks-form input::placeholder,
+#tasksPage .tasks-form textarea::placeholder{
+ color:#788574!important;
+ -webkit-text-fill-color:#788574!important;
+ opacity:1!important;
+}
+#tasksPage .tasks-form select option{
+ background:#fffef9!important;
+ color:#263b2b!important;
+}
+#tasksPage .tasks-form input:focus,
+#tasksPage .tasks-form select:focus,
+#tasksPage .tasks-form textarea:focus{
+ outline:2px solid rgba(126,160,101,.35)!important;
+ border-color:#8da978!important;
+}
+#tasksPage .tasks-form input[type="date"],
+#tasksPage .tasks-form input[type="time"]{
+ color-scheme:light!important;
+}
+#tasksPage .calendar-dayname,
+#tasksPage .calendar-controls strong,
+#tasksPage .agenda-title,
+#tasksPage .task-copy strong,
+#tasksPage .agenda-copy strong{
+ color:#263b2b!important;
+}
+#tasksPage .calendar-day{
+ color:#263b2b!important;
+ background:#f2f5ec!important;
+}
+#tasksPage .calendar-day.selected{
+ color:#fff!important;
+ background:#52794b!important;
+}
+#tasksPage .calendar-day.muted{color:#849080!important}
+</style>
+
 </head>
 
 <body>
