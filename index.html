@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#f7f5f1">
-<meta name="description" content="TOZRA — Creative Intelligence">
+<meta name="description" content="İRCAL DESIGN — Creative Workspace">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="TOZRA">
+<meta name="apple-mobile-web-app-title" content="İRCAL DESIGN">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>TOZRA — Creative Intelligence</title>
+<title>İRCAL DESIGN — Creative Workspace</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="icon" href="/apple-touch-icon.PNG">
 <link rel="apple-touch-icon" href="/apple-touch-icon.PNG">
@@ -1446,31 +1446,59 @@ body{background:var(--cc-paper)!important;color:var(--cc-ink)!important}
  .page{padding-bottom:105px!important}
 }
 </style>
+
+<style id="ircal-design-brand-refresh">
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
+body,button,input,textarea,select{font-family:"Manrope",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.topbar-title,.splash-name,.brand-wordmark>span{font-family:"Space Grotesk","Manrope",sans-serif}
+.topbar-title{font-size:clamp(14px,1.25vw,18px)!important;font-weight:700!important;letter-spacing:.14em!important;color:#263b2b!important}
+.splash{background:radial-gradient(ellipse at 50% 38%,#183b27 0%,#0b1d13 48%,#06100b 100%)!important}
+.splash-mark{width:96px!important;height:96px!important;margin-bottom:20px!important;padding:0!important;overflow:hidden!important;border-radius:27px!important;background:transparent!important;box-shadow:0 18px 55px #0005!important}
+.splash-mark img{width:100%;height:100%;object-fit:cover}
+.splash-name{margin-top:0!important;font-size:clamp(25px,4vw,32px)!important;font-weight:700!important;letter-spacing:.12em!important;color:#f2f0df!important}
+.splash-subtitle{margin-top:9px;color:#b3c39a;font:600 10px "Manrope",sans-serif;letter-spacing:.28em}
+.loader{margin-top:28px!important}
+.nav-symbol{display:inline-grid!important;place-items:center!important;width:23px!important;height:23px!important;flex:0 0 23px!important;font-size:0!important;color:currentColor!important}
+.nav-symbol svg,.studio-icon svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.studio-link .studio-icon{display:inline-grid;place-items:center;width:23px;height:23px;margin-right:8px;color:currentColor;vertical-align:middle}
+.studio-link .studio-icon svg{width:18px;height:18px}
+.auth-mark{width:58px!important;height:58px!important;padding:0!important;overflow:hidden!important;border-radius:17px!important;background:transparent!important}
+.auth-mark img{width:100%;height:100%;object-fit:cover}
+.mobile-brand{font-family:"Space Grotesk",sans-serif;font-weight:700;letter-spacing:.04em}
+@media(max-width:760px){
+ .topbar-title{display:block!important;font-size:11px!important;letter-spacing:.09em!important}
+ .splash-mark{width:84px!important;height:84px!important}
+ .nav-symbol svg{width:21px;height:21px}
+}
+@media(max-width:390px){.topbar-title{display:none!important}}
+</style>
+
 </head>
 
 <body>
 <div class="splash" id="splash">
  <div class="splash-inner">
-  <div class="splash-mark" aria-label="TOZRA">T</div>
-  <div class="splash-name">TOZRA</div>
+  <div class="splash-mark" aria-label="İRCAL DESIGN"><img src="/apple-touch-icon.PNG" alt=""></div>
+  <div class="splash-name">İRCAL DESIGN</div>
+  <div class="splash-subtitle">CREATIVE WORKSPACE</div>
   <div class="loader"><div class="loader-bar"></div></div>
  </div>
 </div>
 
 <div class="app">
 <aside class="sidebar" id="sidebar">
- <div class="brand"><div class="brand-icon"><img src="/apple-touch-icon.PNG" alt="TOZRA"></div><div class="brand-wordmark"><span>TOZRA</span><small>CREATIVE INTELLIGENCE</small></div></div>
- <button class="new-chat" id="newProject"><span class="nav-symbol">＋</span> Yeni proje oluştur</button>
+ <div class="brand"><div class="brand-icon"><img src="/apple-touch-icon.PNG" alt="İRCAL DESIGN"></div><div class="brand-wordmark"><span>İRCAL DESIGN</span><small>CREATIVE WORKSPACE</small></div></div>
+ <button class="new-chat" id="newProject"><span class="nav-symbol"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span> Yeni proje oluştur</button>
  <div class="nav-label">WORKSPACE</div>
- <button class="nav-item active" id="navWorkspace"><span class="nav-symbol">⌂</span> Çalışma alanı</button>
- <button class="nav-item" id="navChat"><span class="nav-symbol">▤</span> Sohbet (AI)</button>
- <button class="nav-item" id="navProjects"><span class="nav-symbol">▣</span> Projelerim</button>
+ <button class="nav-item active" id="navWorkspace"><span class="nav-symbol"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></span> Çalışma alanı</button>
+ <button class="nav-item" id="navChat"><span class="nav-symbol"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14a1 1 0 0 1 1 1v14H4V5a1 1 0 0 1 1-1zM8 8h8M8 12h8M8 16h5"/></svg></span> Sohbet (AI)</button>
+ <button class="nav-item" id="navProjects"><span class="nav-symbol"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 8h8v8H8z"/></svg></span> Projelerim</button>
  <div class="nav-label studio-label">CREATIVE STUDIO</div>
- <button class="nav-item" id="navCreativeStudio"><span class="nav-symbol">✳</span> Creative Studio</button>
+ <button class="nav-item" id="navCreativeStudio"><span class="nav-symbol"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6 5.6 18.4"/></svg></span> Creative Studio</button>
  <div class="studio-links">
-  <button class="studio-link" type="button" data-creative-mode="idea"><span>✧</span> Fikir geliştirme</button>
-  <button class="studio-link" type="button" data-creative-mode="image"><span>▧</span> Görsel konsept</button>
-  <button class="studio-link" type="button" data-creative-mode="video"><span>▷</span> Video planlama</button>
+  <button class="studio-link" type="button" data-creative-mode="idea"><span class="studio-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 1.8 6.2L20 11l-6.2 1.8L12 19l-1.8-6.2L4 11l6.2-1.8z"/></svg></span> Fikir geliştirme</button>
+  <button class="studio-link" type="button" data-creative-mode="image"><span class="studio-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9" r="1.5"/><path d="m21 15-5-5L5 20"/></svg></span> Görsel konsept</button>
+  <button class="studio-link" type="button" data-creative-mode="video"><span class="studio-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z"/></svg></span> Video planlama</button>
   <button class="studio-link" type="button" data-creative-mode="writing"><span>▤</span> Metin & senaryo</button>
  </div>
  <div class="history-title">SON SOHBETLER</div>
@@ -1488,9 +1516,9 @@ body{background:var(--cc-paper)!important;color:var(--cc-ink)!important}
 <header class="topbar">
  <div class="mobile-brand">
   <button class="mobile-menu" id="menuButton" aria-label="Menüyü aç">☰</button>
-  <div class="brand-icon"><img src="/apple-touch-icon.PNG" alt="TOZRA"></div>TOZRA
+  <div class="brand-icon"><img src="/apple-touch-icon.PNG" alt="İRCAL DESIGN"></div>İRCAL DESIGN
  </div>
- <div class="topbar-title" id="topbarTitle">CREATIVE WORKSPACE</div>
+ <div class="topbar-title" id="topbarTitle">İRCAL DESIGN</div>
  <div class="top-actions">
   <div class="status">Çevrimiçi</div>
   <button class="top-button" id="plansButton">Üyelik</button>
@@ -2051,9 +2079,9 @@ function showPage(page){
  $("navChat").classList.toggle("active",page==="chat");
  $("navCreativeStudio").classList.toggle("active",page==="creativeStudio");
  $("topbarTitle").textContent=
-  page==="workspace"?"CREATIVE WORKSPACE":
-  page==="project"?"PROJECT WORKSPACE":
-  page==="creativeStudio"?"CREATIVE STUDIO":"CREATIVE INTELLIGENCE";
+  page==="workspace"?"İRCAL DESIGN":
+  page==="project"?"İRCAL DESIGN":
+  page==="creativeStudio"?"CREATIVE STUDIO":"İRCAL DESIGN";
  toggleMenu(true);
  window.scrollTo({top:0,behavior:"smooth"});
 }
@@ -3117,11 +3145,11 @@ function showModal(type){
  }
 
  if(type==="login"){
-  title.textContent="TOZRA hesabına giriş";
+  title.textContent="İRCAL DESIGN hesabına giriş";
   content.innerHTML=`
    <div class="auth-intro">
-    <div class="auth-mark" aria-hidden="true">T</div>
-    <div class="auth-kicker">TOZRA / CREATIVE INTELLIGENCE</div>
+    <div class="auth-mark" aria-hidden="true"><img src="/apple-touch-icon.PNG" alt=""></div>
+    <div class="auth-kicker">İRCAL DESIGN / CREATIVE WORKSPACE</div>
     <h3>Yeniden hoş geldin.</h3>
     <p>Fikirlerine kaldığın yerden devam et. Çalışma alanın seni bekliyor.</p>
    </div>
