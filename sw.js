@@ -6,7 +6,7 @@
 "use strict";
 
 const CACHE_PREFIX = "tozra-";
-const CACHE_NAME = "tozra-v14-home-bubbles";
+const CACHE_NAME = "tozra-v15-ircai-design-title";
 const APP_SHELL = [
   "/",
   "/manifest.json",
