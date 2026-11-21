@@ -2936,7 +2936,7 @@ function createTyping(area){
  return el;
 }
 
-async function sendToAI({text,list,area,history,onSuccess,onFailure,agentMode=false}){
+async function sendToAI({text,list,area,history,onSuccess,onFailure,agentMode=false,projectContext=""}){
  if(busy)return;
  if(!text.trim()&&!list.length)return;
  if(!text.trim()&&list.length){
@@ -2957,6 +2957,7 @@ async function sendToAI({text,list,area,history,onSuccess,onFailure,agentMode=fa
    body:JSON.stringify({
     prompt:text+media.timelineText,
     history:history,
+    projectContext:projectContext.slice(0,10000),
     images:media.images,
     videoFrames:media.videoFrames,
     personalMemory:window.TozraMemory && typeof window.TozraMemory.getAll==="function"
@@ -3047,16 +3048,13 @@ async function sendProjectMessage(){
  saveProjects();
 
  const projectContext=buildProjectContext(p);
- const contextualPrompt=
-  projectContext+
-  "\n\n[KULLANICININ YENİ MESAJI]\n"+
-  text;
 
  await sendToAI({
-  text:contextualPrompt,
+  text,
   list:projectAttachments,
   area:$("projectMessages"),
   history:p.messages.slice(0,-1),
+  projectContext,
 
   onSuccess:answer=>{
    p.messages.push({role:"assistant",content:answer});
