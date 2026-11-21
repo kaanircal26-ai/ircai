@@ -1493,6 +1493,25 @@ body{background:var(--cc-paper)!important;color:var(--cc-ink)!important}
 @media(max-width:380px){.tasks-panel-head{align-items:flex-start;flex-direction:column}.tasks-add-btn{width:100%}.tasks-form-row{grid-template-columns:1fr}}
 </style>
 
+
+<style id="ph-home-calendar-style">
+.ph-home-calendar{margin-top:22px}
+.ph-home-calendar-card{padding:18px!important}
+.ph-home-calendar-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.ph-home-calendar-top strong{display:block;font-size:17px;color:var(--text)}
+.ph-home-calendar-top span{display:block;font-size:11px;color:var(--muted);margin-top:4px}
+.ph-home-calendar-top button{border:1px solid var(--border);border-radius:9px;background:var(--surface2);color:var(--text);padding:9px 12px;font-size:11px;font-weight:700;white-space:nowrap}
+.ph-home-calendar-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.ph-home-calendar-grid .ph-hcal-dayname{text-align:center;font-size:9px;color:var(--muted);padding:4px 0}
+.ph-home-calendar-grid .ph-hcal-day{min-height:35px;border-radius:8px;background:var(--surface2);display:grid;place-items:center;font-size:11px;color:var(--text);position:relative}
+.ph-home-calendar-grid .ph-hcal-day.muted{opacity:.3}
+.ph-home-calendar-grid .ph-hcal-day.today{outline:1px solid #9bb77b}
+.ph-home-calendar-grid .ph-hcal-day.planned:after{content:"";position:absolute;bottom:4px;width:4px;height:4px;border-radius:50%;background:#a9c77b}
+.ph-home-calendar-foot{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:13px;color:var(--muted);font-size:10px}
+.ph-home-calendar-foot i{display:inline-block;width:6px;height:6px;border-radius:50%;background:#a9c77b;margin-right:5px}
+@media(max-width:600px){.ph-home-calendar-card{padding:14px!important}.ph-home-calendar-grid{gap:4px}.ph-home-calendar-grid .ph-hcal-day{min-height:33px}.ph-home-calendar-top{align-items:flex-start}}
+</style>
+
 </head>
 
 <body>
@@ -1571,22 +1590,22 @@ body{background:var(--cc-paper)!important;color:var(--cc-ink)!important}
   <p class="ph-desc">Önceliklerini belirle, görevlerini tamamla ve ilerlemeni takip et.</p>
  </div>
  <div class="ph-stats"><div class="ph-stat"><strong id="phTotal">0</strong><span>TOPLAM GÖREV</span></div><div class="ph-stat"><strong id="phDone">0</strong><span>TAMAMLANAN</span></div><div class="ph-stat"><strong id="phPending">0</strong><span>BEKLEYEN</span></div></div>
- <section class="ph-tasks"><div class="ph-section"><h2>Görevlerin</h2><small>GÜNLÜK ODAK</small></div><div class="ph-card"><form class="ph-add" id="phTaskForm"><input class="ph-input" id="phTaskInput" maxlength="160" placeholder="Yeni bir görev ekle…" autocomplete="off"><button aria-label="Görev ekle" type="submit">＋</button></form><div class="ph-tasklist" id="phTaskList"><div class="ph-empty">Henüz görev yok. İlk görevini ekleyerek başla.</div></div></div></section>
- <section class="ph-notes"><div class="ph-section"><h2>Hızlı notların</h2><small>AKLINDA KALSIN</small></div><div class="ph-card"><textarea class="ph-textarea" id="phNotes" placeholder="Fikirlerini buraya yaz…"></textarea><div class="ph-save" id="phNotesStatus">Notların bu tarayıcıda otomatik saklanır.</div></div></section>
- <section class="ph-week"><div class="ph-section"><h2>Haftalık program</h2><small>PLANINI OLUŞTUR</small></div><div class="ph-card"><div class="ph-days" id="phDays"></div><p class="ph-plan-day" id="phPlanDay">Pazartesi</p><textarea class="ph-textarea ph-plan" id="phPlan" placeholder="Bugün için planını yaz…"></textarea><div class="ph-save" id="phPlanStatus">Haftalık planın bu tarayıcıda otomatik saklanır.</div></div></section>
- <section class="ph-memory" aria-label="TOZRA akıllı hafıza">
- <div class="ph-section"><h2>TOZRA hafızası</h2><small>ÖNEMLİ BİLGİLERİN</small></div>
- <div class="ph-card ph-memory-card">
-  <p class="ph-memory-desc">TOZRA'nın sonraki sohbetlerinde kullanmasını istediğin tercihleri, hedefleri ve proje bilgilerini kaydet.</p>
-  <form id="phMemoryForm" class="ph-memory-form">
-   <input id="phMemoryInput" class="ph-input" maxlength="1500" placeholder="Örn. Tasarımlarda sade ve premium görünümü tercih ediyorum..." autocomplete="off">
-   <select id="phMemoryCategory" aria-label="Hafıza kategorisi"><option value="Tercih">Tercih</option><option value="Hedef">Hedef</option><option value="Proje">Proje</option><option value="Genel">Genel</option></select>
-   <button type="submit" aria-label="Hafızaya ekle">＋ Kaydet</button>
-  </form>
-  <div class="ph-memory-list" id="phMemoryList"><div class="ph-empty">Henüz kaydedilmiş bilgi yok.</div></div>
-  <div class="ph-save">Hafıza bu tarayıcıda, hesabına özel olarak saklanır. Şifre veya API anahtarı kaydetme.</div>
- </div>
-</section>
+
+ <section class="ph-tasks">
+  <div class="ph-section"><h2>Görevlerin</h2><small>GÜNLÜK ODAK</small></div>
+  <div class="ph-card">
+   <form class="ph-add" id="phTaskForm"><input class="ph-input" id="phTaskInput" maxlength="160" placeholder="Yeni bir görev ekle…" autocomplete="off"><button aria-label="Görev ekle" type="submit">＋</button></form>
+   <div class="ph-tasklist" id="phTaskList"><div class="ph-empty">Henüz görev yok. İlk görevini ekleyerek başla.</div></div>
+  </div>
+ </section>
+ <section class="ph-home-calendar">
+  <div class="ph-section"><h2>Takvimin</h2><small>PLANLARIN</small></div>
+  <div class="ph-card ph-home-calendar-card">
+   <div class="ph-home-calendar-top"><div><strong id="phHomeCalendarMonth">Takvim</strong><span id="phHomeCalendarSummary">Görevlerini ve etkinliklerini takip et.</span></div><button type="button" id="phOpenCalendar">Takvimi aç <span>↗</span></button></div>
+   <div class="ph-home-calendar-grid" id="phHomeCalendarGrid"></div>
+   <div class="ph-home-calendar-foot"><span><i></i> Planlı günler</span><span id="phHomeNextEvent">Yaklaşan plan bulunmuyor</span></div>
+  </div>
+ </section>
 <div class="ph-bottom">TOZRA · Fikirlerini harekete geçir.</div>
 </section>
  <aside class="workspace-rail" aria-label="Yaratıcı çalışma paneli">
@@ -3835,6 +3854,36 @@ taskEl("calendarGrid").addEventListener("click",e=>{
 taskEl("calendarPrev").onclick=()=>{calendarCursor.setMonth(calendarCursor.getMonth()-1);renderTasksCalendar();};
 taskEl("calendarNext").onclick=()=>{calendarCursor.setMonth(calendarCursor.getMonth()+1);renderTasksCalendar();};
 renderTasksCalendar();
+
+
+/* Home calendar preview mirrors the standalone Tasks & Calendar page */
+(function(){
+ const grid=document.getElementById("phHomeCalendarGrid");
+ if(!grid)return;
+ const open=document.getElementById("phOpenCalendar");
+ if(open)open.addEventListener("click",()=>{if(typeof showPage==="function"){showPage("tasks");if(typeof renderTasksCalendar==="function")renderTasksCalendar();}});
+ let data={tasks:[],events:[]};
+ try{const raw=localStorage.getItem("ircal_tasks_calendar_v1");if(raw)data=JSON.parse(raw)||data;}catch(e){}
+ const now=new Date(),year=now.getFullYear(),month=now.getMonth();
+ document.getElementById("phHomeCalendarMonth").textContent=now.toLocaleDateString("tr-TR",{month:"long",year:"numeric"});
+ const total=(data.tasks||[]).filter(x=>!x.done).length+(data.events||[]).length;
+ document.getElementById("phHomeCalendarSummary").textContent=total?`${total} planın ve görevin var.`:"Görevlerini ve etkinliklerini takip et.";
+ const names=["P","S","Ç","P","C","C","P"];
+ let out=names.map(n=>`<div class="ph-hcal-dayname">${n}</div>`).join("");
+ const first=new Date(year,month,1),offset=(first.getDay()+6)%7,days=new Date(year,month+1,0).getDate(),prev=new Date(year,month,0).getDate();
+ const planned=new Set([...(data.tasks||[]).map(x=>x.date),...(data.events||[]).map(x=>x.date)]);
+ for(let i=0;i<42;i++){
+  let d,muted=false;
+  if(i<offset){d=new Date(year,month-1,prev-offset+i+1);muted=true;}
+  else if(i>=offset+days){d=new Date(year,month+1,i-offset-days+1);muted=true;}
+  else d=new Date(year,month,i-offset+1);
+  const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  out+=`<div class="ph-hcal-day ${muted?"muted":""} ${key===`${year}-${String(month+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`?"today":""} ${planned.has(key)?"planned":""}">${d.getDate()}</div>`;
+ }
+ grid.innerHTML=out;
+ const upcoming=[...(data.events||[]),...(data.tasks||[]).filter(x=>!x.done)].filter(x=>x.date>=now.toISOString().slice(0,10)).sort((a,b)=>a.date.localeCompare(b.date))[0];
+ document.getElementById("phHomeNextEvent").textContent=upcoming?`${upcoming.title} · ${new Date(upcoming.date+"T12:00:00").toLocaleDateString("tr-TR",{day:"numeric",month:"short"})}`:"Yaklaşan plan bulunmuyor";
+})();
 
 </script>
 
