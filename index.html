@@ -968,7 +968,7 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
 .ph-memory-body{min-width:0}
 .ph-memory-tag{display:inline-block;font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:#55745b;background:#eaf2e9;border-radius:20px;padding:4px 8px}
 .ph-memory-item p{margin:7px 0 0;font-size:12px;line-height:1.55;color:#2e3930;overflow-wrap:anywhere}
-.ph-memory-remove{border:0;background:transparent;color:#9a5b52;font-size:11px;cursor:pointer;padding:5px}
+.ph-memory-remove{border:0;background:transparent;color:#9a5b52;font-size:11px;cursor:pointer;padding:5px}.ph-memory-edit{border:0;background:transparent;color:#536d4f;font-size:11px;cursor:pointer;padding:5px}.ph-memory-status{margin:10px 0 2px;color:#667465;font-size:11px;line-height:1.5}
 @media(max-width:600px){.ph-memory-form{grid-template-columns:1fr 105px}.ph-memory-form input{grid-column:1/-1}.ph-memory-form button{min-height:40px}}
 
 
@@ -1619,8 +1619,9 @@ body{background:var(--cc-paper)!important;color:var(--cc-ink)!important}
    <select id="phMemoryCategory" aria-label="Hafıza kategorisi"><option value="Tercih">Tercih</option><option value="Hedef">Hedef</option><option value="Proje">Proje</option><option value="Genel">Genel</option></select>
    <button type="submit" aria-label="Hafızaya ekle">＋ Kaydet</button>
   </form>
+  <div class="ph-memory-status" id="phMemoryStatus" role="status" aria-live="polite">Hafıza durumu kontrol ediliyor…</div>
   <div class="ph-memory-list" id="phMemoryList"><div class="ph-empty">Henüz kaydedilmiş bilgi yok.</div></div>
-  <div class="ph-save">Hafıza bu tarayıcıda, hesabına özel olarak saklanır. Şifre veya API anahtarı kaydetme.</div>
+  <div class="ph-save">Giriş yaptıysan kayıtların Supabase hesabınla senkronize edilir. Şifre veya API anahtarı kaydetme.</div>
  </div>
  </section>
  <div class="memory-page-foot">Hafıza kayıtlarını buradan ekleyebilir, görüntüleyebilir ve silebilirsin.</div>
@@ -3006,9 +3007,11 @@ async function sendToAI({text,list,area,history,onSuccess,onFailure,agentMode=fa
     history:history,
     images:media.images,
     videoFrames:media.videoFrames,
-    personalMemory:window.TozraMemory && typeof window.TozraMemory.getAll==="function"
-     ? window.TozraMemory.getAll().slice(-30).map(item=>({content:item.content,category:item.category}))
-     : [],
+    personalMemory:window.TozraMemory && typeof window.TozraMemory.getRelevant==="function"
+     ? window.TozraMemory.getRelevant(text,12).map(item=>({content:item.content,category:item.category}))
+     : (window.TozraMemory && typeof window.TozraMemory.getAll==="function"
+        ? window.TozraMemory.getAll().slice(-12).map(item=>({content:item.content,category:item.category}))
+        : []),
     agentMode:Boolean(agentMode)
    })
   });
@@ -3283,6 +3286,8 @@ function showModal(type){
    $("logoutButton").onclick=async()=>{
     try{
      await TozraAuth.signOut();
+     if(window.TozraMemory?.reload) await window.TozraMemory.reload();
+     window.TozraMemoryUI?.render?.();
      projects=[]; conversations=[]; conversation=[];
      renderProjects(); renderHistory(); renderGeneralMessages();
      $("modalOverlay").classList.remove("show");
@@ -3423,6 +3428,10 @@ async function refreshAccountData(){
  loadProjects();
  TozraAuth.updateAccountUI();
  updateDashboardStats();
+ if(window.TozraMemory?.reload){
+  await window.TozraMemory.reload();
+  window.TozraMemoryUI?.render?.();
+ }
 }
 window.addEventListener("load", async ()=>{
  await TozraAuth.init();
@@ -3583,13 +3592,14 @@ if("serviceWorker" in navigator){
 })();
 </script>
 <script>
-/* TOZRA SMART MEMORY UI */
+/* TOZRA SMART MEMORY UI — local cache + Supabase status */
 (function(){
  const $=id=>document.getElementById(id);
- const form=$("phMemoryForm"), input=$("phMemoryInput"), category=$("phMemoryCategory"), list=$("phMemoryList");
+ const form=$("phMemoryForm"), input=$("phMemoryInput"), category=$("phMemoryCategory"), list=$("phMemoryList"), status=$("phMemoryStatus");
  if(!form||!input||!list)return;
  function render(){
   const api=window.TozraMemory, items=api&&api.getAll?api.getAll():[];
+  if(status&&api?.getStatus){status.textContent=api.getStatus().message;status.dataset.state=api.getStatus().state;}
   list.replaceChildren();
   if(!items.length){const empty=document.createElement("div");empty.className="ph-empty";empty.textContent="Henüz kaydedilmiş bilgi yok.";list.appendChild(empty);return;}
   items.slice().reverse().forEach(item=>{
@@ -3597,9 +3607,16 @@ if("serviceWorker" in navigator){
    const body=document.createElement("div");body.className="ph-memory-body";
    const tag=document.createElement("span");tag.className="ph-memory-tag";tag.textContent=item.category||"Genel";
    const content=document.createElement("p");content.textContent=item.content;body.append(tag,content);
+   const actions=document.createElement("div");actions.style.display="flex";actions.style.gap="6px";
+   const edit=document.createElement("button");edit.type="button";edit.className="ph-memory-edit";edit.textContent="Düzenle";
+   edit.addEventListener("click",()=>{
+    const next=window.prompt("Hafıza kaydını düzenle:",item.content);
+    if(next===null)return;
+    try{api.update(item.id,next);render();}catch(error){alert(error.message||"Hafıza güncellenemedi.");}
+   });
    const remove=document.createElement("button");remove.type="button";remove.className="ph-memory-remove";remove.textContent="Sil";
    remove.addEventListener("click",()=>{if(api.remove(item.id))render();});
-   row.append(body,remove);list.appendChild(row);
+   actions.append(edit,remove);row.append(body,actions);list.appendChild(row);
   });
  }
  form.addEventListener("submit",event=>{
@@ -3607,6 +3624,7 @@ if("serviceWorker" in navigator){
   try{if(!window.TozraMemory)throw new Error("Hafıza sistemi yüklenemedi.");window.TozraMemory.add(value,category.value);input.value="";render();}
   catch(error){alert(error.message||"Hafızaya kaydedilemedi.");}
  });
+ window.addEventListener("tozra:memory-updated",render);
  window.TozraMemoryUI={render};
  render();
 })();
