@@ -2059,7 +2059,7 @@ function showPage(page){
 }
 $("navWorkspace").onclick=()=>showPage("workspace");
 $("navProjects").onclick=()=>showPage("workspace");
-$("navChat").onclick=()=>newGeneralChat();
+$("navChat").onclick=()=>openGeneralChat();
 $("navCreativeStudio").onclick=()=>showPage("creativeStudio");
 $("heroChat").onclick=()=>openGeneralChat();
 $("quickIdea").onclick=()=>startChatWithPrompt("Bir fikrim var. Önce fikrimi netleştirmeme yardım et, ardından uygulanabilir bir yol haritası oluştur.");
@@ -2072,6 +2072,8 @@ function openGeneralChat(){
  showPage("chat");
  renderGeneralMessages();
 }
+window.openGeneralChat = openGeneralChat;
+window.showPage = showPage;
 
 /* AKILLI KARŞILAMA KOMUTU */
 function startChatWithPrompt(value){
@@ -3590,14 +3592,14 @@ if("serviceWorker" in navigator){
   setDockTab(tab);
   if(tab==="home")$id("navWorkspace")?.click();
   if(tab==="chat"){
-   // Open the existing AI chat entry point, preserving the app's chat logic.
-   const chatEntry=$id("heroChat");
-   if(chatEntry){
-    chatEntry.click();
+   // Switch directly to the existing AI chat page; do not simulate a click
+   // on the home-page CTA and do not clear the current conversation.
+   if(typeof window.openGeneralChat === "function"){
+    window.openGeneralChat();
+   }else if(typeof window.showPage === "function"){
+    window.showPage("chat");
    }else{
-    const legacyChat=$id("navChat");
-    if(legacyChat)legacyChat.click();
-    else console.error("TOZRA: Sohbet açma düğmesi bulunamadı (heroChat/navChat).");
+    console.error("TOZRA: Yapay zekâ sohbet ekranı açılamadı; sayfa geçiş fonksiyonu bulunamadı.");
    }
   }
   if(tab==="projects"){$id("navProjects")?.click();window.setTimeout(scrollToProjects,180);}
