@@ -1,4 +1,4 @@
-/* TOZRA — Ücretsiz tarayıcı tabanlı sesli yazma
+/* TOZRA — Ücretsiz tarayıcı tabanlı sesli sohbet gönderimi
    OpenAI Realtime API veya ücretli API kotası kullanmaz.
    Ana uygulama index.html içinden önce yüklenir.
 */
@@ -71,8 +71,16 @@ function startVoiceCapture(button,input,status){
   if(transcript){
    input.value=(input.value.trim()?input.value.trim()+" ":"")+transcript;
    input.dispatchEvent(new Event("input",{bubbles:true}));
-   input.focus();
-   status.textContent="Konuşman yazıya aktarıldı. Göndermek için oka bas.";
+   status.textContent="Konuşman algılandı. TOZRA'ya gönderiliyor…";
+   // Gönderim düğmesine tıklayarak uygulamanın normal mesaj akışını kullan.
+   // Bu yöntem fonksiyonların global kapsamda olup olmamasından etkilenmez.
+   const sendId=input.id==="projectPrompt"?"projectSend":"send";
+   const sendButton=document.getElementById(sendId);
+   if(sendButton){
+    window.setTimeout(()=>sendButton.click(),180);
+   }else{
+    status.textContent="Gönder düğmesi bulunamadı. Metni elle gönderebilirsin.";
+   }
   }else if(!status.textContent.includes("izin")&&!status.textContent.includes("desteklemiyor")&&!status.textContent.includes("bağlanılamadı")){
    status.textContent="Konuşma algılanmadı. Tekrar deneyebilirsin.";
   }
