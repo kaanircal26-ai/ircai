@@ -1758,6 +1758,52 @@ html,body{max-width:100%;overflow-x:hidden}
 @media(prefers-reduced-motion:reduce){
  .splash:before,.splash:after,.splash-inner,.splash-mark,.splash-mark:after,.workspace-hero.tozra-chat-first:before,.workspace-hero.tozra-chat-first:after,#personalHome .ph-hero:before,#personalHome .ph-hero:after{animation:none!important}
 }
+
+/* TOZRA Motion Refresh v3 — cinematic launch + animated auth scene */
+.splash{z-index:9999;overflow:hidden;isolation:isolate;background:radial-gradient(ellipse at 50% 45%,#fbffff 0%,#e9f5ff 34%,#d9d8fa 68%,#c6b7ed 100%)}
+.splash:before{width:min(110vw,760px);height:min(110vw,760px);left:-28%;top:-38%;background:conic-gradient(from 0deg,rgba(87,224,218,.22),rgba(105,128,245,.10),rgba(177,105,231,.24),rgba(87,224,218,.22));filter:blur(24px);animation:splashNebula 9s linear infinite}
+.splash:after{width:min(100vw,700px);height:min(100vw,700px);right:-34%;bottom:-40%;background:radial-gradient(circle at 45% 45%,rgba(114,104,236,.30),rgba(124,181,245,.12) 42%,transparent 70%);animation:splashNebula 12s ease-in-out infinite alternate-reverse}
+.splash-inner{z-index:2;animation:splashArrive .95s cubic-bezier(.16,1,.3,1) both}
+.splash-inner:before,.splash-inner:after{content:"";position:absolute;left:50%;top:43px;width:190px;height:190px;border:1px solid rgba(104,137,221,.22);border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;animation:splashRing 5s linear infinite}
+.splash-inner:after{width:236px;height:236px;border-color:rgba(124,104,210,.14);animation-duration:8s;animation-direction:reverse}
+.splash-mark{width:118px;height:118px;border-radius:34px;animation:splashLogoDance 3.2s cubic-bezier(.45,0,.55,1) infinite;box-shadow:0 24px 70px rgba(82,99,190,.24),inset 0 1px 0 #fff}
+.splash-mark svg{animation:splashGlyphTurn 8s ease-in-out infinite;filter:drop-shadow(0 8px 12px rgba(95,100,190,.28))}
+.splash-mark:after{z-index:2}
+.splash-name{font-size:27px;letter-spacing:.42em;text-shadow:0 4px 18px rgba(75,91,160,.14)}
+.splash-tagline{font-size:9px;letter-spacing:.30em}
+.splash-particle{position:absolute;z-index:1;width:13px;height:13px;border-radius:50%;background:linear-gradient(135deg,#63dcd5,#9273ec);box-shadow:0 0 24px rgba(104,143,231,.55);pointer-events:none}
+.splash-particle-a{left:calc(50% - 112px);top:24%;animation:particleOrbitA 6s ease-in-out infinite}
+.splash-particle-b{right:calc(50% - 132px);top:59%;width:9px;height:9px;animation:particleOrbitB 7s ease-in-out infinite}
+.splash-particle-c{left:calc(50% + 80px);top:27%;width:7px;height:7px;animation:particleOrbitC 5.4s ease-in-out infinite}
+@keyframes splashNebula{0%{transform:rotate(0deg) scale(.88) translate3d(-2%,0,0)}50%{transform:rotate(180deg) scale(1.12) translate3d(3%,2%,0)}100%{transform:rotate(360deg) scale(.92) translate3d(-2%,-2%,0)}}
+@keyframes splashRing{0%{transform:translate(-50%,-50%) rotate(0deg) scale(.84);opacity:.2}50%{opacity:.9}100%{transform:translate(-50%,-50%) rotate(360deg) scale(1.16);opacity:.2}}
+@keyframes splashLogoDance{0%,100%{transform:translateY(0) rotate(-5deg) scale(.98)}25%{transform:translate(8px,-12px) rotate(4deg) scale(1.04)}50%{transform:translateY(-4px) rotate(8deg) scale(1.01)}75%{transform:translate(-7px,-13px) rotate(-2deg) scale(1.05)}}
+@keyframes splashGlyphTurn{0%,100%{transform:rotate(0) scale(1)}50%{transform:rotate(7deg) scale(1.06)}}
+@keyframes particleOrbitA{0%,100%{transform:translate(0,0) scale(.8);opacity:.55}50%{transform:translate(36px,42px) scale(1.5);opacity:1}}
+@keyframes particleOrbitB{0%,100%{transform:translate(0,0);opacity:.4}50%{transform:translate(-42px,-32px);opacity:1}}
+@keyframes particleOrbitC{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(18px,58px) scale(1.8)}}
+/* The sign-in / sign-up sheet sits above the still-running launch animation. */
+#modalOverlay.splash-auth{z-index:10001;background:rgba(18,22,49,.12);backdrop-filter:blur(1.5px);-webkit-backdrop-filter:blur(1.5px);align-items:center}
+#modalOverlay.splash-auth .modal.auth-screen{animation:authCardArrive .85s cubic-bezier(.16,1,.3,1) both;box-shadow:0 28px 100px rgba(45,52,112,.20),0 0 0 1px rgba(255,255,255,.55);background:rgba(250,250,255,.94)}
+#modalOverlay.splash-auth .modal-head{margin-bottom:4px}
+#modalOverlay.splash-auth .auth-mark{background:linear-gradient(135deg,#5edbd4,#7587ed 58%,#a06ee5);color:white;border-radius:17px;box-shadow:0 9px 28px rgba(110,126,220,.24);animation:authMarkFloat 3s ease-in-out infinite}
+#modalOverlay.splash-auth .auth-intro h3{background:linear-gradient(100deg,#273a55,#6c65b6 60%,#398f9b);background-clip:text;-webkit-background-clip:text;color:transparent}
+#modalOverlay.splash-auth .primary{background:linear-gradient(100deg,#6bd9d2,#8790ed 55%,#ad83e5);color:#fff;box-shadow:0 8px 22px rgba(109,132,221,.22)}
+#modalOverlay.splash-auth .secondary{background:rgba(255,255,255,.65)}
+@keyframes authCardArrive{from{opacity:0;transform:translateY(30px) scale(.94);filter:blur(8px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+@keyframes authMarkFloat{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-5px) rotate(4deg)}}
+/* A separate, more energetic motion language for the home hero. */
+.workspace-hero.tozra-chat-first{background:linear-gradient(125deg,#202b3d 0%,#3c3b61 48%,#36596b 100%)!important;background-size:220% 220%!important;animation:homeGradientRide 12s ease-in-out infinite!important}
+.workspace-hero.tozra-chat-first:before{width:clamp(240px,48vw,520px);height:clamp(240px,48vw,520px);right:-8%;top:-48%;background:conic-gradient(from 0deg,rgba(113,239,224,.62),rgba(119,143,255,.25),rgba(201,133,245,.38),rgba(113,239,224,.62));filter:blur(8px);animation:homeNebulaSpin 16s linear infinite!important}
+.workspace-hero.tozra-chat-first:after{width:clamp(160px,28vw,300px);height:clamp(160px,28vw,300px);right:8%;top:10%;border:1px solid rgba(230,236,255,.30);box-shadow:0 0 0 18px rgba(220,224,255,.055),0 0 0 42px rgba(220,224,255,.035),inset 0 0 44px rgba(255,255,255,.10);animation:homeOrbit 9s linear infinite!important}
+#personalHome .ph-hero{background:linear-gradient(120deg,#f7fbff 0%,#eeeaff 45%,#e1f8f5 100%)!important;background-size:220% 220%!important;animation:homeGradientRide 15s ease-in-out infinite!important}
+#personalHome .ph-hero:before{width:280px;height:280px;right:-48px;top:-140px;background:conic-gradient(from 30deg,rgba(111,220,215,.36),rgba(133,120,235,.28),rgba(231,165,221,.24),rgba(111,220,215,.36));filter:blur(3px);animation:homeNebulaSpin 18s linear infinite!important}
+#personalHome .ph-hero:after{width:210px;height:210px;left:34%;bottom:-145px;border:1px solid rgba(112,143,219,.18);box-shadow:0 0 0 20px rgba(112,143,219,.045),0 0 0 44px rgba(112,143,219,.025);animation:homeOrbit 13s linear infinite reverse!important}
+@keyframes homeGradientRide{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+@keyframes homeNebulaSpin{from{transform:rotate(0) scale(.88)}50%{transform:rotate(180deg) scale(1.13)}to{transform:rotate(360deg) scale(.88)}}
+@media(max-width:700px){#modalOverlay.splash-auth{padding:14px}#modalOverlay.splash-auth .modal.auth-screen{max-height:calc(100dvh - 28px);overflow-y:auto;padding:20px 18px}.splash-mark{width:102px;height:102px}.splash-inner:before{width:166px;height:166px}.splash-inner:after{width:210px;height:210px}}
+@media(prefers-reduced-motion:reduce){.splash:before,.splash:after,.splash-inner:before,.splash-inner:after,.splash-mark,.splash-mark svg,.splash-particle,#personalHome .ph-hero,.workspace-hero.tozra-chat-first,#modalOverlay.splash-auth .modal.auth-screen,#modalOverlay.splash-auth .auth-mark{animation:none!important}}
+
 </style>
 
 </head>
@@ -1766,6 +1812,7 @@ html,body{max-width:100%;overflow-x:hidden}
 <div class="splash" id="splash">
  <div class="splash-inner">
   <div class="splash-mark" aria-label="TOZRA"><svg viewBox="0 0 100 100" role="img" aria-hidden="true"><defs><linearGradient id="tozraMarkGradient" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#64e9df"/><stop offset=".48" stop-color="#5688ff"/><stop offset="1" stop-color="#9a42e8"/></linearGradient></defs><path d="M12 23H88V43H60V83H40V43H12Z" fill="url(#tozraMarkGradient)"/></svg></div>
+  <div class="splash-particle splash-particle-a" aria-hidden="true"></div><div class="splash-particle splash-particle-b" aria-hidden="true"></div><div class="splash-particle splash-particle-c" aria-hidden="true"></div>
   <div class="splash-name">TOZRA</div>
   <div class="splash-tagline">CREATIVE INTELLIGENCE</div>
   <div class="loader"><div class="loader-bar"></div></div>
@@ -2382,11 +2429,23 @@ function escapeHTML(value){
 }
 function escapeAttr(value){return escapeHTML(value)}
 
-/* AÇILIŞ */
+/* AÇILIŞ — giriş/kayıt sırasında sahne arka planda çalışmaya devam eder. */
+let tozraSplashTimer=null;
+function finishSplash(){
+ const splash=$("splash");
+ if(!splash)return;
+ $("modalOverlay")?.classList.remove("splash-auth");
+ splash.classList.add("hide");
+ setTimeout(()=>splash.remove(),850);
+}
+function closeSplashAuth(){
+ $("modalOverlay")?.classList.remove("show","splash-auth");
+ finishSplash();
+}
 window.addEventListener("load",()=>{
- setTimeout(()=>{
-  $("splash").classList.add("hide");
-  setTimeout(()=>$("splash")?.remove(),800);
+ tozraSplashTimer=setTimeout(()=>{
+  if(TozraAuth.getSession()) finishSplash();
+  // Oturum yoksa splash kapanmaz; login kartı onun üzerinde açılır.
  },5600);
 });
 
@@ -3473,7 +3532,8 @@ function showModal(type){
  const title=$("modalTitle");
  const content=$("modalContent");
  const modal=document.querySelector("#modalOverlay .modal");
- if(modal) modal.classList.toggle("auth-screen", type==="login");
+ if(modal) modal.classList.toggle("auth-screen", type==="login" || type==="register");
+ if(["login","register"].includes(type) && $("splash") && !$("splash").classList.contains("hide")) $("modalOverlay").classList.add("splash-auth");
 
  if(type==="plans"){
   title.textContent="TOZRA üyelik planları";
@@ -3508,7 +3568,7 @@ function showModal(type){
   $("loginForm").onsubmit=async e=>{
    e.preventDefault(); const button=$("loginSubmit"), notice=$("authNotice");
    button.disabled=true; button.textContent="Giriş yapılıyor…";
-   try{await TozraAuth.signIn($("loginEmail").value,$("loginPassword").value);await refreshAccountData();$("modalOverlay").classList.remove("show");}
+   try{await TozraAuth.signIn($("loginEmail").value,$("loginPassword").value);await refreshAccountData();if($("splash"))closeSplashAuth();else $("modalOverlay").classList.remove("show");}
    catch(error){notice.textContent=error.message||"Giriş yapılamadı.";}
    finally{button.disabled=false;button.textContent="Giriş yap";}
   };
@@ -3547,7 +3607,7 @@ function showModal(type){
    button.disabled=true;button.textContent="Hesap oluşturuluyor…";
    try{
     const data=await TozraAuth.signUp(name,email,password);
-    if(data.session){await refreshAccountData();$("modalOverlay").classList.remove("show");}
+    if(data.session){await refreshAccountData();if($("splash"))closeSplashAuth();else $("modalOverlay").classList.remove("show");}
     else{notice.textContent="Hesabın oluşturuldu. E-posta adresine gönderilen doğrulama bağlantısını aç, ardından giriş yap.";button.textContent="E-posta gönderildi";}
    }catch(error){notice.textContent=error.message||"Kayıt oluşturulamadı.";button.disabled=false;button.textContent="Ücretsiz hesap oluştur";}
   };
@@ -3722,9 +3782,9 @@ $("sideSettings").onclick=()=>{
 };
 $("profileButton").onclick=()=>showModal("profile");
 
-$("closeModal").onclick=()=>$("modalOverlay").classList.remove("show");
+$("closeModal").onclick=()=>{if($("splash"))closeSplashAuth();else $("modalOverlay").classList.remove("show");};
 $("modalOverlay").onclick=e=>{
- if(e.target===$("modalOverlay"))$("modalOverlay").classList.remove("show");
+ if(e.target===$("modalOverlay")){if($("splash"))closeSplashAuth();else $("modalOverlay").classList.remove("show");}
 };
 
 window.addEventListener("beforeunload",()=>{
@@ -3735,7 +3795,7 @@ window.addEventListener("beforeunload",()=>{
 document.addEventListener("keydown",e=>{
  if(e.key==="Escape"){
   toggleMenu(true);
-  $("modalOverlay").classList.remove("show");
+  if($("splash"))closeSplashAuth();else $("modalOverlay").classList.remove("show");
  }
 });
 
@@ -3750,7 +3810,14 @@ async function refreshAccountData(){
 window.addEventListener("load", async ()=>{
  await TozraAuth.init();
  await refreshAccountData();
- if(!TozraAuth.getSession()) showModal("login");
+ if(!TozraAuth.getSession()){
+  showModal("login");
+  $("modalOverlay").classList.add("splash-auth");
+ }else if($("splash")){
+  // Authenticated users see the full animated launch, then enter the workspace.
+  if(tozraSplashTimer)clearTimeout(tozraSplashTimer);
+  tozraSplashTimer=setTimeout(finishSplash,5600);
+ }
 });
 
 /* SERVICE WORKER */
