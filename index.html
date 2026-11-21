@@ -1446,6 +1446,16 @@ body{background:var(--cc-paper)!important;color:var(--cc-ink)!important}
  .page{padding-bottom:105px!important}
 }
 </style>
+
+<style id="tozra-agents-premium-v1">
+:root{--tp-ink:#202a22;--tp-muted:#778176;--tp-paper:#f4f3ed;--tp-card:#fffefa;--tp-line:#e5e5da;--tp-forest:#26392e;--tp-olive:#77875f;--tp-lime:#c8d7a5}
+.tozra-agents{margin:34px 0 42px;padding:clamp(18px,3vw,30px);border:1px solid var(--tp-line);border-radius:25px;background:linear-gradient(145deg,#fbfaf5 0%,#f0f1e9 100%);color:var(--tp-ink);box-shadow:0 18px 50px rgba(35,48,37,.06)}
+.agents-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:22px}.agents-kicker{font-size:9px;letter-spacing:.2em;font-weight:800;color:#7a876c}.agents-heading h2{font-family:Georgia,serif;font-size:clamp(25px,3vw,36px);font-weight:500;letter-spacing:-.04em;margin:9px 0 7px;color:#25372b}.agents-heading p{margin:0;color:#778176;font-size:13px;line-height:1.6;max-width:520px}.agents-orbit{display:grid;place-items:center;width:46px;height:46px;border:1px solid #d8dfce;border-radius:50%;background:#fafff1;color:#75885b;font-size:22px;flex:none}.agents-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.agent-card{appearance:none;display:flex;flex-direction:column;align-items:flex-start;text-align:left;min-height:190px;padding:18px;border:1px solid #e3e5da;border-radius:17px;background:rgba(255,254,250,.88);color:#26352a;cursor:pointer;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}.agent-card:hover{transform:translateY(-3px);border-color:#b8c69d;box-shadow:0 12px 28px rgba(39,57,43,.09)}.agent-icon{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:#edf2e4;color:#61774c;font-size:21px;margin-bottom:16px}.agent-meta{font-size:8px;letter-spacing:.16em;color:#8b927f;font-weight:800}.agent-card strong{font-family:Georgia,serif;font-size:20px;font-weight:500;margin:7px 0}.agent-card small{font-size:11px;line-height:1.55;color:#778176;min-height:36px}.agent-card em{font-style:normal;font-size:10px;font-weight:750;color:#526b42;margin-top:auto;padding-top:15px}.agent-card-featured{background:#2a3d30;color:#f6f5ed;border-color:#2a3d30}.agent-card-featured .agent-icon{background:#40563f;color:#d5e4b5}.agent-card-featured .agent-meta,.agent-card-featured small{color:#c0cbb8}.agent-card-featured em{color:#d6e5b5}.agents-footnote{margin:16px 2px 0;color:#8a9084;font-size:10px;line-height:1.5}
+/* Refined premium surfaces without changing existing feature layout or IDs. */
+.workspace-hero{border-radius:26px!important}.hero-shell{box-shadow:0 20px 55px rgba(28,43,31,.08)!important}.page .project-card,.ph-card,.tool-card,.cs-hero{border-radius:18px!important}.primary-btn,.send,.smart-command button{box-shadow:0 8px 20px rgba(35,67,42,.12)}
+@media(max-width:760px){.tozra-agents{margin:22px 0 30px;padding:17px;border-radius:20px}.agents-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.agent-card{min-height:178px;padding:13px;border-radius:15px}.agent-card strong{font-size:17px}.agent-card small{font-size:10px}.agents-heading p{font-size:11px}.agents-orbit{width:38px;height:38px}}
+@media(max-width:390px){.agents-grid{grid-template-columns:1fr}.agent-card{min-height:150px}}
+</style>
 </head>
 
 <body>
@@ -1515,6 +1525,18 @@ body{background:var(--cc-paper)!important;color:var(--cc-ink)!important}
    <button class="outline-btn" id="heroChat">Sohbeti aç　↗</button>
   </div>
  </div>
+ <section class="tozra-agents" id="tozraAgents" aria-label="TOZRA uzman ajanları">
+  <div class="agents-heading"><div><div class="agents-kicker">TOZRA INTELLIGENCE / SPECIALISTS</div><h2>Uzman ajanların</h2><p>İhtiyacına uygun uzmanı seç. TOZRA sohbetinde birlikte çalışmaya başlayın.</p></div><span class="agents-orbit">✳</span></div>
+  <div class="agents-grid">
+   <button class="agent-card" type="button" data-agent="research"><span class="agent-icon">⌕</span><span class="agent-meta">01 / ANALİZ</span><strong>Research Agent</strong><small>Araştırma, kaynak değerlendirme ve kapsamlı raporlar.</small><em>Uzmanla çalış ↗</em></button>
+   <button class="agent-card" type="button" data-agent="creative"><span class="agent-icon">✳</span><span class="agent-meta">02 / FİKİR</span><strong>Creative Agent</strong><small>Fikir geliştirme, konsept ve yaratıcı strateji.</small><em>Uzmanla çalış ↗</em></button>
+   <button class="agent-card" type="button" data-agent="design"><span class="agent-icon">◈</span><span class="agent-meta">03 / TASARIM</span><strong>Design Agent</strong><small>Marka kimliği, sanat yönetimi ve tasarım brief'i.</small><em>Uzmanla çalış ↗</em></button>
+   <button class="agent-card" type="button" data-agent="writing"><span class="agent-icon">¶</span><span class="agent-meta">04 / İÇERİK</span><strong>Writing Agent</strong><small>Metin, hikâye, içerik planı ve editörlük.</small><em>Uzmanla çalış ↗</em></button>
+   <button class="agent-card" type="button" data-agent="project"><span class="agent-icon">▤</span><span class="agent-meta">05 / PLANLAMA</span><strong>Project Agent</strong><small>Hedefleri görevlere, takvime ve yol haritasına dönüştür.</small><em>Uzmanla çalış ↗</em></button>
+   <button class="agent-card agent-card-featured" type="button" data-agent="strategy"><span class="agent-icon">✦</span><span class="agent-meta">06 / KOMUTA</span><strong>Strategy Agent</strong><small>Birden fazla uzman bakışını birleştirip uygulanabilir plan çıkar.</small><em>Uzmanla çalış ↗</em></button>
+  </div>
+  <p class="agents-footnote">Uzman modları mevcut TOZRA sohbet altyapısını kullanır. Ayrı model veya harici servis gerektirmez; seçilen uzmanlık talimatı konuşmaya eklenir.</p>
+ </section>
  <section id="personalHome" aria-label="TOZRA kişisel çalışma alanı">
  <div class="ph-hero">
   <div class="ph-brand"><div class="ph-mark">T</div><div><div class="ph-brand-name">TOZRA</div><div class="ph-brand-sub">CREATIVE INTELLIGENCE</div></div></div>
@@ -3680,3 +3702,17 @@ if("serviceWorker" in navigator){
 
 </body>
 </html>
+
+<script id="tozra-agent-routing-v1">
+(function(){
+ const prompts={
+  research:"Research Agent olarak çalış. Önce hedefimi ve araştırma sorumu netleştir. Güvenilir kaynakları ayırt et, belirsizlikleri açıkça belirt, bulguları başlıklarla düzenle ve kaynak gerektiren iddiaları doğrulamam için işaretle. Araştırma isteğim: ",
+  creative:"Creative Agent olarak çalış. Yaratıcı stratejist gibi davran; fikrimi netleştir, özgün alternatifler üret, en güçlü yönü gerekçelendir ve uygulanabilir yaratıcı brief hazırla. Fikrim: ",
+  design:"Design Agent olarak çalış. Deneyimli marka ve görsel tasarım danışmanı gibi davran. Amaç, hedef kitle, görsel yön, renk, tipografi, kompozisyon ve teslim kriterlerini içeren profesyonel tasarım brief'i hazırla. Tasarım isteğim: ",
+  writing:"Writing Agent olarak çalış. Editör ve içerik yazarı gibi davran. Hedef kitleyi ve amacı netleştir; güçlü, özgün ve düzenli metin üret. Gerekirse başlık ve ton alternatifleri sun. Yazı isteğim: ",
+  project:"Project Agent olarak çalış. Proje yöneticisi gibi hedefimi aşamalara, görevlere, önceliklere, bağımlılıklara ve ölçülebilir çıktılara böl. Eksik bilgileri sor; gerçek dışı tamamlanma iddiasında bulunma. Projem: ",
+  strategy:"Strategy Agent olarak çalış. Stratejik danışman gibi hedefimi analiz et; araştırma, yaratıcı fikir, tasarım ve proje yönetimi bakışlarını birleştir. Seçenekleri, artı-eksileri, riskleri ve uygulanabilir ilk adımları çıkar. Hedefim: "
+ };
+ document.addEventListener("click",function(e){const card=e.target.closest("[data-agent]");if(!card)return;const key=card.getAttribute("data-agent");const prefix=prompts[key];if(!prefix)return;if(typeof window.startChatWithPrompt==="function")window.startChatWithPrompt(prefix);else if(typeof window.openGeneralChat==="function"){window.openGeneralChat();const input=document.getElementById("prompt");if(input){input.value=prefix;input.focus();}}});
+})();
+</script>
