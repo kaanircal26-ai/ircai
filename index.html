@@ -1536,7 +1536,7 @@ body{background:var(--cc-paper)!important;color:var(--cc-ink)!important}
    <button type="submit" aria-label="Hafızaya ekle">＋ Kaydet</button>
   </form>
   <div class="ph-memory-list" id="phMemoryList"><div class="ph-empty">Henüz kaydedilmiş bilgi yok.</div></div>
-  <div class="ph-save">Hafıza bu tarayıcıda, hesabına özel olarak saklanır. Şifre veya API anahtarı kaydetme.</div>
+  <div class="ph-save" id="phMemoryStatus">Hafıza yükleniyor… Şifre veya API anahtarı kaydetme.</div>
  </div>
 </section>
 <div class="ph-bottom">TOZRA · Fikirlerini harekete geçir.</div>
@@ -1890,6 +1890,9 @@ const TozraAuth = (() => {
    client.auth.onAuthStateChange((event, nextSession) => {
     session = nextSession || null;
     updateAccountUI();
+    if (event === "SIGNED_IN" || event === "SIGNED_OUT") {
+     window.TozraMemory?.reload?.().catch(error => console.warn("Hafıza hesap değişimi:", error));
+    }
     if(event === "PASSWORD_RECOVERY") showModal("updatePassword");
    });
   } catch (error) {
@@ -2959,9 +2962,11 @@ async function sendToAI({text,list,area,history,onSuccess,onFailure,agentMode=fa
     history:history,
     images:media.images,
     videoFrames:media.videoFrames,
-    personalMemory:window.TozraMemory && typeof window.TozraMemory.getAll==="function"
-     ? window.TozraMemory.getAll().slice(-30).map(item=>({content:item.content,category:item.category}))
-     : [],
+    personalMemory:window.TozraMemory && typeof window.TozraMemory.getRelevant==="function"
+     ? window.TozraMemory.getRelevant(text, 12).map(item=>({content:item.content,category:item.category}))
+     : (window.TozraMemory && typeof window.TozraMemory.getAll==="function"
+       ? window.TozraMemory.getAll().slice(-12).map(item=>({content:item.content,category:item.category}))
+       : []),
     agentMode:Boolean(agentMode)
    })
   });
@@ -3379,6 +3384,7 @@ async function refreshAccountData(){
 }
 window.addEventListener("load", async ()=>{
  await TozraAuth.init();
+ if (window.TozraMemory?.init) await window.TozraMemory.init();
  await refreshAccountData();
  if(!TozraAuth.getSession()) showModal("login");
 });
@@ -3390,7 +3396,7 @@ if("serviceWorker" in navigator){
  });
 }
 </script>
-<script src="/memory.js?v=2"></script>
+<script src="/memory.js?v=3"></script>
 <script src="/voice.js?v=8"></script>
 <script>
 (function(){
@@ -3539,27 +3545,44 @@ if("serviceWorker" in navigator){
 /* TOZRA SMART MEMORY UI */
 (function(){
  const $=id=>document.getElementById(id);
- const form=$("phMemoryForm"), input=$("phMemoryInput"), category=$("phMemoryCategory"), list=$("phMemoryList");
+ const form=$("phMemoryForm"), input=$("phMemoryInput"), category=$("phMemoryCategory"), list=$("phMemoryList"), status=$("phMemoryStatus");
  if(!form||!input||!list)return;
  function render(){
   const api=window.TozraMemory, items=api&&api.getAll?api.getAll():[];
   list.replaceChildren();
-  if(!items.length){const empty=document.createElement("div");empty.className="ph-empty";empty.textContent="Henüz kaydedilmiş bilgi yok.";list.appendChild(empty);return;}
-  items.slice().reverse().forEach(item=>{
-   const row=document.createElement("div");row.className="ph-memory-item";
-   const body=document.createElement("div");body.className="ph-memory-body";
-   const tag=document.createElement("span");tag.className="ph-memory-tag";tag.textContent=item.category||"Genel";
-   const content=document.createElement("p");content.textContent=item.content;body.append(tag,content);
-   const remove=document.createElement("button");remove.type="button";remove.className="ph-memory-remove";remove.textContent="Sil";
-   remove.addEventListener("click",()=>{if(api.remove(item.id))render();});
-   row.append(body,remove);list.appendChild(row);
-  });
+  if(!items.length){
+   const empty=document.createElement("div");empty.className="ph-empty";
+   empty.textContent="Henüz kaydedilmiş bilgi yok.";list.appendChild(empty);
+  } else {
+   items.slice().reverse().forEach(item=>{
+    const row=document.createElement("div");row.className="ph-memory-item";
+    const body=document.createElement("div");body.className="ph-memory-body";
+    const tag=document.createElement("span");tag.className="ph-memory-tag";tag.textContent=item.category||"Genel";
+    const content=document.createElement("p");content.textContent=item.content;body.append(tag,content);
+    const actions=document.createElement("div");actions.style.display="flex";actions.style.gap="6px";
+    const edit=document.createElement("button");edit.type="button";edit.className="ph-memory-remove";edit.textContent="Düzenle";
+    edit.addEventListener("click",()=>{
+     const next=window.prompt("Hafıza bilgisini düzenle:",item.content);
+     if(next===null)return;
+     try{api.update(item.id,next);render();}catch(error){alert(error.message||"Hafıza güncellenemedi.");}
+    });
+    const remove=document.createElement("button");remove.type="button";remove.className="ph-memory-remove";remove.textContent="Sil";
+    remove.addEventListener("click",()=>{if(api.remove(item.id))render();});
+    actions.append(edit,remove);row.append(body,actions);list.appendChild(row);
+   });
+  }
+  if(status&&api?.getStatus)status.textContent=api.getStatus().message;
  }
  form.addEventListener("submit",event=>{
   event.preventDefault();const value=input.value.trim();if(!value)return;
-  try{if(!window.TozraMemory)throw new Error("Hafıza sistemi yüklenemedi.");window.TozraMemory.add(value,category.value);input.value="";render();}
-  catch(error){alert(error.message||"Hafızaya kaydedilemedi.");}
+  try{
+   if(!window.TozraMemory)throw new Error("Hafıza sistemi yüklenemedi.");
+   const result=window.TozraMemory.add(value,category.value);
+   if(result.duplicate){alert("Bu bilgi zaten hafızada kayıtlı.");}
+   input.value="";render();
+  } catch(error){alert(error.message||"Hafızaya kaydedilemedi.");}
  });
+ window.addEventListener("tozra:memory-updated",render);
  render();
 })();
 </script>
