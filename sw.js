@@ -1,4 +1,4 @@
-/* TOZRA Service Worker — v15
+/* TOZRA Service Worker — v16
    - Kurulumda tek bir eksik dosya yüzünden tüm yükleme iptal olmaz.
    - Yalnızca TOZRA önbellekleri temizlenir.
    - API ve kullanıcıya özel yanıtlar önbelleğe alınmaz.
@@ -6,7 +6,7 @@
 "use strict";
 
 const CACHE_PREFIX = "tozra-";
-const CACHE_NAME = "tozra-v15";
+const CACHE_NAME = "tozra-v16";
 const APP_SHELL = [
   "/",
   "/manifest.json",
