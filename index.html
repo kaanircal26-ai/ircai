@@ -1720,6 +1720,33 @@ function openProjectOptions(id){
  };
 }
 
+/* TÜRKÇE SESLİ YANIT — tarayıcının ücretsiz SpeechSynthesis özelliği */
+function speakText(content, button){
+ if(!("speechSynthesis" in window)){
+  if(button)button.textContent="Ses desteklenmiyor";
+  return;
+ }
+ const clean=String(content||"").trim();
+ if(!clean)return;
+ window.speechSynthesis.cancel();
+ const utterance=new SpeechSynthesisUtterance(clean);
+ utterance.lang="tr-TR";
+ utterance.rate=1;
+ utterance.pitch=1;
+ const voices=window.speechSynthesis.getVoices();
+ const turkish=voices.find(v=>/^tr([-_]|$)/i.test(v.lang));
+ if(turkish)utterance.voice=turkish;
+ utterance.onstart=()=>{if(button)button.textContent="⏸ Okunuyor…";};
+ utterance.onend=()=>{if(button)button.textContent="🔊 Sesli dinle";};
+ utterance.onerror=()=>{if(button)button.textContent="🔊 Tekrar dene";};
+ window.speechSynthesis.speak(utterance);
+}
+function speakNextVoiceReply(content){
+ if(!window.tozraSpeakNextReply)return;
+ window.tozraSpeakNextReply=false;
+ speakText(content);
+}
+
 /* MESAJ GÖRÜNÜMÜ */
 function addMessage(area,role,content){
  const wrap=document.createElement("div");
@@ -2083,6 +2110,7 @@ async function sendGeneralMessage(value){
    conversation.push({role:"assistant",content:answer});
    addMessage($("messages"),"assistant",answer);
    saveGeneralConversation();
+   speakNextVoiceReply(answer);
   },
   onFailure:error=>{
    conversation.push({role:"assistant",content:error});
@@ -2132,6 +2160,7 @@ async function sendProjectMessage(){
    saveProjects();
    addMessage($("projectMessages"),"assistant",answer);
    renderProjectInfo(p);
+   speakNextVoiceReply(answer);
   },
 
   onFailure:error=>{
@@ -2444,7 +2473,7 @@ if("serviceWorker" in navigator){
 }
 </script>
 <script src="/memory.js?v=2"></script>
-<script src="/voice.js?v=5"></script>
+<script src="/voice.js?v=6"></script>
 <script>
 (function(){
  const syncRail=()=>{

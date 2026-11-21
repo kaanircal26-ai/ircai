@@ -72,6 +72,7 @@ function startVoiceCapture(button,input,status){
    input.value=(input.value.trim()?input.value.trim()+" ":"")+transcript;
    input.dispatchEvent(new Event("input",{bubbles:true}));
    status.textContent="Konuşman algılandı. TOZRA'ya gönderiliyor…";
+   window.tozraSpeakNextReply=true;
    // Gönderim düğmesine tıklayarak uygulamanın normal mesaj akışını kullan.
    // Bu yöntem fonksiyonların global kapsamda olup olmamasından etkilenmez.
    const sendId=input.id==="projectPrompt"?"projectSend":"send";
