@@ -1614,13 +1614,80 @@ body{background:var(--cc-paper)!important;color:var(--cc-ink)!important}
 #tasksPage .calendar-day.muted{color:#849080!important}
 </style>
 
+
+<style id="tozra-ai-home-refresh-v1">
+/* Animated TOZRA identity inspired by the supplied splash reference. */
+.splash{overflow:hidden;background:linear-gradient(180deg,#fbffff 0%,#d8fbf7 30%,#a8c7f6 58%,#3e2d78 82%,#090817 100%);color:#fff;isolation:isolate}
+.splash:before{content:"";position:absolute;inset:-20%;background:radial-gradient(ellipse at 50% 27%,rgba(255,255,255,.9),transparent 34%),radial-gradient(ellipse at 20% 50%,rgba(69,224,221,.35),transparent 42%);filter:blur(20px);animation:splashGlow 4s ease-in-out infinite alternate;z-index:-1}
+.splash-inner{gap:0;animation:splashRise 1.1s cubic-bezier(.2,.8,.2,1) both}
+.splash-mark{width:112px;height:112px;margin:0 0 27px;padding:13px;border-radius:0;background:transparent;box-shadow:none;animation:markFloat 2.8s ease-in-out infinite}
+.splash-mark svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 12px 25px rgba(49,68,180,.3));animation:markTurn 1.4s cubic-bezier(.2,.8,.2,1) both}
+.splash-name{font-size:25px;letter-spacing:.38em;padding-left:.38em;color:#fff;text-shadow:0 2px 20px rgba(31,30,78,.3)}
+.splash-tagline{display:block;margin-top:10px;color:rgba(255,255,255,.75);font-size:9px;letter-spacing:.24em}
+.loader{width:94px;height:2px;margin-top:32px;background:rgba(255,255,255,.2)}
+.loader-bar{background:#fff;box-shadow:0 0 14px rgba(255,255,255,.8)}
+@keyframes splashGlow{from{transform:translate3d(-2%,0,0) scale(.96)}to{transform:translate3d(2%,-2%,0) scale(1.06)}}
+@keyframes splashRise{from{opacity:0;transform:translateY(22px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes markFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes markTurn{from{opacity:0;transform:rotate(-18deg) scale(.55)}to{opacity:1;transform:rotate(0) scale(1)}}
+
+/* AI assistant home: soft glass gradients, sculptural backdrop and quick actions. */
+.tozra-home-top{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2;margin-bottom:35px}
+.tozra-home-brand{display:flex;align-items:center;gap:10px;color:#26233b;font-size:13px;font-weight:850;letter-spacing:2px}
+.tozra-home-brand small{display:block;margin-top:3px;color:#8a82a4;font-size:7px;letter-spacing:1.7px}
+.tozra-home-orb{display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:linear-gradient(145deg,#8d7bff,#c6a6ff);color:#fff;font-size:18px;box-shadow:0 5px 16px #8873dc44}
+.tozra-home-profile{width:38px;height:38px;border:2px solid #fff;border-radius:50%;background:linear-gradient(145deg,#f9d6e9,#b9c8ff);color:#43365d;font-weight:800;box-shadow:0 4px 15px #6e63a522}
+#workspacePage .workspace-hero.tozra-chat-first{position:relative;isolation:isolate;overflow:hidden;min-height:500px;padding:28px 30px 24px;border:1px solid rgba(255,255,255,.68);border-radius:30px;background:linear-gradient(145deg,#fffaff 0%,#f4e8fb 36%,#e2eaff 72%,#e9f3ff 100%);box-shadow:0 22px 65px rgba(110,95,169,.13);color:#28243b}
+#workspacePage .workspace-hero.tozra-chat-first:before{content:"";position:absolute;z-index:-1;width:470px;height:300px;right:-95px;top:125px;border-radius:48% 52% 42% 58%;transform:rotate(-17deg);background:linear-gradient(145deg,rgba(255,255,255,.95),rgba(187,226,246,.76) 34%,rgba(178,166,235,.72) 66%,rgba(255,255,255,.92));box-shadow:inset 12px 15px 35px rgba(255,255,255,.9),inset -18px -24px 40px rgba(106,105,174,.16),0 25px 55px rgba(112,111,174,.12);filter:blur(.2px)}
+#workspacePage .workspace-hero.tozra-chat-first:after{content:"";position:absolute;z-index:-1;width:270px;height:190px;right:8%;top:190px;border-radius:50%;transform:rotate(22deg);background:linear-gradient(130deg,rgba(255,255,255,.88),rgba(126,222,235,.6) 38%,rgba(173,144,226,.75));filter:blur(1px);box-shadow:inset 10px 12px 22px rgba(255,255,255,.85),0 18px 35px rgba(104,100,171,.12)}
+#workspacePage .hero-greeting{color:#82799c;font-size:10px;letter-spacing:1.4px;font-weight:750}
+#workspacePage .eyebrow{color:#8a72c6;font-size:9px;letter-spacing:1.5px}
+#workspacePage .eyebrow-dot{background:#9c83ec;box-shadow:0 0 10px #bda9ff}
+#workspacePage .workspace-hero h1{position:relative;z-index:1;max-width:560px;color:#24213a;font-size:clamp(38px,5vw,56px);letter-spacing:-2.5px;line-height:1.04}
+#workspacePage .workspace-hero p{position:relative;z-index:1;max-width:420px;color:#77718d;font-size:13px;line-height:1.65}
+#workspacePage .smart-command{position:relative;z-index:2;max-width:610px;margin-top:28px;padding:7px 8px 7px 16px;border:1px solid rgba(255,255,255,.9);border-radius:19px;background:rgba(255,255,255,.86);box-shadow:0 12px 32px rgba(91,79,145,.12);backdrop-filter:blur(18px)}
+#workspacePage .smart-command input{color:#342d4d;font-size:13px}#workspacePage .smart-command input::placeholder{color:#9a94aa}
+#workspacePage .smart-command button{border-radius:14px;background:linear-gradient(135deg,#8d78e9,#a98de9);color:#fff;padding:11px 17px;box-shadow:0 5px 14px #927be544}
+#workspacePage .chat-first-hints{position:relative;z-index:2;display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}
+#workspacePage .chat-first-hints button{border:1px solid rgba(255,255,255,.9);border-radius:30px;padding:10px 13px;background:rgba(255,255,255,.78);color:#5e5874;font-size:10px;font-weight:650;box-shadow:0 5px 15px rgba(90,82,139,.06);backdrop-filter:blur(12px)}
+#workspacePage .chat-first-hints button:active{transform:scale(.97)}
+#workspacePage .hero-actions{position:relative;z-index:2;margin-top:17px}
+#workspacePage .hero-actions .primary-btn{background:#29253e;color:#fff;border-radius:14px}
+#workspacePage .hero-actions .outline-btn{border-color:rgba(255,255,255,.9);background:rgba(255,255,255,.6);color:#5d5575;border-radius:14px}
+.tozra-home-voice-row{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;max-width:610px;margin-top:15px;padding:10px 13px 10px 15px;border:1px solid rgba(255,255,255,.85);border-radius:18px;background:rgba(255,255,255,.58);color:#8a839d;font-size:10px;backdrop-filter:blur(12px)}
+.tozra-home-voice-row button{width:35px;height:35px;border:0;border-radius:50%;background:linear-gradient(145deg,#a38df1,#7965d9);color:white;font-size:22px;box-shadow:0 5px 15px #8874db55}
+@media(max-width:760px){
+ .content{padding:12px 12px calc(105px + env(safe-area-inset-bottom))!important}
+ #workspacePage{display:flex!important;flex-direction:column!important;gap:0!important}
+ #workspacePage .workspace-hero.tozra-chat-first{width:100%;min-height:590px;margin:0 0 18px;padding:22px 17px 18px;border-radius:27px}
+ .tozra-home-top{margin-bottom:32px}
+ #workspacePage .workspace-hero h1{font-size:clamp(38px,10vw,48px);max-width:330px;letter-spacing:-2px}
+ #workspacePage .workspace-hero p{max-width:310px;font-size:12px}
+ #workspacePage .workspace-hero.tozra-chat-first:before{width:360px;height:260px;right:-125px;top:185px}
+ #workspacePage .workspace-hero.tozra-chat-first:after{width:220px;height:145px;right:5%;top:235px}
+ #workspacePage .smart-command{position:absolute;left:13px;right:13px;bottom:87px;margin:0;display:flex;min-height:58px}
+ #workspacePage .smart-command input{min-width:0;font-size:12px}
+ #workspacePage .smart-command button{white-space:nowrap;padding:0 13px;font-size:11px}
+ #workspacePage .chat-first-hints{position:absolute;left:15px;right:15px;bottom:155px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ #workspacePage .chat-first-hints button{min-width:0;padding:10px 8px;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ #workspacePage .hero-actions{position:absolute;left:15px;right:15px;bottom:225px;display:flex;gap:7px;margin:0}
+ #workspacePage .hero-actions button{flex:1;min-width:0;padding:10px 7px;font-size:10px}
+ .tozra-home-voice-row{position:absolute;left:15px;right:15px;bottom:15px;margin:0}
+ #workspacePage .workspace-rail{display:none!important}
+ #personalHome{margin-top:8px}
+ .splash-mark{width:104px;height:104px}
+}
+@media(prefers-reduced-motion:reduce){.splash:before,.splash-mark,.splash-mark svg{animation:none!important}}
+</style>
+
 </head>
 
 <body>
 <div class="splash" id="splash">
  <div class="splash-inner">
-  <div class="splash-mark" aria-label="TOZRA">T</div>
+  <div class="splash-mark" aria-label="TOZRA"><svg viewBox="0 0 100 100" role="img" aria-hidden="true"><defs><linearGradient id="tozraMarkGradient" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#64e9df"/><stop offset=".48" stop-color="#5688ff"/><stop offset="1" stop-color="#9a42e8"/></linearGradient></defs><path d="M12 23H88V43H60V83H40V43H12Z" fill="url(#tozraMarkGradient)"/></svg></div>
   <div class="splash-name">TOZRA</div>
+  <div class="splash-tagline">CREATIVE INTELLIGENCE</div>
   <div class="loader"><div class="loader-bar"></div></div>
  </div>
 </div>
@@ -1670,19 +1737,21 @@ body{background:var(--cc-paper)!important;color:var(--cc-ink)!important}
 <section class="content">
 <div class="page active" id="workspacePage">
  <div class="workspace-hero hero-shell tozra-chat-first">
-  <div class="hero-greeting" id="dashboardGreeting">YARATICI ÇALIŞMA ALANIN</div>
-  <div class="eyebrow"><span class="eyebrow-dot"></span> TOZRA　/　CREATIVE CANVAS</div>
-  <h1>Fikrini keşfet.<br>Üretime dönüştür.</h1>
-  <p>Bir fikirle başla; TOZRA onu projeye, içeriğe ve gerçek bir üretim planına dönüştürsün.</p>
+  <div class="tozra-home-top"><div class="tozra-home-brand"><span class="tozra-home-orb">✦</span><span>TOZRA <small>AI ASSISTANT</small></span></div><button class="tozra-home-profile" id="homeProfileButton" aria-label="Profil">T</button></div>
+  <div class="hero-greeting" id="dashboardGreeting">SENİN YARATICI ASİSTANIN</div>
+  <div class="eyebrow"><span class="eyebrow-dot"></span> PERSONALIZED FOR YOU</div>
+  <h1>Merhaba!<br>Bugün ne yapalım?</h1>
+  <p>Fikirlerini keşfet, sorularını sor ve hayallerini birlikte gerçeğe dönüştürelim.</p>
   <form class="smart-command" id="smartCommandForm">
    <input id="smartCommandInput" type="text" maxlength="2000" autocomplete="off" placeholder="TOZRA'ya bir şey sor veya bir hedef yaz..." aria-label="TOZRA ile sohbet et">
    <button type="submit">Gönder ↗</button>
   </form>
-  <div class="chat-first-hints"><span>✦ Fikir geliştir</span><span>▤ İçerik üret</span><span>⌕ Araştır</span></div>
+  <div class="chat-first-hints"><button type="button" data-home-prompt="Bir fikrimi geliştirmeme yardım et.">✦ Fikir geliştir</button><button type="button" data-home-prompt="Bana yaratıcı içerik fikirleri üret.">▤ İçerik üret</button><button type="button" data-home-prompt="Bir konuyu araştır ve özetle.">⌕ Araştır</button></div>
   <div class="hero-actions">
    <button class="primary-btn" id="heroNewProject">＋ Yeni proje</button>
-   <button class="outline-btn" id="heroChat">Sohbeti aç　↗</button>
+   <button class="outline-btn" id="heroChat">Sohbete devam et　↗</button>
   </div>
+  <div class="tozra-home-voice-row"><span>TOZRA ile konuşmaya hazır mısın?</span><button type="button" id="homeVoiceButton" aria-label="Sesli sohbeti aç">⌁</button></div>
  </div>
  <section id="personalHome" aria-label="TOZRA kişisel çalışma alanı">
  <div class="ph-hero">
@@ -2430,6 +2499,16 @@ $("smartCommandForm").addEventListener("submit",e=>{
  if(!value){$("smartCommandInput").focus();return;}
  $("smartCommandInput").value="";
  startChatWithPrompt(value);
+});
+
+// Ana ekrandaki öneriler mevcut sohbet akışına yönlendirilir.
+document.querySelectorAll('[data-home-prompt]').forEach(button=>{
+ button.addEventListener('click',()=>startChatWithPrompt(button.dataset.homePrompt));
+});
+$("homeProfileButton")?.addEventListener("click",()=>$("profileButton")?.click());
+$("homeVoiceButton")?.addEventListener("click",()=>{
+ openGeneralChat();
+ window.setTimeout(()=>$("voiceButton")?.click(),450);
 });
 
 /* PROJE SİSTEMİ */
