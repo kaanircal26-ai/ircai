@@ -6,7 +6,7 @@
 "use strict";
 
 const CACHE_PREFIX = "tozra-";
-const CACHE_NAME = "tozra-v12";
+const CACHE_NAME = "tozra-v13-mobile-icons";
 const APP_SHELL = [
   "/",
   "/manifest.json",
