@@ -1,16 +1,16 @@
 {
-  "name": "TOZRA — Creative Intelligence",
+  "name": "TOZRA — IRCAL DESIGN",
   "short_name": "TOZRA",
-  "description": "Your Creative Intelligence Assistant",
+  "description": "TOZRA by IRCAL DESIGN",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#e9f3ff",
-  "theme_color": "#b9c9f4",
+  "background_color": "#0b1022",
+  "theme_color": "#101b31",
   "icons": [
     {
-      "src": "/apple-touch-icon.PNG",
+      "src": "/ircal-design-icon.png",
       "sizes": "1024x1024",
       "type": "image/png",
       "purpose": "any"

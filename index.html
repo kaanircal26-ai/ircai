@@ -4,14 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#10271B">
-<meta name="description" content="TOZRA — Creative Intelligence">
+<meta name="description" content="TOZRA — IRCAL DESIGN">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="TOZRA">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>TOZRA — Creative Intelligence</title>
+<title>TOZRA — IRCAL DESIGN</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<link rel="icon" href="/apple-touch-icon.PNG">
-<link rel="apple-touch-icon" href="/apple-touch-icon.PNG">
+<link rel="icon" type="image/png" href="/ircal-design-icon.png">
+<link rel="apple-touch-icon" href="/ircal-design-icon.png">
 <link rel="manifest" href="/manifest.json">
 
 <style>
@@ -1088,7 +1088,7 @@ body{background:#f3f6f1!important;color:#202a22!important}
 .splash-inner{position:relative;z-index:1;animation:tozraSplashIn 1s cubic-bezier(.2,.8,.2,1) both!important}
 .splash-mark{display:flex!important;align-items:center!important;justify-content:center!important;width:88px!important;height:88px!important;border:1px solid #d8e6c24a!important;border-radius:27px!important;background:linear-gradient(145deg,#d3e5b1,#9fbd79)!important;color:#263725!important;font-size:45px!important;font-weight:900!important;letter-spacing:-.12em!important;padding-right:5px!important;box-shadow:0 18px 48px #07110955!important}
 .splash-name{margin-top:24px!important;color:#f3f7ed!important;font-size:24px!important;font-weight:850!important;letter-spacing:.32em!important;padding-left:.32em!important}
-.splash-name:after{content:"CREATIVE INTELLIGENCE";display:block;margin-top:11px;color:#aebda9;font-size:8px;font-weight:600;letter-spacing:.24em}
+.splash-name:after{content:"IRCAL DESIGN";display:block;margin-top:11px;color:#aebda9;font-size:8px;font-weight:600;letter-spacing:.24em}
 .loader{width:160px!important;height:3px!important;margin-top:35px!important;background:#ffffff18!important;border-radius:20px!important}
 .loader-bar{background:#c0d99a!important;box-shadow:none!important;animation:loading 2.4s ease-in-out forwards!important}
 @keyframes tozraSplashIn{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
@@ -1802,26 +1802,112 @@ html,body{max-width:100%;overflow-x:hidden}
 @keyframes homeGradientRide{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
 @keyframes homeNebulaSpin{from{transform:rotate(0) scale(.88)}50%{transform:rotate(180deg) scale(1.13)}to{transform:rotate(360deg) scale(.88)}}
 @media(max-width:700px){#modalOverlay.splash-auth{padding:14px}#modalOverlay.splash-auth .modal.auth-screen{max-height:calc(100dvh - 28px);overflow-y:auto;padding:20px 18px}.splash-mark{width:102px;height:102px}.splash-inner:before{width:166px;height:166px}.splash-inner:after{width:210px;height:210px}}
-@media(prefers-reduced-motion:reduce){.splash:before,.splash:after,.splash-inner:before,.splash-inner:after,.splash-mark,.splash-mark svg,.splash-particle,#personalHome .ph-hero,.workspace-hero.tozra-chat-first,#modalOverlay.splash-auth .modal.auth-screen,#modalOverlay.splash-auth .auth-mark{animation:none!important}}
+@media(prefers-reduced-motion:reduce){.splash:before,.splash:after,.splash-inner:before,.splash-inner:after,.splash-mark,.splash-mark svg,.splash-particle,#personalHome .ph-hero,.workspace-hero.tozra-chat-first,}
 
 </style>
 
+
+<style id="ircal-design-cinematic-refresh-v4">
+/* Six-second cinematic opening: independent orbital motion continues beneath auth. */
+.splash{z-index:9999;isolation:isolate;overflow:hidden;background:
+ radial-gradient(ellipse at 50% 48%,#182b42 0%,#101b31 35%,#0b1022 68%,#070a16 100%);color:#f7f9ff}
+.splash:before,.splash:after{content:"";position:absolute;z-index:0;pointer-events:none;border-radius:50%;filter:blur(32px);mix-blend-mode:screen}
+.splash:before{width:min(95vw,720px);height:min(95vw,720px);left:-36%;top:-35%;background:radial-gradient(circle,rgba(42,219,210,.24),transparent 66%);animation:openingNebulaA 8s ease-in-out infinite alternate}
+.splash:after{width:min(90vw,680px);height:min(90vw,680px);right:-35%;bottom:-38%;background:radial-gradient(circle,rgba(142,94,255,.28),transparent 67%);animation:openingNebulaB 9s ease-in-out infinite alternate}
+.splash-cosmos{position:absolute;inset:0;z-index:1;pointer-events:none;display:grid;place-items:center}
+.splash-core-glow{position:absolute;width:min(62vw,330px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(77,202,231,.22),rgba(109,100,239,.12) 42%,transparent 70%);filter:blur(8px);animation:corePulse 3.8s ease-in-out infinite}
+.splash-orbit{position:absolute;left:50%;top:44%;border:1px solid rgba(169,207,255,.26);border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 28px rgba(105,151,255,.08),inset 0 0 24px rgba(105,151,255,.04)}
+.orbit-one{width:min(72vw,370px);height:min(72vw,370px);animation:orbitSpin 8s linear infinite}
+.orbit-two{width:min(92vw,470px);height:min(42vw,215px);border-color:rgba(83,226,220,.3);transform:translate(-50%,-50%) rotate(54deg);animation:orbitSpinReverse 10s linear infinite}
+.orbit-three{width:min(98vw,510px);height:min(29vw,150px);border-color:rgba(183,142,255,.28);transform:translate(-50%,-50%) rotate(-42deg);animation:orbitSpin 13s linear infinite}
+.splash-inner{z-index:3;position:relative;display:flex;align-items:center;flex-direction:column;animation:splashCinematicIn 1.25s cubic-bezier(.16,1,.3,1) both}
+.splash-mark{width:108px;height:108px;border-radius:30px;overflow:hidden;background:rgba(7,20,24,.8);border:1px solid rgba(205,237,255,.4);box-shadow:0 0 0 9px rgba(118,184,255,.045),0 20px 75px rgba(28,182,220,.23);animation:markLevitate 3.2s ease-in-out infinite}
+.splash-mark img{width:100%;height:100%;object-fit:cover}
+.splash-name{margin-top:25px;font-size:29px;font-weight:850;letter-spacing:.34em;padding-left:.34em;color:#f7f9ff;text-shadow:0 4px 28px rgba(120,187,255,.3)}
+.splash-tagline{margin-top:10px;color:#b7c8e9;font-size:10px;font-weight:800;letter-spacing:.34em}
+.splash-loader-label{margin-top:27px;font-size:8px;letter-spacing:.2em;color:#8ea3c6;font-weight:700}
+.splash .loader{width:170px;height:3px;margin-top:13px;background:rgba(180,205,245,.15);overflow:hidden}
+.splash .loader-bar{height:100%;width:38%;border-radius:9px;background:linear-gradient(90deg,#55e4d4,#729dff,#bd83ff);box-shadow:0 0 15px rgba(110,185,255,.75);animation:loaderJourney 6s cubic-bezier(.4,0,.2,1) forwards}
+.splash-particle{position:absolute;z-index:2;width:7px;height:7px;border-radius:50%;background:#9af5ec;box-shadow:0 0 18px 5px rgba(93,226,224,.35)}
+.splash-particle-a{left:19%;top:30%;animation:particleDriftA 6s ease-in-out infinite}
+.splash-particle-b{right:17%;top:39%;background:#c5a2ff;box-shadow:0 0 18px 5px rgba(164,125,255,.4);animation:particleDriftB 7s ease-in-out infinite}
+.splash-particle-c{left:28%;bottom:26%;width:5px;height:5px;animation:particleDriftC 5s ease-in-out infinite}
+.splash-particle-d{right:27%;bottom:29%;width:4px;height:4px;background:#fff;animation:particleDriftB 5.5s ease-in-out infinite reverse}
+.splash-auth-actions{position:absolute;z-index:4;left:0;right:0;bottom:max(28px,env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:center;gap:16px}
+.splash-auth-actions button{border:0;background:transparent;color:#dce8ff;font-size:12px;font-weight:750;letter-spacing:.04em;padding:11px 15px;border-radius:999px;cursor:pointer;transition:background .2s,color .2s,transform .2s}
+.splash-auth-actions button:hover{background:rgba(191,214,255,.12);color:#fff;transform:translateY(-2px)}
+.splash-auth-actions span{height:15px;width:1px;background:rgba(202,220,255,.3)}
+/* Auth panel floats above, never pauses the moving splash scene. */
+#modalOverlay.splash-auth{z-index:10001;background:rgba(6,10,24,.30);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+#modalOverlay.splash-auth .modal.auth-screen{animation:authCardArrive .75s cubic-bezier(.16,1,.3,1) both}
+#modalOverlay.splash-auth .auth-mark{animation:authMarkFloat 3s ease-in-out infinite}
+/* New home motion language: flowing aurora ribbons and orbiting light nodes, intentionally unlike splash. */
+#workspacePage .workspace-hero{position:relative;isolation:isolate;overflow:hidden;background:
+ radial-gradient(ellipse at 12% 100%,rgba(61,217,189,.22),transparent 38%),
+ radial-gradient(ellipse at 88% 10%,rgba(136,112,255,.25),transparent 42%),
+ linear-gradient(128deg,#101c36 0%,#172d4b 48%,#20254a 100%)!important;border:1px solid rgba(147,181,255,.22)!important;box-shadow:0 24px 70px rgba(23,38,76,.18)!important;color:#f8faff!important}
+#workspacePage .workspace-hero:before{content:"";position:absolute;z-index:-1;inset:-35%;pointer-events:none;background:conic-gradient(from 0deg at 50% 50%,transparent 0 18%,rgba(81,220,207,.20) 25%,transparent 34% 53%,rgba(157,119,255,.22) 62%,transparent 72% 100%);filter:blur(28px);animation:homeAuroraSpin 19s linear infinite}
+#workspacePage .workspace-hero:after{content:"";position:absolute;z-index:-1;width:58%;aspect-ratio:1;right:-12%;top:-44%;border-radius:50%;border:1px solid rgba(171,199,255,.25);box-shadow:0 0 0 22px rgba(171,199,255,.035),0 0 0 48px rgba(171,199,255,.025),inset 0 0 50px rgba(116,165,255,.12);animation:homeOrbFloat 7s ease-in-out infinite}
+#workspacePage .workspace-hero>*{position:relative;z-index:1}
+#workspacePage .tozra-home-orb{background:linear-gradient(135deg,#5ce5d3,#8196ff 58%,#bd8cff)!important;color:#0b1830!important;box-shadow:0 0 28px rgba(99,183,255,.32);animation:homeLogoPulse 3.2s ease-in-out infinite}
+#workspacePage .hero-greeting,#workspacePage .eyebrow,#workspacePage .workspace-hero h1,#workspacePage .workspace-hero p{color:#f6f8ff!important}
+#workspacePage .workspace-hero .smart-command{background:rgba(245,249,255,.94)!important;border:1px solid rgba(255,255,255,.55)!important;box-shadow:0 12px 38px rgba(4,12,34,.22)}
+#workspacePage .workspace-hero .chat-first-hints button{background:rgba(225,237,255,.12)!important;border-color:rgba(212,226,255,.2)!important;color:#f1f5ff!important;backdrop-filter:blur(12px)}
+/* Unified icon language, including navigation, tools, cards and home controls. */
+.nav-symbol,.tool-icon,.project-symbol,.mode-icon,.rail-heading-icon,.tip-mark,.ph-mark,.ph-stat,.tozra-home-orb{font-family:inherit}
+.nav-symbol,.tool-icon,.project-symbol,.mode-icon,.rail-heading-icon{display:inline-grid;place-items:center;border-radius:12px;background:linear-gradient(145deg,rgba(108,155,255,.16),rgba(89,221,207,.12));border:1px solid rgba(125,167,238,.24);color:#75b8e9;line-height:1}
+.nav-symbol svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.brand-icon img,.mobile-brand .brand-icon img,.welcome-logo img{object-fit:cover}
+@keyframes openingNebulaA{from{transform:translate(-4%,0) scale(.9)}to{transform:translate(13%,14%) scale(1.18)}}
+@keyframes openingNebulaB{from{transform:translate(4%,2%) scale(1)}to{transform:translate(-15%,-12%) scale(1.2)}}
+@keyframes orbitSpin{to{rotate:360deg}}
+@keyframes orbitSpinReverse{to{rotate:-360deg}}
+@keyframes corePulse{0%,100%{transform:scale(.82);opacity:.55}50%{transform:scale(1.16);opacity:1}}
+@keyframes markLevitate{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-11px) rotate(2deg)}}
+@keyframes splashCinematicIn{from{opacity:0;transform:translateY(28px) scale(.88);filter:blur(9px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+@keyframes loaderJourney{0%{width:0%;transform:translateX(0)}70%{width:80%}100%{width:100%;transform:translateX(0)}}
+@keyframes particleDriftA{0%,100%{transform:translate(0,0) scale(.8)}50%{transform:translate(34px,-42px) scale(1.5)}}
+@keyframes particleDriftB{0%,100%{transform:translate(0,0) scale(.7)}50%{transform:translate(-38px,35px) scale(1.35)}}
+@keyframes particleDriftC{0%,100%{transform:translate(0,0)}50%{transform:translate(25px,24px)}}
+@keyframes homeAuroraSpin{to{transform:rotate(360deg)}}
+@keyframes homeOrbFloat{0%,100%{transform:translate3d(0,0,0) rotate(0deg)}50%{transform:translate3d(-16px,22px,0) rotate(9deg)}}
+@keyframes homeLogoPulse{0%,100%{transform:scale(1);filter:saturate(1)}50%{transform:scale(1.08);filter:saturate(1.4)}}
+@media(max-width:600px){
+ .splash-mark{width:88px;height:88px;border-radius:25px}
+ .splash-name{font-size:25px}
+ .splash-auth-actions{bottom:max(20px,env(safe-area-inset-bottom))}
+ .splash-auth-actions button{font-size:11px;padding:10px 13px}
+ #workspacePage .workspace-hero{min-height:490px}
+}
+@media(prefers-reduced-motion:reduce){
+ .splash:before,.splash:after,.splash-mark,.splash-orbit,.splash-core-glow,.splash-particle,.splash .loader-bar,#workspacePage .workspace-hero:before,#workspacePage .workspace-hero:after,.tozra-home-orb{animation:none!important}
+}
+</style>
 </head>
 
 <body>
 <div class="splash" id="splash">
+ <div class="splash-cosmos" aria-hidden="true">
+  <span class="splash-orbit orbit-one"></span><span class="splash-orbit orbit-two"></span><span class="splash-orbit orbit-three"></span>
+  <span class="splash-core-glow"></span><span class="splash-particle splash-particle-a"></span><span class="splash-particle splash-particle-b"></span><span class="splash-particle splash-particle-c"></span><span class="splash-particle splash-particle-d"></span>
+ </div>
  <div class="splash-inner">
-  <div class="splash-mark" aria-label="TOZRA"><svg viewBox="0 0 100 100" role="img" aria-hidden="true"><defs><linearGradient id="tozraMarkGradient" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#64e9df"/><stop offset=".48" stop-color="#5688ff"/><stop offset="1" stop-color="#9a42e8"/></linearGradient></defs><path d="M12 23H88V43H60V83H40V43H12Z" fill="url(#tozraMarkGradient)"/></svg></div>
-  <div class="splash-particle splash-particle-a" aria-hidden="true"></div><div class="splash-particle splash-particle-b" aria-hidden="true"></div><div class="splash-particle splash-particle-c" aria-hidden="true"></div>
+  <div class="splash-mark" aria-label="TOZRA"><img src="/ircal-design-icon.png" alt="IRCAL DESIGN"></div>
   <div class="splash-name">TOZRA</div>
-  <div class="splash-tagline">CREATIVE INTELLIGENCE</div>
+  <div class="splash-tagline">IRCAL DESIGN</div>
+  <div class="splash-loader-label">CREATIVE WORKSPACE EXPERIENCE</div>
   <div class="loader"><div class="loader-bar"></div></div>
+ </div>
+ <div class="splash-auth-actions" aria-label="Hesap işlemleri">
+  <button type="button" onclick="showModal('login')">Giriş yap</button>
+  <span aria-hidden="true"></span>
+  <button type="button" onclick="showModal('register')">Kayıt ol</button>
  </div>
 </div>
 
 <div class="app">
 <aside class="sidebar" id="sidebar">
- <div class="brand"><div class="brand-icon"><img src="/apple-touch-icon.PNG" alt="TOZRA"></div><div class="brand-wordmark"><span>TOZRA</span><small>CREATIVE INTELLIGENCE</small></div></div>
+ <div class="brand"><div class="brand-icon"><img src="/apple-touch-icon.PNG" alt="TOZRA"></div><div class="brand-wordmark"><span>TOZRA</span><small>IRCAL DESIGN</small></div></div>
  <button class="new-chat" id="newProject"><span class="nav-symbol">＋</span> Yeni proje oluştur</button>
  <div class="nav-label">WORKSPACE</div>
  <button class="nav-item active" id="navWorkspace"><span class="nav-symbol">⌂</span> Çalışma alanı</button>
@@ -1841,7 +1927,7 @@ html,body{max-width:100%;overflow-x:hidden}
  <div class="sidebar-bottom">
   <div class="pro-card"><div class="pro-title">✧ TOZRA Pro</div><p>Daha fazla model ve yaratıcı araçla üretimini genişlet.</p><button id="sidePlans">Planları keşfet <span>→</span></button></div>
   <button class="side-action" id="sideSettings">⚙　Ayarlar</button>
-  <div class="sidebar-footer">TOZRA · CREATIVE INTELLIGENCE</div>
+  <div class="sidebar-footer">TOZRA · IRCAL DESIGN</div>
  </div>
 </aside>
 
@@ -1874,15 +1960,11 @@ html,body{max-width:100%;overflow-x:hidden}
    <button type="submit">Gönder ↗</button>
   </form>
   <div class="chat-first-hints"><button type="button" data-home-prompt="Bir fikrimi geliştirmeme yardım et.">✦ Fikir geliştir</button><button type="button" data-home-prompt="Bana yaratıcı içerik fikirleri üret.">▤ İçerik üret</button><button type="button" data-home-prompt="Bir konuyu araştır ve özetle.">⌕ Araştır</button></div>
-  <div class="hero-actions">
-   <button class="primary-btn" id="heroNewProject">＋ Yeni proje</button>
-   <button class="outline-btn" id="heroChat">Sohbete devam et　↗</button>
-  </div>
   <div class="tozra-home-voice-row"><span>TOZRA ile konuşmaya hazır mısın?</span><button type="button" id="homeVoiceButton" aria-label="Sesli sohbeti aç">⌁</button></div>
  </div>
  <section id="personalHome" aria-label="TOZRA kişisel çalışma alanı">
  <div class="ph-hero">
-  <div class="ph-brand"><div class="ph-mark">T</div><div><div class="ph-brand-name">TOZRA</div><div class="ph-brand-sub">CREATIVE INTELLIGENCE</div></div></div>
+  <div class="ph-brand"><div class="ph-mark">T</div><div><div class="ph-brand-name">TOZRA</div><div class="ph-brand-sub">IRCAL DESIGN</div></div></div>
   <div class="ph-kicker">GÜNLÜK ODAK / BUGÜN</div>
   <h1 class="ph-title">Bugün neler başaracağız?</h1>
   <p class="ph-desc">Önceliklerini belirle, görevlerini tamamla ve ilerlemeni takip et.</p>
@@ -2101,7 +2183,7 @@ html,body{max-width:100%;overflow-x:hidden}
 <div class="page creative-studio-page" id="creativeStudioPage">
  <div class="cs-heading">
   <div>
-   <div class="cs-eyebrow"><span></span> TOZRA / CREATIVE INTELLIGENCE</div>
+   <div class="cs-eyebrow"><span></span> TOZRA / IRCAL DESIGN</div>
    <h1>Creative Studio</h1>
    <p>Fikirleri profesyonel yaratıcı çalışmalara dönüştür. Konseptini oluştur, üretim brief'ini hazırla ve TOZRA ile geliştir.</p>
   </div>
@@ -2446,7 +2528,7 @@ window.addEventListener("load",()=>{
  tozraSplashTimer=setTimeout(()=>{
   if(TozraAuth.getSession()) finishSplash();
   // Oturum yoksa splash kapanmaz; login kartı onun üzerinde açılır.
- },5600);
+ },6000);
 });
 
 /* MENÜ */
@@ -2471,7 +2553,7 @@ function showPage(page){
   page==="workspace"?"CREATIVE WORKSPACE":
   page==="project"?"PROJECT WORKSPACE":
   page==="creativeStudio"?"CREATIVE STUDIO":
-  page==="tasks"?"GÖREVLERİM & TAKVİM":"CREATIVE INTELLIGENCE";
+  page==="tasks"?"GÖREVLERİM & TAKVİM":"IRCAL DESIGN";
  toggleMenu(true);
  window.scrollTo({top:0,behavior:"smooth"});
 }
@@ -2480,7 +2562,7 @@ $("navProjects").onclick=()=>showPage("workspace");
 $("navChat").onclick=()=>openGeneralChat();
 $("navCreativeStudio").onclick=()=>showPage("creativeStudio");
 $("navTasks").onclick=()=>{showPage("tasks");renderTasksCalendar();};
-$("heroChat").onclick=()=>openGeneralChat();
+
 $("quickIdea").onclick=()=>startChatWithPrompt("Bir fikrim var. Önce fikrimi netleştirmeme yardım et, ardından uygulanabilir bir yol haritası oluştur.");
 $("quickContent").onclick=()=>startChatWithPrompt("Bir içerik üretmek istiyorum. Bana hedef kitle, format ve içerik fikrini netleştirmemde yardımcı ol.");
 $("quickResearch").onclick=()=>startChatWithPrompt("Bir araştırma başlatmak istiyorum. Konuyu kapsamlandırmama ve araştırma soruları oluşturmama yardım et.");
@@ -3521,7 +3603,7 @@ function createFromCategory(category){
  openProjectModal(null,category);
 }
 $("newProject").onclick=()=>openProjectModal();
-$("heroNewProject").onclick=()=>openProjectModal();
+
 
 document.querySelectorAll(".tool-card").forEach(card=>{
  card.onclick=()=>createFromCategory(card.dataset.category);
@@ -3551,7 +3633,7 @@ function showModal(type){
   content.innerHTML=`
    <div class="auth-intro">
     <div class="auth-mark" aria-hidden="true">T</div>
-    <div class="auth-kicker">TOZRA / CREATIVE INTELLIGENCE</div>
+    <div class="auth-kicker">TOZRA / IRCAL DESIGN</div>
     <h3>Yeniden hoş geldin.</h3>
     <p>Fikirlerine kaldığın yerden devam et. Çalışma alanın seni bekliyor.</p>
    </div>
@@ -3688,7 +3770,7 @@ function showModal(type){
    </div>
    <p id="mobileSettingsStatus" class="mobile-settings-status" aria-live="polite">Bildirim izni ve yükleme durumu burada gösterilir.</p>
    <h3 style="font-size:14px">Uygulama bilgisi</h3>
-   <p>TOZRA — Creative Intelligence · Mobil arayüz</p>
+   <p>TOZRA — IRCAL DESIGN · Mobil arayüz</p>
    <div class="notice">Çevrimdışı kullanım için ana sayfa kabuğu önbelleğe alınır. Canlı AI, hesap ve medya işlemleri internet bağlantısı gerektirir. Tarayıcı bildirim izni tek başına anlık bildirim servisi anlamına gelmez.</div>`;
  }
 
@@ -3810,14 +3892,12 @@ async function refreshAccountData(){
 window.addEventListener("load", async ()=>{
  await TozraAuth.init();
  await refreshAccountData();
- if(!TozraAuth.getSession()){
-  showModal("login");
-  $("modalOverlay").classList.add("splash-auth");
- }else if($("splash")){
-  // Authenticated users see the full animated launch, then enter the workspace.
+ if(TozraAuth.getSession() && $("splash")){
+  // Authenticated users see the full six-second cinematic launch, then enter the workspace.
   if(tozraSplashTimer)clearTimeout(tozraSplashTimer);
-  tozraSplashTimer=setTimeout(finishSplash,5600);
+  tozraSplashTimer=setTimeout(finishSplash,6000);
  }
+ // Guests remain on the animated opening screen and choose Login or Sign up below.
 });
 
 /* SERVICE WORKER */
@@ -3968,7 +4048,7 @@ if("serviceWorker" in navigator){
  $('phNotes').value=localStorage.getItem('tozra-web-home-notes-v1')||'';let noteTimer; $('phNotes').addEventListener('input',()=>{ $('phNotesStatus').textContent='Kaydediliyor…';clearTimeout(noteTimer);noteTimer=setTimeout(()=>{try{localStorage.setItem('tozra-web-home-notes-v1',$('phNotes').value);$('phNotesStatus').textContent='Kaydedildi · Bu tarayıcıda saklanıyor.'}catch{$('phNotesStatus').textContent='Kaydedilemedi · Tarayıcı depolama alanını kontrol et.'}},250)});
  function renderDays(){const el=$('phDays');el.innerHTML='';DAYS.forEach((day,i)=>{const b=document.createElement('button');b.type='button';b.className='ph-day'+(i===activeDay?' active':'');b.textContent=day.slice(0,3);b.onclick=()=>{activeDay=i;renderDays();$('phPlanDay').textContent=day;$('phPlan').value=week[i]||''};el.append(b)});$('phPlanDay').textContent=DAYS[activeDay];$('phPlan').value=week[activeDay]||'';}
  let planTimer;$('phPlan').addEventListener('input',()=>{week[activeDay]=$('phPlan').value;$('phPlanStatus').textContent='Kaydediliyor…';clearTimeout(planTimer);planTimer=setTimeout(()=>{save('tozra-web-home-week-v1',week);$('phPlanStatus').textContent='Haftalık planın kaydedildi.'},250)});
- $('phAsk').addEventListener('click',()=>{const chat=document.getElementById('navChat');if(chat)chat.click();else document.getElementById('heroChat')?.click()});
+ $('phAsk').addEventListener('click',()=>{const chat=document.getElementById('navChat');if(chat)chat.click();else document.getElementById('navChat')?.click()});
  renderTasks();renderDays();
 })();
 </script>
