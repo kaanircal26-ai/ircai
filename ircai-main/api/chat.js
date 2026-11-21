@@ -141,6 +141,18 @@ Doğruluk, açıklık, tutarlılık ve uygulanabilirliği önceliklendir.
 
   function taskInstructions(task) {
     const instructions = {
+      agent: `
+GÖREV MODU: TOZRA AI AGENT
+Kullanıcının verdiği hedefi sonuç odaklı biçimde ele al.
+1. Önce hedefi tek cümleyle netleştir.
+2. Ardından 3-5 maddelik kısa bir uygulama planı oluştur.
+3. Her adımı bu yanıt içinde gerçekten yapabildiğin ölçüde tamamla; araştırma gerekiyorsa yalnızca sağlanan araştırma kaynaklarını kullan.
+4. Sonucu, üretilen çıktıyı ve kalan işleri ayrı başlıklarla sun.
+5. Kullanıcıdan bilgi gerekiyorsa yalnızca işi durduran tek bir soruyu sor.
+6. Gerçekleştirmediğin web araması, dosya değişikliği, e-posta gönderimi, hesap işlemi veya dış dünyada eylem yaptığını iddia etme.
+7. Dosya silme/değiştirme, mesaj gönderme, satın alma, yayınlama, hesap veya sistem ayarlarını değiştirme gibi dış etkili işlemler için önce açık onay iste.
+8. Kullanıcı hedefi bir belge, plan, metin, analiz veya kod üretmekse mümkün olduğunca tamamlanmış çıktıyı ver.
+`,
       coding: `
 GÖREV MODU: PROFESYONEL KODLAMA
 - İstenen sistemi değerlendir.
@@ -287,7 +299,8 @@ Araştırma kuralları:
       images = [],
       videoFrames = [],
       projectContext = "",
-      personalMemory = []
+      personalMemory = [],
+      agentMode = false
     } = req.body || {};
 
     if (typeof prompt !== "string" || !prompt.trim()) {
@@ -407,7 +420,8 @@ Henüz kayıtlı kişisel hafıza bulunmuyor.
       });
     }
 
-    const task = detectTask(prompt);
+    const useAgentMode = agentMode === true;
+    const task = useAgentMode ? "agent" : detectTask(prompt);
     const researchRequired = requiresResearch(prompt);
 
     let searchResults = [];
@@ -567,6 +581,7 @@ ${prompt.trim()}
       answer,
       model: MODEL,
       task,
+      agentMode: useAgentMode,
       researchRequired,
       searchUsed,
       memoryUsed: safeMemory.length > 0,
