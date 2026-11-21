@@ -2043,6 +2043,180 @@ html,body{max-width:100%;overflow-x:hidden}
   #sidebar .nav-symbol{width:36px;height:36px;flex-basis:36px}
 }
 </style>
+
+<style id="ircal-screenshot-fixes-v6">
+/* Consistent crisp SVG icons for home shortcuts and creative studio cards. */
+#workspacePage .quick-card .tool-icon,
+#workspacePage .tool-card .tool-icon{
+  display:grid!important;place-items:center!important;
+  width:42px!important;height:42px!important;flex:0 0 42px!important;
+  border-radius:13px!important;
+  background:linear-gradient(145deg,#eaf4eb,#e8edf8)!important;
+  border:1px solid #d5e0d7!important;
+  color:#55745d!important;
+  box-shadow:0 3px 9px rgba(41,72,49,.07),inset 0 1px 0 rgba(255,255,255,.95)!important;
+}
+#workspacePage .quick-card .tool-icon svg,
+#workspacePage .tool-card .tool-icon svg{
+  width:22px!important;height:22px!important;display:block!important;
+  fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;
+  stroke-linecap:round!important;stroke-linejoin:round!important;
+}
+#workspacePage .quick-card .tool-icon{margin:0!important}
+#workspacePage .tool-card .tool-icon{margin-bottom:17px!important}
+
+/* Fix the home hero on phones: keep every item in normal flow.
+   This prevents the prompt chips from being hidden underneath the message composer. */
+@media(max-width:760px){
+  #workspacePage .workspace-hero.tozra-chat-first{
+    display:flex!important;flex-direction:column!important;align-items:stretch!important;
+    width:100%!important;height:auto!important;min-height:0!important;
+    padding:24px 18px 20px!important;margin:0 0 18px!important;
+    overflow:hidden!important;gap:0!important;
+  }
+  #workspacePage .tozra-home-top{
+    position:relative!important;inset:auto!important;
+    display:flex!important;align-items:center!important;justify-content:space-between!important;
+    width:100%!important;min-height:48px!important;
+    margin:0 0 25px!important;order:0!important;
+  }
+  #workspacePage .tozra-home-brand{
+    display:flex!important;align-items:center!important;gap:11px!important;
+    transform:none!important;color:#fff!important;
+    font-size:15px!important;font-weight:850!important;letter-spacing:2px!important;
+    text-shadow:0 1px 10px rgba(4,10,28,.28)!important;
+  }
+  #workspacePage .tozra-home-brand>span:last-child{
+    color:#fff!important;-webkit-text-fill-color:#fff!important;
+  }
+  #workspacePage .tozra-home-brand small{
+    display:block!important;color:rgba(241,246,255,.82)!important;
+    -webkit-text-fill-color:rgba(241,246,255,.82)!important;
+    font-size:8px!important;letter-spacing:2px!important;
+  }
+  #workspacePage .tozra-home-orb{
+    width:42px!important;height:42px!important;flex:0 0 42px!important;
+    border-radius:14px!important;color:#18283c!important;
+    background:linear-gradient(145deg,#5ce5d3,#8196ff 58%,#bd8cff)!important;
+  }
+  #workspacePage .tozra-home-profile{
+    position:relative!important;inset:auto!important;
+    width:40px!important;height:40px!important;flex:0 0 40px!important;
+    display:grid!important;place-items:center!important;
+    color:#29324b!important;background:#f2eaff!important;
+    border:2px solid rgba(255,255,255,.9)!important;
+  }
+  #workspacePage .workspace-hero .hero-greeting{
+    position:relative!important;inset:auto!important;order:1!important;
+    margin:0 0 11px!important;font-size:10px!important;line-height:1.5!important;
+    letter-spacing:1.6px!important;color:#f5f7ff!important;
+  }
+  #workspacePage .workspace-hero .eyebrow{
+    position:relative!important;inset:auto!important;order:2!important;
+    margin:0 0 13px!important;color:#f0f3ff!important;
+    font-size:9px!important;letter-spacing:1.7px!important;
+  }
+  #workspacePage .workspace-hero h1{
+    position:relative!important;inset:auto!important;order:3!important;
+    width:100%!important;max-width:100%!important;
+    margin:0 0 12px!important;font-size:clamp(34px,8.8vw,43px)!important;
+    line-height:1.1!important;letter-spacing:-1.5px!important;
+    overflow-wrap:anywhere!important;color:#fff!important;
+  }
+  #workspacePage .workspace-hero>p{
+    position:relative!important;inset:auto!important;order:4!important;
+    width:100%!important;max-width:100%!important;margin:0 0 19px!important;
+    font-size:13px!important;line-height:1.55!important;color:#edf1ff!important;
+  }
+  #workspacePage .workspace-hero .chat-first-hints{
+    position:relative!important;inset:auto!important;order:5!important;
+    display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:7px!important;width:100%!important;margin:0 0 13px!important;
+    padding:0!important;
+  }
+  #workspacePage .workspace-hero .chat-first-hints button{
+    display:flex!important;flex-direction:column!important;align-items:center!important;
+    justify-content:center!important;gap:6px!important;min-width:0!important;
+    min-height:67px!important;padding:8px 4px!important;
+    white-space:normal!important;overflow:visible!important;text-overflow:clip!important;
+    border:1px solid rgba(226,235,255,.24)!important;border-radius:13px!important;
+    background:rgba(255,255,255,.10)!important;color:#f7f8ff!important;
+    font-size:9px!important;line-height:1.25!important;font-weight:700!important;
+    text-align:center!important;backdrop-filter:blur(10px)!important;
+  }
+  #workspacePage .home-hint-icon{
+    width:25px!important;height:25px!important;flex:0 0 25px!important;
+    display:grid!important;place-items:center!important;
+    border-radius:8px!important;background:rgba(255,255,255,.15)!important;
+    color:#d9f4e8!important;
+  }
+  #workspacePage .home-hint-icon svg{width:16px!important;height:16px!important}
+  #workspacePage .workspace-hero .smart-command{
+    position:relative!important;inset:auto!important;order:6!important;
+    display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;
+    align-items:center!important;gap:8px!important;
+    width:100%!important;max-width:100%!important;min-width:0!important;
+    min-height:66px!important;height:auto!important;margin:0!important;padding:8px!important;
+    border-radius:17px!important;background:rgba(248,250,255,.96)!important;
+    border:1px solid rgba(255,255,255,.72)!important;
+    box-shadow:0 10px 26px rgba(5,12,32,.2)!important;
+  }
+  #workspacePage .workspace-hero .smart-command input{
+    flex:1 1 auto!important;width:0!important;min-width:0!important;max-width:none!important;
+    min-height:48px!important;padding:0 9px!important;
+    font-size:13px!important;line-height:1.35!important;
+    color:#253348!important;-webkit-text-fill-color:#253348!important;
+    background:transparent!important;border:0!important;box-shadow:none!important;
+  }
+  #workspacePage .workspace-hero .smart-command input::placeholder{
+    color:#7a8795!important;-webkit-text-fill-color:#7a8795!important;opacity:1!important;
+  }
+  #workspacePage .workspace-hero .smart-command button{
+    flex:0 0 auto!important;min-height:46px!important;padding:0 15px!important;
+    white-space:nowrap!important;border-radius:12px!important;
+    background:#c5d98f!important;color:#263728!important;
+    font-size:12px!important;font-weight:800!important;
+  }
+  #workspacePage .tozra-home-voice-row{
+    position:relative!important;inset:auto!important;order:7!important;
+    display:flex!important;align-items:center!important;justify-content:space-between!important;
+    width:100%!important;max-width:none!important;margin:13px 0 0!important;
+    padding:10px 12px 10px 14px!important;min-height:58px!important;
+    border:1px solid rgba(255,255,255,.38)!important;border-radius:15px!important;
+    background:rgba(255,255,255,.12)!important;color:#eef0ff!important;
+    font-size:11px!important;gap:10px!important;
+  }
+  #workspacePage .tozra-home-voice-row button{
+    width:39px!important;height:39px!important;flex:0 0 39px!important;
+  }
+  #workspacePage .workspace-hero:before{top:125px!important;right:-145px!important}
+  #workspacePage .workspace-hero:after{top:185px!important;right:-5px!important}
+}
+@media(max-width:390px){
+  #workspacePage .workspace-hero.tozra-chat-first{padding:21px 15px 17px!important}
+  #workspacePage .workspace-hero .chat-first-hints button{font-size:8px!important}
+  #workspacePage .workspace-hero h1{font-size:clamp(31px,8.6vw,37px)!important}
+  #workspacePage .workspace-hero .smart-command button{padding:0 11px!important;font-size:11px!important}
+}
+
+/* High-contrast calendar launch button: readable text and icon in every theme. */
+#personalHome .ph-home-calendar-top button,
+#personalHome .ph-home-calendar-top button:focus,
+#personalHome .ph-home-calendar-top button:hover{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  gap:7px!important;min-height:44px!important;padding:10px 14px!important;
+  background:#e6f1e4!important;color:#244b32!important;
+  -webkit-text-fill-color:#244b32!important;
+  border:1px solid #b8d0b8!important;border-radius:12px!important;
+  box-shadow:0 3px 9px rgba(37,75,48,.08)!important;
+  font-size:11px!important;font-weight:800!important;
+}
+#personalHome .ph-home-calendar-top button span{
+  color:#244b32!important;-webkit-text-fill-color:#244b32!important;
+  font-size:14px!important;font-weight:900!important;
+}
+#personalHome .ph-home-calendar-top button:active{transform:scale(.98)!important}
+</style>
 </head>
 
 <body>
@@ -2115,11 +2289,12 @@ html,body{max-width:100%;overflow-x:hidden}
   <div class="eyebrow"><span class="eyebrow-dot"></span> PERSONALIZED FOR YOU</div>
   <h1>Merhaba!<br>Bugün ne yapalım?</h1>
   <p>Fikirlerini keşfet, sorularını sor ve hayallerini birlikte gerçeğe dönüştürelim.</p>
+  <div class="chat-first-hints"><button type="button" data-home-prompt="Bir fikrimi geliştirmeme yardım et."><span class="home-hint-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 22h4M8.5 14.5a7 7 0 1 1 7 0c-.8.6-1.2 1.3-1.3 2.5H9.8c-.1-1.2-.5-1.9-1.3-2.5Z"/></svg></span>Fikir geliştir</button><button type="button" data-home-prompt="Bana yaratıcı içerik fikirleri üret."><span class="home-hint-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4l11-11a2.1 2.1 0 0 0-4-4L4 16zM13.5 6.5l4 4"/></svg></span>İçerik üret</button><button type="button" data-home-prompt="Bir konuyu araştır ve özetle."><span class="home-hint-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9" r="1.5"/><path d="m21 15-5-5L5 20"/></svg></span>Araştır</button></div>
   <form class="smart-command" id="smartCommandForm">
    <input id="smartCommandInput" type="text" maxlength="2000" autocomplete="off" placeholder="TOZRA'ya bir şey sor veya bir hedef yaz..." aria-label="TOZRA ile sohbet et">
    <button type="submit">Gönder ↗</button>
   </form>
-  <div class="chat-first-hints"><button type="button" data-home-prompt="Bir fikrimi geliştirmeme yardım et."><span class="home-hint-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18h6M10 22h4M8.5 14.5a7 7 0 1 1 7 0c-.8.6-1.2 1.3-1.3 2.5H9.8c-.1-1.2-.5-1.9-1.3-2.5Z"/></svg></span>Fikir geliştir</button><button type="button" data-home-prompt="Bana yaratıcı içerik fikirleri üret."><span class="home-hint-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4l11-11a2.1 2.1 0 0 0-4-4L4 16zM13.5 6.5l4 4"/></svg></span>İçerik üret</button><button type="button" data-home-prompt="Bir konuyu araştır ve özetle."><span class="home-hint-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9" r="1.5"/><path d="m21 15-5-5L5 20"/></svg></span>Araştır</button></div>
+
   <div class="tozra-home-voice-row"><span>TOZRA ile konuşmaya hazır mısın?</span><button type="button" id="homeVoiceButton" aria-label="Sesli sohbeti aç"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6"/></svg></button></div>
  </div>
  <section id="personalHome" aria-label="TOZRA kişisel çalışma alanı">
@@ -2172,17 +2347,17 @@ html,body{max-width:100%;overflow-x:hidden}
  </div>
  <div class="section-head"><h2>Hızlı başlangıç</h2><span class="home-section-note">Fikrini hangi yönde geliştirelim?</span></div>
  <div class="quick-start">
-  <button class="quick-card" id="quickIdea"><div class="tool-icon">✳</div><div><strong>Bir fikri geliştir</strong><small>Fikrini netleştir ve yol haritası çıkar.</small></div></button>
-  <button class="quick-card" id="quickContent"><div class="tool-icon">▤</div><div><strong>İçerik üret</strong><small>Metin, senaryo veya sosyal medya içeriği.</small></div></button>
-  <button class="quick-card" id="quickResearch"><div class="tool-icon">⌕</div><div><strong>Araştırma başlat</strong><small>Bir konuyu incele ve özetle.</small></div></button>
+  <button class="quick-card" id="quickIdea"><div class="tool-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2Z"/><path d="m19 15 .9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15Z"/></svg></div><div><strong>Bir fikri geliştir</strong><small>Fikrini netleştir ve yol haritası çıkar.</small></div></button>
+  <button class="quick-card" id="quickContent"><div class="tool-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14a1 1 0 0 1 1 1v14H4V5a1 1 0 0 1 1-1Z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div><div><strong>İçerik üret</strong><small>Metin, senaryo veya sosyal medya içeriği.</small></div></button>
+  <button class="quick-card" id="quickResearch"><div class="tool-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg></div><div><strong>Araştırma başlat</strong><small>Bir konuyu incele ve özetle.</small></div></button>
  </div>
  <div class="section-head"><h2>Stüdyo araçları</h2><span>Düşünceden sonuca</span></div>
  <div class="tool-grid">
-  <button class="tool-card" data-category="Fikir geliştirme"><div class="tool-icon">✳</div><strong>Fikir geliştirme</strong><small>Fikirlerini projeye dönüştür.</small></button>
-  <button class="tool-card" data-category="İçerik üretimi"><div class="tool-icon">▤</div><strong>İçerik üretimi</strong><small>Metinler, senaryolar ve içerikler.</small></button>
-  <button class="tool-card" data-category="Görsel stüdyo"><div class="tool-icon">▧</div><strong>Görsel stüdyo</strong><small>Görsel konseptler ve yaratıcı yön.</small></button>
-  <button class="tool-card" data-category="Video stüdyo"><div class="tool-icon">▷</div><strong>Video stüdyo</strong><small>Video fikirleri ve senaryo geliştirme.</small></button>
-  <button class="tool-card" data-category="Araştırma"><div class="tool-icon">⌕</div><strong>Araştırma</strong><small>Konuları incele ve bilgi topla.</small></button>
+  <button class="tool-card" data-category="Fikir geliştirme"><div class="tool-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2 1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8L12 2Z"/><path d="m19 15 .9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15Z"/></svg></div><strong>Fikir geliştirme</strong><small>Fikirlerini projeye dönüştür.</small></button>
+  <button class="tool-card" data-category="İçerik üretimi"><div class="tool-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14a1 1 0 0 1 1 1v14H4V5a1 1 0 0 1 1-1Z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div><strong>İçerik üretimi</strong><small>Metinler, senaryolar ve içerikler.</small></button>
+  <button class="tool-card" data-category="Görsel stüdyo"><div class="tool-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3.5" width="18" height="17" rx="2.5"/><circle cx="8.5" cy="9" r="1.5"/><path d="m4 17 5-5 3.5 3 2.5-2 5 5"/></svg></div><strong>Görsel stüdyo</strong><small>Görsel konseptler ve yaratıcı yön.</small></button>
+  <button class="tool-card" data-category="Video stüdyo"><div class="tool-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="13" height="14" rx="2"/><path d="m16 10 5-3v10l-5-3z"/></svg></div><strong>Video stüdyo</strong><small>Video fikirleri ve senaryo geliştirme.</small></button>
+  <button class="tool-card" data-category="Araştırma"><div class="tool-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg></div><strong>Araştırma</strong><small>Konuları incele ve bilgi topla.</small></button>
  </div>
  <div class="section-head projects-section-head"><h2>Son projelerim</h2><span id="projectCount">0 proje</span></div>
  <div class="project-grid" id="projectGrid"></div>
