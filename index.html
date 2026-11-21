@@ -882,6 +882,40 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
  .bubble-chat-input-row button{padding:0 12px;min-height:39px}
  .bubble-chat-footer{font-size:9px}
 }
+
+/* FINAL HOME CANVAS OVERRIDE — keep only the bubble launcher on workspace */
+#workspacePage{
+ display:block!important; width:100%!important; min-height:calc(100dvh - 76px)!important;
+ margin:0!important; padding:0!important; background:#f2f1ed!important;
+}
+#workspacePage > :not(.tozra-bubble-home){display:none!important}
+#workspacePage > .tozra-bubble-home{
+ display:flex!important; flex-direction:column!important; justify-content:center!important;
+ box-sizing:border-box!important; width:100%!important; max-width:none!important;
+ min-height:calc(100dvh - 76px)!important; height:auto!important;
+ margin:0!important; padding:clamp(24px,4vw,52px)!important;
+ border:0!important; border-radius:0!important;
+ background:linear-gradient(135deg,#20382a 0%,#2d4935 52%,#40563e 100%)!important;
+ box-shadow:none!important; color:#f8f7ef!important;
+}
+#workspacePage .bubble-home-head h1{color:#f8f7ef!important}
+#workspacePage .bubble-home-head p,#workspacePage .bubble-kicker{color:#d4dfc8!important}
+#workspacePage .bubble-group-label{color:#d4dfc8!important}
+#workspacePage .tozra-bubble{box-shadow:0 8px 22px rgba(0,0,0,.12)!important}
+#workspacePage .bubble-chat-composer{background:rgba(248,249,240,.97)!important;border-color:rgba(255,255,255,.35)!important}
+#workspacePage .bubble-chat-heading{color:#253725!important}
+@media(max-width:760px){
+ #workspacePage{min-height:calc(100dvh - 60px)!important}
+ #workspacePage > .tozra-bubble-home{
+  min-height:calc(100dvh - 60px)!important;height:auto!important;
+  padding:20px 14px calc(22px + env(safe-area-inset-bottom))!important;
+  justify-content:flex-start!important;
+ }
+ #workspacePage .bubble-home-head{margin:2px 0 14px!important}
+ #workspacePage .bubble-cloud{gap:8px!important}
+ #workspacePage .bubble-large{min-height:70px!important}
+ #workspacePage .bubble-chat-composer{margin-top:14px!important}
+}
 </style>
 <style id="tozra-personal-home">
 :root{--personal-ink:#17221b;--personal-muted:#718076;--personal-line:#e5ece6;--personal-green:#16864b;--personal-green2:#dff5e7;--personal-card:#ffffff}
@@ -2391,8 +2425,8 @@ function sendHomeAiPrompt(){
  const value=homeAiPrompt?.value.trim();
  if(!value){homeAiPrompt?.focus();return;}
  homeAiPrompt.value="";
- startChatWithPrompt(value);
- setTimeout(()=>$("send").click(),80);
+ openGeneralChat();
+ if(typeof sendGeneralMessage==="function") sendGeneralMessage(value);
 }
 homeAiSend?.addEventListener("click",sendHomeAiPrompt);
 homeAiPrompt?.addEventListener("keydown",event=>{

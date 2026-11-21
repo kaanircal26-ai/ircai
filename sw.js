@@ -6,7 +6,7 @@
 "use strict";
 
 const CACHE_PREFIX = "tozra-";
-const CACHE_NAME = "tozra-v16-home-chat";
+const CACHE_NAME = "tozra-v17-home-canvas-chat";
 const APP_SHELL = [
   "/",
   "/manifest.json",
