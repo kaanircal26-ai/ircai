@@ -826,6 +826,29 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
 #personalHome .ph-bottom{font-size:9px;color:#a0aaa2;text-align:center;padding:6px 0 3px;letter-spacing:.5px}
 @media(min-width:900px){#personalHome{grid-template-columns:minmax(0,1.1fr) minmax(280px,.9fr);align-items:start}#personalHome .ph-hero,#personalHome .ph-stats,#personalHome .ph-week{grid-column:1/-1}#personalHome .ph-tasks{grid-column:1}#personalHome .ph-notes{grid-column:2}#personalHome .ph-stats{max-width:560px}#personalHome .ph-hero{padding:28px 32px}}
 @media(max-width:760px){#personalHome{gap:13px;margin:0 0 24px}#personalHome .ph-hero{padding:20px 17px 17px;border-radius:20px}#personalHome .ph-brand{margin-bottom:20px}#personalHome .ph-title{font-size:29px}#personalHome .ph-desc{font-size:11px}#personalHome .ph-ask{margin-top:16px;padding:11px}#personalHome .ph-card{padding:13px;border-radius:16px}#personalHome .ph-section h2{font-size:15px}}
+
+/* HOME WORKSPACE REFRESH — AI chat first, daily focus second */
+.home-ai-chat{position:relative;margin:0 0 22px;padding:25px 27px 18px;border:1px solid #dfe9df;border-radius:22px;background:linear-gradient(135deg,#ffffff 0%,#f5faf5 100%);box-shadow:0 12px 34px rgba(25,65,38,.055);color:#17271d}
+.home-ai-head{display:flex;align-items:flex-start;gap:15px;position:relative}
+.home-ai-avatar{width:46px;height:46px;flex:0 0 46px;display:grid;place-items:center;border-radius:15px;background:#e5f4e8;color:#168348;font-size:23px}
+.home-ai-eyebrow{font-size:9px;letter-spacing:1.5px;font-weight:850;color:#278552;margin:1px 0 7px}
+.home-ai-head h1{margin:0;color:#17271d;font-size:clamp(22px,3vw,30px);letter-spacing:-1px;line-height:1.12}
+.home-ai-head p{margin:7px 0 0;color:#748177;font-size:12px;line-height:1.5}
+.home-ai-status{margin-left:auto;display:flex;align-items:center;gap:7px;padding:7px 10px;border:1px solid #e3ece4;border-radius:99px;background:#fff;color:#627468;font-size:10px;white-space:nowrap}
+.home-ai-status i{width:7px;height:7px;border-radius:50%;background:#35a968;box-shadow:0 0 0 3px #35a96819}
+.home-ai-composer{display:flex;gap:10px;margin:21px 0 0;padding:7px 7px 7px 16px;border:1px solid #dce7de;border-radius:15px;background:#fff;box-shadow:0 5px 18px rgba(20,60,32,.045)}
+.home-ai-composer input{width:100%;min-width:0;border:0;outline:0;background:transparent;color:#203327;font-size:14px;padding:9px 0}
+.home-ai-composer input::placeholder{color:#9aa69c}
+.home-ai-composer button{flex:0 0 auto;border:0;border-radius:11px;padding:0 17px;background:#238d50;color:#fff;font-size:12px;font-weight:750;min-height:42px}
+.home-ai-composer button span{font-size:17px;margin-left:8px}
+.home-ai-hints{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px;color:#98a39a;font-size:10px}
+.home-ai-hints button{border:1px solid #e4ece5;border-radius:99px;background:#fff;color:#68776c;padding:6px 10px;font-size:10px}
+#personalHome .ph-hero{background:transparent;border:0;box-shadow:none;padding:3px 2px 9px}
+#personalHome .ph-brand{display:none}
+#personalHome .ph-kicker{margin-bottom:7px;color:#278552}
+#personalHome .ph-title{font-size:clamp(25px,3vw,32px);line-height:1.15;letter-spacing:-1px}
+#personalHome .ph-desc{margin-top:7px}
+@media(max-width:760px){.home-ai-chat{margin:0 0 17px;padding:19px 15px 14px;border-radius:18px}.home-ai-head{gap:11px}.home-ai-avatar{width:40px;height:40px;flex-basis:40px;border-radius:13px}.home-ai-head h1{font-size:22px}.home-ai-head p{font-size:11px;max-width:290px}.home-ai-status{position:absolute;right:0;top:0;padding:6px 8px;font-size:9px}.home-ai-eyebrow{padding-right:54px;font-size:8px}.home-ai-composer{margin-top:16px;padding:6px 6px 6px 12px;gap:6px}.home-ai-composer input{font-size:16px}.home-ai-composer button{padding:0 12px;min-height:42px;font-size:11px}.home-ai-hints{gap:6px}.home-ai-hints button{font-size:9px;padding:6px 8px}#personalHome .ph-hero{padding:4px 2px 8px}#personalHome .ph-title{font-size:27px}}
 </style>
 </head>
 
@@ -881,28 +904,24 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
 
 <section class="content">
 <div class="page active" id="workspacePage">
- <div class="workspace-hero hero-shell">
-  <div class="hero-greeting" id="dashboardGreeting">TOZRA çalışma alanına hoş geldin</div>
-  <div class="eyebrow"><span class="eyebrow-dot"></span> TOZRA AI　/　CREATIVE WORKSPACE</div>
-  <h1>Bugün ne yaratmak<br>istiyorsun?</h1>
-  <p>Fikrini anlat. TOZRA onu geliştirmen, planlaman ve hayata geçirmen için yanında olsun.</p>
-  <div class="hero-actions">
-   <button class="primary-btn" id="heroNewProject">＋ Yeni proje başlat</button>
-   <button class="outline-btn" id="heroChat">TOZRA ile konuş　↗</button>
+ <section class="home-ai-chat" aria-label="TOZRA yapay zekâ sohbeti">
+  <div class="home-ai-head">
+   <div class="home-ai-avatar">✦</div>
+   <div><div class="home-ai-eyebrow">TOZRA AI · KİŞİSEL ASİSTAN</div><h1>Seninle konuşmaya hazırım.</h1><p>Bir fikir sor, plan yap veya üzerinde çalıştığın şeyi birlikte geliştirelim.</p></div>
+   <span class="home-ai-status"><i></i> Hazır</span>
   </div>
-  <form class="smart-command" id="smartCommandForm">
-   <input id="smartCommandInput" type="text" maxlength="2000" autocomplete="off" placeholder="Bir fikir yaz... Örn. marka konsepti, video serisi, kampanya, içerik planı" aria-label="TOZRA komut alanı">
-   <button type="submit">Başlat ↗</button>
+  <form class="home-ai-composer" id="smartCommandForm">
+   <input id="smartCommandInput" type="text" maxlength="2000" autocomplete="off" placeholder="TOZRA'ya mesajını yaz..." aria-label="TOZRA'ya mesaj yaz">
+   <button type="submit" aria-label="Sohbeti başlat">Gönder <span>↑</span></button>
   </form>
-  <div class="smart-command-hint">Fikir geliştir, içerik üret, araştır veya projen için yardım iste.</div>
-</div>
+  <div class="home-ai-hints"><span>Örnek:</span><button type="button" data-home-prompt="Bugün için bana bir çalışma planı hazırla.">Günümü planla</button><button type="button" data-home-prompt="Yeni bir proje fikri geliştirmeme yardım et.">Proje fikri geliştir</button><button type="button" data-home-prompt="Aklımdaki fikri birlikte netleştirelim.">Bir fikri konuşalım</button></div>
+ </section>
  <section id="personalHome" aria-label="TOZRA kişisel çalışma alanı">
  <div class="ph-hero">
   <div class="ph-brand"><div class="ph-mark">T</div><div><div class="ph-brand-name">TOZRA</div><div class="ph-brand-sub">CREATIVE INTELLIGENCE</div></div></div>
   <div class="ph-kicker">KİŞİSEL ÇALIŞMA ALANIN</div>
   <h1 class="ph-title">Merhaba, bugün<br>neler başaracağız?</h1>
   <p class="ph-desc">Düşüncelerini düzenle, planını oluştur ve üretmeye başla.</p>
-  <button class="ph-ask" type="button" id="phAsk"><span class="ph-ask-icon">✧</span><span>TOZRA’ya bir şey sor…</span><span class="ph-ask-arrow">↑</span></button>
  </div>
  <div class="ph-stats"><div class="ph-stat"><strong id="phTotal">0</strong><span>TOPLAM GÖREV</span></div><div class="ph-stat"><strong id="phDone">0</strong><span>TAMAMLANAN</span></div><div class="ph-stat"><strong id="phPending">0</strong><span>BEKLEYEN</span></div></div>
  <section class="ph-tasks"><div class="ph-section"><h2>Görevlerin</h2><small>GÜNLÜK ODAK</small></div><div class="ph-card"><form class="ph-add" id="phTaskForm"><input class="ph-input" id="phTaskInput" maxlength="160" placeholder="Yeni bir görev ekle…" autocomplete="off"><button aria-label="Görev ekle" type="submit">＋</button></form><div class="ph-tasklist" id="phTaskList"><div class="ph-empty">Henüz görev yok. İlk görevini ekleyerek başla.</div></div></div></section>
@@ -1355,7 +1374,7 @@ $("navWorkspace").onclick=()=>showPage("workspace");
 $("navProjects").onclick=()=>showPage("workspace");
 $("navChat").onclick=()=>newGeneralChat();
 $("navCreativeStudio").onclick=()=>showPage("creativeStudio");
-$("heroChat").onclick=()=>openGeneralChat();
+if($("heroChat"))$("heroChat").onclick=()=>openGeneralChat();
 $("quickIdea").onclick=()=>startChatWithPrompt("Bir fikrim var. Önce fikrimi netleştirmeme yardım et, ardından uygulanabilir bir yol haritası oluştur.");
 $("quickContent").onclick=()=>startChatWithPrompt("Bir içerik üretmek istiyorum. Bana hedef kitle, format ve içerik fikrini netleştirmemde yardımcı ol.");
 $("quickResearch").onclick=()=>startChatWithPrompt("Bir araştırma başlatmak istiyorum. Konuyu kapsamlandırmama ve araştırma soruları oluşturmama yardım et.");
@@ -1512,6 +1531,7 @@ $("smartCommandForm").addEventListener("submit",e=>{
  $("smartCommandInput").value="";
  startChatWithPrompt(value);
 });
+document.querySelectorAll("[data-home-prompt]").forEach(button=>button.addEventListener("click",()=>startChatWithPrompt(button.dataset.homePrompt)));
 
 /* PROJE SİSTEMİ */
 function updateDashboardStats(){
@@ -2214,7 +2234,7 @@ function createFromCategory(category){
  openProjectModal(null,category);
 }
 $("newProject").onclick=()=>openProjectModal();
-$("heroNewProject").onclick=()=>openProjectModal();
+if($("heroNewProject"))$("heroNewProject").onclick=()=>openProjectModal();
 
 document.querySelectorAll(".tool-card").forEach(card=>{
  card.onclick=()=>createFromCategory(card.dataset.category);
@@ -2639,7 +2659,7 @@ if("serviceWorker" in navigator){
  $('phNotes').value=localStorage.getItem('tozra-web-home-notes-v1')||'';let noteTimer; $('phNotes').addEventListener('input',()=>{ $('phNotesStatus').textContent='Kaydediliyor…';clearTimeout(noteTimer);noteTimer=setTimeout(()=>{try{localStorage.setItem('tozra-web-home-notes-v1',$('phNotes').value);$('phNotesStatus').textContent='Kaydedildi · Bu tarayıcıda saklanıyor.'}catch{$('phNotesStatus').textContent='Kaydedilemedi · Tarayıcı depolama alanını kontrol et.'}},250)});
  function renderDays(){const el=$('phDays');el.innerHTML='';DAYS.forEach((day,i)=>{const b=document.createElement('button');b.type='button';b.className='ph-day'+(i===activeDay?' active':'');b.textContent=day.slice(0,3);b.onclick=()=>{activeDay=i;renderDays();$('phPlanDay').textContent=day;$('phPlan').value=week[i]||''};el.append(b)});$('phPlanDay').textContent=DAYS[activeDay];$('phPlan').value=week[activeDay]||'';}
  let planTimer;$('phPlan').addEventListener('input',()=>{week[activeDay]=$('phPlan').value;$('phPlanStatus').textContent='Kaydediliyor…';clearTimeout(planTimer);planTimer=setTimeout(()=>{save('tozra-web-home-week-v1',week);$('phPlanStatus').textContent='Haftalık planın kaydedildi.'},250)});
- $('phAsk').addEventListener('click',()=>{const chat=document.getElementById('navChat');if(chat)chat.click();else document.getElementById('heroChat')?.click()});
+ const phAsk=$('phAsk');if(phAsk)phAsk.addEventListener('click',()=>openGeneralChat());
  renderTasks();renderDays();
 })();
 </script>
