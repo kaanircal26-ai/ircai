@@ -3563,8 +3563,16 @@ if("serviceWorker" in navigator){
   setDockTab(tab);
   if(tab==="home")$id("navWorkspace")?.click();
   if(tab==="chat"){
-   if(typeof window.openGeneralChat==="function")window.openGeneralChat();
-   else if(typeof window.showPage==="function")window.showPage("chat");
+   // Use the app's existing, already-wired chat entry point.
+   // This opens the real AI chat view and renders its messages.
+   const chatEntry=$id("heroChat");
+   if(chatEntry){
+    chatEntry.click();
+   }else{
+    const legacyChat=$id("navChat");
+    if(legacyChat)legacyChat.click();
+    else console.error("TOZRA: Sohbet açma düğmesi bulunamadı (heroChat/navChat).");
+   }
   }
   if(tab==="projects"){$id("navProjects")?.click();window.setTimeout(scrollToProjects,180);}
   if(tab==="studio")$id("navCreativeStudio")?.click();
