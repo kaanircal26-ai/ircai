@@ -1,3 +1,4 @@
+
 {
   "name": "TOZRA — Creative Intelligence",
   "short_name": "TOZRA",
@@ -6,8 +7,8 @@
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#f5f3ed",
-  "theme_color": "#26392e",
+  "background_color": "#f7f7f5",
+  "theme_color": "#f7f7f5",
   "icons": [
     {
       "src": "/apple-touch-icon.PNG",
