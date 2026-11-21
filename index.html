@@ -936,7 +936,307 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
  .ps-ai-panel>button{width:100%}
 }
 
+/* SMART MEMORY */
+.ph-memory{margin-top:28px}
+.ph-memory-card{padding:18px!important}
+.ph-memory-desc{margin:0 0 14px;color:#68736a;font-size:12px;line-height:1.6}
+.ph-memory-form{display:grid;grid-template-columns:minmax(0,1fr) 125px auto;gap:8px}
+.ph-memory-form select,.ph-memory-form button{border:1px solid #dce5dc;border-radius:10px;padding:0 12px;background:#f8faf7;color:#28362b;font:inherit;font-size:12px;min-height:42px}
+.ph-memory-form button{background:#dcebdc;border-color:#d0e1d1;font-weight:700;cursor:pointer}
+.ph-memory-list{display:grid;gap:8px;margin-top:14px}
+.ph-memory-item{display:flex;align-items:flex-start;gap:12px;justify-content:space-between;padding:12px;border:1px solid #e8eee8;border-radius:11px;background:#fbfcfa}
+.ph-memory-body{min-width:0}
+.ph-memory-tag{display:inline-block;font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:#55745b;background:#eaf2e9;border-radius:20px;padding:4px 8px}
+.ph-memory-item p{margin:7px 0 0;font-size:12px;line-height:1.55;color:#2e3930;overflow-wrap:anywhere}
+.ph-memory-remove{border:0;background:transparent;color:#9a5b52;font-size:11px;cursor:pointer;padding:5px}
+@media(max-width:600px){.ph-memory-form{grid-template-columns:1fr 105px}.ph-memory-form input{grid-column:1/-1}.ph-memory-form button{min-height:40px}}
+
+
+/* TOZRA PROGRESS CENTER */
+.progress-center{margin:34px 0 30px;padding:25px;border:1px solid #e5ece5;border-radius:18px;background:linear-gradient(145deg,#fbfdf9,#f2f7f1);color:#26352a}
+.progress-center-head{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:20px}
+.pc-kicker{font-size:9px;letter-spacing:.16em;font-weight:800;color:#63816a}
+.progress-center-head h2{font-size:24px;margin:7px 0 5px}
+.progress-center-head p{font-size:12px;color:#748076;margin:0}
+.pc-live{font-size:9px;letter-spacing:.1em;color:#537b5a;background:#e6f1e5;padding:8px 10px;border-radius:20px;white-space:nowrap}
+.pc-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.pc-metric{padding:15px;border:1px solid #e5ece4;background:#fff;border-radius:13px;min-width:0}
+.pc-metric>span{display:block;font-size:9px;letter-spacing:.09em;color:#7b887d;font-weight:800}
+.pc-metric strong{display:block;font-size:27px;letter-spacing:-.04em;margin:9px 0 3px;color:#25382a}
+.pc-metric small{font-size:10px;color:#89938a}
+.pc-content{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(220px,.8fr);gap:12px;margin-top:13px}
+.pc-panel{background:#fff;border:1px solid #e5ece4;border-radius:13px;padding:17px;min-width:0}
+.pc-panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:13px}
+.pc-panel-head h3{font-size:13px;margin:0}
+.pc-panel-head>span{font-size:8px;letter-spacing:.1em;color:#89958a}
+.pc-project-list{display:grid;gap:8px}
+.pc-project-row{display:block;text-align:left;width:100%;border:1px solid #edf1ec;background:#fbfcfa;border-radius:10px;padding:11px;cursor:pointer;color:inherit}
+.pc-project-row:hover{border-color:#b9cfba;background:#f7fbf6}
+.pc-project-top{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.pc-project-top strong{font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc-project-top b{font-size:11px;color:#4f7958}
+.pc-track{display:block;height:6px;background:#edf2ec;border-radius:10px;overflow:hidden;margin:9px 0 6px}
+.pc-track>span{display:block;height:100%;border-radius:10px;background:#9cbd9f}
+.pc-project-meta{display:block;font-size:9px;color:#879188}
+.pc-empty{padding:18px;text-align:center;color:#89938a;font-size:11px;line-height:1.6}
+.pc-next-step{padding:15px;border-radius:11px;background:#f5f8f3;min-height:130px}
+.pc-next-icon{display:block;color:#6d956f;font-size:19px;margin-bottom:8px}
+.pc-next-step strong{display:block;font-size:13px;line-height:1.45}
+.pc-next-step p{font-size:10px;line-height:1.6;color:#7b887d;margin:6px 0 0}
+.pc-open-next,.pc-refresh{margin-top:11px;border:1px solid #dce7dc;border-radius:9px;background:#f9fcf8;padding:9px 11px;font-size:10px;color:#45664a;cursor:pointer}
+.pc-refresh{width:100%}
+@media(max-width:850px){.pc-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.pc-content{grid-template-columns:1fr}}
+@media(max-width:600px){.progress-center{padding:16px;margin:24px 0}.progress-center-head h2{font-size:20px}.pc-live{font-size:8px;padding:7px}.pc-metric{padding:12px}.pc-metric strong{font-size:23px}.pc-panel{padding:13px}}
+
+
+/* TOZRA SIGNATURE REDESIGN — premium mixed workspace */
+:root{--green:#a8c96a;--green-strong:#8dad51;--app-bg:#f3f6f1;--surface:#ffffff;--text:#202a22;--muted:#778178;--border:#e3e9e1}
+body{background:#f3f6f1!important;color:#202a22!important}
+.app{background:#f3f6f1!important}
+.sidebar{background:#17221a!important;border-right:1px solid #26352a!important}
+.sidebar .brand-wordmark span{color:#f2f6f0!important}
+.sidebar .brand-wordmark small,.sidebar .nav-label,.sidebar .history-title,.sidebar .sidebar-footer{color:#87968a!important}
+.sidebar .nav-item{color:#c4cec5!important;border-radius:10px!important}
+.sidebar .nav-item.active,.sidebar .nav-item:hover{background:#29392c!important;color:#e5f0dc!important}
+.sidebar .new-chat{background:#b6d18a!important;color:#1c2b1e!important;border-radius:11px!important;box-shadow:none!important}
+.sidebar .pro-card{background:#233329!important;border:1px solid #34483a!important;border-radius:13px!important}
+.main{background:#f3f6f1!important}
+.topbar{background:rgba(250,252,248,.92)!important;border-bottom:1px solid #e5ebe3!important;backdrop-filter:blur(16px)!important}
+.topbar-title{color:#68766a!important;letter-spacing:.13em!important}
+.top-actions .status{background:#eaf2e7!important;color:#52724d!important;border:1px solid #dce8d8!important}
+.top-button,.avatar{background:#fff!important;color:#26362a!important;border:1px solid #e2e9e0!important}
+.content{max-width:1500px!important;padding:30px clamp(18px,3vw,46px) 54px!important}
+#workspacePage{display:block!important}
+.workspace-hero.tozra-chat-first{position:relative!important;isolation:isolate!important;display:grid!important;grid-template-columns:minmax(0,1fr) minmax(260px,.72fr)!important;grid-template-rows:auto auto auto auto!important;column-gap:28px!important;align-items:center!important;min-height:300px!important;margin:0 0 22px!important;padding:34px 38px!important;border:1px solid #344a38!important;border-radius:24px!important;background:radial-gradient(circle at 82% 35%,rgba(176,207,128,.19),transparent 26%),linear-gradient(115deg,#1c2b20 0%,#26392b 55%,#344633 100%)!important;box-shadow:0 18px 44px rgba(32,51,35,.12)!important}
+.workspace-hero.tozra-chat-first:before{content:"T";position:absolute;right:8%;top:50%;transform:translateY(-52%);z-index:-1;font-size:clamp(190px,24vw,320px);font-weight:900;line-height:1;color:rgba(231,241,222,.045);letter-spacing:-.1em}
+.workspace-hero.tozra-chat-first:after{width:300px!important;height:300px!important;right:-110px!important;top:-160px!important;border-color:#d4e5c01a!important;box-shadow:0 0 0 38px #d4e5c00a,0 0 0 78px #d4e5c006!important}
+.tozra-chat-first .hero-greeting{grid-column:1;grid-row:1;color:#c1d0bd!important;font-size:11px!important;letter-spacing:.04em!important;margin-bottom:15px!important}
+.tozra-chat-first .eyebrow{grid-column:1;grid-row:2;color:#b7d28d!important;font-size:9px!important;letter-spacing:.17em!important;margin-bottom:12px!important}
+.tozra-chat-first h1{grid-column:1;grid-row:3;font-size:clamp(32px,4.2vw,50px)!important;line-height:1.04!important;letter-spacing:-.055em!important;color:#f3f7ef!important;margin:0 0 12px!important}
+.tozra-chat-first p{grid-column:1;grid-row:4;color:#c5d0c3!important;font-size:13px!important;max-width:470px!important}
+.tozra-chat-first .smart-command{grid-column:2;grid-row:2/5;align-self:center!important;position:relative!important;inset:auto!important;width:100%!important;max-width:none!important;margin:0!important;padding:9px!important;display:flex!important;flex-wrap:wrap!important;gap:6px!important;border:1px solid #ffffff2b!important;border-radius:17px!important;background:#f9fbf6!important;box-shadow:0 18px 40px #0a140c44!important}
+.tozra-chat-first .smart-command input{flex:1 1 100%!important;min-width:0!important;min-height:74px!important;padding:14px 15px!important;border:0!important;background:transparent!important;color:#243226!important;font-size:13px!important;outline:none!important}
+.tozra-chat-first .smart-command input::placeholder{color:#8c978d!important}
+.tozra-chat-first .smart-command button{margin-left:auto!important;min-height:40px!important;padding:0 17px!important;border:0!important;border-radius:11px!important;background:#b8d38d!important;color:#233322!important;font-size:11px!important;font-weight:800!important}
+.tozra-chat-first .chat-first-hints{grid-column:2;grid-row:5;justify-content:flex-start!important;margin-top:12px!important;color:#d5dfd1!important;font-size:9px!important}
+.tozra-chat-first .chat-first-hints span{border-color:#ffffff24!important;background:#ffffff0d!important;padding:7px 10px!important}
+.tozra-chat-first .hero-actions{grid-column:1;grid-row:5;margin-top:18px!important}
+.tozra-chat-first .primary-btn{background:#b8d38d!important;color:#243222!important;border:0!important;border-radius:10px!important;box-shadow:none!important}
+.tozra-chat-first .outline-btn{background:#ffffff0b!important;border:1px solid #ffffff42!important;color:#f0f5ed!important;border-radius:10px!important}
+#personalHome{display:grid!important;grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr)!important;gap:14px!important;margin:0 0 25px!important;align-items:start!important}
+#personalHome .ph-hero{grid-column:1/-1!important;padding:19px 23px!important;border:0!important;border-radius:0!important;background:transparent!important}
+#personalHome .ph-brand{display:none!important}
+#personalHome .ph-kicker{color:#82945f!important;font-size:9px!important;letter-spacing:.15em!important;font-weight:800!important}
+#personalHome .ph-title{font-size:clamp(23px,2.5vw,30px)!important;letter-spacing:-.045em!important;color:#243126!important;margin:5px 0 5px!important}
+#personalHome .ph-desc{color:#7b867c!important;font-size:12px!important}
+#personalHome .ph-stats{grid-column:1/-1!important;display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:10px!important;margin:0 0 2px!important;padding:0!important}
+#personalHome .ph-stat{border:1px solid #e4eae1!important;background:#fff!important;border-radius:13px!important;padding:13px 15px!important;box-shadow:0 5px 18px rgba(34,55,36,.035)!important}
+#personalHome .ph-stat strong{color:#28392b!important;font-size:24px!important}
+#personalHome .ph-stat span{color:#89948a!important;font-size:9px!important;letter-spacing:.09em!important}
+#personalHome .ph-tasks{grid-column:1!important;grid-row:3/span 2!important;margin:0!important}
+#personalHome .ph-week{grid-column:2!important;grid-row:3!important;margin:0!important}
+#personalHome .ph-notes{grid-column:2!important;grid-row:4!important;margin:0!important}
+#personalHome .ph-memory{grid-column:1/-1!important;margin:0!important}
+#personalHome .ph-section{margin:0 0 10px!important}
+#personalHome .ph-section h2{font-size:14px!important;color:#2b392e!important}
+#personalHome .ph-section small{font-size:8px!important;color:#8a968b!important;letter-spacing:.12em!important}
+#personalHome .ph-card{background:#fff!important;border:1px solid #e5ebe3!important;border-radius:14px!important;box-shadow:0 7px 24px rgba(31,52,34,.04)!important}
+#personalHome .ph-input,#personalHome .ph-textarea{background:#f8faf7!important;border:1px solid #e7ece5!important;color:#29362c!important;border-radius:10px!important}
+#personalHome .ph-add button{background:#b8d38d!important;color:#263523!important;border-radius:10px!important}
+#personalHome .ph-tasklist{color:#3a483d!important}
+#personalHome .ph-days button{background:#f5f8f3!important;color:#5c6c5e!important;border-radius:9px!important}
+#personalHome .ph-days button.active{background:#dce9cc!important;color:#2f492d!important}
+#personalHome .ph-memory-form button{background:#b8d38d!important;color:#243322!important}
+#workspacePage>.workspace-rail{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important;margin:24px 0!important}
+#workspacePage>.workspace-rail .rail-panel,#workspacePage>.workspace-rail .rail-tip{background:#fff!important;border:1px solid #e4ebe2!important;border-radius:14px!important;box-shadow:0 6px 20px rgba(31,52,34,.035)!important}
+#workspacePage>.workspace-rail .rail-heading h2,#workspacePage>.workspace-rail strong{color:#2b392e!important}
+#workspacePage>.workspace-rail small,#workspacePage>.workspace-rail p,#workspacePage>.workspace-rail .activity-row{color:#778378!important}
+#workspacePage>.dashboard-stats{display:none!important}
+#workspacePage>.section-head{margin-top:28px!important}
+#workspacePage .section-head h2{color:#29372c!important}
+#workspacePage .home-section-note,#workspacePage .section-head span{color:#7d897e!important}
+#workspacePage .quick-card,#workspacePage .tool-card,#workspacePage .project-card{background:#fff!important;border:1px solid #e4eae2!important;border-radius:14px!important;box-shadow:0 6px 20px rgba(31,52,34,.035)!important;color:#29372c!important}
+#workspacePage .quick-card strong,#workspacePage .tool-card strong{color:#2b392e!important}
+#workspacePage .quick-card small,#workspacePage .tool-card small{color:#7b877d!important}
+.progress-center{background:#fff!important;border-color:#e4ebe2!important;border-radius:17px!important}
+.progress-center-head h2,.pc-panel-head h3{color:#2c392f!important}
+.pc-metric{border-color:#e8eee6!important;background:#fafcf9!important}
+.pc-metric strong{color:#2d3c30!important}
+.pc-panel{border-color:#e8eee6!important}
+.splash{background:radial-gradient(ellipse at 50% 38%,#334b36 0%,#1b2b20 42%,#111b15 100%)!important;transition:opacity .55s,visibility .55s!important}
+.splash:before{content:"";position:absolute;width:min(76vw,560px);aspect-ratio:1;border:1px solid #d7e8c012;border-radius:50%;box-shadow:0 0 0 48px #d7e8c008,0 0 0 96px #d7e8c005}
+.splash-inner{position:relative;z-index:1;animation:tozraSplashIn 1s cubic-bezier(.2,.8,.2,1) both!important}
+.splash-mark{display:flex!important;align-items:center!important;justify-content:center!important;width:88px!important;height:88px!important;border:1px solid #d8e6c24a!important;border-radius:27px!important;background:linear-gradient(145deg,#d3e5b1,#9fbd79)!important;color:#263725!important;font-size:45px!important;font-weight:900!important;letter-spacing:-.12em!important;padding-right:5px!important;box-shadow:0 18px 48px #07110955!important}
+.splash-name{margin-top:24px!important;color:#f3f7ed!important;font-size:24px!important;font-weight:850!important;letter-spacing:.32em!important;padding-left:.32em!important}
+.splash-name:after{content:"CREATIVE INTELLIGENCE";display:block;margin-top:11px;color:#aebda9;font-size:8px;font-weight:600;letter-spacing:.24em}
+.loader{width:160px!important;height:3px!important;margin-top:35px!important;background:#ffffff18!important;border-radius:20px!important}
+.loader-bar{background:#c0d99a!important;box-shadow:none!important;animation:loading 2.4s ease-in-out forwards!important}
+@keyframes tozraSplashIn{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:900px){
+ .workspace-hero.tozra-chat-first{grid-template-columns:1fr!important;grid-template-rows:auto!important;padding:27px 25px!important;gap:0!important}
+ .tozra-chat-first .hero-greeting,.tozra-chat-first .eyebrow,.tozra-chat-first h1,.tozra-chat-first p,.tozra-chat-first .smart-command,.tozra-chat-first .chat-first-hints,.tozra-chat-first .hero-actions{grid-column:1!important;grid-row:auto!important}
+ .tozra-chat-first .smart-command{margin-top:20px!important}
+ .tozra-chat-first .chat-first-hints{margin-top:10px!important}
+ #personalHome{grid-template-columns:1fr!important}
+ #personalHome .ph-hero,#personalHome .ph-stats,#personalHome .ph-tasks,#personalHome .ph-week,#personalHome .ph-notes,#personalHome .ph-memory{grid-column:1!important;grid-row:auto!important}
+ #workspacePage>.workspace-rail{grid-template-columns:1fr!important}
+}
+@media(max-width:600px){
+ .content{padding:18px 14px 38px!important}
+ .workspace-hero.tozra-chat-first{padding:23px 18px!important;border-radius:18px!important;min-height:0!important}
+ .tozra-chat-first h1{font-size:34px!important}
+ .tozra-chat-first .smart-command input{min-height:66px!important;font-size:12px!important}
+ .tozra-chat-first .smart-command button{min-height:39px!important}
+ #personalHome{gap:11px!important}
+ #personalHome .ph-hero{padding:13px 4px!important}
+ #personalHome .ph-stats{gap:7px!important}
+ #personalHome .ph-stat{padding:11px 9px!important}
+ #personalHome .ph-stat strong{font-size:21px!important}
+ #personalHome .ph-stat span{font-size:8px!important}
+ .progress-center{padding:15px!important}
+}
+
 </style>
+
+<style id="tozra-creative-canvas-v1">
+/* TOZRA Creative Canvas — visual layer only; existing feature IDs and scripts remain intact */
+:root{
+ --cc-ink:#202820;--cc-muted:#74796e;--cc-paper:#f5f3ed;--cc-white:#fffefa;
+ --cc-line:#e5e1d6;--cc-forest:#26392e;--cc-olive:#687c54;--cc-lime:#c5d69a;
+ --cc-shadow:0 14px 36px rgba(43,49,37,.07);
+}
+body{background:var(--cc-paper)!important;color:var(--cc-ink)!important}
+.main{background:var(--cc-paper)!important}
+.topbar{background:rgba(250,249,244,.92)!important;border-bottom:1px solid var(--cc-line)!important;backdrop-filter:blur(18px)}
+.topbar-title{letter-spacing:.19em!important;font-size:10px!important;color:#788072!important}
+.top-actions .status{color:#65745b!important}
+.content{max-width:1580px!important;padding:30px clamp(18px,3vw,48px) 52px!important}
+#workspacePage{
+ display:grid!important;grid-template-columns:minmax(0,1fr) 310px!important;
+ column-gap:24px!important;row-gap:20px!important;align-items:start!important;
+}
+#workspacePage>.workspace-hero{
+ grid-column:1!important;grid-row:1!important;min-height:370px!important;
+ margin:0!important;padding:39px 36px 30px!important;border-radius:5px 30px 5px 30px!important;
+ background:linear-gradient(125deg,#26392e 0%,#344637 58%,#4b5941 100%)!important;
+ box-shadow:0 22px 48px rgba(38,57,46,.15)!important;overflow:hidden!important;
+ display:flex!important;flex-direction:column!important;justify-content:center!important;
+}
+.workspace-hero:before{content:"";position:absolute;right:8%;top:13%;width:240px;height:240px;border:1px solid rgba(232,239,214,.18);border-radius:50%;box-shadow:0 0 0 28px rgba(232,239,214,.035),0 0 0 58px rgba(232,239,214,.025);pointer-events:none}
+.workspace-hero:after{content:"T";position:absolute!important;right:9%!important;bottom:-110px!important;top:auto!important;width:auto!important;height:auto!important;background:none!important;font-family:Georgia,serif!important;font-size:390px!important;line-height:1!important;color:rgba(231,237,214,.055)!important;opacity:1!important;pointer-events:none!important}
+.workspace-hero>*{position:relative;z-index:1}
+.workspace-hero .hero-greeting{color:#d0d8c7!important;font-size:11px!important;letter-spacing:.12em!important;text-transform:uppercase!important;margin-bottom:18px!important}
+.workspace-hero .eyebrow{color:#d3dfc1!important;letter-spacing:.18em!important;font-size:9px!important}
+.workspace-hero .eyebrow-dot{background:var(--cc-lime)!important;box-shadow:0 0 0 4px rgba(197,214,154,.13)!important}
+.workspace-hero h1{font-family:Georgia,'Times New Roman',serif!important;font-weight:500!important;letter-spacing:-.045em!important;line-height:1.02!important;font-size:clamp(42px,5vw,66px)!important;max-width:650px!important;margin:18px 0 13px!important}
+.workspace-hero p{max-width:490px!important;color:#d7ded2!important;font-size:14px!important;line-height:1.75!important}
+.smart-command{max-width:680px!important;background:#fffefa!important;border:1px solid rgba(255,255,255,.42)!important;border-radius:4px 15px 4px 15px!important;padding:6px!important;box-shadow:0 10px 25px rgba(15,27,18,.13)!important}
+.smart-command input{color:#273329!important;font-size:13px!important;padding:13px 14px!important}
+.smart-command input::placeholder{color:#8b9185!important}
+.smart-command button{background:#c5d69a!important;color:#253327!important;border-radius:3px 10px 3px 10px!important;font-weight:750!important;padding:0 20px!important}
+.chat-first-hints{color:#d8e1d0!important;gap:18px!important;font-size:10px!important;opacity:.9}
+.hero-actions{margin-top:19px!important}
+.hero-actions .primary-btn{background:#c5d69a!important;color:#253327!important;border:1px solid #c5d69a!important;border-radius:3px 10px 3px 10px!important}
+.hero-actions .outline-btn{border:1px solid rgba(255,255,255,.32)!important;color:#f5f4eb!important;border-radius:3px 10px 3px 10px!important;background:rgba(255,255,255,.05)!important}
+#workspacePage>.workspace-rail{
+ grid-column:2!important;grid-row:1!important;display:flex!important;flex-direction:column!important;
+ gap:14px!important;margin:0!important;position:relative!important;top:auto!important;
+}
+.workspace-rail .rail-panel,.workspace-rail .rail-tip{
+ background:#fffefa!important;border:1px solid var(--cc-line)!important;border-radius:5px 20px 5px 20px!important;
+ box-shadow:var(--cc-shadow)!important;padding:19px!important
+}
+.rail-heading h2{font-family:Georgia,serif!important;font-size:18px!important;font-weight:500!important}
+.rail-heading-icon,.mode-icon{color:#72865c!important}
+.mode-row{border-bottom:1px solid #efede6!important;padding:11px 2px!important}
+.mode-row strong{font-size:11px!important;color:#303b30!important}
+.mode-row small{color:#888c80!important}
+.mode-row.selected{background:#f0f2e8!important;border-radius:8px!important;padding-left:8px!important;padding-right:8px!important}
+.activity-row strong{color:#425a39!important}
+.workspace-rail .rail-tip{background:#e9eddf!important;border-color:#e0e6d5!important}
+.workspace-rail .tip-title{color:#40533a!important}
+.workspace-rail .rail-tip p{color:#65705e!important;line-height:1.7!important}
+#personalHome{
+ grid-column:1/-1!important;display:grid!important;grid-template-columns:repeat(12,minmax(0,1fr))!important;
+ gap:14px!important;margin:0!important;align-items:stretch!important
+}
+#personalHome .ph-hero{
+ grid-column:1/-1!important;border-radius:5px 22px 5px 22px!important;padding:22px 26px!important;
+ background:#e8ebdf!important;border:1px solid #dfe4d4!important;box-shadow:none!important
+}
+#personalHome .ph-brand{margin-bottom:13px!important}
+#personalHome .ph-mark{background:#40563b!important;border-radius:4px 12px 4px 12px!important}
+#personalHome .ph-brand-name{font-family:Georgia,serif!important;letter-spacing:.06em!important}
+#personalHome .ph-brand-sub{letter-spacing:.18em!important}
+#personalHome .ph-kicker{color:#78856c!important;letter-spacing:.18em!important}
+#personalHome .ph-title{font-family:Georgia,serif!important;font-weight:500!important;font-size:clamp(25px,3vw,35px)!important;letter-spacing:-.025em!important;color:#2c3b2d!important}
+#personalHome .ph-desc{color:#727c6c!important}
+#personalHome .ph-stats{grid-column:1/-1!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important}
+#personalHome .ph-stat{background:#fffefa!important;border:1px solid var(--cc-line)!important;border-radius:4px 15px 4px 15px!important;padding:17px 19px!important;box-shadow:none!important}
+#personalHome .ph-stat strong{font-family:Georgia,serif!important;color:#425a39!important;font-size:29px!important}
+#personalHome .ph-stat span{letter-spacing:.12em!important;color:#828778!important}
+#personalHome .ph-tasks{grid-column:span 7!important}
+#personalHome .ph-notes{grid-column:span 5!important}
+#personalHome .ph-week{grid-column:span 7!important}
+#personalHome .ph-memory{grid-column:span 5!important}
+#personalHome .ph-card{height:100%!important;background:#fffefa!important;border:1px solid var(--cc-line)!important;border-radius:4px 17px 4px 17px!important;box-shadow:none!important;padding:17px!important}
+#personalHome .ph-section h2{font-family:Georgia,serif!important;font-weight:500!important;font-size:19px!important}
+#personalHome .ph-section small{letter-spacing:.14em!important;color:#87907e!important}
+#personalHome .ph-input,#personalHome .ph-textarea,#personalHome select{background:#faf9f4!important;border:1px solid #e8e5dc!important;border-radius:5px!important;color:#344033!important}
+#personalHome .ph-add button,#personalHome .ph-memory-form button{background:#40563b!important;border-radius:4px 10px 4px 10px!important}
+#personalHome .ph-bottom{grid-column:1/-1!important;color:#8b9083!important;letter-spacing:.12em!important}
+#workspacePage>.dashboard-stats{grid-column:1/-1!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important}
+#workspacePage>.dashboard-stats .stat-card{background:#fffefa!important;border:1px solid var(--cc-line)!important;border-radius:4px 15px 4px 15px!important;box-shadow:none!important;padding:18px!important}
+#workspacePage>.dashboard-stats .stat-card strong{font-family:Georgia,serif!important;color:#40563b!important}
+#workspacePage>.section-head{grid-column:1/-1!important;margin:10px 0 0!important}
+#workspacePage>.section-head h2{font-family:Georgia,serif!important;font-weight:500!important;font-size:25px!important;letter-spacing:-.02em!important}
+#workspacePage>.quick-start{grid-column:1/-1!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important}
+.quick-card{background:#fffefa!important;border:1px solid var(--cc-line)!important;border-radius:4px 16px 4px 16px!important;box-shadow:none!important;padding:18px!important;transition:transform .2s,border-color .2s!important}
+.quick-card:hover,.tool-card:hover{transform:translateY(-3px)!important;border-color:#aab995!important}
+.quick-card .tool-icon,.tool-card .tool-icon{background:#e9eddf!important;color:#526c45!important;border-radius:4px 11px 4px 11px!important}
+.quick-card strong,.tool-card strong{color:#303b30!important}
+.quick-card small,.tool-card small{color:#818779!important}
+#workspacePage>.tool-grid{grid-column:1/-1!important;display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:11px!important}
+.tool-card{background:#f0efe8!important;border:1px solid #e4e1d7!important;border-radius:4px 15px 4px 15px!important;box-shadow:none!important;padding:17px!important}
+#workspacePage>.projects-section-head{grid-column:1/-1!important}
+#workspacePage>#projectGrid{grid-column:1/-1!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:13px!important}
+#workspacePage .progress-center{grid-column:1/-1!important;background:#e9eddf!important;border:1px solid #dfe5d4!important;border-radius:5px 22px 5px 22px!important;padding:25px!important;box-shadow:none!important}
+.progress-center h2{font-family:Georgia,serif!important;font-weight:500!important}
+.progress-center .pc-metric,.progress-center .pc-panel{background:#fffefa!important;border:1px solid #dfe4d7!important;border-radius:4px 14px 4px 14px!important;box-shadow:none!important}
+.progress-center .pc-metric strong{font-family:Georgia,serif!important;color:#40563b!important}
+.workspace-footer{grid-column:1/-1!important;border-top:1px solid var(--cc-line)!important;color:#858b7e!important}
+@media(max-width:1050px){
+ #workspacePage{grid-template-columns:minmax(0,1fr)!important}
+ #workspacePage>.workspace-hero,#workspacePage>.workspace-rail{grid-column:1!important;grid-row:auto!important}
+ #workspacePage>.workspace-rail{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #workspacePage>.workspace-rail .rail-tip{grid-column:1/-1!important}
+ #personalHome .ph-tasks,#personalHome .ph-week{grid-column:span 7!important}
+ #personalHome .ph-notes,#personalHome .ph-memory{grid-column:span 5!important}
+}
+@media(max-width:680px){
+ .content{padding:15px 13px 32px!important}
+ #workspacePage>.workspace-hero{min-height:0!important;padding:27px 20px 23px!important;border-radius:4px 20px 4px 20px!important}
+ .workspace-hero h1{font-size:40px!important}
+ .workspace-hero:after{font-size:250px!important;right:-3%!important;bottom:-65px!important}
+ .smart-command{display:flex!important;gap:5px!important}
+ .smart-command input{min-width:0!important}
+ .smart-command button{padding:0 12px!important;font-size:11px!important}
+ #workspacePage>.workspace-rail{grid-template-columns:1fr!important}
+ #personalHome{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+ #personalHome .ph-hero,#personalHome .ph-stats,#personalHome .ph-bottom{grid-column:1/-1!important}
+ #personalHome .ph-tasks,#personalHome .ph-notes,#personalHome .ph-week,#personalHome .ph-memory{grid-column:1/-1!important}
+ #personalHome .ph-stats{gap:7px!important}
+ #personalHome .ph-stat{padding:12px 9px!important}
+ #personalHome .ph-stat strong{font-size:23px!important}
+ #workspacePage>.dashboard-stats{gap:7px!important}
+ #workspacePage>.dashboard-stats .stat-card{padding:12px 9px!important}
+ #workspacePage>.quick-start{grid-template-columns:1fr!important}
+ #workspacePage>.tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #workspacePage>#projectGrid{grid-template-columns:1fr!important}
+ .progress-center{padding:16px!important}
+}
+</style>
+
 </head>
 
 <body>
@@ -992,10 +1292,10 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
 <section class="content">
 <div class="page active" id="workspacePage">
  <div class="workspace-hero hero-shell tozra-chat-first">
-  <div class="hero-greeting" id="dashboardGreeting">TOZRA çalışma alanına hoş geldin</div>
-  <div class="eyebrow"><span class="eyebrow-dot"></span> TOZRA AI　/　KİŞİSEL ASİSTANIN</div>
-  <h1>Bugün neyi birlikte<br>başaralım?</h1>
-  <p>Fikrini, sorunu veya yapmak istediğin işi yaz. TOZRA ile hemen konuşmaya başla.</p>
+  <div class="hero-greeting" id="dashboardGreeting">YARATICI ÇALIŞMA ALANIN</div>
+  <div class="eyebrow"><span class="eyebrow-dot"></span> TOZRA　/　CREATIVE CANVAS</div>
+  <h1>Fikrini keşfet.<br>Üretime dönüştür.</h1>
+  <p>Bir fikirle başla; TOZRA onu projeye, içeriğe ve gerçek bir üretim planına dönüştürsün.</p>
   <form class="smart-command" id="smartCommandForm">
    <input id="smartCommandInput" type="text" maxlength="2000" autocomplete="off" placeholder="TOZRA'ya bir şey sor veya bir hedef yaz..." aria-label="TOZRA ile sohbet et">
    <button type="submit">Gönder ↗</button>
@@ -1017,7 +1317,20 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
  <section class="ph-tasks"><div class="ph-section"><h2>Görevlerin</h2><small>GÜNLÜK ODAK</small></div><div class="ph-card"><form class="ph-add" id="phTaskForm"><input class="ph-input" id="phTaskInput" maxlength="160" placeholder="Yeni bir görev ekle…" autocomplete="off"><button aria-label="Görev ekle" type="submit">＋</button></form><div class="ph-tasklist" id="phTaskList"><div class="ph-empty">Henüz görev yok. İlk görevini ekleyerek başla.</div></div></div></section>
  <section class="ph-notes"><div class="ph-section"><h2>Hızlı notların</h2><small>AKLINDA KALSIN</small></div><div class="ph-card"><textarea class="ph-textarea" id="phNotes" placeholder="Fikirlerini buraya yaz…"></textarea><div class="ph-save" id="phNotesStatus">Notların bu tarayıcıda otomatik saklanır.</div></div></section>
  <section class="ph-week"><div class="ph-section"><h2>Haftalık program</h2><small>PLANINI OLUŞTUR</small></div><div class="ph-card"><div class="ph-days" id="phDays"></div><p class="ph-plan-day" id="phPlanDay">Pazartesi</p><textarea class="ph-textarea ph-plan" id="phPlan" placeholder="Bugün için planını yaz…"></textarea><div class="ph-save" id="phPlanStatus">Haftalık planın bu tarayıcıda otomatik saklanır.</div></div></section>
- <div class="ph-bottom">TOZRA · Fikirlerini harekete geçir.</div>
+ <section class="ph-memory" aria-label="TOZRA akıllı hafıza">
+ <div class="ph-section"><h2>TOZRA hafızası</h2><small>ÖNEMLİ BİLGİLERİN</small></div>
+ <div class="ph-card ph-memory-card">
+  <p class="ph-memory-desc">TOZRA'nın sonraki sohbetlerinde kullanmasını istediğin tercihleri, hedefleri ve proje bilgilerini kaydet.</p>
+  <form id="phMemoryForm" class="ph-memory-form">
+   <input id="phMemoryInput" class="ph-input" maxlength="1500" placeholder="Örn. Tasarımlarda sade ve premium görünümü tercih ediyorum..." autocomplete="off">
+   <select id="phMemoryCategory" aria-label="Hafıza kategorisi"><option value="Tercih">Tercih</option><option value="Hedef">Hedef</option><option value="Proje">Proje</option><option value="Genel">Genel</option></select>
+   <button type="submit" aria-label="Hafızaya ekle">＋ Kaydet</button>
+  </form>
+  <div class="ph-memory-list" id="phMemoryList"><div class="ph-empty">Henüz kaydedilmiş bilgi yok.</div></div>
+  <div class="ph-save">Hafıza bu tarayıcıda, hesabına özel olarak saklanır. Şifre veya API anahtarı kaydetme.</div>
+ </div>
+</section>
+<div class="ph-bottom">TOZRA · Fikirlerini harekete geçir.</div>
 </section>
  <aside class="workspace-rail" aria-label="Yaratıcı çalışma paneli">
   <section class="rail-panel">
@@ -1041,13 +1354,13 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
   <div class="stat-card"><span>Sohbet geçmişi</span><strong id="statChats">0</strong><small>TOZRA ile çalışmaların</small></div>
   <div class="stat-card"><span>Üretim alanı</span><strong>5</strong><small>Yaratıcı araç kategorisi</small></div>
  </div>
- <div class="section-head"><h2>Hızlı başlangıç</h2><span class="home-section-note">Nereden başlamak istersin?</span></div>
+ <div class="section-head"><h2>Hızlı başlangıç</h2><span class="home-section-note">Fikrini hangi yönde geliştirelim?</span></div>
  <div class="quick-start">
   <button class="quick-card" id="quickIdea"><div class="tool-icon">✳</div><div><strong>Bir fikri geliştir</strong><small>Fikrini netleştir ve yol haritası çıkar.</small></div></button>
   <button class="quick-card" id="quickContent"><div class="tool-icon">▤</div><div><strong>İçerik üret</strong><small>Metin, senaryo veya sosyal medya içeriği.</small></div></button>
   <button class="quick-card" id="quickResearch"><div class="tool-icon">⌕</div><div><strong>Araştırma başlat</strong><small>Bir konuyu incele ve özetle.</small></div></button>
  </div>
- <div class="section-head"><h2>Stüdyo araçları</h2><span>Fikrini üretime dönüştür</span></div>
+ <div class="section-head"><h2>Stüdyo araçları</h2><span>Düşünceden sonuca</span></div>
  <div class="tool-grid">
   <button class="tool-card" data-category="Fikir geliştirme"><div class="tool-icon">✳</div><strong>Fikir geliştirme</strong><small>Fikirlerini projeye dönüştür.</small></button>
   <button class="tool-card" data-category="İçerik üretimi"><div class="tool-icon">▤</div><strong>İçerik üretimi</strong><small>Metinler, senaryolar ve içerikler.</small></button>
@@ -1057,6 +1370,22 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
  </div>
  <div class="section-head projects-section-head"><h2>Son projelerim</h2><span id="projectCount">0 proje</span></div>
  <div class="project-grid" id="projectGrid"></div>
+<section class="progress-center" id="progressCenter" aria-label="İlerleme merkezi">
+ <div class="progress-center-head">
+  <div><div class="pc-kicker">TOZRA / PROGRESS CENTER</div><h2>İlerleme merkezin</h2><p>Projelerinin ve günlük hedeflerinin genel durumunu tek yerde gör.</p></div>
+  <span class="pc-live">● GÜNCEL DURUM</span>
+ </div>
+ <div class="pc-metrics">
+  <article class="pc-metric"><span>TOPLAM PROJE</span><strong id="pcProjectTotal">0</strong><small>Çalışma alanındaki projeler</small></article>
+  <article class="pc-metric"><span>PROJE İLERLEMESİ</span><strong id="pcAverageProgress">0%</strong><small>Adımların tamamlanma oranı</small></article>
+  <article class="pc-metric"><span>TAMAMLANAN GÖREV</span><strong id="pcTasksDone">0</strong><small id="pcTasksCaption">0 görev takip ediliyor</small></article>
+  <article class="pc-metric"><span>BUGÜNKÜ HEDEFLER</span><strong id="pcDailyDone">0/0</strong><small>Günlük görevlerin durumu</small></article>
+ </div>
+ <div class="pc-content">
+  <section class="pc-panel"><div class="pc-panel-head"><h3>Proje ilerlemeleri</h3><span>EN SON GÜNCELLENENLER</span></div><div class="pc-project-list" id="pcProjectList"><div class="pc-empty">Projelerin burada görünecek.</div></div></section>
+  <section class="pc-panel pc-focus"><div class="pc-panel-head"><h3>Bir sonraki adım</h3><span>TOZRA ÖNERİSİ</span></div><div id="pcNextStep" class="pc-next-step"><span class="pc-next-icon">✦</span><strong>İlk projenle başla</strong><p>Bir proje oluşturduğunda ilerlemeni burada takip edebilirsin.</p></div><button type="button" class="pc-refresh" id="pcRefresh">↻ İlerlemeyi yenile</button></section>
+ </div>
+</section>
  <div class="workspace-footer"><span>TOZRA CREATIVE WORKSPACE</span><span>Fikirden üretime.</span></div>
 </div>
 
@@ -1677,7 +2006,7 @@ function updateDashboardStats(){
  const user=TozraAuth.getSession()?.user;
  const name=user?.user_metadata?.full_name?.trim()?.split(/\s+/)[0];
  const hour=new Date().getHours(), greeting=hour<12?"Günaydın":hour<18?"İyi günler":"İyi akşamlar";
- if($("dashboardGreeting"))$("dashboardGreeting").textContent=name?`${greeting}, ${name}. Bugün ne üretmek istersin?`:`${greeting}. TOZRA çalışma alanına hoş geldin.`;
+ if($("dashboardGreeting"))$("dashboardGreeting").textContent=name?`${greeting}, ${name}. Bugün ne üretmek istersin?`:`${greeting}. YARATICI ÇALIŞMA ALANIN.`;
 }
 function loadProjects(){
  const data=safeRead("tozra-projects",[]);
@@ -1697,11 +2026,74 @@ function saveProjects(){
  safeSave("tozra-projects",projects);
  renderProjects();
 }
+function renderProgressCenter(){
+ const byId=id=>document.getElementById(id);
+ if(!byId("pcProjectTotal"))return;
+ const all=Array.isArray(projects)?projects:[];
+ let stepTotal=0,stepDone=0,taskTotal=0,taskDone=0;
+ const rows=all.map(project=>{
+  const studio=project.studio&&typeof project.studio==="object"?project.studio:{};
+  const milestones=Array.isArray(studio.milestones)?studio.milestones:[];
+  const tasks=Array.isArray(studio.tasks)?studio.tasks:[];
+  const total=milestones.length+tasks.length;
+  const done=milestones.filter(x=>x.done).length+tasks.filter(x=>x.done).length;
+  stepTotal+=total;stepDone+=done;taskTotal+=tasks.length;taskDone+=tasks.filter(x=>x.done).length;
+  return {project,total,done,pct:total?Math.round(done/total*100):0,open:tasks.filter(x=>!x.done).length+milestones.filter(x=>!x.done).length};
+ }).sort((a,b)=>(b.project.updatedAt||0)-(a.project.updatedAt||0));
+ const daily=(()=>{try{const value=JSON.parse(localStorage.getItem("tozra-web-home-tasks-v1")||"[]");return Array.isArray(value)?value:[]}catch{return []}})();
+ const dailyDone=daily.filter(x=>x.done).length;
+ byId("pcProjectTotal").textContent=String(all.length);
+ byId("pcAverageProgress").textContent=(stepTotal?Math.round(stepDone/stepTotal*100):0)+"%";
+ byId("pcTasksDone").textContent=String(taskDone);
+ byId("pcTasksCaption").textContent=taskDone+" / "+taskTotal+" proje görevi tamamlandı";
+ byId("pcDailyDone").textContent=dailyDone+"/"+daily.length;
+ const list=byId("pcProjectList");list.replaceChildren();
+ if(!rows.length){
+  const empty=document.createElement("div");empty.className="pc-empty";empty.textContent="Henüz proje yok. İlk projen oluşturulduğunda ilerleme özeti burada görünecek.";list.appendChild(empty);
+ }else{
+  rows.slice(0,5).forEach(row=>{
+   const item=document.createElement("button");item.type="button";item.className="pc-project-row";
+   const top=document.createElement("span");top.className="pc-project-top";
+   const name=document.createElement("strong");name.textContent=row.project.name;
+   const pct=document.createElement("b");pct.textContent=row.pct+"%";top.append(name,pct);
+   const track=document.createElement("span");track.className="pc-track";
+   const fill=document.createElement("span");fill.style.width=row.pct+"%";track.appendChild(fill);
+   const meta=document.createElement("span");meta.className="pc-project-meta";meta.textContent=row.total?row.done+" / "+row.total+" adım tamamlandı":"Henüz takip edilecek adım eklenmedi";
+   item.append(top,track,meta);item.addEventListener("click",()=>openProject(row.project.id));list.appendChild(item);
+  });
+ }
+ const next=byId("pcNextStep");next.replaceChildren();
+ let candidate=null;
+ for(const row of rows){
+  const studio=row.project.studio||{};
+  const firstTask=(Array.isArray(studio.tasks)?studio.tasks:[]).find(x=>!x.done);
+  const firstMilestone=(Array.isArray(studio.milestones)?studio.milestones:[]).find(x=>!x.done);
+  const step=firstTask||firstMilestone;
+  if(step){candidate={row,step};break;}
+ }
+ const icon=document.createElement("span");icon.className="pc-next-icon";icon.textContent="✦";
+ const title=document.createElement("strong"),desc=document.createElement("p");
+ if(candidate){
+  title.textContent=candidate.step.title;
+  desc.textContent=candidate.row.project.name+" · Sıradaki tamamlanmamış adım";
+  next.append(icon,title,desc);
+  const open=document.createElement("button");open.type="button";open.className="pc-open-next";open.textContent="Projeyi aç ↗";open.addEventListener("click",()=>openProject(candidate.row.project.id));next.appendChild(open);
+ }else if(daily.some(x=>!x.done)){
+  const todo=daily.find(x=>!x.done);title.textContent=todo.title;desc.textContent="Bugünkü görevlerinden sıradaki tamamlanmamış hedef.";
+  next.append(icon,title,desc);
+ }else{
+  title.textContent=all.length?"Harika, bekleyen adım görünmüyor":"İlk projenle başla";
+  desc.textContent=all.length?"Yeni bir hedef veya görev ekleyerek ilerlemeye devam et.":"Bir proje oluşturduğunda TOZRA ilerlemeni burada takip edecek.";
+  next.append(icon,title,desc);
+ }
+}
+document.getElementById("pcRefresh")?.addEventListener("click",renderProgressCenter);
 function renderProjects(){
  const grid=$("projectGrid");
  grid.innerHTML="";
  $("projectCount").textContent=projects.length+" proje";
  if($("statProjects"))$("statProjects").textContent=String(projects.length);
+ renderProgressCenter();
 
  if(!projects.length){
   const empty=document.createElement("div");
@@ -2345,6 +2737,9 @@ async function sendToAI({text,list,area,history,onSuccess,onFailure,agentMode=fa
     history:history,
     images:media.images,
     videoFrames:media.videoFrames,
+    personalMemory:window.TozraMemory && typeof window.TozraMemory.getAll==="function"
+     ? window.TozraMemory.getAll().slice(-30).map(item=>({content:item.content,category:item.category}))
+     : [],
     agentMode:Boolean(agentMode)
    })
   });
@@ -2904,5 +3299,34 @@ if("serviceWorker" in navigator){
  renderTasks();renderDays();
 })();
 </script>
+<script>
+/* TOZRA SMART MEMORY UI */
+(function(){
+ const $=id=>document.getElementById(id);
+ const form=$("phMemoryForm"), input=$("phMemoryInput"), category=$("phMemoryCategory"), list=$("phMemoryList");
+ if(!form||!input||!list)return;
+ function render(){
+  const api=window.TozraMemory, items=api&&api.getAll?api.getAll():[];
+  list.replaceChildren();
+  if(!items.length){const empty=document.createElement("div");empty.className="ph-empty";empty.textContent="Henüz kaydedilmiş bilgi yok.";list.appendChild(empty);return;}
+  items.slice().reverse().forEach(item=>{
+   const row=document.createElement("div");row.className="ph-memory-item";
+   const body=document.createElement("div");body.className="ph-memory-body";
+   const tag=document.createElement("span");tag.className="ph-memory-tag";tag.textContent=item.category||"Genel";
+   const content=document.createElement("p");content.textContent=item.content;body.append(tag,content);
+   const remove=document.createElement("button");remove.type="button";remove.className="ph-memory-remove";remove.textContent="Sil";
+   remove.addEventListener("click",()=>{if(api.remove(item.id))render();});
+   row.append(body,remove);list.appendChild(row);
+  });
+ }
+ form.addEventListener("submit",event=>{
+  event.preventDefault();const value=input.value.trim();if(!value)return;
+  try{if(!window.TozraMemory)throw new Error("Hafıza sistemi yüklenemedi.");window.TozraMemory.add(value,category.value);input.value="";render();}
+  catch(error){alert(error.message||"Hafızaya kaydedilemedi.");}
+ });
+ render();
+})();
+</script>
+
 </body>
 </html>
