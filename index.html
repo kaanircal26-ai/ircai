@@ -799,22 +799,6 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
 .auth-screen .notice{background:#edf1e8;border:1px solid #dfe6d8;color:#627362;border-radius:12px;font-size:11px}
 @media(max-width:700px){#modalOverlay .modal.auth-screen{width:calc(100% - 24px);max-width:460px;max-height:calc(100dvh - 30px);padding:24px 22px;border-radius:25px}.auth-intro{padding-bottom:14px}.auth-mark{width:44px;height:44px;margin-bottom:16px}}
 
-
-/* Dedicated mobile AI chat screen */
-@media (max-width: 760px){
- body.chat-screen-open .app{padding-bottom:0 !important;}
- body.chat-screen-open #chatPage.active{
-  display:flex !important; flex-direction:column !important;
-  min-height:calc(100dvh - env(safe-area-inset-top)) !important;
-  height:calc(100dvh - env(safe-area-inset-top)) !important;
-  padding:14px 16px calc(82px + env(safe-area-inset-bottom)) !important;
-  overflow-y:auto !important;
- }
- body.chat-screen-open #chatPage .messages{flex:1 1 auto; min-height:180px;}
- body.chat-screen-open #chatPage .composer-wrap{position:sticky; bottom:0; z-index:20;}
- body.chat-screen-open #mobileDock{z-index:40;}
-}
-
 </style>
 <style id="tozra-personal-home">
 :root{--personal-ink:#17221b;--personal-muted:#718076;--personal-line:#e5ece6;--personal-green:#16864b;--personal-green2:#dff5e7;--personal-card:#ffffff}
@@ -2062,10 +2046,7 @@ $("menuBackdrop").onclick=()=>toggleMenu(true);
 /* SAYFA GEÇİŞLERİ */
 function showPage(page){
  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
- const targetPage=$(page+"Page");
- if(!targetPage){console.error("TOZRA: Sayfa bulunamadı:",page);return;}
- targetPage.classList.add("active");
- document.body.classList.toggle("chat-screen-open",page==="chat");
+ $(page+"Page").classList.add("active");
  $("navWorkspace").classList.toggle("active",page==="workspace");
  $("navChat").classList.toggle("active",page==="chat");
  $("navCreativeStudio").classList.toggle("active",page==="creativeStudio");
@@ -3605,38 +3586,36 @@ if("serviceWorker" in navigator){
   if(target)target.scrollIntoView({behavior:"smooth",block:"start"});
  }
  if(dock) dock.addEventListener("click",event=>{
-  const button=event.target.closest("[data-mobile-tab]");
+  const button=event.target.closest("button[data-mobile-tab]");
   if(!button)return;
-  const tab=button.dataset.mobileTab;
+  const tab=button.getAttribute("data-mobile-tab");
   setDockTab(tab);
-  if(tab==="home")$id("navWorkspace")?.click();
-  if(tab==="chat"){
-   // Open the dedicated full-screen AI chat page, not the workspace chat shortcut.
-   // Use the existing page router, then refresh the saved conversation list.
-   event.preventDefault();
-   event.stopPropagation();
-   const chatPage=$id("chatPage");
-   if(chatPage){
-    document.querySelectorAll(".page").forEach(page=>page.classList.remove("active"));
-    chatPage.classList.add("active");
-    $id("navWorkspace")?.classList.remove("active");
-    $id("navChat")?.classList.add("active");
-    $id("navCreativeStudio")?.classList.remove("active");
-    const title=$id("topbarTitle");
-    if(title)title.textContent="TOZRA AI / SOHBET";
-    document.body.classList.add("chat-screen-open");
-    window.scrollTo({top:0,behavior:"instant"});
-    if(typeof window.renderGeneralMessages==="function") window.renderGeneralMessages();
-    const prompt=$id("prompt");
-    if(prompt) window.setTimeout(()=>prompt.focus({preventScroll:true}),120);
-   }else{
-    console.error("TOZRA: chatPage bölümü bulunamadı.");
-   }
+  if(tab==="home"){
+   if(typeof window.showPage==="function")window.showPage("workspace");
+   else $id("navWorkspace")?.click();
   }
-  if(tab==="projects"){$id("navProjects")?.click();window.setTimeout(scrollToProjects,180);}
+  if(tab==="chat"){
+   // Route to the real, existing AI chat page and render its conversation.
+   if(typeof window.openGeneralChat==="function"){
+    window.openGeneralChat();
+   }else{
+    document.querySelectorAll(".page").forEach(page=>page.classList.remove("active"));
+    const chatPage=$id("chatPage");
+    if(chatPage)chatPage.classList.add("active");
+    $id("navChat")?.classList.add("active");
+    $id("navWorkspace")?.classList.remove("active");
+    if(typeof window.renderGeneralMessages==="function")window.renderGeneralMessages();
+   }
+   const chatPage=$id("chatPage");
+   if(chatPage && !chatPage.classList.contains("active"))chatPage.classList.add("active");
+  }
+  if(tab==="projects"){
+   $id("navProjects")?.click();
+   window.setTimeout(scrollToProjects,180);
+  }
   if(tab==="studio")$id("navCreativeStudio")?.click();
-  if(tab==="profile" && typeof showModal==="function")showModal("profile");
- });
+  if(tab==="profile" && typeof window.showModal==="function")window.showModal("profile");
+ },true);
  function syncDockToPage(){
   const active=document.querySelector(".page.active");
   if(!active)return;
