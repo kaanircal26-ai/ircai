@@ -820,6 +820,38 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
 @media(max-width:700px){
   .ircai-design-title{font-size:13px!important;letter-spacing:.16em!important}
 }
+
+/* IRCAI DESIGN — fill the open upper workspace with the bubble launcher */
+#workspacePage{display:block!important}
+#workspacePage>.tozra-bubble-home{
+  width:100%!important;max-width:none!important;
+  min-height:calc(100vh - 150px);
+  margin:0 0 28px!important;
+  padding:clamp(28px,4vw,54px)!important;
+  display:flex;flex-direction:column;justify-content:center;
+  border-radius:0 0 30px 30px;
+  border-top:0;
+}
+.tozra-bubble-home .bubble-home-head{margin-bottom:clamp(30px,5vh,56px)}
+.tozra-bubble-home .bubble-group-label{margin-top:clamp(22px,3vh,34px);margin-bottom:16px}
+.tozra-bubble-home .bubble-cloud{gap:16px}
+.tozra-bubble-home .bubble-large{min-height:104px;padding:20px 24px}
+.tozra-bubble-home .bubble-cloud-studio .tozra-bubble{min-height:94px;padding:18px 20px}
+.tozra-bubble-home .bubble-icon{width:50px;height:50px;flex-basis:50px;font-size:24px}
+.tozra-bubble-home .bubble-bottom-row{margin-top:clamp(26px,4vh,42px)}
+@media(max-width:760px){
+ #workspacePage>.tozra-bubble-home{
+  min-height:calc(100dvh - 118px);padding:22px 16px!important;
+  justify-content:flex-start;border-radius:0 0 22px 22px;
+ }
+ .tozra-bubble-home .bubble-home-head{margin-bottom:20px}
+ .tozra-bubble-home .bubble-group-label{margin-top:19px;margin-bottom:10px}
+ .tozra-bubble-home .bubble-cloud{gap:9px}
+ .tozra-bubble-home .bubble-large{min-height:78px;padding:12px 10px}
+ .tozra-bubble-home .bubble-cloud-studio .tozra-bubble{min-height:76px;padding:11px 10px}
+ .tozra-bubble-home .bubble-icon{width:36px;height:36px;flex-basis:36px;font-size:19px}
+ .tozra-bubble-home .bubble-bottom-row{margin-top:20px}
+}
 </style>
 <style id="tozra-personal-home">
 :root{--personal-ink:#17221b;--personal-muted:#718076;--personal-line:#e5ece6;--personal-green:#16864b;--personal-green2:#dff5e7;--personal-card:#ffffff}
