@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#f7f5f1">
+<meta name="theme-color" content="#10271B">
 <meta name="description" content="TOZRA — Creative Intelligence">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="TOZRA">
@@ -1510,6 +1510,45 @@ body{background:var(--cc-paper)!important;color:var(--cc-ink)!important}
 .ph-home-calendar-foot{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:13px;color:var(--muted);font-size:10px}
 .ph-home-calendar-foot i{display:inline-block;width:6px;height:6px;border-radius:50%;background:#a9c77b;margin-right:5px}
 @media(max-width:600px){.ph-home-calendar-card{padding:14px!important}.ph-home-calendar-grid{gap:4px}.ph-home-calendar-grid .ph-hcal-day{min-height:33px}.ph-home-calendar-top{align-items:flex-start}}
+</style>
+
+
+<style id="ircal-glass-dock-v1">
+@media(max-width:760px){
+ .mobile-dock{
+  display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));
+  position:fixed;z-index:80;left:12px;right:12px;
+  bottom:calc(9px + env(safe-area-inset-bottom));
+  min-height:76px;padding:9px 8px;
+  background:linear-gradient(135deg,rgba(250,255,242,.84),rgba(232,244,218,.68) 48%,rgba(255,255,249,.82));
+  border:1px solid rgba(255,255,255,.9);border-radius:25px;
+  box-shadow:0 12px 34px rgba(23,47,27,.18),inset 0 1px 0 rgba(255,255,255,.9),inset 0 -1px 0 rgba(130,157,119,.18);
+  -webkit-backdrop-filter:blur(24px) saturate(165%);backdrop-filter:blur(24px) saturate(165%);
+ }
+ .mobile-dock button{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
+  min-width:0;min-height:58px;padding:5px 2px;border:1px solid transparent;
+  border-radius:17px;background:transparent;color:#65745f;
+  font-size:10px;font-weight:700;line-height:1.1;white-space:nowrap;
+  transition:background .2s ease,box-shadow .2s ease,transform .2s ease;
+ }
+ .mobile-dock button .dock-icon{
+  display:grid;place-items:center;width:38px;height:34px;border-radius:13px;
+  color:#527448;background:linear-gradient(145deg,rgba(255,255,255,.82),rgba(224,241,211,.56));
+  border:1px solid rgba(255,255,255,.62);
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.8),0 3px 9px rgba(41,68,40,.08);
+ }
+ .mobile-dock button .dock-icon svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+ .mobile-dock button.is-active{
+  color:#213d26;background:linear-gradient(145deg,rgba(255,255,255,.68),rgba(224,241,207,.72));
+  border-color:rgba(255,255,255,.8);box-shadow:0 5px 16px rgba(43,74,39,.13),inset 0 1px 0 rgba(255,255,255,.9);
+ }
+ .mobile-dock button.is-active .dock-icon{
+  color:#ffffff;background:linear-gradient(145deg,#83a96d,#5f8950);
+  border-color:rgba(255,255,255,.48);box-shadow:0 4px 12px rgba(32,70,36,.25),inset 0 1px 0 rgba(255,255,255,.4);
+ }
+ .mobile-dock button:active{transform:scale(.96)}
+}
 </style>
 
 </head>
