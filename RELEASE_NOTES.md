@@ -20,3 +20,10 @@
 ## Deployment
 
 Deploy the contents of the existing project root as usual. Keep the current `GROQ_API_KEY`, Supabase environment variables, and other existing Vercel settings unchanged. No database migration or new environment variable is required for these AI changes.
+
+
+## Follow-up reliability fix
+
+- Increased the completion budget for planning, analysis, and agent tasks to 8,192 tokens; coding tasks use 6,144 and general tasks use 3,072.
+- Added server-side diagnostics for empty model responses and a clearer message when the model reports token-limit exhaustion.
+- This is a targeted API change; the interface, authentication, storage, and other features are unchanged.
