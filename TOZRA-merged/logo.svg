@@ -1,8 +1,0 @@
-
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="112" fill="#ffffff"/>
-  <path d="M112 130H400V194H288V382H224V194H112Z" fill="#111111"/>
-  <text x="256" y="445" text-anchor="middle"
-        font-family="Arial,sans-serif" font-size="42"
-        font-weight="700" letter-spacing="8" fill="#111111">TOZRA</text>
-</svg>
