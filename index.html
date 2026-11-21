@@ -1371,6 +1371,49 @@ body{background:var(--cc-paper)!important;color:var(--cc-ink)!important}
 }
 </style>
 
+
+<style id="tozra-mobile-complete-v2">
+.mobile-dock{display:none}
+.mobile-capture-button{display:none!important}
+.mobile-settings-actions,.profile-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:12px 0}
+.mobile-settings-actions button,.profile-actions button{min-height:44px}
+.mobile-settings-status{font-size:12px;color:#687564;line-height:1.5}
+@media(max-width:760px){
+ .mobile-dock{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));position:fixed;z-index:58;left:9px;right:9px;bottom:calc(7px + env(safe-area-inset-bottom));min-height:62px;padding:6px 5px;background:rgba(250,249,244,.96);border:1px solid rgba(222,224,211,.95);border-radius:17px;box-shadow:0 9px 30px rgba(31,43,31,.17);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+ .mobile-dock button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:0;min-height:48px;padding:4px 2px;border:0;border-radius:11px;background:transparent;color:#7a8173;font-size:9px;font-weight:650;line-height:1.15;white-space:nowrap}
+ .mobile-dock button .dock-icon{font-size:19px;line-height:1.1;color:#66765a}
+ .mobile-dock button.is-active{background:#e8eddf;color:#344a32}
+ .mobile-dock button.is-active .dock-icon{color:#344a32}
+ .content{padding-bottom:calc(94px + env(safe-area-inset-bottom))!important}
+ #chatPage .composer-wrap{padding-bottom:calc(85px + env(safe-area-inset-bottom))!important}
+ #chatPage .composer{margin-bottom:5px!important}
+ .mobile-capture-button{display:inline-flex!important}
+ .tools{display:flex!important;flex-wrap:wrap!important;gap:6px!important}
+ .tools .tool-button{min-height:37px!important;padding:8px 10px!important;font-size:10px!important}
+ #projectStudioPanel,.project-studio{width:100%!important;min-width:0!important;overflow:hidden!important}
+ .project-studio{padding:14px!important;border-radius:5px 18px 5px 18px!important}
+ .ps-overview{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ .ps-progress-card{grid-column:1/-1!important}
+ .ps-grid{grid-template-columns:1fr!important}
+ .ps-panel,.ps-metric,.ps-progress-card{min-width:0!important}
+ .cs-heading{gap:12px!important}
+ .cs-heading h1{font-size:clamp(28px,8vw,38px)!important}
+ .cs-workspace-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ .modal{width:min(94vw,520px)!important;max-height:calc(100dvh - 34px - env(safe-area-inset-top))!important;overflow-y:auto!important;padding-bottom:calc(16px + env(safe-area-inset-bottom))!important}
+ .modal input,.modal select,.modal textarea{font-size:16px!important}
+ .splash{padding-top:env(safe-area-inset-top)!important}
+ .splash-mark{border-radius:9px 24px 9px 24px!important}
+}
+@media(max-width:390px){
+ .mobile-dock{left:6px;right:6px;min-height:59px}
+ .mobile-dock button{font-size:8px}
+ .mobile-dock button .dock-icon{font-size:18px}
+ .mobile-capture-button{display:none!important}
+ .tools .tool-button{padding:7px 8px!important}
+ .mobile-settings-actions,.profile-actions{grid-template-columns:1fr!important}
+}
+</style>
+
 </head>
 
 <body>
@@ -1644,8 +1687,8 @@ body{background:var(--cc-paper)!important;color:var(--cc-ink)!important}
    <textarea id="prompt" rows="1" placeholder="TOZRA'ya bir şey sor..."></textarea>
    <div class="composer-bottom">
     <div class="tools">
-     <button class="tool-button" id="imageButton">＋ Fotoğraf</button>
-     <button class="tool-button" id="videoButton">＋ Video</button>
+     <button class="tool-button" id="imageButton">＋ Fotoğraf</button><button class="tool-button mobile-capture-button" id="cameraButton" type="button">📷 Kamera</button>
+     <button class="tool-button" id="videoButton">＋ Video</button><button class="tool-button mobile-capture-button" id="recordVideoButton" type="button">◉ Çek</button>
      <button class="tool-button" id="linkButton">↗ Bağlantı</button>
      <button class="tool-button voice-button" id="voiceButton" aria-label="Sesli mesaj">🎙 Konuş</button>
     </div>
@@ -1763,11 +1806,22 @@ body{background:var(--cc-paper)!important;color:var(--cc-ink)!important}
  <div class="cs-footer-note"><span>TOZRA CREATIVE STUDIO</span><span>IDEAS INTO WORK</span></div>
 </div>
 </section>
+
+<nav class="mobile-dock" id="mobileDock" aria-label="Mobil ana navigasyon">
+ <button type="button" data-mobile-tab="home" class="is-active" aria-label="Ana sayfa"><span class="dock-icon">⌂</span><span>Ana sayfa</span></button>
+ <button type="button" data-mobile-tab="chat" aria-label="Sohbet"><span class="dock-icon">✳</span><span>Sohbet</span></button>
+ <button type="button" data-mobile-tab="projects" aria-label="Projeler"><span class="dock-icon">▣</span><span>Projeler</span></button>
+ <button type="button" data-mobile-tab="studio" aria-label="Stüdyo"><span class="dock-icon">◇</span><span>Stüdyo</span></button>
+ <button type="button" data-mobile-tab="profile" aria-label="Profil"><span class="dock-icon">○</span><span>Profil</span></button>
+</nav>
+
 </main>
 </div>
 
 <input type="file" id="imageInput" accept="image/jpeg,image/png,image/webp" multiple hidden>
 <input type="file" id="videoInput" accept="video/*" multiple hidden>
+<input type="file" id="cameraInput" accept="image/*" capture="environment" hidden>
+<input type="file" id="recordVideoInput" accept="video/*" capture="environment" hidden>
 
 <div class="overlay" id="modalOverlay">
  <div class="modal">
@@ -3128,14 +3182,15 @@ function showModal(type){
     <h3>${escapeHTML(user.user_metadata?.full_name||"TOZRA kullanıcısı")}</h3>
     <p>${escapeHTML(user.email||"")}</p>
    </div>
-   <button class="secondary" id="logoutButton">Çıkış yap</button>`:`
+   <div class="profile-actions"><button class="primary" id="profilePlansButton" type="button">Üyelik planları</button><button class="secondary" id="profileSettingsButton" type="button">Ayarlar</button></div><button class="secondary" id="logoutButton">Çıkış yap</button>`:`
    <div style="text-align:center;padding:10px">
     <div class="avatar" style="margin:auto;display:grid;place-items:center">U</div>
     <h3>Misafir kullanıcı</h3>
     <p>Projelerini hesabına bağlamak için giriş yap.</p>
    </div>
    <button class="primary" onclick="showModal('register')">Hesap oluştur</button>
-   <button class="secondary" onclick="showModal('login')">Giriş yap</button>`;
+   <button class="secondary" onclick="showModal('login')">Giriş yap</button>
+   <div class="profile-actions"><button class="secondary" id="profilePlansButton" type="button">Üyelik planları</button><button class="secondary" id="profileSettingsButton" type="button">Ayarlar</button></div>`;
   if(user){
    $("logoutButton").onclick=async()=>{
     try{
@@ -3153,11 +3208,17 @@ function showModal(type){
   title.textContent="Ayarlar";
   content.innerHTML=`
    <h3 style="font-size:14px">Görünüm</h3>
-   <p>TOZRA premium siyah-yeşil tema ile çalışıyor.</p>
-   <h3 style="font-size:14px">Uygulama</h3>
-   <p>TOZRA — Creative Intelligence</p>
-   <p>Sürüm 5.1</p>
-   <div class="notice">Hesap girişi Supabase ile korunur. Projeler ve sohbetler bu sürümde kullanıcı hesabına özel olarak cihazında saklanır; bulut senkronizasyonu sonraki aşamadır.</div>`;
+   <p>Creative Canvas · kırık beyaz, orman yeşili ve doğal zeytin tonları.</p>
+   <h3 style="font-size:14px">Mobil uygulama</h3>
+   <p>TOZRA'yı telefonunun ana ekranına ekleyerek uygulama gibi açabilirsin.</p>
+   <div class="mobile-settings-actions">
+    <button class="primary" id="installTozraButton" type="button">Ana ekrana ekle</button>
+    <button class="secondary" id="enableTozraNotifications" type="button">Bildirim iznini yönet</button>
+   </div>
+   <p id="mobileSettingsStatus" class="mobile-settings-status" aria-live="polite">Bildirim izni ve yükleme durumu burada gösterilir.</p>
+   <h3 style="font-size:14px">Uygulama bilgisi</h3>
+   <p>TOZRA — Creative Intelligence · Mobil arayüz</p>
+   <div class="notice">Çevrimdışı kullanım için ana sayfa kabuğu önbelleğe alınır. Canlı AI, hesap ve medya işlemleri internet bağlantısı gerektirir. Tarayıcı bildirim izni tek başına anlık bildirim servisi anlamına gelmez.</div>`;
  }
 
  $("modalOverlay").classList.add("show");
@@ -3289,7 +3350,7 @@ if("serviceWorker" in navigator){
 }
 </script>
 <script src="/memory.js?v=2"></script>
-<script src="/voice.js?v=7"></script>
+<script src="/voice.js?v=8"></script>
 <script>
 (function(){
  const syncRail=()=>{
@@ -3459,6 +3520,99 @@ if("serviceWorker" in navigator){
   catch(error){alert(error.message||"Hafızaya kaydedilemedi.");}
  });
  render();
+})();
+</script>
+
+
+<script id="tozra-mobile-interactions-v2">
+(function(){
+ "use strict";
+ const $id=id=>document.getElementById(id);
+ const dock=$id("mobileDock");
+ let selectedTab="home";
+ let deferredInstallPrompt=null;
+ function setDockTab(tab){
+  selectedTab=tab;
+  if(!dock)return;
+  dock.querySelectorAll("[data-mobile-tab]").forEach(button=>{
+   const active=button.dataset.mobileTab===tab;
+   button.classList.toggle("is-active",active);
+   button.setAttribute("aria-current",active?"page":"false");
+  });
+ }
+ function scrollToProjects(){
+  const target=$id("projectGrid");
+  if(target)target.scrollIntoView({behavior:"smooth",block:"start"});
+ }
+ if(dock) dock.addEventListener("click",event=>{
+  const button=event.target.closest("[data-mobile-tab]");
+  if(!button)return;
+  const tab=button.dataset.mobileTab;
+  setDockTab(tab);
+  if(tab==="home")$id("navWorkspace")?.click();
+  if(tab==="chat")$id("navChat")?.click();
+  if(tab==="projects"){$id("navProjects")?.click();window.setTimeout(scrollToProjects,180);}
+  if(tab==="studio")$id("navCreativeStudio")?.click();
+  if(tab==="profile" && typeof showModal==="function")showModal("profile");
+ });
+ const pageObserver=new MutationObserver(()=>{
+  const active=document.querySelector(".page.active");
+  if(!active)return;
+  if(active.id==="chatPage")setDockTab("chat");
+  else if(active.id==="creativeStudioPage")setDockTab("studio");
+  else if(active.id==="projectPage")setDockTab("projects");
+  else if(active.id==="workspacePage" && selectedTab!=="projects")setDockTab("home");
+ });
+ document.querySelectorAll(".page").forEach(page=>pageObserver.observe(page,{attributes:true,attributeFilter:["class"]}));
+
+ function addCapturedFiles(inputId,kind){
+  const input=$id(inputId);if(!input)return;
+  const isProject=$id("projectPage")?.classList.contains("active");
+  const target=isProject?projectAttachments:attachments;
+  const areaId=isProject?"projectAttachments":"attachments";
+  if(typeof addFiles==="function")addFiles(input.files,kind,target,areaId);
+  input.value="";
+ }
+ $id("cameraButton")?.addEventListener("click",()=>$id("cameraInput")?.click());
+ $id("recordVideoButton")?.addEventListener("click",()=>$id("recordVideoInput")?.click());
+ $id("cameraInput")?.addEventListener("change",()=>addCapturedFiles("cameraInput","image"));
+ $id("recordVideoInput")?.addEventListener("change",()=>addCapturedFiles("recordVideoInput","video"));
+
+ window.addEventListener("beforeinstallprompt",event=>{event.preventDefault();deferredInstallPrompt=event;});
+ document.addEventListener("click",async event=>{
+  if(event.target.closest("#installTozraButton")){
+   const status=$id("mobileSettingsStatus");
+   if(deferredInstallPrompt){
+    try{
+     deferredInstallPrompt.prompt();
+     const choice=await deferredInstallPrompt.userChoice;
+     if(status)status.textContent=choice?.outcome==="accepted"?"TOZRA ana ekrana ekleniyor.":"Kurulum isteği iptal edildi.";
+    }catch(error){if(status)status.textContent="Kurulum penceresi açılamadı. Tarayıcı menüsünü kullanabilirsin.";}
+    deferredInstallPrompt=null;
+   }else if(/iphone|ipad|ipod/i.test(navigator.userAgent)){
+    if(status)status.textContent="Safari'de Paylaş düğmesine dokun, ardından 'Ana Ekrana Ekle' seçeneğini seç.";
+   }else if(status)status.textContent="Tarayıcı menüsünden 'Uygulamayı yükle' veya 'Ana ekrana ekle' seçeneğini kontrol et.";
+  }
+  if(event.target.closest("#enableTozraNotifications")){
+   const status=$id("mobileSettingsStatus");
+   if(!("Notification" in window)){if(status)status.textContent="Bu tarayıcı bildirim iznini desteklemiyor.";return;}
+   try{
+    const permission=await Notification.requestPermission();
+    if(status)status.textContent=permission==="granted"
+     ?"Tarayıcı bildirim izni verildi. Anlık push bildirimi için ayrıca bildirim sunucusu kurulmalıdır."
+     :permission==="denied"?"Bildirim izni reddedildi. Telefonunun tarayıcı ayarlarından değiştirebilirsin.":"Bildirim izni seçilmedi.";
+   }catch(error){if(status)status.textContent="Bildirim izni şu anda alınamadı.";}
+  }
+  if(event.target.closest("#profilePlansButton"))showModal("plans");
+  if(event.target.closest("#profileSettingsButton"))showModal("settings");
+ });
+ function updateConnection(){
+  const status=document.querySelector(".top-actions .status");
+  if(status)status.textContent=navigator.onLine?"Çevrimiçi":"Çevrimdışı";
+ }
+ window.addEventListener("online",updateConnection);
+ window.addEventListener("offline",updateConnection);
+ updateConnection();
 })();
 </script>
 
