@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#050806">
-<meta name="description" content="TOZRA — Creative Intelligence">
+<meta name="theme-color" content="#f2f0e9">
+<meta name="description" content="TOZRA — Creative Studio & Intelligence">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="TOZRA">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>TOZRA — Creative Intelligence</title>
+<title>TOZRA — Creative Studio</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="icon" href="/apple-touch-icon.PNG">
 <link rel="apple-touch-icon" href="/apple-touch-icon.PNG">
 <link rel="manifest" href="/manifest.json">
@@ -72,7 +73,18 @@ button:disabled{opacity:.45;cursor:not-allowed}
 .page{display:none;animation:enter .3s ease}
 .page.active{display:block}
 
-.workspace-hero{padding:22px 0 32px}
+.workspace-hero{padding:22px 0 28px}
+.hero-shell{position:relative;overflow:hidden;padding:30px;border:1px solid #25402c;border-radius:22px;background:radial-gradient(ellipse at 88% 10%,#1d633326,transparent 42%),linear-gradient(135deg,#101b13,#080e0a 72%);box-shadow:0 18px 50px #0003}
+.hero-shell:after{content:"";position:absolute;width:250px;height:250px;border:1px solid #42e47718;border-radius:50%;right:-95px;top:-130px;box-shadow:0 0 0 28px #42e47708,0 0 0 58px #42e47705;pointer-events:none}
+.hero-greeting{color:#9daf9f;font-size:12px;letter-spacing:.5px;margin-bottom:12px}
+.hero-shell .workspace-hero h1{max-width:700px}
+.dashboard-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:5px 0 28px}
+.stat-card{border:1px solid var(--border);background:linear-gradient(145deg,#101811,#0a100c);border-radius:14px;padding:15px 17px}
+.stat-card span{display:block;color:#819084;font-size:11px;margin-bottom:8px}.stat-card strong{font-size:23px;letter-spacing:-.7px;color:#eaf4eb}.stat-card small{display:block;color:#68776c;font-size:10px;margin-top:4px}
+.home-section-note{font-size:11px;color:#718075}
+.quick-start{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin:0 0 24px}
+.quick-card{display:flex;align-items:center;gap:12px;text-align:left;padding:14px;border:1px solid var(--border);border-radius:13px;background:#0d160f;color:var(--text);transition:.2s}
+.quick-card:hover{border-color:#398c4e;transform:translateY(-2px)}.quick-card .tool-icon{margin:0;flex-shrink:0}.quick-card strong{display:block;font-size:12px;margin-bottom:4px}.quick-card small{display:block;color:var(--muted);font-size:10px;line-height:1.4}
 .eyebrow{font-size:10px;letter-spacing:2px;color:var(--green);font-weight:800;margin-bottom:13px}
 .workspace-hero h1{font-size:clamp(30px,5vw,45px);letter-spacing:-1.8px;margin:0 0 12px;line-height:1.12}
 .workspace-hero p{color:var(--muted);font-size:14px;line-height:1.7;margin:0;max-width:580px}
@@ -190,6 +202,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
 .project-layout{grid-template-columns:1fr}
 }
 @media(max-width:700px){
+.hero-shell .workspace-hero h1{font-size:clamp(27px,8vw,36px)}
 .sidebar{display:flex;position:fixed;left:0;top:0;bottom:0;width:275px;max-width:85vw;box-shadow:var(--shadow);transform:translateX(-105%);visibility:hidden;transition:transform .32s,visibility .32s}
 .sidebar.open{transform:translateX(0);visibility:visible}
 .topbar{height:58px;padding:0 14px}
@@ -207,6 +220,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
 .message{max-width:95%}
 .top-button{padding:8px;font-size:11px}
 .plan-grid{grid-template-columns:1fr}
+.dashboard-stats{gap:8px}.stat-card{padding:12px}.stat-card strong{font-size:20px}.hero-shell{padding:22px 17px}.quick-start{grid-template-columns:1fr}
 .tool-button{padding:8px;font-size:11px}
 .disclaimer{font-size:9px}
 .project-layout{gap:5px}
@@ -223,10 +237,218 @@ button:disabled{opacity:.45;cursor:not-allowed}
 .voice-status{font-size:11px;color:#a8e9b8;margin:6px 2px;min-height:15px}
 
 
-.voice-mode-button{border-color:#397b50;color:#b9f5c9;white-space:nowrap}
-.voice-mode-button.active{background:#173c25;border-color:#6ee798;color:#d7ffe2;box-shadow:0 0 0 2px rgba(110,231,152,.12)}
-.voice-mode-button:disabled{opacity:.55}
-.voice-status.active{color:#a8efbd}
+/* TOZRA 2.0 — akıllı komut alanı */
+.smart-command{display:flex;align-items:center;gap:10px;margin-top:25px;max-width:760px;padding:9px 10px 9px 16px;border:1px solid #31523a;border-radius:15px;background:#080f0a;box-shadow:inset 0 1px 0 #ffffff08,0 10px 30px #0003}
+.smart-command:focus-within{border-color:#42e477;box-shadow:0 0 0 3px #42e47712}
+.smart-command input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--text);font-size:14px;padding:9px 0}
+.smart-command input::placeholder{color:#718075}
+.smart-command button{border:0;border-radius:10px;background:linear-gradient(135deg,#61f18b,#28d963);color:#061009;font-weight:800;padding:12px 16px;white-space:nowrap}
+.smart-command-hint{font-size:10px;color:#718075;margin:9px 2px 0}
+@media(max-width:700px){.smart-command{padding:8px 8px 8px 12px;gap:6px}.smart-command input{font-size:13px}.smart-command button{padding:11px 12px;font-size:12px}}
+
+
+
+/* =========================================================
+   TOZRA / EDITORIAL FUTURE — interface refresh v1
+   Keeps existing DOM IDs and application logic intact.
+   ========================================================= */
+:root{
+ --bg:#f2f0e9;
+ --surface:#fbfaf6;
+ --surface2:#e9e6dc;
+ --text:#191b18;
+ --muted:#77776f;
+ --border:#dedbd1;
+ --green:#d65b35;
+ --green2:#b94325;
+ --shadow:0 18px 55px rgba(32,29,23,.09);
+}
+html,body{background:var(--bg);color:var(--text)}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:-.01em}
+::selection{background:#f2a58d;color:#21130f}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #d65b35;outline-offset:3px}
+.splash{background:#171916;color:#f4f0e7}
+.splash-logo{background:#292c26;box-shadow:0 0 65px #d65b3528}
+.splash-name{letter-spacing:.32em;font-size:24px}
+.splash-tagline{color:#aaa99f;letter-spacing:.22em}
+.loader{background:#34372f}.loader-bar{background:#e16a43;box-shadow:0 0 14px #e16a43}
+.app{background:var(--bg)}
+.sidebar{
+ width:248px;background:#e9e6dc;border-right:1px solid #d8d4c9;
+ padding:25px 17px 18px;color:#1b1d19
+}
+.brand{font-size:18px;letter-spacing:.19em;color:#171a16;margin:3px 7px 38px}
+.brand-icon{width:34px;height:34px;border-radius:9px;background:#1b201a;border:0}
+.new-chat{
+ background:#1a1d19;color:#f7f4eb;border:1px solid #1a1d19;border-radius:4px;
+ padding:14px 15px;font-size:12px;letter-spacing:.01em;margin-bottom:22px
+}
+.new-chat:hover{background:#d65b35;border-color:#d65b35;color:white}
+.nav-label,.history-title{color:#969187;font-size:9px;letter-spacing:.2em;margin:23px 10px 9px}
+.nav-item{color:#6d6c64;border-radius:3px;padding:12px 11px;font-size:12px;margin-bottom:3px}
+.nav-item:hover,.nav-item.active{background:#dcd8cd;color:#b64b2c}
+.history{max-height:32vh}
+.history-item{color:#77766d;border-radius:3px;font-size:12px}
+.history-item:hover{background:#dedbd1;color:#191b18}
+.side-action{color:#69685f;border-radius:3px;font-size:12px;padding:11px}
+.side-action:hover{background:#dedbd1;color:#b64b2c;border-color:transparent}
+.sidebar-footer{color:#9a968c;font-size:9px;letter-spacing:.16em}
+.main{background:#f5f3ed}
+.topbar{
+ height:68px;padding:0 4.2%;background:rgba(245,243,237,.93);
+ border-bottom:1px solid #e2dfd6;backdrop-filter:blur(18px)
+}
+.topbar-title{font-size:9px;letter-spacing:.22em;color:#8a877d}
+.top-actions{gap:13px}
+.status{color:#8a877d;font-size:10px}
+.status:before{background:#d65b35;box-shadow:none;width:6px;height:6px}
+.top-button{background:transparent;color:#292b26;border:1px solid #d8d4c9;border-radius:3px;padding:9px 15px;font-size:11px}
+.top-button:hover{border-color:#d65b35;color:#b64b2c}
+.avatar{background:#1a1d19;color:#f6f2e9;border:0;border-radius:3px;width:34px;height:34px}
+.content{max-width:1360px;padding:34px clamp(20px,4.2vw,66px) 35px}
+.workspace-hero{padding:8px 0 30px}
+.hero-shell{
+ border:0;border-radius:3px;padding:clamp(28px,5vw,66px);
+ min-height:350px;color:#f4f0e7;
+ background:
+ radial-gradient(ellipse at 84% 20%,rgba(214,91,53,.28),transparent 32%),
+ linear-gradient(115deg,#1a1d19 0%,#242720 58%,#171a16 100%);
+ box-shadow:0 24px 55px rgba(32,29,23,.13);
+}
+.hero-shell:before{
+ content:"TOZRA / STUDIO";position:absolute;right:36px;bottom:28px;
+ color:rgba(245,241,230,.24);font-size:9px;letter-spacing:.25em;font-weight:700
+}
+.hero-shell:after{
+ width:330px;height:330px;right:-95px;top:-135px;border:1px solid rgba(230,113,77,.23);
+ box-shadow:0 0 0 34px rgba(230,113,77,.035),0 0 0 70px rgba(230,113,77,.025)
+}
+.hero-greeting{color:#b9b7ad;font-size:11px;letter-spacing:.02em;margin-bottom:22px}
+.eyebrow{color:#e47a57;font-size:9px;letter-spacing:.24em;margin-bottom:17px}
+.workspace-hero h1{font-size:clamp(38px,6vw,76px);line-height:.99;letter-spacing:-.065em;max-width:760px;margin:0 0 18px;font-weight:650}
+.workspace-hero p{color:#b9b8ae;font-size:13px;line-height:1.8;max-width:480px}
+.hero-actions{margin-top:28px;gap:9px}
+.primary-btn{background:#e16a43;color:#fff;border-radius:3px;padding:14px 18px;font-size:11px;letter-spacing:.01em}
+.primary-btn:hover{background:#c84e2b;box-shadow:0 8px 22px #d65b3530}
+.outline-btn{background:transparent;border:1px solid #64665d;color:#f3f0e8;border-radius:3px;padding:13px 17px;font-size:11px}
+.outline-btn:hover{border-color:#e16a43;color:#f3a184}
+.smart-command{background:#f7f5ef;border:1px solid #f7f5ef;border-radius:3px;padding:6px;margin-top:30px;max-width:690px;display:flex;gap:8px}
+.smart-command input{background:transparent;color:#22241f;padding:12px 13px;font-size:12px}
+.smart-command input::placeholder{color:#99968d}
+.smart-command button{background:#1b1e19;color:#f8f5ed;border-radius:2px;padding:0 18px;font-size:11px}
+.smart-command button:hover{background:#d65b35}
+.smart-command-hint{color:#9d9a90;font-size:10px;margin-top:10px}
+.dashboard-stats{gap:0;margin:2px 0 35px;border-top:1px solid #dedbd1;border-bottom:1px solid #dedbd1}
+.stat-card{background:transparent;border:0;border-right:1px solid #dedbd1;border-radius:0;padding:19px 22px}
+.stat-card:first-child{padding-left:0}
+.stat-card:last-child{border-right:0}
+.stat-card span{color:#8b887e;font-size:9px;letter-spacing:.13em;text-transform:uppercase}
+.stat-card strong{color:#1c1e19;font-size:28px;font-weight:600;letter-spacing:-.06em}
+.stat-card small{color:#a09c92;font-size:10px}
+.section-head{margin:30px 0 15px}
+.section-head h2{font-size:15px;font-weight:650;letter-spacing:-.03em;color:#22241f}
+.section-head span{font-size:10px;color:#9b978d}
+.quick-start{gap:10px;margin-bottom:32px}
+.quick-card{
+ background:#ebe8df;border:1px solid #e1ddd2;border-radius:3px;color:#20221d;
+ padding:16px;min-height:88px;transition:transform .2s,border-color .2s,background .2s
+}
+.quick-card:hover{border-color:#d65b35;background:#f1eee6;transform:translateY(-2px)}
+.quick-card strong{font-size:11px;font-weight:650}
+.quick-card small{color:#8d897f;font-size:10px}
+.tool-icon{background:#dedacf;border:0;border-radius:3px;color:#c65332;font-size:17px;width:36px;height:36px}
+.tool-grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.tool-card{
+ background:#ebe8df;border:1px solid #e1ddd2;border-radius:3px;color:#22241f;
+ min-height:148px;padding:17px;transition:.2s
+}
+.tool-card:hover{background:#f6f3ec;border-color:#d65b35;transform:translateY(-3px)}
+.tool-card strong{font-size:12px;font-weight:650}
+.tool-card small{font-size:10px;color:#8e8a80}
+.project-grid{gap:10px}
+.project-card{background:#ebe8df;border:1px solid #e1ddd2;border-radius:3px;min-height:160px;padding:18px}
+.project-card:hover{background:#f6f3ec;border-color:#d65b35;transform:translateY(-2px)}
+.project-symbol{background:#dedacf;border:0;border-radius:3px;color:#c65332}
+.project-menu{color:#88847a}
+.project-card h3{font-size:14px;color:#22241f}
+.project-card p{color:#858177;font-size:11px}
+.project-meta{color:#a19d92}
+.empty-projects{border:1px dashed #c9c4b8;border-radius:3px;color:#8c887e}
+.empty-projects strong{color:#242620}
+.workspace-footer{border-color:#dedbd1;color:#aaa69c;font-size:9px;letter-spacing:.12em}
+.page{animation:editorialEnter .32s ease}
+@keyframes editorialEnter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* Chat and project surfaces */
+.back-button{color:#8a867c;border-radius:2px;font-size:11px}
+.back-button:hover{color:#c65332}
+.welcome h1{color:#20221d;font-size:clamp(30px,4vw,48px);letter-spacing:-.055em}
+.welcome p{color:#88847a}
+.welcome-logo{background:#1a1d19;border-radius:4px}
+.suggestions{gap:8px}
+.suggestion{background:#ebe8df;border:1px solid #dfdbd0;color:#5f5d55;border-radius:3px;font-size:11px}
+.suggestion:hover{border-color:#d65b35;color:#b64b2c}
+.messages{color:#242620}
+.message.user .message-bubble{background:#e7e3d9;color:#22241f;border-radius:4px}
+.message.assistant .message-bubble{background:#fbfaf6;border:1px solid #e4e0d6;color:#252720;border-radius:4px}
+.composer,.panel{background:#fbfaf6;border:1px solid #e0dcd1;border-radius:4px;box-shadow:0 10px 35px rgba(34,31,24,.045)}
+.composer textarea,.notes-area{color:#22241f}
+.composer textarea::placeholder,.notes-area::placeholder{color:#a19c91}
+.tool-button{background:#f0eee7;border:1px solid #e4e0d6;color:#77736a;border-radius:3px;font-size:10px}
+.tool-button:hover{border-color:#d65b35;color:#b64b2c}
+.send{background:#1b1e19;border-radius:3px;color:#fff}
+.send:hover{background:#d65b35}
+.disclaimer,.voice-status{color:#a09b90}
+.project-header h1{color:#20221d;letter-spacing:-.05em}
+.project-header p{color:#89857b}
+.project-badge{background:#e9e5db;color:#b64b2c;border-radius:3px}
+.project-info{color:#77736a}
+.small-btn{background:#efede6;border:1px solid #dedacf;color:#666258;border-radius:3px}
+.small-btn:hover{border-color:#d65b35;color:#b64b2c}
+.notes-hint{color:#9b978d}
+.modal{background:#f8f6f0;color:#20221d;border:1px solid #ddd8cc;border-radius:4px}
+.modal-head{border-color:#e3dfd5}
+.modal-head h2{color:#20221d}
+.close{color:#77736a}
+.form-label{color:#77736a}
+.modal-input,.modal-select{background:#fffdf8;border:1px solid #dedacf;color:#22241f;border-radius:3px}
+.primary{background:#d65b35;color:#fff;border-radius:3px}
+.overlay{background:rgba(24,26,22,.55);backdrop-filter:blur(7px)}
+.menu-backdrop{background:rgba(24,26,22,.45)}
+/* responsive refinements */
+@media(max-width:1050px){
+ .tool-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .sidebar{width:230px}
+}
+@media(max-width:760px){
+ .sidebar{background:#e9e6dc}
+ .topbar{padding:0 16px}
+ .topbar-title{display:none}
+ .content{padding:18px 15px 25px}
+ .hero-shell{padding:27px 22px;min-height:0}
+ .hero-shell:before{right:18px;bottom:15px;font-size:8px}
+ .workspace-hero h1{font-size:clamp(37px,10vw,54px)}
+ .dashboard-stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .stat-card{padding:14px 10px}
+ .stat-card:first-child{padding-left:0}
+ .stat-card strong{font-size:22px}
+ .stat-card span{font-size:8px;letter-spacing:.08em}
+ .stat-card small{font-size:9px}
+ .quick-start{grid-template-columns:1fr}
+ .quick-card{min-height:74px}
+ .tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .project-grid{grid-template-columns:1fr}
+ .smart-command{gap:4px}
+ .smart-command button{padding:0 12px}
+ .top-actions{gap:7px}
+ .status{display:none}
+}
+@media(max-width:390px){
+ .dashboard-stats{grid-template-columns:1fr}
+ .stat-card,.stat-card:first-child{padding:12px 0;border-right:0;border-bottom:1px solid #dedbd1}
+ .stat-card:last-child{border-bottom:0}
+ .tool-grid{grid-template-columns:1fr}
+}
 
 </style>
 </head>
@@ -276,7 +498,8 @@ button:disabled{opacity:.45;cursor:not-allowed}
 
 <section class="content">
 <div class="page active" id="workspacePage">
- <div class="workspace-hero">
+ <div class="workspace-hero hero-shell">
+  <div class="hero-greeting" id="dashboardGreeting">TOZRA çalışma alanına hoş geldin</div>
   <div class="eyebrow">TOZRA · CREATIVE INTELLIGENCE</div>
   <h1>Fikirlerini projelere dönüştür.</h1>
   <p>Fikirlerini keşfet, geliştir ve üret. Tüm yaratıcı çalışmalarını tek bir çalışma alanında yönet.</p>
@@ -284,6 +507,22 @@ button:disabled{opacity:.45;cursor:not-allowed}
    <button class="primary-btn" id="heroNewProject">＋ Yeni proje oluştur</button>
    <button class="outline-btn" id="heroChat">✳ TOZRA ile sohbet et</button>
   </div>
+  <form class="smart-command" id="smartCommandForm">
+   <input id="smartCommandInput" type="text" maxlength="2000" autocomplete="off" placeholder="TOZRA'ya ne yapmak istediğini anlat..." aria-label="TOZRA komut alanı">
+   <button type="submit">Başlat ↗</button>
+  </form>
+  <div class="smart-command-hint">Fikir geliştir, içerik üret, araştır veya projen için yardım iste.</div>
+ </div>
+ <div class="dashboard-stats">
+  <div class="stat-card"><span>Toplam proje</span><strong id="statProjects">0</strong><small>Çalışma alanındaki projelerin</small></div>
+  <div class="stat-card"><span>Sohbet geçmişi</span><strong id="statChats">0</strong><small>TOZRA ile çalışmaların</small></div>
+  <div class="stat-card"><span>Üretim alanı</span><strong>5</strong><small>Yaratıcı araç kategorisi</small></div>
+ </div>
+ <div class="section-head"><h2>Hızlı başlangıç</h2><span class="home-section-note">Nereden başlamak istersin?</span></div>
+ <div class="quick-start">
+  <button class="quick-card" id="quickIdea"><div class="tool-icon">✳</div><div><strong>Bir fikri geliştir</strong><small>Fikrini netleştir ve yol haritası çıkar.</small></div></button>
+  <button class="quick-card" id="quickContent"><div class="tool-icon">▤</div><div><strong>İçerik üret</strong><small>Metin, senaryo veya sosyal medya içeriği.</small></div></button>
+  <button class="quick-card" id="quickResearch"><div class="tool-icon">⌕</div><div><strong>Araştırma başlat</strong><small>Bir konuyu incele ve özetle.</small></div></button>
  </div>
  <div class="section-head"><h2>Yaratıcı araçlar</h2><span>Çalışma alanını keşfet</span></div>
  <div class="tool-grid">
@@ -371,7 +610,6 @@ button:disabled{opacity:.45;cursor:not-allowed}
      <button class="tool-button" id="videoButton">＋ Video</button>
      <button class="tool-button" id="linkButton">↗ Bağlantı</button>
      <button class="tool-button voice-button" id="voiceButton" aria-label="Sesli mesaj">🎙 Konuş</button>
-     <button class="tool-button voice-mode-button" id="voiceModeButton" aria-label="Sesli sohbeti başlat">◉ Sesli sohbeti başlat</button>
     </div>
     <button class="send" id="send" aria-label="Gönder">↑</button>
    </div>
@@ -398,6 +636,108 @@ button:disabled{opacity:.45;cursor:not-allowed}
 "use strict";
 
 const $=id=>document.getElementById(id);
+
+const TozraAuth = (() => {
+ let client = null;
+ let session = null;
+ let initialized = false;
+ let configError = "";
+
+ async function init() {
+  if (initialized) return session;
+  initialized = true;
+  try {
+   if (!window.supabase?.createClient) throw new Error("Supabase istemcisi yüklenemedi.");
+   const response = await fetch("/api/config", { cache: "no-store" });
+   const config = await response.json();
+   if (!response.ok || !config.success) throw new Error(config.error || "Supabase yapılandırması okunamadı.");
+   client = window.supabase.createClient(config.supabaseUrl, config.supabaseKey, {
+    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+   });
+   const result = await client.auth.getSession();
+   if (result.error) throw result.error;
+   session = result.data.session || null;
+   client.auth.onAuthStateChange((event, nextSession) => {
+    session = nextSession || null;
+    updateAccountUI();
+    if(event === "PASSWORD_RECOVERY") showModal("updatePassword");
+   });
+  } catch (error) {
+   configError = error.message || "Hesap servisine bağlanılamadı.";
+   console.error("TOZRA auth:", error);
+  }
+  updateAccountUI();
+  return session;
+ }
+
+ function updateAccountUI() {
+  const button = document.getElementById("profileButton");
+  if (button) {
+   button.textContent = session?.user?.email
+    ? session.user.email.slice(0, 1).toUpperCase()
+    : "U";
+   button.title = session?.user?.email || "Hesap";
+  }
+ }
+
+ function userId() { return session?.user?.id || "guest"; }
+ function getClient() { return client; }
+ function getSession() { return session; }
+ function getError() { return configError; }
+ async function signUp(name, email, password) {
+  if (!client) throw new Error(configError || "Supabase bağlantısı hazır değil.");
+  const { data, error } = await client.auth.signUp({
+   email: email.trim().toLowerCase(),
+   password,
+   options: { data: { full_name: name.trim() }, emailRedirectTo: `${window.location.origin}/` }
+  });
+  if (error) throw error;
+  session = data.session || null;
+  return data;
+ }
+ async function signIn(email, password) {
+  if (!client) throw new Error(configError || "Supabase bağlantısı hazır değil.");
+  const { data, error } = await client.auth.signInWithPassword({
+   email: email.trim().toLowerCase(), password
+  });
+  if (error) throw error;
+  session = data.session || null;
+  return data;
+ }
+ async function resetPassword(email) {
+  if (!client) throw new Error(configError || "Supabase bağlantısı hazır değil.");
+  const { error } = await client.auth.resetPasswordForEmail(email.trim().toLowerCase(), { redirectTo: `${window.location.origin}/` });
+  if (error) throw error;
+ }
+ async function resendConfirmation(email) {
+  if (!client) throw new Error(configError || "Supabase bağlantısı hazır değil.");
+  const { error } = await client.auth.resend({ type: "signup", email: email.trim().toLowerCase(), options: { emailRedirectTo: `${window.location.origin}/` } });
+  if (error) throw error;
+ }
+ async function updatePassword(password) {
+  if (!client) throw new Error(configError || "Supabase bağlantısı hazır değil.");
+  const { error } = await client.auth.updateUser({ password });
+  if (error) throw error;
+ }
+ async function signOut() {
+  if (!client) return;
+  const { error } = await client.auth.signOut();
+  if (error) throw error;
+  session = null;
+ }
+ async function authHeaders() {
+  if (!session?.access_token) throw new Error("Oturum bulunamadı. Lütfen yeniden giriş yap.");
+  return { Authorization: `Bearer ${session.access_token}` };
+ }
+ return { init, userId, getClient, getSession, getError, signUp, signIn, resetPassword, resendConfirmation, updatePassword, signOut, authHeaders, updateAccountUI };
+})();
+
+function scopedStorageKey(key) {
+ const id = TozraAuth.userId();
+ return id === "guest" ? `tozra-guest:${key}` : `tozra-user:${id}:${key}`;
+}
+window.tozraStorageKey = scopedStorageKey;
+
 const promptInput=$("prompt");
 let conversation=[],conversations=[],projects=[],currentProjectId=null;
 let busy=false,attachments=[],projectAttachments=[];
@@ -412,13 +752,19 @@ const categories={
 
 function safeRead(key,fallback){
  try{
-  const value=JSON.parse(localStorage.getItem(key)||"null");
+  const scopedKey=scopedStorageKey(key);
+  let raw=localStorage.getItem(scopedKey);
+  if(raw===null && TozraAuth.userId()!=="guest"){
+   const legacy=localStorage.getItem(key);
+   if(legacy!==null){raw=legacy;localStorage.setItem(scopedKey,legacy);localStorage.removeItem(key);}
+  }
+  const value=JSON.parse(raw||"null");
   return value===null?fallback:value;
  }catch(e){return fallback}
 }
 function safeSave(key,value){
  try{
-  localStorage.setItem(key,JSON.stringify(value));
+  localStorage.setItem(scopedStorageKey(key),JSON.stringify(value));
   return true;
  }catch(e){
   console.error("Kayıt hatası:",e);
@@ -470,6 +816,9 @@ $("navWorkspace").onclick=()=>showPage("workspace");
 $("navProjects").onclick=()=>showPage("workspace");
 $("navChat").onclick=()=>newGeneralChat();
 $("heroChat").onclick=()=>openGeneralChat();
+$("quickIdea").onclick=()=>startChatWithPrompt("Bir fikrim var. Önce fikrimi netleştirmeme yardım et, ardından uygulanabilir bir yol haritası oluştur.");
+$("quickContent").onclick=()=>startChatWithPrompt("Bir içerik üretmek istiyorum. Bana hedef kitle, format ve içerik fikrini netleştirmemde yardımcı ol.");
+$("quickResearch").onclick=()=>startChatWithPrompt("Bir araştırma başlatmak istiyorum. Konuyu kapsamlandırmama ve araştırma soruları oluşturmama yardım et.");
 $("chatBack").onclick=()=>showPage("workspace");
 $("backWorkspace").onclick=()=>showPage("workspace");
 
@@ -478,7 +827,33 @@ function openGeneralChat(){
  renderGeneralMessages();
 }
 
+/* AKILLI KARŞILAMA KOMUTU */
+function startChatWithPrompt(value){
+ const prompt=String(value||"").trim();
+ openGeneralChat();
+ if(prompt){
+  promptInput.value=prompt;
+  promptInput.dispatchEvent(new Event("input",{bubbles:true}));
+  promptInput.focus();
+ }
+}
+$("smartCommandForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ const value=$("smartCommandInput").value.trim();
+ if(!value){$("smartCommandInput").focus();return;}
+ $("smartCommandInput").value="";
+ startChatWithPrompt(value);
+});
+
 /* PROJE SİSTEMİ */
+function updateDashboardStats(){
+ if($("statChats"))$("statChats").textContent=String(Array.isArray(conversations)?conversations.length:0);
+ if($("statProjects"))$("statProjects").textContent=String(projects.length);
+ const user=TozraAuth.getSession()?.user;
+ const name=user?.user_metadata?.full_name?.trim()?.split(/\s+/)[0];
+ const hour=new Date().getHours(), greeting=hour<12?"Günaydın":hour<18?"İyi günler":"İyi akşamlar";
+ if($("dashboardGreeting"))$("dashboardGreeting").textContent=name?`${greeting}, ${name}. Bugün ne üretmek istersin?`:`${greeting}. TOZRA çalışma alanına hoş geldin.`;
+}
 function loadProjects(){
  const data=safeRead("tozra-projects",[]);
  projects=Array.isArray(data)?data:[];
@@ -501,6 +876,7 @@ function renderProjects(){
  const grid=$("projectGrid");
  grid.innerHTML="";
  $("projectCount").textContent=projects.length+" proje";
+ if($("statProjects"))$("statProjects").textContent=String(projects.length);
 
  if(!projects.length){
   const empty=document.createElement("div");
@@ -778,6 +1154,7 @@ function renderHistory(){
   };
   $("history").appendChild(el);
  });
+ updateDashboardStats();
 }
 
 /* DOSYA EKLERİ */
@@ -1006,7 +1383,7 @@ async function sendToAI({text,list,area,history,onSuccess,onFailure}){
   const media=await prepareMedia(list);
   const response=await fetch("/api/chat",{
    method:"POST",
-   headers:{"Content-Type":"application/json"},
+   headers:{ "Content-Type":"application/json", ...(await TozraAuth.authHeaders()) },
    body:JSON.stringify({
     prompt:text+media.timelineText,
     history:history,
@@ -1034,14 +1411,11 @@ async function sendToAI({text,list,area,history,onSuccess,onFailure}){
   busy=false;
   $("send").disabled=false;
   $("projectSend").disabled=false;
-  if(voiceModeActive && !voiceSpeaking && !voiceRecognition){
-   voiceRestartTimer=setTimeout(startRecognition,500);
-  }
  }
 }
 
 /* GENEL SOHBET */
-async function sendGeneralMessage(value,options={}){
+async function sendGeneralMessage(value){
  const text=(value??promptInput.value).trim();
  if((!text&&!attachments.length)||busy)return;
 
@@ -1065,18 +1439,13 @@ async function sendGeneralMessage(value,options={}){
    conversation.push({role:"assistant",content:answer});
    addMessage($("messages"),"assistant",answer);
    saveGeneralConversation();
-   if(options.fromVoice && voiceModeActive)speakVoiceReply(answer);
   },
   onFailure:error=>{
    conversation.push({role:"assistant",content:error});
    addMessage($("messages"),"assistant",error);
    saveGeneralConversation();
-   if(options.fromVoice && voiceModeActive)speakVoiceReply(error);
   }
  });
- if(options.fromVoice && voiceModeActive && !busy && !voiceSpeaking){
-  startRecognition();
- }
 }
 
 /* PROJE SOHBETİ VE PROJEYE ÖZEL HAFIZA */
@@ -1171,48 +1540,124 @@ function showModal(type){
  if(type==="login"){
   title.textContent="TOZRA hesabına giriş";
   content.innerHTML=`
-   <p>Hesabına giriş yaparak TOZRA deneyimine devam et.</p>
+   <p>Çalışma alanına güvenli şekilde devam et.</p>
    <form id="loginForm">
-    <input class="modal-input" type="email" placeholder="E-posta adresin" required>
-    <input class="modal-input" type="password" placeholder="Şifren" required>
-    <button class="primary">Giriş yap</button>
+    <label class="form-label" for="loginEmail">E-posta adresi</label>
+    <input class="modal-input" id="loginEmail" type="email" placeholder="ornek@eposta.com" autocomplete="email" required>
+    <label class="form-label" for="loginPassword">Şifre</label>
+    <input class="modal-input" id="loginPassword" type="password" placeholder="Şifren" autocomplete="current-password" required>
+    <button class="primary" id="loginSubmit">Giriş yap</button>
    </form>
-   <button class="secondary" id="registerSwitch">Hesap oluştur</button>
-   <div class="notice">Gerçek hesap girişi için sunucu ve kullanıcı veritabanı bağlantısı gereklidir.</div>`;
-  $("loginForm").onsubmit=e=>{
-   e.preventDefault();
-   alert("Üyelik sistemi henüz backend'e bağlanmadı.");
+   <button class="secondary" id="forgotPassword">Şifremi unuttum</button>
+   <button class="secondary" id="registerSwitch">Yeni hesap oluştur</button>
+   <div class="notice" id="authNotice">${escapeHTML(TozraAuth.getError() || "Hesabına e-posta adresin ve şifrenle giriş yap.")}</div>`;
+  $("loginForm").onsubmit=async e=>{
+   e.preventDefault(); const button=$("loginSubmit"), notice=$("authNotice");
+   button.disabled=true; button.textContent="Giriş yapılıyor…";
+   try{await TozraAuth.signIn($("loginEmail").value,$("loginPassword").value);await refreshAccountData();$("modalOverlay").classList.remove("show");}
+   catch(error){notice.textContent=error.message||"Giriş yapılamadı.";}
+   finally{button.disabled=false;button.textContent="Giriş yap";}
+  };
+  $("forgotPassword").onclick=async()=>{
+   const email=$("loginEmail").value.trim(), notice=$("authNotice"), button=$("forgotPassword");
+   if(!email){notice.textContent="Şifre sıfırlama bağlantısı için önce e-posta adresini yaz.";$("loginEmail").focus();return;}
+   button.disabled=true;button.textContent="Gönderiliyor…";
+   try{await TozraAuth.resetPassword(email);notice.textContent="Şifre yenileme bağlantısı e-posta adresine gönderildi.";}
+   catch(error){notice.textContent=error.message||"Bağlantı gönderilemedi.";}
+   finally{button.disabled=false;button.textContent="Şifremi unuttum";}
   };
   $("registerSwitch").onclick=()=>showModal("register");
  }
-
  if(type==="register"){
   title.textContent="TOZRA hesabı oluştur";
   content.innerHTML=`
-   <p>TOZRA dünyasına katıl.</p>
+   <p>Hesabını oluştur; fikirlerini ve projelerini tek bir çalışma alanında yönet.</p>
    <form id="registerForm">
-    <input class="modal-input" placeholder="Adın" required>
-    <input class="modal-input" type="email" placeholder="E-posta adresin" required>
-    <input class="modal-input" type="password" placeholder="Şifre oluştur" required>
-    <button class="primary">Hesap oluştur</button>
+    <label class="form-label" for="registerName">Adın</label>
+    <input class="modal-input" id="registerName" placeholder="Adın soyadın" autocomplete="name" maxlength="80" required>
+    <label class="form-label" for="registerEmail">E-posta adresi</label>
+    <input class="modal-input" id="registerEmail" type="email" placeholder="ornek@eposta.com" autocomplete="email" required>
+    <label class="form-label" for="registerPassword">Şifre</label>
+    <input class="modal-input" id="registerPassword" type="password" placeholder="En az 8 karakter" autocomplete="new-password" minlength="8" required>
+    <small style="display:block;color:#758478;font-size:10px;margin:-4px 0 10px">En az 8 karakter kullan. E-posta doğrulaması gerekebilir.</small>
+    <button class="primary" id="registerSubmit">Ücretsiz hesap oluştur</button>
    </form>
-   <div class="notice">Bu ekran şu an arayüz önizlemesidir. Bilgilerin kaydedilmez.</div>`;
-  $("registerForm").onsubmit=e=>{
-   e.preventDefault();
-   alert("Gerçek kayıt sistemi henüz bağlı değil.");
+   <button class="secondary" id="loginSwitch">Zaten hesabım var</button>
+   <button class="secondary" id="resendConfirmation" type="button">Doğrulama e-postasını tekrar gönder</button>
+   <div class="notice" id="authNotice">${escapeHTML(TozraAuth.getError() || "Kayıt sonrası doğrulama bağlantısını e-postandan açarak hesabını etkinleştir.")}</div>`;
+  $("registerForm").onsubmit=async e=>{
+   e.preventDefault(); const button=$("registerSubmit"), notice=$("authNotice");
+   const name=$("registerName").value.trim(), email=$("registerEmail").value.trim(), password=$("registerPassword").value;
+   if(name.length<2){notice.textContent="Lütfen adını en az 2 karakter olacak şekilde gir.";return;}
+   if(password.length<8){notice.textContent="Şifren en az 8 karakter olmalı.";return;}
+   button.disabled=true;button.textContent="Hesap oluşturuluyor…";
+   try{
+    const data=await TozraAuth.signUp(name,email,password);
+    if(data.session){await refreshAccountData();$("modalOverlay").classList.remove("show");}
+    else{notice.textContent="Hesabın oluşturuldu. E-posta adresine gönderilen doğrulama bağlantısını aç, ardından giriş yap.";button.textContent="E-posta gönderildi";}
+   }catch(error){notice.textContent=error.message||"Kayıt oluşturulamadı.";button.disabled=false;button.textContent="Ücretsiz hesap oluştur";}
+  };
+  $("resendConfirmation").onclick=async()=>{
+   const email=$("registerEmail").value.trim(), notice=$("authNotice"), button=$("resendConfirmation");
+   if(!email){notice.textContent="Önce e-posta adresini gir.";$("registerEmail").focus();return;}
+   button.disabled=true;button.textContent="Gönderiliyor…";
+   try{await TozraAuth.resendConfirmation(email);notice.textContent="Doğrulama e-postası yeniden gönderildi. Gelen kutunu ve spam klasörünü kontrol et.";}
+   catch(error){notice.textContent=error.message||"Doğrulama e-postası gönderilemedi.";}
+   finally{button.disabled=false;button.textContent="Doğrulama e-postasını tekrar gönder";}
+  };
+  $("loginSwitch").onclick=()=>showModal("login");
+ }
+
+ if(type==="updatePassword"){
+  title.textContent="Yeni şifre belirle";
+  content.innerHTML=`
+   <p>Hesabın için yeni bir şifre oluştur.</p>
+   <form id="updatePasswordForm">
+    <label class="form-label" for="newPassword">Yeni şifre</label>
+    <input class="modal-input" id="newPassword" type="password" minlength="8" autocomplete="new-password" placeholder="En az 8 karakter" required>
+    <label class="form-label" for="confirmNewPassword">Yeni şifreyi tekrar gir</label>
+    <input class="modal-input" id="confirmNewPassword" type="password" minlength="8" autocomplete="new-password" placeholder="Şifreni tekrar yaz" required>
+    <button class="primary" id="updatePasswordSubmit">Şifreyi güncelle</button>
+   </form>
+   <div class="notice" id="authNotice">Yeni şifren en az 8 karakter olmalı.</div>`;
+  $("updatePasswordForm").onsubmit=async e=>{
+   e.preventDefault(); const password=$("newPassword").value, confirm=$("confirmNewPassword").value, button=$("updatePasswordSubmit"), notice=$("authNotice");
+   if(password.length<8){notice.textContent="Şifren en az 8 karakter olmalı.";return;}
+   if(password!==confirm){notice.textContent="Girdiğin şifreler eşleşmiyor.";return;}
+   button.disabled=true;button.textContent="Güncelleniyor…";
+   try{await TozraAuth.updatePassword(password);notice.textContent="Şifren başarıyla güncellendi.";button.textContent="Güncellendi";setTimeout(()=>$("modalOverlay").classList.remove("show"),900);}
+   catch(error){notice.textContent=error.message||"Şifre güncellenemedi.";button.disabled=false;button.textContent="Şifreyi güncelle";}
   };
  }
 
  if(type==="profile"){
   title.textContent="Profil";
-  content.innerHTML=`
+  const user=TozraAuth.getSession()?.user;
+  content.innerHTML=user?`
+   <div style="text-align:center;padding:10px">
+    <div class="avatar" style="margin:auto;display:grid;place-items:center">${escapeHTML((user.email||"U").slice(0,1).toUpperCase())}</div>
+    <h3>${escapeHTML(user.user_metadata?.full_name||"TOZRA kullanıcısı")}</h3>
+    <p>${escapeHTML(user.email||"")}</p>
+   </div>
+   <button class="secondary" id="logoutButton">Çıkış yap</button>`:`
    <div style="text-align:center;padding:10px">
     <div class="avatar" style="margin:auto;display:grid;place-items:center">U</div>
     <h3>Misafir kullanıcı</h3>
-    <p>TOZRA hesabın henüz oluşturulmadı.</p>
+    <p>Projelerini hesabına bağlamak için giriş yap.</p>
    </div>
    <button class="primary" onclick="showModal('register')">Hesap oluştur</button>
    <button class="secondary" onclick="showModal('login')">Giriş yap</button>`;
+  if(user){
+   $("logoutButton").onclick=async()=>{
+    try{
+     await TozraAuth.signOut();
+     projects=[]; conversations=[]; conversation=[];
+     renderProjects(); renderHistory(); renderGeneralMessages();
+     $("modalOverlay").classList.remove("show");
+     showModal("login");
+    }catch(error){alert(error.message||"Çıkış yapılamadı.");}
+   };
+  }
  }
 
  if(type==="settings"){
@@ -1222,8 +1667,8 @@ function showModal(type){
    <p>TOZRA premium siyah-yeşil tema ile çalışıyor.</p>
    <h3 style="font-size:14px">Uygulama</h3>
    <p>TOZRA — Creative Intelligence</p>
-   <p>Sürüm 5.0</p>
-   <div class="notice">Projeler ve sohbetler şu anda bu tarayıcıda saklanır. Hesaplar arası bulut senkronizasyonu henüz etkin değildir.</div>`;
+   <p>Sürüm 5.1</p>
+   <div class="notice">Hesap girişi Supabase ile korunur. Projeler ve sohbetler bu sürümde kullanıcı hesabına özel olarak cihazında saklanır; bulut senkronizasyonu sonraki aşamadır.</div>`;
  }
 
  $("modalOverlay").classList.add("show");
@@ -1253,163 +1698,6 @@ function addLink(input){
  input.focus();
 }
 
-
-/* SÜREKLİ SESLİ SOHBET — tarayıcı konuşma tanıma + mevcut TOZRA sohbet API'si */
-let voiceModeActive=false;
-let voiceRecognition=null;
-let voiceRestartTimer=null;
-let voiceSpeaking=false;
-let voiceFinalBuffer="";
-let voiceLastSubmitAt=0;
-let voiceModeGeneration=0;
-
-function voiceStatus(message){
- const status=$("voiceStatus");
- if(status){
-  status.textContent=message||"";
-  status.classList.toggle("active",!!message && voiceModeActive);
- }
-}
-function getSpeechRecognition(){
- return window.SpeechRecognition || window.webkitSpeechRecognition || null;
-}
-function stopRecognition(){
- if(voiceRestartTimer){
-  clearTimeout(voiceRestartTimer);
-  voiceRestartTimer=null;
- }
- if(voiceRecognition){
-  try{voiceRecognition.onend=null;voiceRecognition.stop()}catch(e){}
-  voiceRecognition=null;
- }
-}
-function startRecognition(){
- if(!voiceModeActive || voiceSpeaking || busy)return;
- const Recognition=getSpeechRecognition();
- if(!Recognition){
-  voiceStatus("Bu tarayıcı sürekli sesli sohbeti desteklemiyor. Güncel Safari veya Chrome deneyebilirsin.");
-  stopVoiceMode();
-  return;
- }
- stopRecognition();
- const recognition=new Recognition();
- voiceRecognition=recognition;
- recognition.lang="tr-TR";
- recognition.continuous=true;
- recognition.interimResults=true;
- recognition.maxAlternatives=1;
-
- recognition.onstart=()=>{
-  if(voiceModeActive)voiceStatus("🎙 Seni dinliyorum. Konuşabilirsin.");
- };
- recognition.onresult=(event)=>{
-  let finalText="";
-  let interimText="";
-  for(let i=event.resultIndex;i<event.results.length;i++){
-   const transcript=event.results[i][0]?.transcript||"";
-   if(event.results[i].isFinal)finalText+=transcript+" ";
-   else interimText+=transcript;
-  }
-  if(finalText.trim()){
-   voiceFinalBuffer=(voiceFinalBuffer+" "+finalText).trim();
-   const now=Date.now();
-   if(now-voiceLastSubmitAt>450){
-    const message=voiceFinalBuffer.trim();
-    voiceFinalBuffer="";
-    voiceLastSubmitAt=now;
-    if(message && voiceModeActive){
-     stopRecognition();
-     voiceStatus("TOZRA yanıt hazırlıyor…");
-     sendGeneralMessage(message,{fromVoice:true});
-    }
-   }
-  }else if(interimText.trim() && voiceModeActive){
-   voiceStatus("🎙 "+interimText.trim());
-  }
- };
- recognition.onerror=(event)=>{
-  if(!voiceModeActive)return;
-  if(event.error==="not-allowed" || event.error==="service-not-allowed"){
-   voiceStatus("Mikrofon izni verilmedi. Tarayıcı ayarlarından mikrofon iznini aç.");
-   stopVoiceMode();
-  }else if(event.error==="audio-capture"){
-   voiceStatus("Mikrofon bulunamadı veya kullanılamıyor.");
-   stopVoiceMode();
-  }else if(event.error!=="no-speech" && event.error!=="aborted"){
-   voiceStatus("Ses tanıma bağlantısı kesildi. Yeniden deneniyor…");
-  }
- };
- recognition.onend=()=>{
-  if(voiceRecognition===recognition)voiceRecognition=null;
-  if(voiceModeActive && !voiceSpeaking && !busy){
-   voiceRestartTimer=setTimeout(startRecognition,350);
-  }
- };
- try{
-  recognition.start();
- }catch(error){
-  voiceRestartTimer=setTimeout(startRecognition,700);
- }
-}
-function startVoiceMode(){
- const Recognition=getSpeechRecognition();
- if(!Recognition){
-  voiceStatus("Bu tarayıcı konuşma tanımayı desteklemiyor. Güncel Safari veya Chrome kullan.");
-  return;
- }
- if(!("speechSynthesis" in window)){
-  voiceStatus("Bu tarayıcı sesli yanıt özelliğini desteklemiyor.");
-  return;
- }
- voiceModeActive=true;
- voiceModeGeneration++;
- $("voiceModeButton").classList.add("active");
- $("voiceModeButton").textContent="■ Sesli sohbeti bitir";
- $("voiceModeButton").setAttribute("aria-pressed","true");
- voiceFinalBuffer="";
- voiceStatus("Sesli sohbet açıldı. Seni dinliyorum…");
- startRecognition();
-}
-function stopVoiceMode(){
- voiceModeActive=false;
- voiceModeGeneration++;
- stopRecognition();
- if(window.speechSynthesis)window.speechSynthesis.cancel();
- voiceSpeaking=false;
- $("voiceModeButton").classList.remove("active");
- $("voiceModeButton").textContent="◉ Sesli sohbeti başlat";
- $("voiceModeButton").setAttribute("aria-pressed","false");
- voiceStatus("Sesli sohbet kapatıldı.");
-}
-function speakVoiceReply(text){
- if(!voiceModeActive || !("speechSynthesis" in window))return;
- stopRecognition();
- voiceSpeaking=true;
- const generation=voiceModeGeneration;
- const utterance=new SpeechSynthesisUtterance(String(text||""));
- utterance.lang="tr-TR";
- utterance.rate=0.98;
- utterance.pitch=1;
- utterance.onend=()=>{
-  if(generation!==voiceModeGeneration)return;
-  voiceSpeaking=false;
-  if(voiceModeActive){
-   voiceStatus("Yanıt tamamlandı. Seni dinliyorum…");
-   startRecognition();
-  }
- };
- utterance.onerror=()=>{
-  if(generation!==voiceModeGeneration)return;
-  voiceSpeaking=false;
-  if(voiceModeActive)startRecognition();
- };
- window.speechSynthesis.cancel();
- window.speechSynthesis.speak(utterance);
-}
-$("voiceModeButton").onclick=()=>{
- if(voiceModeActive)stopVoiceMode();
- else startVoiceMode();
-};
 
 /* SESLİ SOHBET */
 let activeRecorder=null;
@@ -1521,7 +1809,7 @@ async function startVoiceCapture(button, input, status){
     const audio=await blobToBase64(blob);
     const response=await fetch("/api/transcribe",{
      method:"POST",
-     headers:{"Content-Type":"application/json"},
+     headers:{"Content-Type":"application/json", ...(await TozraAuth.authHeaders())},
      body:JSON.stringify({
       audio,
       mimeType:blob.type||"audio/webm"
@@ -1625,7 +1913,6 @@ $("modalOverlay").onclick=e=>{
 };
 
 window.addEventListener("beforeunload",()=>{
- stopVoiceMode();
  stopVoiceCapture();
  if(window.speechSynthesis) window.speechSynthesis.cancel();
 });
@@ -1638,8 +1925,18 @@ document.addEventListener("keydown",e=>{
 });
 
 /* BAŞLANGIÇ */
-loadHistory();
-loadProjects();
+async function refreshAccountData(){
+ conversation=[]; conversations=[]; projects=[];
+ loadHistory();
+ loadProjects();
+ TozraAuth.updateAccountUI();
+ updateDashboardStats();
+}
+window.addEventListener("load", async ()=>{
+ await TozraAuth.init();
+ await refreshAccountData();
+ if(!TozraAuth.getSession()) showModal("login");
+});
 
 /* SERVICE WORKER */
 if("serviceWorker" in navigator){
@@ -1648,5 +1945,7 @@ if("serviceWorker" in navigator){
  });
 }
 </script>
+<script src="/memory.js?v=2"></script>
+<script src="/voice.js?v=3"></script>
 </body>
 </html>

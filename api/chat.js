@@ -16,10 +16,10 @@ module.exports = async function handler(req, res) {
 
   const MAX_HISTORY = 10;
   const MAX_HISTORY_ITEM_LENGTH = 6000;
-  const MAX_IMAGES = 15;
+  const MAX_IMAGES = 3; // Groq Qwen 3.8 supports up to 3 images per request.
   const MAX_IMAGE_SIZE = 3500000;
   const MAX_SEARCH_RESULTS = 8;
-  const MAX_COMPLETION_TOKENS = 800;
+  const MAX_COMPLETION_TOKENS = 2048; // More room for project and coding answers without an excessive default.
   const MAX_MEMORY_ITEMS = 30;
   const MAX_MEMORY_LENGTH = 1500;
 
@@ -141,18 +141,6 @@ Doğruluk, açıklık, tutarlılık ve uygulanabilirliği önceliklendir.
 
   function taskInstructions(task) {
     const instructions = {
-      agent: `
-GÖREV MODU: TOZRA AI AGENT
-Kullanıcının verdiği hedefi sonuç odaklı biçimde ele al.
-1. Önce hedefi tek cümleyle netleştir.
-2. Ardından 3-5 maddelik kısa bir uygulama planı oluştur.
-3. Her adımı bu yanıt içinde gerçekten yapabildiğin ölçüde tamamla; araştırma gerekiyorsa yalnızca sağlanan araştırma kaynaklarını kullan.
-4. Sonucu, üretilen çıktıyı ve kalan işleri ayrı başlıklarla sun.
-5. Kullanıcıdan bilgi gerekiyorsa yalnızca işi durduran tek bir soruyu sor.
-6. Gerçekleştirmediğin web araması, dosya değişikliği, e-posta gönderimi, hesap işlemi veya dış dünyada eylem yaptığını iddia etme.
-7. Dosya silme/değiştirme, mesaj gönderme, satın alma, yayınlama, hesap veya sistem ayarlarını değiştirme gibi dış etkili işlemler için önce açık onay iste.
-8. Kullanıcı hedefi bir belge, plan, metin, analiz veya kod üretmekse mümkün olduğunca tamamlanmış çıktıyı ver.
-`,
       coding: `
 GÖREV MODU: PROFESYONEL KODLAMA
 - İstenen sistemi değerlendir.
@@ -299,8 +287,7 @@ Araştırma kuralları:
       images = [],
       videoFrames = [],
       projectContext = "",
-      personalMemory = [],
-      agentMode = false
+      personalMemory = []
     } = req.body || {};
 
     if (typeof prompt !== "string" || !prompt.trim()) {
@@ -420,8 +407,7 @@ Henüz kayıtlı kişisel hafıza bulunmuyor.
       });
     }
 
-    const useAgentMode = agentMode === true;
-    const task = useAgentMode ? "agent" : detectTask(prompt);
+    const task = detectTask(prompt);
     const researchRequired = requiresResearch(prompt);
 
     let searchResults = [];
@@ -581,7 +567,6 @@ ${prompt.trim()}
       answer,
       model: MODEL,
       task,
-      agentMode: useAgentMode,
       researchRequired,
       searchUsed,
       memoryUsed: safeMemory.length > 0,
