@@ -871,6 +871,71 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
  #personalHome .ph-stat strong{font-size:20px}
 }
 
+
+/* TOZRA PROJECT STUDIO */
+.project-studio{margin:22px 0 28px;padding:24px;border:1px solid var(--border,#e4e9e3);border-radius:20px;background:linear-gradient(145deg,#fbfdfb,#f2f6f1);color:#1b2920}
+.ps-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:19px}
+.ps-kicker{font-size:9px;letter-spacing:2px;font-weight:800;color:#718575;margin-bottom:8px}
+.ps-head h2{font-size:25px;margin:0 0 6px;color:#1d2c22}
+.ps-head p{font-size:12px;color:#738076;margin:0}
+.ps-ai-button{flex-shrink:0;border:0;border-radius:11px;padding:12px 16px;background:#d7e8d8;color:#203b27;font-size:11px;font-weight:800;cursor:pointer}
+.ps-overview{display:grid;grid-template-columns:minmax(220px,2fr) repeat(3,minmax(90px,.7fr));gap:10px;margin-bottom:13px}
+.ps-progress-card,.ps-metric,.ps-panel{background:#fff;border:1px solid #e7ece6;border-radius:14px}
+.ps-progress-card{padding:15px 17px}
+.ps-progress-top,.ps-progress-foot{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.ps-progress-top span,.ps-metric>span{font-size:8px;letter-spacing:1.3px;font-weight:800;color:#829086}
+.ps-progress-top strong{font-size:21px;color:#263d2b}
+.ps-progress-track{height:7px;border-radius:9px;background:#edf1ed;overflow:hidden;margin:11px 0 9px}
+.ps-progress-track span{display:block;width:0;height:100%;border-radius:9px;background:#9bbd9d;transition:width .25s ease}
+.ps-progress-foot{font-size:9px;color:#879188}
+.ps-metric{padding:14px 13px;display:flex;flex-direction:column;justify-content:center}
+.ps-metric strong{font-size:24px;color:#24392a;margin-top:6px;line-height:1}
+.ps-metric small{font-size:9px;color:#879188;margin-top:4px}
+.ps-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.ps-panel{padding:17px;min-width:0}
+.ps-panel-title{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:13px}
+.ps-panel-title>div{display:flex;align-items:center;gap:9px}
+.ps-panel-title h3{margin:0;font-size:14px;color:#24342a}
+.ps-panel-title>span{font-size:8px;letter-spacing:1px;color:#99a39a;font-weight:800}
+.ps-icon{width:27px;height:27px;border-radius:9px;background:#edf4ed;color:#52775a;display:grid;place-items:center;font-size:15px}
+#psGoal{width:100%;min-height:104px;resize:vertical;border:1px solid #e7ece6;border-radius:10px;padding:12px;font:inherit;font-size:12px;line-height:1.6;color:#26362b;background:#fbfcfb;outline:none}
+#psGoal:focus,.ps-add-form input:focus{border-color:#a7c6aa;box-shadow:0 0 0 3px #e8f1e8}
+.ps-hint{font-size:9px;color:#9aa49b;margin-top:8px}
+.ps-add-form{display:flex;gap:7px;margin-bottom:10px}
+.ps-add-form input{min-width:0;flex:1;border:1px solid #e7ece6;border-radius:9px;padding:10px 11px;font-size:11px;outline:none;background:#fbfcfb;color:#26362b}
+.ps-add-form button{width:36px;flex-shrink:0;border:0;border-radius:9px;background:#dcebdd;color:#28442e;font-size:20px;cursor:pointer}
+.ps-list{display:flex;flex-direction:column;gap:5px;max-height:220px;overflow:auto}
+.ps-list-row{display:flex;align-items:center;gap:9px;padding:8px 8px;border-radius:9px;background:#fafcf9}
+.ps-check{width:19px;height:19px;flex-shrink:0;border:1px solid #cbd8cc;border-radius:6px;background:#fff;color:#fff;font-size:12px;cursor:pointer}
+.ps-list-row.is-done .ps-check{background:#7fa784;border-color:#7fa784}
+.ps-row-label{flex:1;min-width:0;font-size:11px;color:#39483d;overflow-wrap:anywhere}
+.ps-list-row.is-done .ps-row-label{text-decoration:line-through;color:#9aa49b}
+.ps-remove{border:0;background:transparent;color:#a5aea6;font-size:17px;cursor:pointer;padding:0 4px}
+.ps-remove:hover{color:#a24d4d}
+.ps-empty{font-size:10px;color:#a0aaa1;padding:12px 4px}
+.ps-ai-panel{grid-column:1/-1;display:flex;align-items:center;gap:15px;background:linear-gradient(105deg,#27352b,#35483a);border:0;color:#fff}
+.ps-ai-orb{width:43px;height:43px;flex-shrink:0;border-radius:14px;display:grid;place-items:center;background:#d3e5d4;color:#2a4430;font-size:22px}
+.ps-ai-panel>div:nth-child(2){flex:1}
+.ps-ai-label{font-size:8px;letter-spacing:1.5px;color:#b6cbb8;font-weight:800}
+.ps-ai-panel h3{font-size:14px;margin:4px 0;color:#f4f7f3}
+.ps-ai-panel p{font-size:10px;color:#c4d0c5;margin:0;line-height:1.5}
+.ps-ai-panel>button{border:1px solid #708473;background:transparent;color:#eff5ef;border-radius:9px;padding:10px 13px;font-size:10px;font-weight:700;white-space:nowrap;cursor:pointer}
+.ps-ai-panel>button span{margin-left:8px;color:#c4dfc7}
+@media(max-width:760px){
+ .project-studio{padding:15px;margin:14px 0 20px;border-radius:15px}
+ .ps-head{flex-direction:column;gap:12px}
+ .ps-head h2{font-size:21px}
+ .ps-ai-button{width:100%}
+ .ps-overview{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .ps-progress-card{grid-column:1/-1}
+ .ps-metric{padding:11px 9px}
+ .ps-metric strong{font-size:21px}
+ .ps-grid{grid-template-columns:1fr}
+ .ps-ai-panel{grid-column:auto;align-items:flex-start;flex-wrap:wrap}
+ .ps-ai-panel>div:nth-child(2){min-width:calc(100% - 65px)}
+ .ps-ai-panel>button{width:100%}
+}
+
 </style>
 </head>
 
@@ -1005,6 +1070,54 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
   </div>
   <span class="project-badge">● Aktif proje</span>
  </div>
+ <section class="project-studio" id="projectStudioPanel" aria-label="Project Studio">
+  <div class="ps-head">
+   <div>
+    <div class="ps-kicker">TOZRA / PROJECT STUDIO</div>
+    <h2>Proje kontrol merkezi</h2>
+    <p>Hedefini netleştir, yol haritanı oluştur ve ilerlemeni takip et.</p>
+   </div>
+   <button class="ps-ai-button" id="psAiPlan" type="button">✦ TOZRA ile planla</button>
+  </div>
+  <div class="ps-overview">
+   <div class="ps-progress-card">
+    <div class="ps-progress-top"><span>GENEL İLERLEME</span><strong id="psProgressValue">0%</strong></div>
+    <div class="ps-progress-track"><span id="psProgressBar"></span></div>
+    <div class="ps-progress-foot"><span id="psProgressCaption">İlk adımını ekleyerek başla.</span><span id="psProgressCount">0 / 0 tamamlandı</span></div>
+   </div>
+   <div class="ps-metric"><span>YOL HARİTASI</span><strong id="psMilestoneCount">0</strong><small> aşama</small></div>
+   <div class="ps-metric"><span>GÖREVLER</span><strong id="psTaskCount">0</strong><small> toplam</small></div>
+   <div class="ps-metric"><span>TAMAMLANAN</span><strong id="psDoneCount">0</strong><small> görev</small></div>
+  </div>
+  <div class="ps-grid">
+   <section class="ps-panel ps-goal-panel">
+    <div class="ps-panel-title"><div><span class="ps-icon">◎</span><h3>Proje hedefi</h3></div><span>01 / ODAK</span></div>
+    <textarea id="psGoal" maxlength="1200" placeholder="Bu projenin sonunda neyi başarmak istiyorsun? Başarıyı nasıl tanımlarsın?"></textarea>
+    <div class="ps-hint" id="psGoalStatus">Hedefin otomatik kaydedilir.</div>
+   </section>
+   <section class="ps-panel">
+    <div class="ps-panel-title"><div><span class="ps-icon">◇</span><h3>Yol haritası</h3></div><span>02 / AŞAMALAR</span></div>
+    <form class="ps-add-form" id="psMilestoneForm">
+     <input id="psMilestoneInput" maxlength="100" placeholder="Yeni aşama ekle..." autocomplete="off">
+     <button type="submit" aria-label="Aşama ekle">＋</button>
+    </form>
+    <div class="ps-list" id="psMilestoneList"><div class="ps-empty">Projenin aşamalarını burada sırala.</div></div>
+   </section>
+   <section class="ps-panel ps-task-panel">
+    <div class="ps-panel-title"><div><span class="ps-icon">✓</span><h3>Yapılacaklar</h3></div><span>03 / UYGULAMA</span></div>
+    <form class="ps-add-form" id="psTaskForm">
+     <input id="psTaskInput" maxlength="140" placeholder="Bir sonraki görev..." autocomplete="off">
+     <button type="submit" aria-label="Görev ekle">＋</button>
+    </form>
+    <div class="ps-list" id="psTaskList"><div class="ps-empty">İlk görevini ekleyerek ilerlemeyi başlat.</div></div>
+   </section>
+   <section class="ps-panel ps-ai-panel">
+    <div class="ps-ai-orb">✦</div>
+    <div><span class="ps-ai-label">TOZRA AI / PROJECT PARTNER</span><h3>Bir sonraki adımını birlikte belirleyelim.</h3><p>Proje hedefini ve mevcut görevlerini dikkate alarak uygulanabilir öneriler al.</p></div>
+    <button type="button" id="psAiAdvice">Projemi analiz et <span>↗</span></button>
+   </section>
+  </div>
+ </section>
  <div class="project-layout">
   <div>
    <div class="panel project-chat">
@@ -1694,6 +1807,106 @@ function openProjectModal(id=null,category=null){
  };
 }
 
+/* PROJECT STUDIO — proje hedefi, yol haritası ve görev takibi */
+function ensureProjectStudio(project){
+ if(!project.studio||typeof project.studio!=="object")project.studio={goal:"",milestones:[],tasks:[]};
+ if(!Array.isArray(project.studio.milestones))project.studio.milestones=[];
+ if(!Array.isArray(project.studio.tasks))project.studio.tasks=[];
+ return project.studio;
+}
+function saveProjectStudio(){
+ const p=getCurrentProject();
+ if(!p)return;
+ p.updatedAt=Date.now();
+ saveProjects();
+ renderProjectStudio(p);
+}
+function renderProjectStudio(project){
+ const studio=ensureProjectStudio(project);
+ const goal=$("psGoal");
+ if(goal&&goal.value!==studio.goal)goal.value=studio.goal||"";
+ const milestoneList=$("psMilestoneList"),taskList=$("psTaskList");
+ if(!milestoneList||!taskList)return;
+ milestoneList.innerHTML="";
+ taskList.innerHTML="";
+ const makeEmpty=(container,message)=>{
+  const empty=document.createElement("div");empty.className="ps-empty";empty.textContent=message;container.appendChild(empty);
+ };
+ if(!studio.milestones.length)makeEmpty(milestoneList,"Projenin aşamalarını burada sırala.");
+ studio.milestones.forEach((item,index)=>{
+  const row=document.createElement("div");row.className="ps-list-row"+(item.done?" is-done":"");
+  const check=document.createElement("button");check.type="button";check.className="ps-check";check.setAttribute("aria-label",item.done?"Aşamayı yeniden aç":"Aşamayı tamamla");check.textContent=item.done?"✓":"";
+  check.onclick=()=>{item.done=!item.done;saveProjectStudio();};
+  const label=document.createElement("span");label.className="ps-row-label";label.textContent=item.title;
+  const remove=document.createElement("button");remove.type="button";remove.className="ps-remove";remove.textContent="×";remove.setAttribute("aria-label","Aşamayı sil");
+  remove.onclick=()=>{studio.milestones.splice(index,1);saveProjectStudio();};
+  row.append(check,label,remove);milestoneList.appendChild(row);
+ });
+ if(!studio.tasks.length)makeEmpty(taskList,"İlk görevini ekleyerek ilerlemeyi başlat.");
+ studio.tasks.forEach((item,index)=>{
+  const row=document.createElement("div");row.className="ps-list-row"+(item.done?" is-done":"");
+  const check=document.createElement("button");check.type="button";check.className="ps-check";check.setAttribute("aria-label",item.done?"Görevi yeniden aç":"Görevi tamamla");check.textContent=item.done?"✓":"";
+  check.onclick=()=>{item.done=!item.done;saveProjectStudio();};
+  const label=document.createElement("span");label.className="ps-row-label";label.textContent=item.title;
+  const remove=document.createElement("button");remove.type="button";remove.className="ps-remove";remove.textContent="×";remove.setAttribute("aria-label","Görevi sil");
+  remove.onclick=()=>{studio.tasks.splice(index,1);saveProjectStudio();};
+  row.append(check,label,remove);taskList.appendChild(row);
+ });
+ const total=studio.tasks.length+studio.milestones.length;
+ const done=studio.tasks.filter(x=>x.done).length+studio.milestones.filter(x=>x.done).length;
+ const pct=total?Math.round(done/total*100):0;
+ $("psProgressValue").textContent=pct+"%";
+ $("psProgressBar").style.width=pct+"%";
+ $("psProgressCount").textContent=done+" / "+total+" tamamlandı";
+ $("psProgressCaption").textContent=total?(pct===100?"Harika! Bu projenin tüm adımları tamamlandı.":"Adım adım ilerliyorsun."):"İlk adımını ekleyerek başla.";
+ $("psMilestoneCount").textContent=studio.milestones.length;
+ $("psTaskCount").textContent=studio.tasks.length;
+ $("psDoneCount").textContent=done;
+}
+$("psGoal").addEventListener("input",()=>{
+ const p=getCurrentProject();if(!p)return;
+ ensureProjectStudio(p).goal=$("psGoal").value;
+ p.updatedAt=Date.now();safeSave("tozra-projects",projects);
+ $("psGoalStatus").textContent="Kaydediliyor…";
+ clearTimeout(window.__psGoalSaveTimer);
+ window.__psGoalSaveTimer=setTimeout(()=>{
+  safeSave("tozra-projects",projects);
+  $("psGoalStatus").textContent="Hedefin kaydedildi.";
+ },350);
+});
+$("psMilestoneForm").addEventListener("submit",event=>{
+ event.preventDefault();const p=getCurrentProject(),input=$("psMilestoneInput");
+ const title=input.value.trim();if(!p||!title)return;
+ ensureProjectStudio(p).milestones.push({id:makeId(),title,done:false,createdAt:Date.now()});
+ input.value="";saveProjectStudio();input.focus();
+});
+$("psTaskForm").addEventListener("submit",event=>{
+ event.preventDefault();const p=getCurrentProject(),input=$("psTaskInput");
+ const title=input.value.trim();if(!p||!title)return;
+ ensureProjectStudio(p).tasks.push({id:makeId(),title,done:false,createdAt:Date.now()});
+ input.value="";saveProjectStudio();input.focus();
+});
+function askProjectStudioAI(kind){
+ const p=getCurrentProject();if(!p)return;
+ const studio=ensureProjectStudio(p);
+ const summary=[
+  "Bu projeyi Project Studio kapsamında değerlendir.",
+  "Proje: "+p.name,
+  "Kategori: "+p.category,
+  "Açıklama: "+(p.description||"Belirtilmedi"),
+  "Hedef: "+(studio.goal||"Henüz belirlenmedi"),
+  "Yol haritası: "+(studio.milestones.map(x=>(x.done?"[Tamamlandı] ":"[Bekliyor] ")+x.title).join("; ")||"Henüz yok"),
+  "Görevler: "+(studio.tasks.map(x=>(x.done?"[Tamamlandı] ":"[Bekliyor] ")+x.title).join("; ")||"Henüz yok"),
+  kind==="plan"?"Eksik bilgileri sorarak netleştir; ardından ölçülebilir hedef, mantıklı aşamalar, önceliklendirilmiş görevler ve gerçekçi bir başlangıç planı öner.":"Projenin mevcut durumunu analiz et. En önemli üç riski, üç fırsatı ve hemen atılabilecek en iyi sonraki adımı belirt. Kullanıcı onaylamadan mevcut görevleri değiştirme."
+ ].join("\\n");
+ $("projectPrompt").value=summary;
+ showPage("project");
+ $("projectPrompt").focus();
+ $("projectPrompt").scrollIntoView({behavior:"smooth",block:"center"});
+}
+$("psAiPlan").onclick=()=>askProjectStudioAI("plan");
+$("psAiAdvice").onclick=()=>askProjectStudioAI("advice");
+
 /* PROJE DETAYI */
 function openProject(id){
  const project=projects.find(p=>p.id===id);
@@ -1704,6 +1917,7 @@ function openProject(id){
  $("detailCategory").textContent=project.category.toUpperCase();
  $("detailDescription").textContent=project.description||"Bu projeyi TOZRA ile birlikte geliştirmeye başla.";
  $("projectNotes").value=project.notes||"";
+ renderProjectStudio(project);
 
  renderProjectInfo(project);
  renderProjectMessages();
@@ -1730,6 +1944,9 @@ function buildProjectContext(project){
   "Proje adı: "+project.name,
   "Proje kategorisi: "+project.category,
   "Proje açıklaması: "+(project.description||"Belirtilmedi"),
+  "Proje hedefi: "+(project.studio?.goal||"Henüz belirlenmedi"),
+  "Yol haritası: "+((project.studio?.milestones||[]).map(x=>(x.done?"Tamamlandı: ":"Bekliyor: ")+x.title).join("; ")||"Henüz oluşturulmadı"),
+  "Görevler: "+((project.studio?.tasks||[]).map(x=>(x.done?"Tamamlandı: ":"Bekliyor: ")+x.title).join("; ")||"Henüz oluşturulmadı"),
   "",
   "[PROJE NOTLARI]",
   project.notes||"Henüz proje notu eklenmedi.",
