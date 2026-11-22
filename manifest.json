@@ -7,11 +7,11 @@
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#f5f3ed",
-  "theme_color": "#26392e",
+  "theme_color": "#f5f3ed",
   "icons": [
     {
-      "src": "/apple-touch-icon.PNG",
-      "sizes": "1024x1024",
+      "src": "/tozra-icon.PNG",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     }

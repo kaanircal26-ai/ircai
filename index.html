@@ -2739,34 +2739,51 @@ const $=id=>document.getElementById(id);
 const TozraAuth = (() => {
  let client = null;
  let session = null;
+ let initPromise = null;
  let initialized = false;
  let configError = "";
+ let authListenerReady = false;
 
- async function init() {
-  if (initialized) return session;
-  initialized = true;
-  try {
-   if (!window.supabase?.createClient) throw new Error("Supabase istemcisi yüklenemedi.");
-   const response = await fetch("/api/config", { cache: "no-store" });
-   const config = await response.json();
-   if (!response.ok || !config.success) throw new Error(config.error || "Supabase yapılandırması okunamadı.");
-   client = window.supabase.createClient(config.supabaseUrl, config.supabaseKey, {
-    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
-   });
-   const result = await client.auth.getSession();
-   if (result.error) throw result.error;
-   session = result.data.session || null;
-   client.auth.onAuthStateChange((event, nextSession) => {
-    session = nextSession || null;
+ // Tek bir başlatma Promise'i kullanılır. Eşzamanlı çağrılar aynı Supabase
+ // istemcisini ve aynı oturum yüklemesini bekler; erken guest durumuna düşmez.
+ function init() {
+  if (initPromise) return initPromise;
+  initPromise = (async () => {
+   try {
+    if (!window.supabase?.createClient) throw new Error("Supabase istemcisi yüklenemedi.");
+    const response = await fetch("/api/config", { cache: "no-store" });
+    const config = await response.json();
+    if (!response.ok || !config.success) throw new Error(config.error || "Supabase yapılandırması okunamadı.");
+    client = window.supabase.createClient(config.supabaseUrl, config.supabaseKey, {
+     auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: "pkce" }
+    });
+    const { data, error } = await client.auth.getSession();
+    if (error) throw error;
+    session = data.session || null;
+    if (!authListenerReady) {
+     authListenerReady = true;
+     client.auth.onAuthStateChange((event, nextSession) => {
+      session = nextSession || null;
+      // Supabase callback'i içinde başka auth çağrısı yapmadan UI'ı güncelle.
+      queueMicrotask(() => {
+       updateAccountUI();
+       if (event === "SIGNED_IN" && session?.user) ensureAvatar().catch(err => console.warn("TOZRA avatar:", err));
+       if (event === "PASSWORD_RECOVERY") showModal("updatePassword");
+      });
+     });
+    }
+    initialized = true;
     updateAccountUI();
-    if(event === "PASSWORD_RECOVERY") showModal("updatePassword");
-   });
-  } catch (error) {
-   configError = error.message || "Hesap servisine bağlanılamadı.";
-   console.error("TOZRA auth:", error);
-  }
-  updateAccountUI();
-  return session;
+    return session;
+   } catch (error) {
+    configError = error.message || "Hesap servisine bağlanılamadı.";
+    console.error("TOZRA auth:", error);
+    initialized = true;
+    updateAccountUI();
+    return null;
+   }
+  })();
+  return initPromise;
  }
 
  const AVATARS = ["fox","cat","panda","rabbit","bear","dog","penguin","frog"];
@@ -2775,19 +2792,28 @@ const TozraAuth = (() => {
   if (!user) return "cat";
   const saved = user.user_metadata?.tozra_avatar;
   if (AVATARS.includes(saved)) return saved;
-  // Deterministic fallback prevents avatar flicker while metadata is being saved.
+  try {
+   const local = localStorage.getItem(`tozra-avatar:${user.id}`);
+   if (AVATARS.includes(local)) return local;
+  } catch {}
   let hash = 0;
   for (const char of String(user.id || user.email || "")) hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
   return AVATARS[hash % AVATARS.length];
  }
  async function ensureAvatar() {
+  await init();
   if (!client || !session?.user) return avatarForCurrentUser();
   const current = session.user.user_metadata?.tozra_avatar;
-  if (AVATARS.includes(current)) return current;
-  const chosen = AVATARS[Math.floor(Math.random() * AVATARS.length)];
+  if (AVATARS.includes(current)) { updateAccountUI(); return current; }
+  let chosen;
+  try { chosen = localStorage.getItem(`tozra-avatar:${session.user.id}`); } catch {}
+  if (!AVATARS.includes(chosen)) chosen = AVATARS[Math.floor(Math.random() * AVATARS.length)];
+  try { localStorage.setItem(`tozra-avatar:${session.user.id}`, chosen); } catch {}
+  // Metadata yazımı başarısız olsa bile avatar aynı tarayıcıda sabit kalır.
   try {
    const { data, error } = await client.auth.updateUser({ data: { tozra_avatar: chosen } });
    if (!error && data?.user) session = { ...session, user: data.user };
+   else if (error) console.warn("TOZRA avatar metadata kaydedilemedi:", error.message);
   } catch (error) { console.warn("TOZRA avatar kaydedilemedi:", error); }
   updateAccountUI();
   return avatarForCurrentUser();
@@ -2802,67 +2828,87 @@ const TozraAuth = (() => {
    button.dataset.avatar = animal;
   }
  }
-
  function userId() { return session?.user?.id || "guest"; }
  function getClient() { return client; }
  function getSession() { return session; }
  function getError() { return configError; }
  async function signUp(name, email, password) {
+  await init();
   if (!client) throw new Error(configError || "Supabase bağlantısı hazır değil.");
   const { data, error } = await client.auth.signUp({
-   email: email.trim().toLowerCase(),
-   password,
+   email: email.trim().toLowerCase(), password,
    options: { data: { full_name: name.trim() }, emailRedirectTo: `${window.location.origin}/` }
   });
   if (error) throw error;
   session = data.session || null;
+  if (session) await ensureAvatar();
   return data;
  }
  async function signIn(email, password) {
+  await init();
   if (!client) throw new Error(configError || "Supabase bağlantısı hazır değil.");
-  const { data, error } = await client.auth.signInWithPassword({
-   email: email.trim().toLowerCase(), password
-  });
+  const { data, error } = await client.auth.signInWithPassword({ email: email.trim().toLowerCase(), password });
   if (error) throw error;
   session = data.session || null;
+  if (session) await ensureAvatar();
   return data;
  }
  async function signInWithGoogle() {
+  await init();
   if (!client) throw new Error(configError || "Supabase bağlantısı hazır değil.");
   const { data, error } = await client.auth.signInWithOAuth({
    provider: "google",
-   options: {
-    redirectTo: `${window.location.origin}/`,
-    queryParams: { prompt: "select_account" }
-   }
+   options: { redirectTo: `${window.location.origin}/`, queryParams: { prompt: "select_account" } }
   });
   if (error) throw error;
   return data;
  }
  async function resetPassword(email) {
+  await init();
   if (!client) throw new Error(configError || "Supabase bağlantısı hazır değil.");
   const { error } = await client.auth.resetPasswordForEmail(email.trim().toLowerCase(), { redirectTo: `${window.location.origin}/` });
   if (error) throw error;
  }
  async function resendConfirmation(email) {
+  await init();
   if (!client) throw new Error(configError || "Supabase bağlantısı hazır değil.");
   const { error } = await client.auth.resend({ type: "signup", email: email.trim().toLowerCase(), options: { emailRedirectTo: `${window.location.origin}/` } });
   if (error) throw error;
  }
  async function updatePassword(password) {
+  await init();
   if (!client) throw new Error(configError || "Supabase bağlantısı hazır değil.");
   const { error } = await client.auth.updateUser({ password });
   if (error) throw error;
  }
  async function signOut() {
+  await init();
   if (!client) return;
   const { error } = await client.auth.signOut();
   if (error) throw error;
   session = null;
+  updateAccountUI();
  }
  async function authHeaders() {
-  if (!session?.access_token) throw new Error("Oturum bulunamadı. Lütfen yeniden giriş yap.");
-  return { Authorization: `Bearer ${session.access_token}` };
+  await init();
+  if (!client) throw new Error(configError || "Supabase bağlantısı hazır değil.");
+  // Bellekteki değişken yerine Supabase'in güncel/yenilenmiş oturumunu esas al.
+  let result = await client.auth.getSession();
+  if (result.error) throw result.error;
+  let current = result.data.session || null;
+  if (!current?.access_token) {
+   const refreshed = await client.auth.refreshSession();
+   if (refreshed.error) throw refreshed.error;
+   current = refreshed.data.session || null;
+  }
+  if (!current?.access_token) {
+   session = null;
+   updateAccountUI();
+   throw new Error("Oturum bulunamadı. Lütfen Google veya e-posta hesabınla yeniden giriş yap.");
+  }
+  session = current;
+  updateAccountUI();
+  return { Authorization: `Bearer ${current.access_token}` };
  }
  return { init, userId, getClient, getSession, getError, signUp, signIn, signInWithGoogle, resetPassword, resendConfirmation, updatePassword, signOut, authHeaders, updateAccountUI, ensureAvatar, avatarForCurrentUser };
 })();
