@@ -1,4 +1,4 @@
-/* TOZRA Service Worker — v18
+/* TOZRA Service Worker — v19
    - Kurulumda tek bir eksik dosya yüzünden tüm yükleme iptal olmaz.
    - Yalnızca TOZRA önbellekleri temizlenir.
    - API ve kullanıcıya özel yanıtlar önbelleğe alınmaz.
@@ -6,13 +6,14 @@
 "use strict";
 
 const CACHE_PREFIX = "tozra-";
-const CACHE_NAME = "tozra-v18";
+const CACHE_NAME = "tozra-v19";
 const APP_SHELL = [
   "/",
   "/manifest.json",
   "/apple-touch-icon.PNG",
-  "/ircal-design-icon.png",
-  "/voice.js?v=9"
+  "/tozra-logo.svg",
+  "/avatars/cat.svg",
+  "/voice.js?v=11"
 ];
 
 self.addEventListener("install", event => {

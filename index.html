@@ -10,8 +10,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>TOZRA — IRCAL DESIGN</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<link rel="icon" type="image/png" href="/ircal-design-icon.png">
-<link rel="apple-touch-icon" href="/ircal-design-icon.png">
+<link rel="icon" type="image/svg+xml" href="/tozra-logo.svg">
+<link rel="apple-touch-icon" href="/apple-touch-icon.PNG">
 <link rel="manifest" href="/manifest.json">
 
 <style>
@@ -2335,7 +2335,7 @@ body.voice-screen-open{overflow:hidden}
   <span class="splash-particle splash-particle-a"></span><span class="splash-particle splash-particle-b"></span><span class="splash-particle splash-particle-c"></span><span class="splash-particle splash-particle-d"></span>
  </div>
  <div class="splash-inner">
-  <div class="splash-mark" aria-label="TOZRA"><img src="/ircal-design-icon.png" alt="TOZRA"></div>
+  <div class="splash-mark" aria-label="TOZRA"><img src="/tozra-logo.svg" alt="TOZRA"></div>
   <div class="splash-name">TOZRA</div>
   <div class="splash-tagline">IRCAL DESIGN</div>
   <div class="splash-feature-icons" aria-hidden="true">
@@ -2357,7 +2357,7 @@ body.voice-screen-open{overflow:hidden}
 
 <div class="app">
 <aside class="sidebar" id="sidebar">
- <div class="brand"><div class="brand-icon"><img src="/apple-touch-icon.PNG" alt="TOZRA"></div><div class="brand-wordmark"><span>TOZRA</span><small>IRCAL DESIGN</small></div></div>
+ <div class="brand"><div class="brand-icon"><img src="/tozra-logo.svg" alt="TOZRA"></div><div class="brand-wordmark"><span>TOZRA</span><small>IRCAL DESIGN</small></div></div>
  <button class="new-chat" id="newProject"><span class="nav-symbol nav-symbol-plus"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span> Yeni proje oluştur</button>
  <div class="nav-label">WORKSPACE</div>
  <button class="nav-item active" id="navWorkspace"><span class="nav-symbol nav-symbol-home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></span> Çalışma alanı</button>
@@ -2387,13 +2387,13 @@ body.voice-screen-open{overflow:hidden}
 <header class="topbar">
  <div class="mobile-brand">
   <button class="mobile-menu" id="menuButton" aria-label="Menüyü aç">☰</button>
-  <div class="brand-icon"><img src="/apple-touch-icon.PNG" alt="TOZRA"></div>TOZRA
+  <div class="brand-icon"><img src="/tozra-logo.svg" alt="TOZRA"></div>TOZRA
  </div>
  <div class="topbar-title" id="topbarTitle">CREATIVE WORKSPACE</div>
  <div class="top-actions">
   <div class="status">Çevrimiçi</div>
   <button class="top-button" id="plansButton">Üyelik</button>
-  <button class="avatar" id="profileButton">U</button>
+  <button class="avatar animal-avatar" id="profileButton" aria-label="Profil" title="Profil"><img src="/avatars/cat.svg" alt="Profil avatarı"></button>
  </div>
 </header>
 
@@ -2528,7 +2528,7 @@ body.voice-screen-open{overflow:hidden}
 <div class="page" id="chatPage">
  <button class="back-button" id="chatBack">← Çalışma alanına dön</button>
  <div class="welcome" id="welcome">
-  <div class="welcome-logo"><img src="/apple-touch-icon.PNG" alt="TOZRA"></div>
+  <div class="welcome-logo"><img src="/tozra-logo.svg" alt="TOZRA"></div>
   <h1>Merhaba, nasıl yardımcı olabilirim?</h1>
   <p>Fikirlerini keşfet. Üret. Geliştir.</p>
   <div class="suggestions">
@@ -2769,13 +2769,36 @@ const TozraAuth = (() => {
   return session;
  }
 
+ const AVATARS = ["fox","cat","panda","rabbit","bear","dog","penguin","frog"];
+ function avatarForCurrentUser() {
+  const user = session?.user;
+  if (!user) return "cat";
+  const saved = user.user_metadata?.tozra_avatar;
+  if (AVATARS.includes(saved)) return saved;
+  // Deterministic fallback prevents avatar flicker while metadata is being saved.
+  let hash = 0;
+  for (const char of String(user.id || user.email || "")) hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
+  return AVATARS[hash % AVATARS.length];
+ }
+ async function ensureAvatar() {
+  if (!client || !session?.user) return avatarForCurrentUser();
+  const current = session.user.user_metadata?.tozra_avatar;
+  if (AVATARS.includes(current)) return current;
+  const chosen = AVATARS[Math.floor(Math.random() * AVATARS.length)];
+  try {
+   const { data, error } = await client.auth.updateUser({ data: { tozra_avatar: chosen } });
+   if (!error && data?.user) session = { ...session, user: data.user };
+  } catch (error) { console.warn("TOZRA avatar kaydedilemedi:", error); }
+  updateAccountUI();
+  return avatarForCurrentUser();
+ }
  function updateAccountUI() {
   const button = document.getElementById("profileButton");
   if (button) {
-   button.textContent = session?.user?.email
-    ? session.user.email.slice(0, 1).toUpperCase()
-    : "U";
+   const animal = avatarForCurrentUser();
+   button.innerHTML = `<img src="/avatars/${animal}.svg" alt="${animal} avatarı">`;
    button.title = session?.user?.email || "Hesap";
+   button.setAttribute("aria-label", session?.user?.email ? "Profil" : "Misafir profil");
   }
  }
 
@@ -2828,7 +2851,7 @@ const TozraAuth = (() => {
   if (!session?.access_token) throw new Error("Oturum bulunamadı. Lütfen yeniden giriş yap.");
   return { Authorization: `Bearer ${session.access_token}` };
  }
- return { init, userId, getClient, getSession, getError, signUp, signIn, resetPassword, resendConfirmation, updatePassword, signOut, authHeaders, updateAccountUI };
+ return { init, userId, getClient, getSession, getError, signUp, signIn, resetPassword, resendConfirmation, updatePassword, signOut, authHeaders, updateAccountUI, ensureAvatar, avatarForCurrentUser };
 })();
 
 function scopedStorageKey(key) {
@@ -3188,10 +3211,7 @@ document.querySelectorAll('[data-home-prompt]').forEach(button=>{
  button.addEventListener('click',()=>startChatWithPrompt(button.dataset.homePrompt));
 });
 $("homeProfileButton")?.addEventListener("click",()=>$("profileButton")?.click());
-$("homeVoiceButton")?.addEventListener("click",()=>{
- openGeneralChat();
- window.setTimeout(()=>$("voiceButton")?.click(),450);
-});
+$("homeVoiceButton")?.addEventListener("click",()=>{ if(window.startTozraVoiceFromHome){window.startTozraVoiceFromHome();return;} openGeneralChat(); window.setTimeout(()=>$("voiceButton")?.click(),450); });
 
 /* PROJE SİSTEMİ */
 function updateDashboardStats(){
@@ -4100,6 +4120,18 @@ document.querySelectorAll(".tool-card").forEach(card=>{
  card.onclick=()=>createFromCategory(card.dataset.category);
 });
 
+/* TOZRA tema tercihi: profil ekranından seçilir ve cihazda saklanır. */
+function getTozraTheme(){return localStorage.getItem("tozra-theme") === "dark" ? "dark" : "light";}
+function setTozraTheme(theme){
+ const selected=theme==="dark"?"dark":"light";
+ document.documentElement.dataset.tozraTheme=selected;
+ document.documentElement.style.colorScheme=selected;
+ localStorage.setItem("tozra-theme",selected);
+ const meta=document.querySelector('meta[name="theme-color"]');
+ if(meta)meta.content=selected==="dark"?"#151b17":"#f5f3ed";
+}
+setTozraTheme(getTozraTheme());
+
 /* MODAL SİSTEMİ */
 function showModal(type){
  const title=$("modalTitle");
@@ -4123,7 +4155,7 @@ function showModal(type){
   title.textContent="TOZRA hesabına giriş";
   content.innerHTML=`
    <div class="auth-intro">
-    <div class="auth-mark" aria-hidden="true">T</div>
+    <div class="auth-mark" aria-hidden="true"><img src="/tozra-logo.svg" alt=""></div>
     <div class="auth-kicker">TOZRA / IRCAL DESIGN</div>
     <h3>Yeniden hoş geldin.</h3>
     <p>Fikirlerine kaldığın yerden devam et. Çalışma alanın seni bekliyor.</p>
@@ -4222,18 +4254,20 @@ function showModal(type){
   const user=TozraAuth.getSession()?.user;
   content.innerHTML=user?`
    <div style="text-align:center;padding:10px">
-    <div class="avatar" style="margin:auto;display:grid;place-items:center">${escapeHTML((user.email||"U").slice(0,1).toUpperCase())}</div>
+    <div class="avatar animal-avatar profile-animal-avatar" style="margin:auto;display:grid;place-items:center"><img src="/avatars/${TozraAuth.avatarForCurrentUser()}.svg" alt="Hayvan avatarın"></div>
     <h3>${escapeHTML(user.user_metadata?.full_name||"TOZRA kullanıcısı")}</h3>
     <p>${escapeHTML(user.email||"")}</p>
    </div>
+   <section class="profile-theme-picker" aria-label="Tema seçimi"><h4>Görünüm teması</h4><div class="theme-choice-row"><button type="button" class="theme-choice" data-theme-choice="light"><span class="theme-preview theme-preview-light"></span><span>Aydınlık</span><i>✓</i></button><button type="button" class="theme-choice" data-theme-choice="dark"><span class="theme-preview theme-preview-dark"></span><span>Karanlık</span><i>✓</i></button></div></section>
    <div class="profile-actions"><button class="primary" id="profilePlansButton" type="button">Üyelik planları</button><button class="secondary" id="profileSettingsButton" type="button">Ayarlar</button></div><button class="secondary" id="logoutButton">Çıkış yap</button>`:`
    <div style="text-align:center;padding:10px">
-    <div class="avatar" style="margin:auto;display:grid;place-items:center">U</div>
+    <div class="avatar animal-avatar profile-animal-avatar" style="margin:auto;display:grid;place-items:center"><img src="/avatars/cat.svg" alt="TOZRA hayvan avatarı"></div>
     <h3>Misafir kullanıcı</h3>
     <p>Projelerini hesabına bağlamak için giriş yap.</p>
    </div>
    <button class="primary" onclick="showModal('register')">Hesap oluştur</button>
    <button class="secondary" onclick="showModal('login')">Giriş yap</button>
+   <section class="profile-theme-picker" aria-label="Tema seçimi"><h4>Görünüm teması</h4><div class="theme-choice-row"><button type="button" class="theme-choice" data-theme-choice="light"><span class="theme-preview theme-preview-light"></span><span>Aydınlık</span><i>✓</i></button><button type="button" class="theme-choice" data-theme-choice="dark"><span class="theme-preview theme-preview-dark"></span><span>Karanlık</span><i>✓</i></button></div></section>
    <div class="profile-actions"><button class="secondary" id="profilePlansButton" type="button">Üyelik planları</button><button class="secondary" id="profileSettingsButton" type="button">Ayarlar</button></div>`;
   if(user){
    $("logoutButton").onclick=async()=>{
@@ -4246,6 +4280,16 @@ function showModal(type){
     }catch(error){alert(error.message||"Çıkış yapılamadı.");}
    };
   }
+ }
+
+ if(type==="profile"){
+  content.querySelectorAll("[data-theme-choice]").forEach(button=>{
+   button.classList.toggle("is-selected", button.dataset.themeChoice===getTozraTheme());
+   button.addEventListener("click",()=>{
+    setTozraTheme(button.dataset.themeChoice);
+    content.querySelectorAll("[data-theme-choice]").forEach(item=>item.classList.toggle("is-selected",item===button));
+   });
+  });
  }
 
  if(type==="settings"){
@@ -4374,6 +4418,7 @@ document.addEventListener("keydown",e=>{
 
 /* BAŞLANGIÇ */
 async function refreshAccountData(){
+ await TozraAuth.ensureAvatar?.();
  if (window.TozraCloudSync) await TozraCloudSync.init(true);
  conversation=[]; conversations=[]; projects=[];
  loadHistory();
@@ -4911,7 +4956,7 @@ renderTasksCalendar();
  </div>
 </div>
 
-<script src="/voice.js?v=10"></script>
+<script src="/voice.js?v=11"></script>
 <script>
 (()=>{
  const splash=document.getElementById('splash');
@@ -4927,5 +4972,93 @@ renderTasksCalendar();
  requestAnimationFrame(tick);
 })();
 </script>
+
+<style id="tozra-v26-identity-theme-voice">
+/* One TOZRA brand mark and a consistent animal avatar treatment. */
+.brand-icon,.splash-mark{overflow:hidden}
+.brand-icon img,.mobile-brand .brand-icon img,.splash-mark img{width:100%;height:100%;object-fit:cover}
+.animal-avatar{padding:0!important;overflow:hidden!important;display:grid!important;place-items:center!important;border-radius:50%!important;background:#edf2e7!important;border:2px solid #d6e4c8!important;box-shadow:0 3px 12px rgba(65,95,57,.13)!important}
+.animal-avatar img{width:100%;height:100%;display:block;object-fit:cover;animation:tozraAvatarBob 3.8s ease-in-out infinite}
+@keyframes tozraAvatarBob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-2px) rotate(2deg)}}
+/* Unified app-icon language for side tools and plugin-style shortcuts. */
+.studio-icon,.nav-symbol,.tool-icon,.rail-heading-icon,.dock-icon,.ps-icon,.mode-icon,.cs-card-icon,.cs-builder-icon{display:inline-grid!important;place-items:center!important;border-radius:12px!important;background:linear-gradient(145deg,#eaf1df,#dfe9d3)!important;border:1px solid #d5e2c9!important;color:#526c45!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.9)!important}
+.studio-icon{width:31px!important;height:31px!important;flex:0 0 31px!important}
+.auth-mark{padding:0!important;overflow:hidden!important}
+.auth-mark img{width:100%;height:100%;object-fit:cover;display:block}
+.studio-icon svg,.nav-symbol svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+/* Livelier always-on home assistant animation. */
+#workspacePage .tozra-home-orbit{isolation:isolate;transform:translateZ(0);animation:tozraOrbDrift 6.2s ease-in-out infinite}
+#workspacePage .tozra-home-orbit:before,#workspacePage .tozra-home-orbit:after{content:"";position:absolute;inset:-24px;border-radius:50%;border:1px solid rgba(139,174,105,.34);pointer-events:none;animation:tozraOrbHalo 5.2s ease-in-out infinite}
+#workspacePage .tozra-home-orbit:after{inset:-44px;border-style:dashed;border-color:rgba(139,174,105,.2);animation:tozraOrbHalo 8s ease-in-out infinite reverse}
+#workspacePage .tozra-orbit-ring{animation-duration:9s!important}
+#workspacePage .tozra-orbit-ring.ring-two{animation-duration:6.5s!important;animation-direction:reverse}
+#workspacePage .tozra-orbit-ring.ring-three{animation-duration:12s!important}
+#workspacePage .tozra-orbit-core{animation:tozraCoreLiving 3.1s ease-in-out infinite!important;box-shadow:0 0 28px rgba(173,210,131,.45),0 0 80px rgba(143,183,108,.25)!important}
+#workspacePage .tozra-core-symbol{animation:tozraStarTurn 8s linear infinite}
+#workspacePage .tozra-orbit-particle{animation:tozraParticleOrbit 7s linear infinite!important}
+#workspacePage .particle-two{animation-duration:9s!important;animation-direction:reverse}
+#workspacePage .particle-three{animation-duration:11s!important}
+@keyframes tozraOrbDrift{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(0,-10px,0) scale(1.025)}}
+@keyframes tozraOrbHalo{0%,100%{transform:scale(.94) rotate(0);opacity:.35}50%{transform:scale(1.08) rotate(16deg);opacity:.9}}
+@keyframes tozraCoreLiving{0%,100%{transform:scale(.91);filter:saturate(.9) brightness(.98)}50%{transform:scale(1.12);filter:saturate(1.25) brightness(1.13)}}
+@keyframes tozraStarTurn{to{transform:rotate(360deg) scale(1.08)}}
+@keyframes tozraParticleOrbit{0%{transform:rotate(0deg) translateX(0) scale(.8)}50%{transform:rotate(180deg) translateX(12px) scale(1.2)}100%{transform:rotate(360deg) translateX(0) scale(.8)}}
+/* Profile theme selector. */
+.profile-theme-picker{margin:18px 0 14px;padding:15px;border:1px solid var(--line,#e5e1d6);border-radius:14px;background:var(--paper,#fffefa)}
+.profile-theme-picker h4{font-size:12px;margin:0 0 12px;color:var(--ink,#202820)}
+.theme-choice-row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.theme-choice{position:relative;display:flex;align-items:center;gap:9px;padding:9px;border:1px solid var(--line,#ddd);border-radius:10px;background:var(--paper-2,#f7f6f0);color:var(--ink,#202820);font-size:11px;font-weight:650}
+.theme-choice i{display:none;margin-left:auto;color:#6b8c4f;font-style:normal;font-weight:900}
+.theme-choice.is-selected{border-color:#9bb77a;box-shadow:0 0 0 2px rgba(155,183,122,.16)}
+.theme-choice.is-selected i{display:block}
+.theme-preview{width:34px;height:27px;border-radius:7px;border:1px solid rgba(0,0,0,.1);display:block;flex:0 0 34px}
+.theme-preview-light{background:linear-gradient(135deg,#fbfaf4 0 55%,#dbe8ca 55%)}
+.theme-preview-dark{background:linear-gradient(135deg,#18211b 0 55%,#8da86a 55%)}
+/* Dark mode is a real palette, not an inverted filter. */
+html[data-tozra-theme="dark"]{color-scheme:dark;--canvas:#121713;--paper:#1a211c;--paper-2:#202922;--ink:#edf2e9;--muted:#a0ad9f;--line:#303c32;--sidebar:#101612;--sidebar-2:#18211a;--accent:#a8c77b;--accent-soft:#283523;--accent-deep:#c2d99b;--shadow:0 14px 36px rgba(0,0,0,.28);--cc-ink:#edf2e9;--cc-muted:#a0ad9f;--cc-paper:#121713;--cc-white:#1a211c;--cc-line:#303c32;--cc-forest:#26392e;--cc-olive:#a8c77b;--cc-lime:#c5d69a;}
+html[data-tozra-theme="dark"] body,html[data-tozra-theme="dark"] .app,html[data-tozra-theme="dark"] .main,html[data-tozra-theme="dark"] .content{background:#121713!important;color:#edf2e9!important}
+html[data-tozra-theme="dark"] .topbar{background:rgba(20,27,22,.94)!important;border-color:#303c32!important}
+html[data-tozra-theme="dark"] .topbar-title,html[data-tozra-theme="dark"] .status{color:#aab7a8!important}
+html[data-tozra-theme="dark"] .top-button,html[data-tozra-theme="dark"] .avatar{background:#202a22!important;color:#edf2e9!important;border-color:#39483b!important}
+html[data-tozra-theme="dark"] .sidebar{background:#101612!important;border-color:#303c32!important}
+html[data-tozra-theme="dark"] .sidebar .nav-item{color:#c3cec1!important}
+html[data-tozra-theme="dark"] .sidebar .nav-item.active{background:#2a3928!important;color:#e9f4d9!important}
+html[data-tozra-theme="dark"] .brand-wordmark,.html[data-tozra-theme="dark"] .brand-wordmark span{color:#edf2e9!important}
+html[data-tozra-theme="dark"] .pro-card,html[data-tozra-theme="dark"] .rail-panel,html[data-tozra-theme="dark"] .project-card,html[data-tozra-theme="dark"] .tool-card,html[data-tozra-theme="dark"] .quick-card,html[data-tozra-theme="dark"] .panel,html[data-tozra-theme="dark"] .composer,html[data-tozra-theme="dark"] .tasks-panel,html[data-tozra-theme="dark"] .ps-progress-card,html[data-tozra-theme="dark"] .ps-metric,html[data-tozra-theme="dark"] .cs-card,html[data-tozra-theme="dark"] .cs-builder-panel{background:#1a211c!important;color:#edf2e9!important;border-color:#303c32!important;box-shadow:0 8px 24px rgba(0,0,0,.18)!important}
+html[data-tozra-theme="dark"] .project-card h3,html[data-tozra-theme="dark"] .tool-card strong,html[data-tozra-theme="dark"] .quick-card strong,html[data-tozra-theme="dark"] .rail-heading h2,html[data-tozra-theme="dark"] .tasks-panel h2,html[data-tozra-theme="dark"] .projects-page-heading h1,html[data-tozra-theme="dark"] .projects-page-meta strong{color:#edf2e9!important}
+html[data-tozra-theme="dark"] .project-card p,html[data-tozra-theme="dark"] .tool-card small,html[data-tozra-theme="dark"] .quick-card small,html[data-tozra-theme="dark"] .tasks-panel p,html[data-tozra-theme="dark"] .projects-page-heading p{color:#a0ad9f!important}
+html[data-tozra-theme="dark"] input,html[data-tozra-theme="dark"] textarea,html[data-tozra-theme="dark"] select,html[data-tozra-theme="dark"] .modal-input,html[data-tozra-theme="dark"] .modal-select{background:#111813!important;color:#edf2e9!important;border-color:#3a493c!important}
+html[data-tozra-theme="dark"] input::placeholder,html[data-tozra-theme="dark"] textarea::placeholder{color:#819080!important}
+html[data-tozra-theme="dark"] .modal{background:#1a211c!important;color:#edf2e9!important;border-color:#39483b!important}
+html[data-tozra-theme="dark"] .modal-head,html[data-tozra-theme="dark"] .modal-head h2,html[data-tozra-theme="dark"] .form-label{color:#edf2e9!important;border-color:#303c32!important}
+html[data-tozra-theme="dark"] .profile-theme-picker{background:#202922!important;border-color:#39483b!important}
+html[data-tozra-theme="dark"] .theme-choice{background:#151c17!important;color:#edf2e9!important;border-color:#39483b!important}
+html[data-tozra-theme="dark"] .calendar-grid,html[data-tozra-theme="dark"] .calendar-day,html[data-tozra-theme="dark"] .tasks-list,html[data-tozra-theme="dark"] .agenda-list{color:#edf2e9!important}
+html[data-tozra-theme="dark"] .calendar-day{background:#202922!important;border-color:#354236!important}
+html[data-tozra-theme="dark"] .calendar-day.is-selected{background:#34472e!important;color:#f4ffe8!important}
+html[data-tozra-theme="dark"] .calendar-day small,html[data-tozra-theme="dark"] .tasks-empty,html[data-tozra-theme="dark"] .tasks-privacy{color:#a0ad9f!important}
+html[data-tozra-theme="dark"] .tozra-minimal-home{background:radial-gradient(ellipse at 50% 43%,rgba(147,184,108,.14),transparent 40%),#121713!important}
+html[data-tozra-theme="dark"] .tozra-minimal-home h1{color:#edf2e9!important}
+html[data-tozra-theme="dark"] .tozra-minimal-home p,html[data-tozra-theme="dark"] .tozra-minimal-caption,html[data-tozra-theme="dark"] .tozra-minimal-kicker{color:#a0ad9f!important}
+html[data-tozra-theme="dark"] .tozra-minimal-talk{background:#293a2b!important;color:#edf2e9!important;border-color:#536d45!important}
+html[data-tozra-theme="dark"] .mobile-dock{background:rgba(20,27,22,.97)!important;border-color:#344236!important}
+html[data-tozra-theme="dark"] .mobile-dock button{color:#b7c3b4!important}
+html[data-tozra-theme="dark"] .mobile-dock button.is-active{background:#2a3928!important;color:#e9f4d9!important}
+html[data-tozra-theme="dark"] .tozra-voice-screen,html[data-tozra-theme="dark"] #tozraVoiceScreen{background:radial-gradient(ellipse at 50% 20%,#26352a 0%,#151d18 70%,#101612 100%)!important;color:#edf2e9!important}
+html[data-tozra-theme="dark"] #tozraVoiceScreen .voice-screen-status,html[data-tozra-theme="dark"] #tozraVoiceScreen .voice-screen-transcript,html[data-tozra-theme="dark"] #tozraVoiceScreen .voice-screen-hint{color:#d2dfcf!important}
+html[data-tozra-theme="dark"] #tozraVoiceScreen .voice-screen-control{background:#26352a!important;color:#edf2e9!important;border-color:#52674b!important}
+@media(prefers-reduced-motion:reduce){#workspacePage .tozra-home-orbit,#workspacePage .tozra-home-orbit:before,#workspacePage .tozra-home-orbit:after,#workspacePage .tozra-orbit-core,#workspacePage .tozra-core-symbol,#workspacePage .tozra-orbit-particle,.animal-avatar img{animation:none!important}}
+</style>
+
+
+<style id="tozra-v26-voice-motion-fix">
+.profile-animal-avatar{width:76px!important;height:76px!important;border-width:3px!important}
+.profile-animal-avatar img{width:100%;height:100%;object-fit:cover}
+#tozraVoiceScreen .voice-orb{transform:scale(var(--voice-scale,1));transition:transform .09s linear}
+#tozraVoiceScreen.is-speaking .voice-orb{filter:saturate(1.2) brightness(1.08)}
+#tozraVoiceScreen.is-listening .voice-orb{filter:saturate(1.05)}
+#tozraVoiceScreen .voice-orb-ring{transform:scale(var(--voice-ring-scale,1))}
+</style>
+
 </body>
 </html>

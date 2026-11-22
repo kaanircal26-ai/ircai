@@ -14,7 +14,7 @@
       label.textContent = message;
       const screen = $("tozraVoiceScreen");
       if (screen) {
-        screen.classList.toggle("is-speaking", /konuşuyor|yanıt hazırlıyor/i.test(message));
+        screen.classList.toggle("is-speaking", /konuşuyor/i.test(message));
         screen.classList.toggle("is-listening", /dinliyorum|seni dinliyorum|hazır/i.test(message));
         screen.classList.toggle("is-thinking", /hazırlıyor|bağlanıyor/i.test(message));
       }
@@ -42,6 +42,38 @@
       screen.hidden = true;
       voiceScreenHideTimer = null;
     }, window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? 0 : 360);
+  }
+
+  function attachVoiceVisualizer(session, stream) {
+    try {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass || !stream) return;
+      const context = new AudioContextClass();
+      const source = context.createMediaStreamSource(stream);
+      const analyser = context.createAnalyser();
+      analyser.fftSize = 256;
+      analyser.smoothingTimeConstant = 0.78;
+      source.connect(analyser);
+      const samples = new Uint8Array(analyser.frequencyBinCount);
+      session.visualContext = context;
+      session.visualAnalyser = analyser;
+      if (context.state === "suspended") context.resume().catch(() => {});
+      const tick = () => {
+        if (voiceSession !== session || !session.visualAnalyser) return;
+        analyser.getByteFrequencyData(samples);
+        let total = 0;
+        for (let i = 0; i < samples.length; i++) total += samples[i];
+        const level = Math.min(1, (total / samples.length) / 110);
+        const screen = $("tozraVoiceScreen");
+        if (screen) {
+          screen.style.setProperty("--voice-level", level.toFixed(3));
+          screen.style.setProperty("--voice-scale", (1 + level * .22).toFixed(3));
+          screen.style.setProperty("--voice-ring-scale", (1 + level * .14).toFixed(3));
+        }
+        session.visualFrame = requestAnimationFrame(tick);
+      };
+      session.visualFrame = requestAnimationFrame(tick);
+    } catch (error) { console.debug("TOZRA ses görselleştirme kullanılamıyor:", error); }
   }
 
   function getVoiceTarget() {
@@ -338,6 +370,14 @@
         session.audioElement.srcObject = null;
         session.audioElement.remove();
       }
+      if (session.visualFrame) cancelAnimationFrame(session.visualFrame);
+      if (session.visualContext && session.visualContext.state !== "closed") await session.visualContext.close();
+      const screen = $("tozraVoiceScreen");
+      if (screen) {
+        screen.style.setProperty("--voice-level", "0");
+        screen.style.setProperty("--voice-scale", "1");
+        screen.style.setProperty("--voice-ring-scale", "1");
+      }
 
     } catch (error) {
       console.warn(
@@ -432,6 +472,7 @@
 
         return;
       }
+      attachVoiceVisualizer(session, session.localStream);
 
       /*
        * WebRTC bağlantısı.
@@ -684,6 +725,7 @@
   const generalButton = $("voiceButton");
   const projectButton = $("projectVoiceButton");
   const startFromButton = () => { showVoiceScreen(); startRealtimeVoice(); };
+  window.startTozraVoiceFromHome = startFromButton;
   if (generalButton) {
     generalButton.onclick = startFromButton;
     generalButton.textContent = "🎙 Sesli sohbet";
