@@ -350,6 +350,23 @@
 
     voiceSession = null;
 
+    if (session.browserFallback) {
+      try {
+        if (session.recognition) {
+          session.recognition.onend = null;
+          session.recognition.onerror = null;
+          session.recognition.onresult = null;
+          session.recognition.stop();
+        }
+        if (window.speechSynthesis) window.speechSynthesis.cancel();
+      } catch (error) {
+        console.warn("Tarayıcı ses oturumu kapatılırken:", error);
+      }
+      updateButton(session.target, false);
+      if (showMessage) setStatus("Sesli görüşme sona erdi.", session.target.status);
+      return;
+    }
+
     try {
       if (session.dataChannel) {
         session.dataChannel.close();
@@ -394,6 +411,157 @@
         session.target.status
       );
     }
+  }
+
+
+  const BrowserSpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  function speakBrowserReply(text, session) {
+    if (!window.speechSynthesis || !text) {
+      setStatus("Yanıt hazır. Tarayıcın sesli okumayı desteklemiyor.", session.target.status);
+      return;
+    }
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "tr-TR";
+    utterance.rate = 1;
+    utterance.pitch = 1;
+    utterance.onstart = () => setStatus("TOZRA konuşuyor…", session.target.status);
+    utterance.onend = () => {
+      if (voiceSession === session && !session.muted) {
+        setStatus("Seni dinliyorum…", session.target.status);
+        startBrowserRecognition(session);
+      }
+    };
+    utterance.onerror = () => {
+      if (voiceSession === session) setStatus("Yanıt hazır. Tekrar konuşabilirsin.", session.target.status);
+    };
+    window.speechSynthesis.speak(utterance);
+  }
+
+  async function answerBrowserVoice(transcript, session) {
+    const prompt = String(transcript || "").trim();
+    if (!prompt || voiceSession !== session) return;
+    setStatus("TOZRA yanıt hazırlıyor…", session.target.status);
+    const history = session.scope === "project"
+      ? (projects.find(item => item.id === session.projectId)?.messages || []).slice(-20)
+      : (typeof conversation !== "undefined" ? conversation : []).slice(-20);
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...(await window.TozraAuth.authHeaders()) },
+        body: JSON.stringify({
+          prompt,
+          history,
+          images: [],
+          videoFrames: [],
+          personalMemory: getPersonalMemory(),
+          agentMode: false
+        })
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || !data.success) throw new Error(data.error || "TOZRA yanıt veremedi.");
+      if (voiceSession !== session) return;
+      addVoiceMessage(session, "user", prompt, `browser-user-${Date.now()}`);
+      addVoiceMessage(session, "assistant", data.answer || "Şu an yanıt oluşturamadım.", `browser-assistant-${Date.now()}`);
+      const transcriptNode = $("voiceScreenTranscript");
+      if (transcriptNode) transcriptNode.textContent = data.answer || "Yanıt oluşturulamadı.";
+      speakBrowserReply(data.answer || "Şu an yanıt oluşturamadım.", session);
+    } catch (error) {
+      console.error("TOZRA ücretsiz sesli sohbet:", error);
+      setStatus("Yanıt alınamadı: " + (error.message || "Bağlantı hatası"), session.target.status);
+      if (voiceSession === session) startBrowserRecognition(session);
+    }
+  }
+
+  function startBrowserRecognition(session) {
+    if (voiceSession !== session || session.muted || session.processing) return;
+    if (!BrowserSpeechRecognition) {
+      setStatus("Bu tarayıcı ücretsiz ses tanımayı desteklemiyor. Chrome veya Edge deneyebilirsin.", session.target.status);
+      return;
+    }
+    try {
+      const recognition = new BrowserSpeechRecognition();
+      session.recognition = recognition;
+      recognition.lang = "tr-TR";
+      recognition.continuous = false;
+      recognition.interimResults = true;
+      recognition.maxAlternatives = 1;
+      let finalTranscript = "";
+      recognition.onstart = () => setStatus("Seni dinliyorum…", session.target.status);
+      recognition.onresult = event => {
+        let interim = "";
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const piece = event.results[i][0]?.transcript || "";
+          if (event.results[i].isFinal) finalTranscript += piece;
+          else interim += piece;
+        }
+        const node = $("voiceScreenTranscript");
+        if (node) node.textContent = finalTranscript || interim || "Seni dinliyorum…";
+      };
+      recognition.onerror = event => {
+        if (voiceSession !== session) return;
+        if (event.error === "not-allowed" || event.error === "service-not-allowed") {
+          setStatus("Mikrofon izni verilmedi. Tarayıcı ayarlarından mikrofon iznini aç.", session.target.status);
+        } else if (event.error !== "no-speech" && event.error !== "aborted") {
+          setStatus("Ses tanıma hatası: " + event.error, session.target.status);
+        }
+      };
+      recognition.onend = () => {
+        if (voiceSession !== session) return;
+        if (finalTranscript.trim()) {
+          session.processing = true;
+          answerBrowserVoice(finalTranscript.trim(), session).finally(() => { session.processing = false; });
+        } else if (!session.muted && !session.processing) {
+          setStatus("Ses algılanmadı. Tekrar konuşabilirsin.", session.target.status);
+          setTimeout(() => startBrowserRecognition(session), 350);
+        }
+      };
+      recognition.start();
+    } catch (error) {
+      setStatus("Mikrofon başlatılamadı: " + (error.message || "Bilinmeyen hata"), session.target.status);
+    }
+  }
+
+  async function startBrowserVoice() {
+    let target;
+    try {
+      target = getVoiceTarget();
+      if (!target.button || !target.status) throw new Error("Sesli sohbet arayüzü bulunamadı.");
+    } catch (error) { alert(error.message); return; }
+
+    if (!window.TozraAuth?.getSession?.()?.access_token) {
+      setStatus("Sesli sohbet için önce hesabına giriş yapmalısın.", target.status);
+      if (typeof window.showModal === "function") window.showModal("login");
+      return;
+    }
+    if (!BrowserSpeechRecognition) {
+      showVoiceScreen();
+      setStatus("Ücretsiz ses tanıma bu tarayıcıda desteklenmiyor. Chrome veya Edge kullanabilirsin.", target.status);
+      return;
+    }
+    if (!window.speechSynthesis) {
+      showVoiceScreen();
+      setStatus("Tarayıcının sesli yanıt özelliği desteklenmiyor.", target.status);
+      return;
+    }
+    showVoiceScreen();
+    const session = {
+      browserFallback: true,
+      target,
+      scope: target.scope,
+      projectId: target.projectId,
+      savedMessages: new Set(),
+      muted: false,
+      processing: false,
+      recognition: null
+    };
+    voiceSession = session;
+    updateButton(target, true);
+    $("voiceScreenMic")?.classList.remove("is-muted");
+    $("voiceScreenMic")?.setAttribute("aria-label", "Mikrofonu kapat");
+    setStatus("Ücretsiz sesli sohbet hazırlanıyor…", target.status);
+    startBrowserRecognition(session);
   }
 
   async function startRealtimeVoice() {
@@ -769,8 +937,7 @@
       return;
     }
 
-    showVoiceScreen();
-    await startRealtimeVoice();
+    await startBrowserVoice();
   };
   window.startTozraVoiceFromHome = startFromButton;
   const homeVoiceButton = $("homeVoiceButton");
@@ -796,6 +963,20 @@
   $("voiceScreenClose")?.addEventListener("click", finishAndClose);
   $("voiceScreenClose2")?.addEventListener("click", finishAndClose);
   $("voiceScreenMic")?.addEventListener("click", () => {
+    if (voiceSession?.browserFallback) {
+      const session = voiceSession;
+      session.muted = !session.muted;
+      if (session.muted) {
+        try { session.recognition?.stop(); } catch {}
+        window.speechSynthesis?.cancel();
+      } else {
+        startBrowserRecognition(session);
+      }
+      $("voiceScreenMic").classList.toggle("is-muted", session.muted);
+      $("voiceScreenMic").setAttribute("aria-label", session.muted ? "Mikrofonu aç" : "Mikrofonu kapat");
+      setStatus(session.muted ? "Mikrofon kapalı." : "Mikrofon açık. Seni dinliyorum…", session.target.status);
+      return;
+    }
     if (!voiceSession?.localStream) return;
     const tracks = voiceSession.localStream.getAudioTracks();
     const currentlyEnabled = tracks.some(track => track.enabled);

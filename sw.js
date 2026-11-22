@@ -12,7 +12,7 @@ const APP_SHELL = [
   "/manifest.json",
   "/apple-touch-icon.PNG",
   "/tozra-logo.svg",
-  "/voice.js?v=16"
+  "/voice.js?v=17"
 ];
 
 self.addEventListener("install", event => {
