@@ -2315,6 +2315,13 @@ body.voice-screen-open{overflow:hidden}
 @media(prefers-reduced-motion:reduce){#splash:before,#splash:after,#splash .wave-ribbon,#splash .splash-mark,#splash .splash-mark:after,#splash .splash-particle,#splash .loader-bar,#splash .splash-inner>*{animation:none!important;opacity:1!important;transform:none!important;clip-path:none!important}}
 </style>
 
+
+<style id="tozra-final-voice-avatar-visibility">
+#homeVoiceButton{display:inline-flex!important;visibility:visible!important;opacity:1!important;align-items:center!important;justify-content:center!important;gap:12px!important;min-height:54px!important;cursor:pointer!important;pointer-events:auto!important;position:relative!important;z-index:5!important}
+#profileButton.animal-avatar{display:grid!important;place-items:center!important;overflow:hidden!important;width:40px!important;height:40px!important;min-width:40px!important;min-height:40px!important;padding:0!important;border-radius:50%!important;background:#edf2e7!important;border:2px solid #cbdcbd!important}
+#profileButton.animal-avatar img{display:block!important;visibility:visible!important;opacity:1!important;width:100%!important;height:100%!important;object-fit:contain!important}
+</style>
+
 </head>
 
 <body>
@@ -2881,13 +2888,7 @@ const TozraAuth = (() => {
   session = null;
  }
  async function authHeaders() {
-  await init();
-  if (!client) throw new Error(configError || "Hesap servisi hazır değil.");
-  const { data, error } = await client.auth.getSession();
-  if (error) throw error;
-  session = data?.session || null;
-  updateAccountUI();
-  if (!session?.access_token) throw new Error("Oturum bulunamadı. Lütfen Google hesabınla yeniden giriş yap.");
+  if (!session?.access_token) throw new Error("Oturum bulunamadı. Lütfen yeniden giriş yap.");
   return { Authorization: `Bearer ${session.access_token}` };
  }
  return { init, userId, getClient, getSession, getError, signUp, signIn, signInWithGoogle, resetPassword, resendConfirmation, updatePassword, signOut, authHeaders, updateAccountUI, ensureAvatar, avatarForCurrentUser };
@@ -3250,7 +3251,7 @@ document.querySelectorAll('[data-home-prompt]').forEach(button=>{
  button.addEventListener('click',()=>startChatWithPrompt(button.dataset.homePrompt));
 });
 $("homeProfileButton")?.addEventListener("click",()=>$("profileButton")?.click());
-$("homeVoiceButton")?.addEventListener("click",()=>{ if(window.startTozraVoiceFromHome){window.startTozraVoiceFromHome();return;} openGeneralChat(); window.setTimeout(()=>$("voiceButton")?.click(),450); });
+/* Home voice button is wired once by voice.js after auth initialization. */
 
 /* PROJE SİSTEMİ */
 function updateDashboardStats(){
@@ -5011,7 +5012,7 @@ renderTasksCalendar();
  </div>
 </div>
 
-<script src="/voice.js?v=14"></script>
+<script src="/voice.js?v=15"></script>
 <script>
 (()=>{
  const splash=document.getElementById('splash');
@@ -5135,14 +5136,6 @@ html[data-tozra-theme="dark"] #tozraVoiceScreen .voice-screen-control{background
 html[data-tozra-theme="dark"] .google-auth-button{background:#202922;color:#edf2e9;border-color:#3b4b3d}
 html[data-tozra-theme="dark"] .auth-divider:before,html[data-tozra-theme="dark"] .auth-divider:after{background:#3a473b}
 html[data-tozra-theme="dark"] .auth-divider{color:#a7b5a5}
-</style>
-
-
-
-<style id="tozra-avatar-render-fix">
-#profileButton.animal-avatar{width:38px!important;height:38px!important;min-width:38px!important;min-height:38px!important;padding:0!important;overflow:hidden!important;display:grid!important;place-items:center!important;border-radius:50%!important;background:#edf2e7!important;border:2px solid #d6e4c8!important}
-#profileButton.animal-avatar img{width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;display:block!important;object-fit:contain!important;visibility:visible!important;opacity:1!important}
-.animal-avatar img{pointer-events:none}
 </style>
 
 </body>
