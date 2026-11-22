@@ -422,7 +422,17 @@
       return;
     }
     window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
+    // Emojileri yalnızca seslendirme metninden çıkar; ekrandaki yanıt aynen kalır.
+    const speechText = String(text)
+      .replace(/[\p{Extended_Pictographic}\uFE0F\u200D\u{1F1E6}-\u{1F1FF}\u{1F3FB}-\u{1F3FF}\u20E3]/gu, " ")
+      .replace(/[ \\t]{2,}/g, " ")
+      .replace(/\\s+([,.!?;:])/g, "$1")
+      .trim();
+    if (!speechText) {
+      if (voiceSession === session && !session.muted) startBrowserRecognition(session);
+      return;
+    }
+    const utterance = new SpeechSynthesisUtterance(speechText);
     utterance.lang = "tr-TR";
     utterance.rate = 1;
     utterance.pitch = 1;
