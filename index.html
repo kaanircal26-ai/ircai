@@ -3646,12 +3646,12 @@ function renderProjectMessages(){
  const area=$("projectMessages");
  area.innerHTML="";
  if(!p)return;
- p.messages.forEach(m=>addMessage(area,m.role,m.content));
+ p.messages.forEach(m=>addMessage(area,m.role,m.content,m.sources||[]));
 }
 function renderGeneralMessages(){
  $("messages").innerHTML="";
  $("welcome").style.display=conversation.length?"none":"block";
- conversation.forEach(m=>addMessage($("messages"),m.role,m.content));
+ conversation.forEach(m=>addMessage($("messages"),m.role,m.content,m.sources||[]));
 }
 
 /* GENEL SOHBET GEÇMİŞİ */
