@@ -1,4 +1,4 @@
-/* TOZRA Service Worker — v20
+/* TOZRA Service Worker — v21
    - Kurulumda tek bir eksik dosya yüzünden tüm yükleme iptal olmaz.
    - Yalnızca TOZRA önbellekleri temizlenir.
    - API ve kullanıcıya özel yanıtlar önbelleğe alınmaz.
@@ -20,7 +20,7 @@ const APP_SHELL = [
   "/avatars/dog.svg",
   "/avatars/penguin.svg",
   "/avatars/frog.svg",
-  "/voice.js?v=12"
+  "/voice.js?v=13"
 ];
 
 self.addEventListener("install", event => {

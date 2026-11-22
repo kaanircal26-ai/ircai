@@ -418,9 +418,16 @@
       return;
     }
 
-    if (!window.TozraAuth?.getSession?.()) {
-      setStatus("Sesli sohbet için önce hesabına giriş yapmalısın.", target.status);
+    try {
+      // OAuth redirect/session restoration is asynchronous. Wait for the
+      // shared auth client before deciding whether the user is signed in.
+      await window.TozraAuth?.init?.();
+      const headers = await window.TozraAuth?.authHeaders?.();
+      if (!headers?.Authorization) throw new Error("Oturum bulunamadı. Google hesabınla yeniden giriş yap.");
+    } catch (authError) {
+      setStatus("Sesli sohbet için hesabını doğrulaman gerekiyor.", target.status);
       if (typeof window.showModal === "function") window.showModal("login");
+      console.warn("TOZRA voice auth:", authError);
       return;
     }
 
