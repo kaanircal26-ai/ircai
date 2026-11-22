@@ -2893,6 +2893,8 @@ const TozraAuth = (() => {
  }
  return { init, userId, getClient, getSession, getError, signUp, signIn, signInWithGoogle, resetPassword, resendConfirmation, updatePassword, signOut, authHeaders, updateAccountUI, ensureAvatar, avatarForCurrentUser };
 })();
+// voice.js ayrı dosyada çalıştığı için hesap servisini global alana aç.
+window.TozraAuth = TozraAuth;
 
 function scopedStorageKey(key) {
  const id = TozraAuth.userId();
@@ -5012,7 +5014,7 @@ renderTasksCalendar();
  </div>
 </div>
 
-<script src="/voice.js?v=15"></script>
+<script src="/voice.js?v=16"></script>
 <script>
 (()=>{
  const splash=document.getElementById('splash');
