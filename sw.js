@@ -6,7 +6,7 @@
 "use strict";
 
 const CACHE_PREFIX = "tozra-";
-const CACHE_NAME = "tozra-v21";
+const CACHE_NAME = "tozra-v22";
 const APP_SHELL = [
   "/",
   "/manifest.json",
@@ -20,7 +20,7 @@ const APP_SHELL = [
   "/avatars/dog.svg",
   "/avatars/penguin.svg",
   "/avatars/frog.svg",
-  "/voice.js?v=13"
+  "/voice.js?v=14"
 ];
 
 self.addEventListener("install", event => {

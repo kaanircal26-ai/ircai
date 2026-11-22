@@ -2881,7 +2881,13 @@ const TozraAuth = (() => {
   session = null;
  }
  async function authHeaders() {
-  if (!session?.access_token) throw new Error("Oturum bulunamadı. Lütfen yeniden giriş yap.");
+  await init();
+  if (!client) throw new Error(configError || "Hesap servisi hazır değil.");
+  const { data, error } = await client.auth.getSession();
+  if (error) throw error;
+  session = data?.session || null;
+  updateAccountUI();
+  if (!session?.access_token) throw new Error("Oturum bulunamadı. Lütfen Google hesabınla yeniden giriş yap.");
   return { Authorization: `Bearer ${session.access_token}` };
  }
  return { init, userId, getClient, getSession, getError, signUp, signIn, signInWithGoogle, resetPassword, resendConfirmation, updatePassword, signOut, authHeaders, updateAccountUI, ensureAvatar, avatarForCurrentUser };
@@ -5005,7 +5011,7 @@ renderTasksCalendar();
  </div>
 </div>
 
-<script src="/voice.js?v=13"></script>
+<script src="/voice.js?v=14"></script>
 <script>
 (()=>{
  const splash=document.getElementById('splash');
@@ -5129,6 +5135,14 @@ html[data-tozra-theme="dark"] #tozraVoiceScreen .voice-screen-control{background
 html[data-tozra-theme="dark"] .google-auth-button{background:#202922;color:#edf2e9;border-color:#3b4b3d}
 html[data-tozra-theme="dark"] .auth-divider:before,html[data-tozra-theme="dark"] .auth-divider:after{background:#3a473b}
 html[data-tozra-theme="dark"] .auth-divider{color:#a7b5a5}
+</style>
+
+
+
+<style id="tozra-avatar-render-fix">
+#profileButton.animal-avatar{width:38px!important;height:38px!important;min-width:38px!important;min-height:38px!important;padding:0!important;overflow:hidden!important;display:grid!important;place-items:center!important;border-radius:50%!important;background:#edf2e7!important;border:2px solid #d6e4c8!important}
+#profileButton.animal-avatar img{width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;display:block!important;object-fit:contain!important;visibility:visible!important;opacity:1!important}
+.animal-avatar img{pointer-events:none}
 </style>
 
 </body>

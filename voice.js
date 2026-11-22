@@ -418,9 +418,20 @@
       return;
     }
 
-    if (!window.TozraAuth?.getSession?.()) {
-      setStatus("Sesli sohbet için önce hesabına giriş yapmalısın.", target.status);
-      if (typeof window.showModal === "function") window.showModal("login");
+    // Always await Supabase session restoration here too. The click handler
+    // already awaits init(), but this function is also called from other paths.
+    try {
+      if (!window.TozraAuth) throw new Error("Hesap servisi yüklenemedi.");
+      await window.TozraAuth.init();
+      const liveSession = window.TozraAuth.getSession();
+      if (!liveSession?.access_token) {
+        setStatus("Sesli sohbet için önce hesabına giriş yapmalısın.", target.status);
+        if (typeof window.showModal === "function") window.showModal("login");
+        return;
+      }
+    } catch (authError) {
+      console.error("TOZRA sesli sohbet auth kontrolü:", authError);
+      setStatus("Hesap oturumu doğrulanamadı: " + (authError?.message || "Bilinmeyen hata"), target.status);
       return;
     }
 
