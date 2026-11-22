@@ -2796,9 +2796,10 @@ const TozraAuth = (() => {
   const button = document.getElementById("profileButton");
   if (button) {
    const animal = avatarForCurrentUser();
-   button.innerHTML = `<img src="/avatars/${animal}.svg" alt="${animal} avatarı">`;
+   button.innerHTML = `<img src="/avatars/${animal}.svg" alt="${animal} avatarı" loading="eager" onerror="this.onerror=null;this.src='/avatars/cat.svg'">`;
    button.title = session?.user?.email || "Hesap";
    button.setAttribute("aria-label", session?.user?.email ? "Profil" : "Misafir profil");
+   button.dataset.avatar = animal;
   }
  }
 
@@ -2826,6 +2827,18 @@ const TozraAuth = (() => {
   session = data.session || null;
   return data;
  }
+ async function signInWithGoogle() {
+  if (!client) throw new Error(configError || "Supabase bağlantısı hazır değil.");
+  const { data, error } = await client.auth.signInWithOAuth({
+   provider: "google",
+   options: {
+    redirectTo: `${window.location.origin}/`,
+    queryParams: { prompt: "select_account" }
+   }
+  });
+  if (error) throw error;
+  return data;
+ }
  async function resetPassword(email) {
   if (!client) throw new Error(configError || "Supabase bağlantısı hazır değil.");
   const { error } = await client.auth.resetPasswordForEmail(email.trim().toLowerCase(), { redirectTo: `${window.location.origin}/` });
@@ -2851,7 +2864,7 @@ const TozraAuth = (() => {
   if (!session?.access_token) throw new Error("Oturum bulunamadı. Lütfen yeniden giriş yap.");
   return { Authorization: `Bearer ${session.access_token}` };
  }
- return { init, userId, getClient, getSession, getError, signUp, signIn, resetPassword, resendConfirmation, updatePassword, signOut, authHeaders, updateAccountUI, ensureAvatar, avatarForCurrentUser };
+ return { init, userId, getClient, getSession, getError, signUp, signIn, signInWithGoogle, resetPassword, resendConfirmation, updatePassword, signOut, authHeaders, updateAccountUI, ensureAvatar, avatarForCurrentUser };
 })();
 
 function scopedStorageKey(key) {
@@ -4167,6 +4180,8 @@ function showModal(type){
     <input class="modal-input" id="loginPassword" type="password" placeholder="Şifren" autocomplete="current-password" required>
     <button class="primary" id="loginSubmit">Giriş yap</button>
    </form>
+   <div class="auth-divider"><span>veya</span></div>
+   <button class="google-auth-button" id="googleLogin" type="button"><span class="google-g-mark" aria-hidden="true">G</span> Google ile devam et</button>
    <button class="secondary" id="forgotPassword">Şifremi unuttum</button>
    <button class="secondary" id="registerSwitch">Yeni hesap oluştur</button>
    <div class="notice" id="authNotice">${escapeHTML(TozraAuth.getError() || "Hesabına e-posta adresin ve şifrenle giriş yap.")}</div>`;
@@ -4185,6 +4200,12 @@ function showModal(type){
    catch(error){notice.textContent=error.message||"Bağlantı gönderilemedi.";}
    finally{button.disabled=false;button.textContent="Şifremi unuttum";}
   };
+  $("googleLogin").onclick=async()=>{
+   const button=$("googleLogin"), notice=$("authNotice");
+   button.disabled=true;button.textContent="Google bağlantısı açılıyor…";
+   try{await TozraAuth.signInWithGoogle();}
+   catch(error){notice.textContent=error.message||"Google ile giriş başlatılamadı.";button.disabled=false;button.innerHTML='<span class="google-g-mark" aria-hidden="true">G</span> Google ile devam et';}
+  };
   $("registerSwitch").onclick=()=>showModal("register");
  }
  if(type==="register"){
@@ -4201,6 +4222,8 @@ function showModal(type){
     <small style="display:block;color:#758478;font-size:10px;margin:-4px 0 10px">En az 8 karakter kullan. E-posta doğrulaması gerekebilir.</small>
     <button class="primary" id="registerSubmit">Ücretsiz hesap oluştur</button>
    </form>
+   <div class="auth-divider"><span>veya</span></div>
+   <button class="google-auth-button" id="googleRegister" type="button"><span class="google-g-mark" aria-hidden="true">G</span> Google ile kayıt ol</button>
    <button class="secondary" id="loginSwitch">Zaten hesabım var</button>
    <button class="secondary" id="resendConfirmation" type="button">Doğrulama e-postasını tekrar gönder</button>
    <div class="notice" id="authNotice">${escapeHTML(TozraAuth.getError() || "Kayıt sonrası doğrulama bağlantısını e-postandan açarak hesabını etkinleştir.")}</div>`;
@@ -4223,6 +4246,12 @@ function showModal(type){
    try{await TozraAuth.resendConfirmation(email);notice.textContent="Doğrulama e-postası yeniden gönderildi. Gelen kutunu ve spam klasörünü kontrol et.";}
    catch(error){notice.textContent=error.message||"Doğrulama e-postası gönderilemedi.";}
    finally{button.disabled=false;button.textContent="Doğrulama e-postasını tekrar gönder";}
+  };
+  $("googleRegister").onclick=async()=>{
+   const button=$("googleRegister"), notice=$("authNotice");
+   button.disabled=true;button.textContent="Google bağlantısı açılıyor…";
+   try{await TozraAuth.signInWithGoogle();}
+   catch(error){notice.textContent=error.message||"Google ile kayıt başlatılamadı.";button.disabled=false;button.innerHTML='<span class="google-g-mark" aria-hidden="true">G</span> Google ile kayıt ol';}
   };
   $("loginSwitch").onclick=()=>showModal("login");
  }
@@ -4956,7 +4985,7 @@ renderTasksCalendar();
  </div>
 </div>
 
-<script src="/voice.js?v=11"></script>
+<script src="/voice.js?v=12"></script>
 <script>
 (()=>{
  const splash=document.getElementById('splash');
@@ -5058,6 +5087,28 @@ html[data-tozra-theme="dark"] #tozraVoiceScreen .voice-screen-control{background
 #tozraVoiceScreen.is-speaking .voice-orb{filter:saturate(1.2) brightness(1.08)}
 #tozraVoiceScreen.is-listening .voice-orb{filter:saturate(1.05)}
 #tozraVoiceScreen .voice-orb-ring{transform:scale(var(--voice-ring-scale,1))}
+</style>
+
+
+<style id="tozra-v27-fix-pack">
+/* OAuth action */
+.google-auth-button{width:100%;min-height:46px;display:flex;align-items:center;justify-content:center;gap:11px;margin:10px 0 12px;padding:10px 14px;border:1px solid #dce2d9;border-radius:12px;background:#fff;color:#263329;font-size:12px;font-weight:750;box-shadow:0 3px 12px rgba(30,50,34,.05);transition:transform .16s ease,border-color .16s ease}
+.google-auth-button:hover{border-color:#a8bf94;transform:translateY(-1px)}
+.google-auth-button:disabled{opacity:.65;cursor:wait;transform:none}
+.google-g-mark{font:800 19px/1 Arial,sans-serif;background:conic-gradient(from -45deg,#4285f4 0 25%,#34a853 25% 48%,#fbbc05 48% 72%,#ea4335 72% 88%,#4285f4 88%);background-clip:text;-webkit-background-clip:text;color:transparent}
+.auth-divider{display:flex;align-items:center;gap:10px;margin:13px 0;color:#929b90;font-size:10px}
+.auth-divider:before,.auth-divider:after{content:"";height:1px;flex:1;background:#e6e9e2}
+.animal-avatar{width:36px!important;height:36px!important;min-width:36px!important;aspect-ratio:1/1!important;line-height:0!important}
+.animal-avatar img{width:100%!important;height:100%!important;max-width:none!important;object-fit:cover!important;border-radius:50%!important}
+.profile-animal-avatar{width:82px!important;height:82px!important;margin:0 auto 10px!important}
+/* Shared icon language across desktop side navigation, mobile dock and creative tools. */
+#sidebar .nav-symbol,#sidebar .studio-icon,.mobile-dock .dock-icon,.cs-card-icon,.cs-builder-icon,.mode-icon,.rail-heading-icon,.tool-icon{width:34px;min-width:34px;height:34px;display:inline-grid;place-items:center;border-radius:11px;background:linear-gradient(145deg,#edf4e5,#dce9d0);border:1px solid #d3e2c7;color:#547047;box-shadow:inset 0 1px 0 rgba(255,255,255,.9);font-size:15px}
+#sidebar .nav-symbol svg,.mobile-dock .dock-icon svg,.cs-card-icon svg,.cs-builder-icon svg,.mode-icon svg,.rail-heading-icon svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#sidebar .nav-item.active .nav-symbol{background:#d8e8c8;border-color:#bfd5ad;color:#365333}
+@media(max-width:760px){.google-auth-button{min-height:48px}.animal-avatar{width:36px!important;height:36px!important}}
+html[data-tozra-theme="dark"] .google-auth-button{background:#202922;color:#edf2e9;border-color:#3b4b3d}
+html[data-tozra-theme="dark"] .auth-divider:before,html[data-tozra-theme="dark"] .auth-divider:after{background:#3a473b}
+html[data-tozra-theme="dark"] .auth-divider{color:#a7b5a5}
 </style>
 
 </body>

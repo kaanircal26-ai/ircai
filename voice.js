@@ -418,6 +418,12 @@
       return;
     }
 
+    if (!window.TozraAuth?.getSession?.()) {
+      setStatus("Sesli sohbet için önce hesabına giriş yapmalısın.", target.status);
+      if (typeof window.showModal === "function") window.showModal("login");
+      return;
+    }
+
     if (
       !navigator.mediaDevices?.getUserMedia ||
       !window.RTCPeerConnection
@@ -503,9 +509,17 @@
 
           audio.autoplay = true;
           audio.playsInline = true;
+          audio.muted = false;
+          audio.volume = 1;
           audio.setAttribute("playsinline", "");
+          audio.setAttribute("webkit-playsinline", "");
           audio.setAttribute("autoplay", "");
-          audio.style.display = "none";
+          audio.setAttribute("aria-label", "TOZRA ses çıkışı");
+          audio.style.position = "fixed";
+          audio.style.width = "1px";
+          audio.style.height = "1px";
+          audio.style.opacity = "0";
+          audio.style.pointerEvents = "none";
 
           document.body.appendChild(audio);
 
@@ -538,6 +552,13 @@
       /*
        * Bağlantı durumları.
        */
+      session.pc.oniceconnectionstatechange = () => {
+        const iceState = session.pc?.iceConnectionState;
+        if (iceState === "failed") {
+          setStatus("Ses bağlantısı kurulamadı. Ağını veya VPN ayarını kontrol edip tekrar dene.", target.status);
+        }
+      };
+
       session.pc.onconnectionstatechange = () => {
         const state =
           session.pc?.connectionState;
@@ -575,6 +596,12 @@
           "TOZRA hazır. Seni dinliyorum…",
           target.status
         );
+        // The first greeting confirms that both audio directions are alive.
+        try {
+          session.dataChannel.send(JSON.stringify({ type: "response.create" }));
+        } catch (error) {
+          console.warn("TOZRA ilk sesli yanıt isteği gönderilemedi:", error);
+        }
       };
 
       session.dataChannel.onmessage = message => {
@@ -713,18 +740,25 @@
         await stopRealtimeVoice(false);
       }
 
-      setStatus(
-        "Sesli sohbet başlatılamadı: " +
-          (error.message || "Bilinmeyen hata"),
-        target.status
-      );
+      const readableError = error?.message || "Bilinmeyen hata";
+      setStatus("Sesli sohbet başlatılamadı: " + readableError, target.status);
+      const transcript = $("voiceScreenTranscript");
+      if (transcript) transcript.textContent = readableError;
     }
   }
 
   /* Mevcut mikrofon düğmelerini tam ekran görüşme arayüzüne bağla. */
   const generalButton = $("voiceButton");
   const projectButton = $("projectVoiceButton");
-  const startFromButton = () => { showVoiceScreen(); startRealtimeVoice(); };
+  const startFromButton = () => {
+    if (voiceSession) { showVoiceScreen(); stopRealtimeVoice(); return; }
+    if (!window.TozraAuth?.getSession?.()) {
+      if (typeof window.showModal === "function") window.showModal("login");
+      return;
+    }
+    showVoiceScreen();
+    startRealtimeVoice();
+  };
   window.startTozraVoiceFromHome = startFromButton;
   if (generalButton) {
     generalButton.onclick = startFromButton;
