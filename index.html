@@ -2789,6 +2789,92 @@ function scopedStorageKey(key) {
 }
 window.tozraStorageKey = scopedStorageKey;
 
+/* TOZRA CLOUD SYNC v1 — authenticated, account-scoped JSON backup */
+const TozraCloudSync = (() => {
+ const TABLE = "user_data";
+ const KEYS = [
+  "tozra-projects", "tozra-conversations", "ircal_tasks_calendar_v1",
+  "tozra-web-home-tasks-v1", "tozra-web-home-notes-v1",
+  "tozra-web-home-week-v1", "tozra-personal-memory-v1"
+ ];
+ let activeUser = null, timer = null, applying = false, channel = null;
+ let lastError = "";
+ const keyFor = key => scopedStorageKey(key);
+ function collect() {
+  const data = {};
+  for (const key of KEYS) {
+   const raw = localStorage.getItem(keyFor(key));
+   if (raw !== null) { try { data[key] = JSON.parse(raw); } catch {} }
+  }
+  return data;
+ }
+ function apply(data) {
+  if (!data || typeof data !== "object" || Array.isArray(data)) return;
+  applying = true;
+  try {
+   for (const key of KEYS) {
+    if (Object.prototype.hasOwnProperty.call(data, key)) {
+     localStorage.setItem(keyFor(key), JSON.stringify(data[key]));
+    }
+   }
+  } finally { applying = false; }
+ }
+ async function pushNow() {
+  const userId = TozraAuth.userId(), client = TozraAuth.getClient();
+  if (!client || userId === "guest" || applying) return false;
+  const payload = { ...collect(), _meta: { version: 1, updatedAt: new Date().toISOString(), app: "TOZRA" } };
+  const { error } = await client.from(TABLE).upsert(
+   { user_id: userId, data: payload, updated_at: new Date().toISOString() },
+   { onConflict: "user_id" }
+  );
+  if (error) { lastError = error.message || "Bulut kaydı başarısız."; console.warn("TOZRA cloud sync:", lastError); return false; }
+  lastError = "";
+  window.dispatchEvent(new CustomEvent("tozra-cloud-status", { detail: { status: "synced" } }));
+  return true;
+ }
+ function schedule() {
+  if (applying || TozraAuth.userId() === "guest") return;
+  clearTimeout(timer);
+  timer = setTimeout(() => pushNow().catch(error => { lastError = error.message; console.warn("TOZRA cloud sync:", error); }), 700);
+ }
+ async function init(force = false) {
+  const userId = TozraAuth.userId(), client = TozraAuth.getClient();
+  if (!client || userId === "guest") { activeUser = null; return { synced: false, reason: "guest" }; }
+  if (!force && activeUser === userId) return { synced: true, cached: true };
+  activeUser = userId;
+  try {
+   // One-time migration from the previous guest namespace into the newly signed-in account.
+   for (const key of KEYS) {
+    const accountKey = `tozra-user:${userId}:${key}`;
+    const guestKey = `tozra-guest:${key}`;
+    if (localStorage.getItem(accountKey) === null) {
+     const guestValue = localStorage.getItem(guestKey);
+     if (guestValue !== null) localStorage.setItem(accountKey, guestValue);
+    }
+   }
+   const { data: row, error } = await client.from(TABLE).select("data,updated_at").eq("user_id", userId).maybeSingle();
+   if (error) throw error;
+   if (row && row.data && typeof row.data === "object") {
+    apply(row.data);
+   } else {
+    // First cloud activation: preserve this account's existing browser data and upload it once.
+    await pushNow();
+   }
+   window.dispatchEvent(new CustomEvent("tozra-cloud-hydrated", { detail: { userId } }));
+   window.dispatchEvent(new CustomEvent("tozra-cloud-status", { detail: { status: "synced" } }));
+   return { synced: true, migrated: !row };
+  } catch (error) {
+   lastError = error.message || "Bulut verisine erişilemedi.";
+   console.warn("TOZRA cloud sync başlatılamadı:", lastError);
+   window.dispatchEvent(new CustomEvent("tozra-cloud-status", { detail: { status: "error", message: lastError } }));
+   return { synced: false, reason: lastError };
+  }
+ }
+ function getStatus() { return { userId: activeUser, error: lastError, pending: !!timer }; }
+ return Object.freeze({ init, schedule, pushNow, getStatus });
+})();
+window.TozraCloudSync = TozraCloudSync;
+
 const promptInput=$("prompt");
 let conversation=[],conversations=[],projects=[],currentProjectId=null;
 let busy=false,attachments=[],projectAttachments=[];
@@ -2829,6 +2915,7 @@ function safeRead(key,fallback){
 function safeSave(key,value){
  try{
   localStorage.setItem(scopedStorageKey(key),JSON.stringify(value));
+  if (window.TozraCloudSync) window.TozraCloudSync.schedule();
   return true;
  }catch(e){
   console.error("Kayıt hatası:",e);
@@ -4218,9 +4305,16 @@ document.addEventListener("keydown",e=>{
 
 /* BAŞLANGIÇ */
 async function refreshAccountData(){
+ if (window.TozraCloudSync) await TozraCloudSync.init(true);
  conversation=[]; conversations=[]; projects=[];
  loadHistory();
  loadProjects();
+ if (typeof taskItems !== "undefined") {
+  const restored=safeRead(TASKS_KEY,{tasks:[],events:[]});
+  if(restored && Array.isArray(restored.tasks) && Array.isArray(restored.events)) taskItems=restored;
+  if(typeof renderTasksCalendar === "function") renderTasksCalendar();
+ }
+ window.dispatchEvent(new CustomEvent("tozra-account-data-refreshed"));
  TozraAuth.updateAccountUI();
  updateDashboardStats();
 }
@@ -4375,16 +4469,22 @@ if("serviceWorker" in navigator){
 (()=>{
  const root=document.getElementById('personalHome');if(!root)return;
  const $=id=>document.getElementById(id), DAYS=['Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi','Pazar'];
- const safeRead=(key,fallback)=>{try{const v=JSON.parse(localStorage.getItem(key));return v??fallback}catch{return fallback}};
+ const scoped=key=>typeof window.tozraStorageKey==='function'?window.tozraStorageKey(key):key;
+ const safeRead=(key,fallback)=>{try{const v=JSON.parse(localStorage.getItem(scoped(key)));if(v!==null)return v;const legacy=localStorage.getItem(key);if(legacy!==null){localStorage.setItem(scoped(key),legacy);localStorage.removeItem(key);return JSON.parse(legacy)}return fallback}catch{return fallback}};
  let tasks=safeRead('tozra-web-home-tasks-v1',[]),week=safeRead('tozra-web-home-week-v1',{}),activeDay=0;
- const save=(key,value)=>{try{localStorage.setItem(key,JSON.stringify(value))}catch(e){console.warn('TOZRA home storage:',e)}};
+ const save=(key,value)=>{try{localStorage.setItem(scoped(key),JSON.stringify(value));window.TozraCloudSync?.schedule()}catch(e){console.warn('TOZRA home storage:',e)}};
  function renderTasks(){const list=$('phTaskList');list.innerHTML='';if(!tasks.length){list.innerHTML='<div class="ph-empty">Henüz görev yok. İlk görevini ekleyerek başla.</div>';}else tasks.forEach(task=>{const row=document.createElement('div');row.className='ph-task'+(task.done?' done':'');const check=document.createElement('button');check.className='ph-check'+(task.done?' done':'');check.type='button';check.setAttribute('aria-label',task.done?'Görevi tamamlanmadı yap':'Görevi tamamla');check.textContent=task.done?'✓':'';check.onclick=()=>{tasks=tasks.map(t=>t.id===task.id?{...t,done:!t.done}:t);save('tozra-web-home-tasks-v1',tasks);renderTasks()};const label=document.createElement('span');label.className='ph-task-label';label.textContent=task.title;const del=document.createElement('button');del.className='ph-delete';del.type='button';del.setAttribute('aria-label','Görevi sil');del.textContent='×';del.onclick=()=>{tasks=tasks.filter(t=>t.id!==task.id);save('tozra-web-home-tasks-v1',tasks);renderTasks()};row.append(check,label,del);list.append(row)});$('phTotal').textContent=tasks.length;$('phDone').textContent=tasks.filter(t=>t.done).length;$('phPending').textContent=tasks.filter(t=>!t.done).length;}
  $('phTaskForm').addEventListener('submit',e=>{e.preventDefault();const input=$('phTaskInput'),title=input.value.trim();if(!title)return;tasks.unshift({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),title,done:false});save('tozra-web-home-tasks-v1',tasks);input.value='';renderTasks();});
- $('phNotes').value=localStorage.getItem('tozra-web-home-notes-v1')||'';let noteTimer; $('phNotes').addEventListener('input',()=>{ $('phNotesStatus').textContent='Kaydediliyor…';clearTimeout(noteTimer);noteTimer=setTimeout(()=>{try{localStorage.setItem('tozra-web-home-notes-v1',$('phNotes').value);$('phNotesStatus').textContent='Kaydedildi · Bu tarayıcıda saklanıyor.'}catch{$('phNotesStatus').textContent='Kaydedilemedi · Tarayıcı depolama alanını kontrol et.'}},250)});
+ $('phNotes').value=localStorage.getItem(scoped('tozra-web-home-notes-v1'))||localStorage.getItem('tozra-web-home-notes-v1')||'';let noteTimer; $('phNotes').addEventListener('input',()=>{ $('phNotesStatus').textContent='Kaydediliyor…';clearTimeout(noteTimer);noteTimer=setTimeout(()=>{try{localStorage.setItem(scoped('tozra-web-home-notes-v1'),$('phNotes').value);window.TozraCloudSync?.schedule();$('phNotesStatus').textContent='Kaydedildi · Hesabınla eşitleniyor.'}catch{$('phNotesStatus').textContent='Kaydedilemedi · Tarayıcı depolama alanını kontrol et.'}},250)});
  function renderDays(){const el=$('phDays');el.innerHTML='';DAYS.forEach((day,i)=>{const b=document.createElement('button');b.type='button';b.className='ph-day'+(i===activeDay?' active':'');b.textContent=day.slice(0,3);b.onclick=()=>{activeDay=i;renderDays();$('phPlanDay').textContent=day;$('phPlan').value=week[i]||''};el.append(b)});$('phPlanDay').textContent=DAYS[activeDay];$('phPlan').value=week[activeDay]||'';}
  let planTimer;$('phPlan').addEventListener('input',()=>{week[activeDay]=$('phPlan').value;$('phPlanStatus').textContent='Kaydediliyor…';clearTimeout(planTimer);planTimer=setTimeout(()=>{save('tozra-web-home-week-v1',week);$('phPlanStatus').textContent='Haftalık planın kaydedildi.'},250)});
  $('phAsk').addEventListener('click',()=>{const chat=document.getElementById('navChat');if(chat)chat.click();else document.getElementById('navChat')?.click()});
  renderTasks();renderDays();
+ window.addEventListener('tozra-cloud-hydrated',()=>{
+  tasks=safeRead('tozra-web-home-tasks-v1',[]);week=safeRead('tozra-web-home-week-v1',{});
+  $('phNotes').value=localStorage.getItem(scoped('tozra-web-home-notes-v1'))||'';
+  renderTasks();renderDays();
+ });
 })();
 </script>
 <script>
@@ -4606,7 +4706,7 @@ renderTasksCalendar();
  const open=document.getElementById("phOpenCalendar");
  if(open)open.addEventListener("click",()=>{if(typeof showPage==="function"){showPage("tasks");if(typeof renderTasksCalendar==="function")renderTasksCalendar();}});
  let data={tasks:[],events:[]};
- try{const raw=localStorage.getItem("ircal_tasks_calendar_v1");if(raw)data=JSON.parse(raw)||data;}catch(e){}
+ try{const raw=localStorage.getItem(typeof window.tozraStorageKey==="function"?window.tozraStorageKey("ircal_tasks_calendar_v1"):"ircal_tasks_calendar_v1");if(raw)data=JSON.parse(raw)||data;}catch(e){}
  const now=new Date(),year=now.getFullYear(),month=now.getMonth();
  document.getElementById("phHomeCalendarMonth").textContent=now.toLocaleDateString("tr-TR",{month:"long",year:"numeric"});
  const total=(data.tasks||[]).filter(x=>!x.done).length+(data.events||[]).length;

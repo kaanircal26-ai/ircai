@@ -47,6 +47,7 @@
   function write(memories) {
     try {
       localStorage.setItem(storageKey(), JSON.stringify(memories));
+      if (window.TozraCloudSync) window.TozraCloudSync.schedule();
       return true;
     } catch (error) {
       console.error("TOZRA hafıza kayıt hatası:", error);
