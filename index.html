@@ -4627,7 +4627,24 @@ let calendarCursor=new Date(); calendarCursor.setDate(1);
 let calendarSelected=new Date().toISOString().slice(0,10);
 const taskEl=id=>document.getElementById(id);
 const dateKey=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-function persistTaskItems(){safeSave(TASKS_KEY,taskItems);}
+function persistTaskItems(){
+ // Persist the calendar state synchronously before any UI reset/render.
+ // This avoids losing a newly-added task if the debounced cloud sync has not run yet.
+ try{
+  const storageKey=scopedStorageKey(TASKS_KEY);
+  const serialized=JSON.stringify(taskItems);
+  localStorage.setItem(storageKey,serialized);
+  const verified=localStorage.getItem(storageKey);
+  if(verified!==serialized) throw new Error("Görev kaydı doğrulanamadı.");
+  if(window.TozraCloudSync) window.TozraCloudSync.schedule();
+  window.dispatchEvent(new CustomEvent("tozra-tasks-saved",{detail:{storageKey}}));
+  return true;
+ }catch(error){
+  console.error("TOZRA takvim görevleri kaydedilemedi:",error);
+  alert("Görev kaydedilemedi. Tarayıcı depolama iznini ve boş alanı kontrol et.");
+  return false;
+ }
+}
 function dateLabel(value){if(!value)return "";const d=new Date(value+"T12:00:00");return d.toLocaleDateString("tr-TR",{day:"numeric",month:"short",year:"numeric"});}
 function renderTasksCalendar(){
  taskEl("tasksActiveCount").textContent=taskItems.tasks.filter(x=>!x.done).length;
@@ -4674,13 +4691,13 @@ taskEl("taskForm").onsubmit=e=>{
  e.preventDefault();const title=taskEl("taskTitle").value.trim(),date=taskEl("taskDate").value;
  if(!title||!date)return;
  taskItems.tasks.push({id:makeId(),title,date,priority:taskEl("taskPriority").value,note:taskEl("taskNote").value.trim(),done:false});
- calendarSelected=date;persistTaskItems();taskEl("taskForm").reset();taskEl("taskForm").hidden=true;renderTasksCalendar();
+ calendarSelected=date;if(!persistTaskItems())return;taskEl("taskForm").reset();taskEl("taskForm").hidden=true;renderTasksCalendar();
 };
 taskEl("eventForm").onsubmit=e=>{
  e.preventDefault();const title=taskEl("eventTitle").value.trim(),date=taskEl("eventDate").value;
  if(!title||!date)return;
  taskItems.events.push({id:makeId(),title,date,time:taskEl("eventTime").value,note:taskEl("eventNote").value.trim()});
- calendarSelected=date;persistTaskItems();taskEl("eventForm").reset();taskEl("eventForm").hidden=true;renderTasksCalendar();
+ calendarSelected=date;if(!persistTaskItems())return;taskEl("eventForm").reset();taskEl("eventForm").hidden=true;renderTasksCalendar();
 };
 taskEl("tasksList").addEventListener("change",e=>{
  const id=e.target.dataset.taskCheck;if(!id)return;
