@@ -3933,7 +3933,9 @@ async function sendToAI({text,list,area,history,onSuccess,onFailure,agentMode=fa
   catch(e){throw new Error("Sunucudan geçerli yanıt alınamadı.")}
 
   if(!response.ok||!data.success){
-   throw new Error(data.error||"Yapay zekâ yanıt veremedi.");
+   const apiError=new Error(data.error||"Yapay zekâ yanıt veremedi.");
+   apiError.responseData=data;
+   throw apiError;
   }
 
   typing.remove();
@@ -3941,7 +3943,10 @@ async function sendToAI({text,list,area,history,onSuccess,onFailure,agentMode=fa
   clearFiles(list,list===attachments?"attachments":"projectAttachments");
  }catch(error){
   typing.remove();
-  onFailure("İstek tamamlanamadı: "+(error.message||"Bir bağlantı sorunu oluştu."));
+  onFailure(
+   "İstek tamamlanamadı: "+(error.message||"Bir bağlantı sorunu oluştu."),
+   error.responseData||null
+  );
   console.error(error);
  }finally{
   busy=false;
@@ -3979,9 +3984,9 @@ async function sendGeneralMessage(value){
    saveGeneralConversation();
    speakNextVoiceReply(answer);
   },
-  onFailure:error=>{
-   conversation.push({role:"assistant",content:error});
-   addMessage($("messages"),"assistant",error);
+  onFailure:(error,errorData)=>{
+   conversation.push({role:"assistant",content:error,sources:errorData?.sources||[]});
+   addMessage($("messages"),"assistant",error,errorData?.sources||[]);
    saveGeneralConversation();
   }
  });
@@ -4031,11 +4036,11 @@ async function sendProjectMessage(){
    speakNextVoiceReply(answer);
   },
 
-  onFailure:error=>{
-   p.messages.push({role:"assistant",content:error});
+  onFailure:(error,errorData)=>{
+   p.messages.push({role:"assistant",content:error,sources:errorData?.sources||[]});
    p.updatedAt=Date.now();
    saveProjects();
-   addMessage($("projectMessages"),"assistant",error);
+   addMessage($("projectMessages"),"assistant",error,errorData?.sources||[]);
    renderProjectInfo(p);
   }
  });
