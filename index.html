@@ -4312,14 +4312,14 @@ function showModal(type){
   const user=TozraAuth.getSession()?.user;
   content.innerHTML=user?`
    <div style="text-align:center;padding:10px">
-    <div class="avatar animal-avatar profile-animal-avatar" style="margin:auto;display:grid;place-items:center"><img src="/avatars/${TozraAuth.avatarForCurrentUser()}.svg" alt="Hayvan avatarın"></div>
+    <div class="avatar user-avatar profile-user-avatar" role="img" aria-label="Kullanıcı profili" style="margin:0 auto 14px;width:82px;height:82px;min-width:82px;border-radius:50%;display:grid;place-items:center;background:#edf2e7;border:3px solid #d7e5ce;color:#26362a;box-shadow:0 4px 14px rgba(25,45,28,.10)"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" style="width:39px;height:39px;fill:none;stroke:currentColor;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="8" r="3.5"></circle><path d="M4.8 20c.5-3.6 3.3-5.6 7.2-5.6s6.7 2 7.2 5.6"></path></svg></div>
     <h3>${escapeHTML(user.user_metadata?.full_name||"TOZRA kullanıcısı")}</h3>
     <p>${escapeHTML(user.email||"")}</p>
    </div>
    <section class="profile-theme-picker" aria-label="Tema seçimi"><h4>Görünüm teması</h4><div class="theme-choice-row"><button type="button" class="theme-choice" data-theme-choice="light"><span class="theme-preview theme-preview-light"></span><span>Aydınlık</span><i>✓</i></button><button type="button" class="theme-choice" data-theme-choice="dark"><span class="theme-preview theme-preview-dark"></span><span>Karanlık</span><i>✓</i></button></div></section>
    <div class="profile-actions"><button class="primary" id="profilePlansButton" type="button">Üyelik planları</button><button class="secondary" id="profileSettingsButton" type="button">Ayarlar</button></div><button class="secondary" id="logoutButton">Çıkış yap</button>`:`
    <div style="text-align:center;padding:10px">
-    <div class="avatar animal-avatar profile-animal-avatar" style="margin:auto;display:grid;place-items:center"><img src="/avatars/cat.svg" alt="TOZRA hayvan avatarı"></div>
+    <div class="avatar user-avatar profile-user-avatar" role="img" aria-label="Kullanıcı profili" style="margin:0 auto 14px;width:82px;height:82px;min-width:82px;border-radius:50%;display:grid;place-items:center;background:#edf2e7;border:3px solid #d7e5ce;color:#26362a;box-shadow:0 4px 14px rgba(25,45,28,.10)"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" style="width:39px;height:39px;fill:none;stroke:currentColor;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round"><circle cx="12" cy="8" r="3.5"></circle><path d="M4.8 20c.5-3.6 3.3-5.6 7.2-5.6s6.7 2 7.2 5.6"></path></svg></div>
     <h3>Misafir kullanıcı</h3>
     <p>Projelerini hesabına bağlamak için giriş yap.</p>
    </div>
