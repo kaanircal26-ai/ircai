@@ -799,6 +799,27 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
 .auth-screen .notice{background:#edf1e8;border:1px solid #dfe6d8;color:#627362;border-radius:12px;font-size:11px}
 @media(max-width:700px){#modalOverlay .modal.auth-screen{width:calc(100% - 24px);max-width:460px;max-height:calc(100dvh - 30px);padding:24px 22px;border-radius:25px}.auth-intro{padding-bottom:14px}.auth-mark{width:44px;height:44px;margin-bottom:16px}}
 
+
+/* TOZRA CHAT 2.0 */
+#chatPage .message{max-width:min(88%,820px);}
+#chatPage .message-text{overflow-wrap:anywhere;}
+#chatPage .assistant .message-text{background:linear-gradient(145deg,var(--panel, #151d16),var(--surface, #101610));border-color:color-mix(in srgb,var(--green, #9acb67) 24%,transparent);}
+#chatPage .user .message-text{background:linear-gradient(135deg,color-mix(in srgb,var(--green, #9acb67) 22%,#172019),#18251b);border-color:color-mix(in srgb,var(--green, #9acb67) 34%,transparent);}
+#chatPage .message-text strong{font-weight:750;color:var(--text,#eef3ed);}
+#chatPage .message-text a{color:var(--green,#a6d878);text-decoration:underline;text-underline-offset:3px;}
+#chatPage .tozra-inline-code{padding:2px 6px;border-radius:6px;background:rgba(120,150,110,.16);font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.9em;}
+#chatPage .tozra-code-block{margin:10px 0;padding:0;overflow:hidden;border:1px solid var(--border,#344235);border-radius:12px;background:#0c120e;white-space:normal;}
+#chatPage .tozra-code-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 11px;background:rgba(130,160,120,.1);color:#a9b8aa;font-size:10px;letter-spacing:.06em;text-transform:uppercase;}
+#chatPage .tozra-code-head button{border:1px solid #3b4d3d;border-radius:7px;padding:5px 8px;background:#172119;color:#d4e2d4;font-size:10px;cursor:pointer;}
+#chatPage .tozra-code-block code{display:block;padding:13px;overflow-x:auto;color:#e1e9e1;font:12px/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre;}
+#chatPage .message-actions{display:flex;align-items:center;flex-wrap:wrap;gap:13px;padding:1px 2px;}
+#chatPage .message-actions button{border:0;background:transparent;color:var(--muted,#8d9b8e);font-size:11px;padding:4px 0;cursor:pointer;}
+#chatPage .message-actions button:hover{color:var(--green,#a6d878);}
+#chatPage .message-actions button:disabled{opacity:.55;cursor:wait;}
+#chatPage .composer{box-shadow:0 12px 34px rgba(0,0,0,.13);}
+#chatPage .composer:focus-within{transform:translateY(-1px);}
+@media(max-width:640px){#chatPage .message{max-width:96%;}#chatPage .message-actions{gap:12px;}#chatPage .tozra-code-block code{font-size:11px;}}
+
 </style>
 <style id="tozra-personal-home">
 :root{--personal-ink:#17221b;--personal-muted:#718076;--personal-line:#e5ece6;--personal-green:#16864b;--personal-green2:#dff5e7;--personal-card:#ffffff}
@@ -3579,7 +3600,27 @@ function speakNextVoiceReply(content){
  speakText(content);
 }
 
-/* MESAJ GÖRÜNÜMÜ */
+/* MESAJ GÖRÜNÜMÜ — güvenli temel Markdown ve mesaj araçları */
+function formatChatContent(value){
+ const blocks=[];
+ let html=escapeHTML(String(value??""));
+ html=html.replace(/```([\w+-]*)\n?([\s\S]*?)```/g,(_,lang,code)=>{
+  const token="@@TOZRA_CODE_"+blocks.length+"@@";
+  blocks.push('<pre class="tozra-code-block"><div class="tozra-code-head"><span>'+escapeHTML(lang||"Kod")+'</span><button type="button" class="code-copy">Kodu kopyala</button></div><code>'+code.replace(/\n$/ ,"")+'</code></pre>');
+  return token;
+ });
+ html=html.replace(/`([^`\n]+)`/g,'<code class="tozra-inline-code">$1</code>');
+ html=html.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+ html=html.replace(/(^|[^*])\*([^*\n]+)\*/g,'$1<em>$2</em>');
+ html=html.replace(/(https?:\/\/[^\s<]+)/g,(url)=>{
+  const clean=url.replace(/[),.!?]+$/g,"");
+  const tail=url.slice(clean.length);
+  return '<a href="'+clean+'" target="_blank" rel="noopener noreferrer">'+clean+'</a>'+tail;
+ });
+ html=html.replace(/\n/g,"<br>");
+ blocks.forEach((block,index)=>{html=html.replace("@@TOZRA_CODE_"+index+"@@",block);});
+ return html;
+}
 function addMessage(area,role,content){
  const wrap=document.createElement("div");
  wrap.className="message "+role;
@@ -3588,28 +3629,75 @@ function addMessage(area,role,content){
  label.textContent=role==="user"?"SEN":"TOZRA";
  const text=document.createElement("div");
  text.className="message-text";
- text.textContent=content;
+ text.innerHTML=formatChatContent(content);
  wrap.append(label,text);
 
+ text.querySelectorAll(".code-copy").forEach(button=>{
+  button.onclick=async()=>{
+   const code=button.closest(".tozra-code-block")?.querySelector("code")?.textContent||"";
+   try{await navigator.clipboard.writeText(code);button.textContent="Kopyalandı";}
+   catch(e){button.textContent="Kopyalanamadı";}
+  };
+ });
+
  if(role==="assistant"){
+  const actions=document.createElement("div");
+  actions.className="message-actions";
   const copy=document.createElement("button");
   copy.className="copy-button";
   copy.textContent="Kopyala";
   copy.onclick=async()=>{
-   try{
-    await navigator.clipboard.writeText(content);
-    copy.textContent="Kopyalandı";
-   }catch(e){copy.textContent="Kopyalanamadı"}
+   try{await navigator.clipboard.writeText(String(content));copy.textContent="Kopyalandı";}
+   catch(e){copy.textContent="Kopyalanamadı";}
   };
   const speak=document.createElement("button");
   speak.className="speak-button";
   speak.type="button";
   speak.textContent="🔊 Sesli dinle";
   speak.onclick=()=>speakText(content,speak);
-  wrap.append(copy,speak);
+  actions.append(copy,speak);
+  if(area.id==="messages"){
+   const retry=document.createElement("button");
+   retry.className="retry-button";
+   retry.type="button";
+   retry.textContent="↻ Yeniden oluştur";
+   retry.onclick=()=>regenerateLastGeneralAnswer(retry);
+   actions.appendChild(retry);
+  }
+  wrap.appendChild(actions);
  }
  area.appendChild(wrap);
  wrap.scrollIntoView({behavior:"smooth",block:"end"});
+}
+
+async function regenerateLastGeneralAnswer(button){
+ if(busy)return;
+ let lastUserIndex=-1;
+ for(let i=conversation.length-1;i>=0;i--){if(conversation[i].role==="user"){lastUserIndex=i;break;}}
+ if(lastUserIndex<0)return;
+ const lastUser=conversation[lastUserIndex];
+ const previousHistory=conversation.slice(0,lastUserIndex);
+ conversation=conversation.slice(0,lastUserIndex+1);
+ saveGeneralConversation();
+ renderGeneralMessages();
+ if(button){button.disabled=true;button.textContent="Yeniden oluşturuluyor…";}
+ await sendToAI({
+  text:String(lastUser.content||""),
+  list:[],
+  area:$("messages"),
+  history:previousHistory,
+  agentMode:agentModeEnabled,
+  onSuccess:answer=>{
+   conversation.push({role:"assistant",content:answer});
+   addMessage($("messages"),"assistant",answer);
+   saveGeneralConversation();
+  },
+  onFailure:error=>{
+   conversation.push({role:"assistant",content:error});
+   addMessage($("messages"),"assistant",error);
+   saveGeneralConversation();
+  }
+ });
 }
 
 function renderProjectMessages(){
