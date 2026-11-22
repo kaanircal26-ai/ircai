@@ -2332,7 +2332,11 @@ body.voice-screen-open{overflow:hidden}
    <button type="submit">Gönder ↗</button>
   </form>
 
-  <div class="tozra-home-voice-row"><span>TOZRA ile konuşmaya hazır mısın?</span><button type="button" id="homeVoiceButton" aria-label="Sesli sohbeti aç"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6"/></svg></button></div>
+  <button type="button" class="tozra-home-voice-row" id="homeVoiceButton" aria-label="TOZRA ile sesli konuşmayı başlat">
+   <span class="home-voice-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6"/></svg></span>
+   <span class="home-voice-copy"><strong>Sesli konuşmayı başlat</strong><small>TOZRA ile doğal şekilde konuş</small></span>
+   <span class="home-voice-action">Başlat <span aria-hidden="true">↗</span></span>
+  </button>
  </div>
  <section id="personalHome" aria-label="TOZRA kişisel çalışma alanı">
  <div class="ph-hero">
@@ -4816,6 +4820,40 @@ renderTasksCalendar();
 
 
 
+<style id="tozra-voice-discovery-transition-v1">
+/* Prominent voice entry point on the home screen */
+#workspacePage .tozra-home-voice-row{
+  position:relative!important;z-index:5!important;display:flex!important;align-items:center!important;gap:13px!important;
+  width:min(100%,610px)!important;min-height:76px!important;margin:18px 0 0!important;padding:12px 15px!important;
+  border:1px solid rgba(255,255,255,.9)!important;border-radius:19px!important;
+  background:linear-gradient(110deg,rgba(255,255,255,.96),rgba(244,239,255,.91))!important;
+  color:#4f456b!important;text-align:left!important;box-shadow:0 10px 28px rgba(101,83,158,.13)!important;
+  backdrop-filter:blur(16px)!important;cursor:pointer!important;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease!important;
+}
+#workspacePage .tozra-home-voice-row:active{transform:scale(.985)!important}
+#workspacePage .home-voice-icon{width:46px;height:46px;flex:0 0 46px;display:grid;place-items:center;border-radius:15px;background:linear-gradient(145deg,#a38df1,#7965d9);color:#fff;box-shadow:0 6px 16px #8874db44}
+#workspacePage .home-voice-icon svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#workspacePage .home-voice-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:4px}
+#workspacePage .home-voice-copy strong{font-size:13px;font-weight:800;color:#40365e;letter-spacing:-.1px}
+#workspacePage .home-voice-copy small{font-size:11px;font-weight:500;color:#9188a8}
+#workspacePage .home-voice-action{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border-radius:12px;background:#eee9ff;color:#715bc2;font-size:11px;font-weight:800;white-space:nowrap}
+#workspacePage .home-voice-action span{font-size:15px}
+/* Soft full-screen entrance transition */
+#tozraVoiceScreen{opacity:0;transform:translateY(14px) scale(.985);transition:opacity .28s ease,transform .34s cubic-bezier(.2,.75,.25,1)}
+#tozraVoiceScreen.is-visible{opacity:1;transform:translateY(0) scale(1)}
+@media(max-width:760px){
+ #workspacePage .tozra-home-voice-row{position:relative!important;inset:auto!important;width:100%!important;min-height:72px!important;margin:13px 0 0!important;padding:10px 12px!important}
+ #workspacePage .home-voice-icon{width:43px;height:43px;flex-basis:43px}
+ #workspacePage .home-voice-copy strong{font-size:12px}
+ #workspacePage .home-voice-copy small{font-size:10px}
+ #workspacePage .home-voice-action{padding:9px 10px}
+}
+@media(prefers-reduced-motion:reduce){
+ #tozraVoiceScreen{transition:none!important;transform:none!important}
+ #workspacePage .tozra-home-voice-row{transition:none!important}
+}
+</style>
+
 <div id="tozraVoiceScreen" hidden role="dialog" aria-modal="true" aria-label="TOZRA sesli görüşme">
  <div class="voice-screen-top"><div class="voice-screen-brand">TOZRA <span style="font-weight:400;letter-spacing:.12em">· VOICE</span></div><button type="button" class="voice-screen-close" id="voiceScreenClose" aria-label="Görüşmeyi kapat">×</button></div>
  <div class="voice-screen-center">
@@ -4832,6 +4870,6 @@ renderTasksCalendar();
  </div>
 </div>
 
-<script src="/voice.js?v=9"></script>
+<script src="/voice.js?v=10"></script>
 </body>
 </html>

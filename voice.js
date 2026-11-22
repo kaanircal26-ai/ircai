@@ -21,13 +21,27 @@
     }
   }
 
+  let voiceScreenHideTimer = null;
   function showVoiceScreen() {
     const screen = $("tozraVoiceScreen");
-    if (screen) { screen.hidden = false; document.body.classList.add("voice-screen-open"); }
+    if (!screen) return;
+    if (voiceScreenHideTimer) { clearTimeout(voiceScreenHideTimer); voiceScreenHideTimer = null; }
+    screen.hidden = false;
+    document.body.classList.add("voice-screen-open");
+    screen.classList.remove("is-visible");
+    // Allow the initial hidden state to paint before animating into view.
+    requestAnimationFrame(() => requestAnimationFrame(() => screen.classList.add("is-visible")));
   }
   function hideVoiceScreen() {
     const screen = $("tozraVoiceScreen");
-    if (screen) { screen.hidden = true; document.body.classList.remove("voice-screen-open"); }
+    if (!screen) return;
+    screen.classList.remove("is-visible");
+    document.body.classList.remove("voice-screen-open");
+    if (voiceScreenHideTimer) clearTimeout(voiceScreenHideTimer);
+    voiceScreenHideTimer = setTimeout(() => {
+      screen.hidden = true;
+      voiceScreenHideTimer = null;
+    }, window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? 0 : 360);
   }
 
   function getVoiceTarget() {
