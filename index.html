@@ -2741,38 +2741,52 @@ const TozraAuth = (() => {
  let session = null;
  let initialized = false;
  let initPromise = null;
+ let authListenerRegistered = false;
  let configError = "";
 
  async function init() {
   if (initialized) return session;
   if (initPromise) return initPromise;
+
   initPromise = (async () => {
-  try {
-   if (!window.supabase?.createClient) throw new Error("Supabase istemcisi yüklenemedi.");
-   const response = await fetch("/api/config", { cache: "no-store" });
-   const config = await response.json();
-   if (!response.ok || !config.success) throw new Error(config.error || "Supabase yapılandırması okunamadı.");
-   client = window.supabase.createClient(config.supabaseUrl, config.supabaseKey, {
-    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
-   });
-   const result = await client.auth.getSession();
-   if (result.error) throw result.error;
-   session = result.data.session || null;
-   client.auth.onAuthStateChange((event, nextSession) => {
-    session = nextSession || null;
+   try {
+    if (!window.supabase?.createClient) throw new Error("Supabase istemcisi yüklenemedi.");
+
+    if (!client) {
+     const response = await fetch("/api/config", { cache: "no-store" });
+     const config = await response.json();
+     if (!response.ok || !config.success) throw new Error(config.error || "Supabase yapılandırması okunamadı.");
+     client = window.supabase.createClient(config.supabaseUrl, config.supabaseKey, {
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+     });
+    }
+
+    const result = await client.auth.getSession();
+    if (result.error) throw result.error;
+    session = result.data.session || null;
+
+    if (!authListenerRegistered) {
+     client.auth.onAuthStateChange((event, nextSession) => {
+      session = nextSession || null;
+      updateAccountUI();
+      if(event === "PASSWORD_RECOVERY") showModal("updatePassword");
+     });
+     authListenerRegistered = true;
+    }
+
+    initialized = true;
+    configError = "";
+   } catch (error) {
+    configError = error.message || "Hesap servisine bağlanılamadı.";
+    console.error("TOZRA auth:", error);
+   } finally {
     updateAccountUI();
-    if(event === "PASSWORD_RECOVERY") showModal("updatePassword");
-   });
-  } catch (error) {
-   configError = error.message || "Hesap servisine bağlanılamadı.";
-   console.error("TOZRA auth:", error);
-  }
-  initialized = true;
-  updateAccountUI();
-  return session;
+    initPromise = null;
+   }
+   return session;
   })();
-  try { return await initPromise; }
-  finally { if (!initialized) initPromise = null; }
+
+  return initPromise;
  }
 
  const AVATARS = ["fox","cat","panda","rabbit","bear","dog","penguin","frog"];
@@ -2867,17 +2881,7 @@ const TozraAuth = (() => {
   session = null;
  }
  async function authHeaders() {
-  await init();
-  if (!client) throw new Error(configError || "Hesap servisi hazır değil.");
-  // Ask Supabase for the latest persisted/refreshed session instead of relying
-  // only on the in-memory value populated during the initial page load.
-  const { data, error } = await client.auth.getSession();
-  if (error) throw error;
-  session = data?.session || null;
-  if (!session?.access_token) {
-   throw new Error("Oturum bulunamadı. Google hesabınla yeniden giriş yap.");
-  }
-  updateAccountUI();
+  if (!session?.access_token) throw new Error("Oturum bulunamadı. Lütfen yeniden giriş yap.");
   return { Authorization: `Bearer ${session.access_token}` };
  }
  return { init, userId, getClient, getSession, getError, signUp, signIn, signInWithGoogle, resetPassword, resendConfirmation, updatePassword, signOut, authHeaders, updateAccountUI, ensureAvatar, avatarForCurrentUser };

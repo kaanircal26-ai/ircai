@@ -418,16 +418,9 @@
       return;
     }
 
-    try {
-      // OAuth redirect/session restoration is asynchronous. Wait for the
-      // shared auth client before deciding whether the user is signed in.
-      await window.TozraAuth?.init?.();
-      const headers = await window.TozraAuth?.authHeaders?.();
-      if (!headers?.Authorization) throw new Error("Oturum bulunamadı. Google hesabınla yeniden giriş yap.");
-    } catch (authError) {
-      setStatus("Sesli sohbet için hesabını doğrulaman gerekiyor.", target.status);
+    if (!window.TozraAuth?.getSession?.()) {
+      setStatus("Sesli sohbet için önce hesabına giriş yapmalısın.", target.status);
       if (typeof window.showModal === "function") window.showModal("login");
-      console.warn("TOZRA voice auth:", authError);
       return;
     }
 
@@ -757,14 +750,27 @@
   /* Mevcut mikrofon düğmelerini tam ekran görüşme arayüzüne bağla. */
   const generalButton = $("voiceButton");
   const projectButton = $("projectVoiceButton");
-  const startFromButton = () => {
-    if (voiceSession) { showVoiceScreen(); stopRealtimeVoice(); return; }
-    if (!window.TozraAuth?.getSession?.()) {
-      if (typeof window.showModal === "function") window.showModal("login");
+  const startFromButton = async () => {
+    if (voiceSession) { showVoiceScreen(); await stopRealtimeVoice(); return; }
+
+    // Do not check the in-memory session before Supabase has restored it.
+    // This was the reason Google users were incorrectly sent to the login modal.
+    try {
+      if (!window.TozraAuth) throw new Error("Hesap servisi yüklenemedi.");
+      await window.TozraAuth.init();
+      const currentSession = window.TozraAuth.getSession();
+      if (!currentSession?.access_token) {
+        if (typeof window.showModal === "function") window.showModal("login");
+        return;
+      }
+    } catch (authError) {
+      console.error("TOZRA sesli sohbet oturum kontrolü:", authError);
+      setStatus("Hesap oturumu doğrulanamadı. Tekrar deneyebilirsin.", $("voiceStatus"));
       return;
     }
+
     showVoiceScreen();
-    startRealtimeVoice();
+    await startRealtimeVoice();
   };
   window.startTozraVoiceFromHome = startFromButton;
   if (generalButton) {
