@@ -2254,19 +2254,88 @@ body.voice-screen-open{overflow:hidden}
 @media(min-width:700px){.voice-orb-wrap{width:210px}}
 @media(prefers-reduced-motion:reduce){.voice-orb,.voice-orb-ring,.voice-wave i{animation:none!important}}
 </style>
+
+<style id="ircal-design-wave-splash-v6">
+/* TOZRA / IRCAL DESIGN — extended emerald wave identity */
+#splash.splash{z-index:9999;isolation:isolate;overflow:hidden;color:#f5f8ef;background:
+ radial-gradient(ellipse at 50% 43%,rgba(37,83,49,.62) 0%,rgba(13,34,23,.94) 43%,#06140e 100%)!important}
+#splash .splash-cosmos{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none}
+#splash .splash-cosmos>.splash-orbit{display:none}
+#splash .splash-wave-art{position:absolute;inset:0;width:100%;height:100%;opacity:.95}
+#splash .wave-ribbon{fill:none;stroke:url(#splashWaveStroke);stroke-width:1.1;vector-effect:non-scaling-stroke;stroke-dasharray:5 8;animation:waveDraw 13s linear infinite}
+#splash .wave-top{stroke-width:2.2;filter:drop-shadow(0 0 9px rgba(176,255,91,.55));animation:waveDriftTop 12s ease-in-out infinite alternate}
+#splash .wave-top-inner{opacity:.38;animation:waveDriftTop 16s ease-in-out infinite alternate-reverse}
+#splash .wave-bottom{stroke-width:2.2;filter:drop-shadow(0 0 10px rgba(176,255,91,.5));animation:waveDriftBottom 14s ease-in-out infinite alternate}
+#splash .wave-bottom-inner{opacity:.35;animation:waveDriftBottom 18s ease-in-out infinite alternate-reverse}
+#splash:before{content:"";position:absolute;z-index:0;inset:-25%;pointer-events:none;background:
+ radial-gradient(ellipse at 18% 14%,rgba(128,218,91,.24),transparent 29%),
+ radial-gradient(ellipse at 82% 78%,rgba(95,185,91,.18),transparent 32%),
+ radial-gradient(ellipse at 50% 48%,rgba(33,91,48,.22),transparent 45%);filter:blur(22px);animation:emeraldBreath 11s ease-in-out infinite alternate}
+#splash:after{content:"";position:absolute;z-index:1;left:50%;top:34%;width:min(66vw,310px);aspect-ratio:1;border:1px solid rgba(191,255,117,.32);border-left-color:transparent;border-bottom-color:rgba(191,255,117,.08);border-radius:50%;transform:translate(-50%,-50%) rotate(-32deg);box-shadow:0 0 30px rgba(166,255,91,.06),inset 0 0 25px rgba(166,255,91,.04);animation:logoHalo 16s linear infinite}
+#splash .splash-inner{z-index:3;position:relative;display:flex;align-items:center;flex-direction:column;gap:0;animation:waveContentIn 1.8s cubic-bezier(.16,1,.3,1) both}
+#splash .splash-mark{width:112px;height:112px;margin:0 0 27px;padding:0;border-radius:29px;overflow:hidden;background:rgba(4,23,13,.92);border:1px solid rgba(208,255,161,.72);box-shadow:0 0 0 7px rgba(176,255,110,.055),0 0 32px rgba(159,255,79,.42),0 18px 65px rgba(0,0,0,.38);animation:logoHover 5.8s ease-in-out infinite}
+#splash .splash-mark:after{content:"";position:absolute;inset:-80%;pointer-events:none;background:linear-gradient(112deg,transparent 42%,rgba(235,255,211,.4) 50%,transparent 58%);transform:translateX(-75%) rotate(12deg);animation:logoSweep 7s ease-in-out infinite}
+#splash .splash-mark img{width:100%;height:100%;object-fit:cover}
+#splash .splash-name{margin-top:0;color:#f6f8ef;font-family:Inter,Arial,sans-serif;font-size:clamp(29px,7vw,36px);font-weight:750;letter-spacing:.39em;padding-left:.39em;text-shadow:0 4px 28px rgba(183,255,128,.13);animation:wordmarkIn 1.7s .65s both}
+#splash .splash-tagline{display:block;margin-top:12px;color:#c4d7b5;font-family:Georgia,'Times New Roman',serif;font-size:clamp(12px,3vw,15px);font-style:italic;font-weight:500;letter-spacing:.34em;padding-left:.34em;text-shadow:0 0 18px rgba(188,255,130,.14);animation:wordmarkIn 1.8s 1.05s both}
+#splash .splash-feature-icons{display:flex;gap:17px;margin-top:34px;animation:wordmarkIn 1.6s 1.55s both}
+#splash .splash-feature-icons span{width:49px;height:49px;display:grid;place-items:center;border-radius:15px;border:1px solid rgba(192,236,163,.24);background:linear-gradient(145deg,rgba(185,232,154,.12),rgba(14,47,27,.28));box-shadow:inset 0 1px rgba(255,255,255,.07),0 8px 24px rgba(0,0,0,.12);backdrop-filter:blur(10px)}
+#splash .splash-feature-icons svg{width:22px;height:22px;fill:none;stroke:#c8f49e;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+#splash .splash-feature-icons span:first-child svg{fill:#c8f49e;stroke:none}
+#splash .splash-loader-label{margin-top:25px;color:#c1d0bd;font-size:10px;font-weight:600;letter-spacing:.18em;text-align:center;animation:wordmarkIn 1.6s 1.9s both}
+#splash .splash-loader-label i{font-style:normal;color:#baff69;padding:0 3px}
+#splash .loader{width:min(62vw,260px);height:4px;margin-top:28px;border-radius:10px;background:rgba(196,225,184,.13);overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.025)}
+#splash .loader-bar{width:0;height:100%;border-radius:10px;background:linear-gradient(90deg,#a8df70,#d5ff8b,#9fe65d);box-shadow:0 0 13px rgba(186,255,103,.55);animation:emeraldLoader 9s cubic-bezier(.4,0,.2,1) forwards}
+#splash .splash-particle{z-index:2;width:5px;height:5px;background:#d7ff9d;box-shadow:0 0 15px 4px rgba(182,255,108,.38)}
+#splash .splash-particle-a{left:19%;top:29%;animation:particleDriftA 9s ease-in-out infinite}
+#splash .splash-particle-b{right:18%;top:41%;background:#baff77;box-shadow:0 0 16px 4px rgba(182,255,108,.38);animation:particleDriftB 11s ease-in-out infinite}
+#splash .splash-particle-c{left:27%;bottom:24%;animation:particleDriftC 8s ease-in-out infinite}
+#splash .splash-particle-d{right:25%;bottom:27%;background:#eaffd6;animation:particleDriftB 10s ease-in-out infinite reverse}
+#splash .splash-auth-actions{z-index:4;bottom:max(27px,env(safe-area-inset-bottom));gap:18px}
+#splash .splash-auth-actions button{color:#edf5e7;font-family:Inter,Arial,sans-serif;font-size:13px;font-weight:750;letter-spacing:.035em;padding:12px 19px;border:1px solid rgba(204,236,188,.22);background:rgba(11,37,22,.3);backdrop-filter:blur(9px)}
+#splash .splash-auth-actions button:first-child{color:#14220f;background:linear-gradient(110deg,#b9ef7b,#d9ff9a);border-color:transparent;box-shadow:0 7px 25px rgba(155,229,94,.17)}
+#splash .splash-auth-actions span{background:rgba(205,236,190,.25)}
+@keyframes waveDraw{to{stroke-dashoffset:-260}}
+@keyframes waveDriftTop{0%{transform:translate3d(-2%,0,0) scale(1)}100%{transform:translate3d(3%,2%,0) scale(1.04)}}
+@keyframes waveDriftBottom{0%{transform:translate3d(2%,0,0) scale(1)}100%{transform:translate3d(-3%,-2%,0) scale(1.05)}}
+@keyframes emeraldBreath{from{transform:translate3d(-2%,0,0) scale(.92);opacity:.65}to{transform:translate3d(3%,2%,0) scale(1.1);opacity:1}}
+@keyframes logoHalo{to{transform:translate(-50%,-50%) rotate(328deg)}}
+@keyframes logoHover{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-9px) scale(1.025)}}
+@keyframes logoSweep{0%,38%{transform:translateX(-85%) rotate(12deg)}78%,100%{transform:translateX(85%) rotate(12deg)}}
+@keyframes waveContentIn{0%{opacity:0;transform:translateY(25px) scale(.96);filter:blur(7px)}100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+@keyframes wordmarkIn{from{opacity:0;transform:translateY(12px);filter:blur(4px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
+@keyframes emeraldLoader{0%{width:0}18%{width:12%}48%{width:43%}76%{width:72%}100%{width:100%}}
+@media(max-width:600px){#splash .splash-inner{transform:translateY(-12px)}#splash .splash-mark{width:100px;height:100px;border-radius:27px}#splash .splash-feature-icons{gap:12px;margin-top:29px}#splash .splash-feature-icons span{width:43px;height:43px;border-radius:13px}#splash .splash-loader-label{font-size:9px;letter-spacing:.12em}#splash .splash-auth-actions{bottom:max(22px,env(safe-area-inset-bottom))}}
+@media(max-height:720px){#splash .splash-inner{transform:scale(.84);transform-origin:center}#splash .splash-auth-actions{bottom:max(14px,env(safe-area-inset-bottom))}}
+@media(prefers-reduced-motion:reduce){#splash:before,#splash:after,#splash .wave-ribbon,#splash .splash-mark,#splash .splash-mark:after,#splash .splash-particle,#splash .loader-bar{animation:none!important}}
+</style>
+
 </head>
 
 <body>
 <div class="splash" id="splash">
  <div class="splash-cosmos" aria-hidden="true">
-  <span class="splash-orbit orbit-one"></span><span class="splash-orbit orbit-two"></span><span class="splash-orbit orbit-three"></span>
-  <span class="splash-core-glow"></span><span class="splash-particle splash-particle-a"></span><span class="splash-particle splash-particle-b"></span><span class="splash-particle splash-particle-c"></span><span class="splash-particle splash-particle-d"></span>
+  <svg class="splash-wave-art" viewBox="0 0 430 900" preserveAspectRatio="none">
+   <defs><linearGradient id="splashWaveStroke" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d9ff9b" stop-opacity=".08"/><stop offset=".48" stop-color="#baff59" stop-opacity=".9"/><stop offset="1" stop-color="#63b87a" stop-opacity=".12"/></linearGradient></defs>
+   <path class="wave-ribbon wave-top" d="M-80 115 C45 30 104 118 190 42 S350 -18 510 58"/>
+   <path class="wave-ribbon wave-top-inner" d="M-80 135 C45 50 104 138 190 62 S350 2 510 78"/>
+   <path class="wave-ribbon wave-bottom" d="M-80 790 C60 690 145 810 245 744 S390 680 510 735"/>
+   <path class="wave-ribbon wave-bottom-inner" d="M-80 812 C60 712 145 832 245 766 S390 702 510 757"/>
+  </svg>
+  <span class="splash-core-glow"></span>
+  <span class="splash-particle splash-particle-a"></span><span class="splash-particle splash-particle-b"></span><span class="splash-particle splash-particle-c"></span><span class="splash-particle splash-particle-d"></span>
  </div>
  <div class="splash-inner">
-  <div class="splash-mark" aria-label="TOZRA"><img src="/ircal-design-icon.png" alt="IRCAL DESIGN"></div>
+  <div class="splash-mark" aria-label="TOZRA"><img src="/ircal-design-icon.png" alt="TOZRA"></div>
   <div class="splash-name">TOZRA</div>
   <div class="splash-tagline">IRCAL DESIGN</div>
-  <div class="splash-loader-label">CREATIVE WORKSPACE EXPERIENCE</div>
+  <div class="splash-feature-icons" aria-hidden="true">
+   <span><svg viewBox="0 0 24 24"><path d="M12 2.8 14 9l6.2 2-6.2 2-2 6.2-2-6.2-6.2-2 6.2-2zM19 15l1.1 3.1L23 19l-2.9.9L19 23l-.9-3.1L15 19l3.1-.9z"/></svg></span>
+   <span><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.2" cy="9" r="1.5"/><path d="m4 17 5-5 3.2 3 2.3-2 5.5 5"/></svg></span>
+   <span><svg viewBox="0 0 24 24"><path d="m8 4 12 8-12 8z"/></svg></span>
+   <span><svg viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5zM3 12l9 5 9-5M3 16l9 5 9-5"/></svg></span>
+  </div>
+  <div class="splash-loader-label">Üret <i>·</i> Planla <i>·</i> Tasarla <i>·</i> Geliştir</div>
   <div class="loader"><div class="loader-bar"></div></div>
  </div>
  <div class="splash-auth-actions" aria-label="Hesap işlemleri">
@@ -2991,7 +3060,7 @@ window.addEventListener("load",()=>{
  tozraSplashTimer=setTimeout(()=>{
   if(TozraAuth.getSession()) finishSplash();
   // Oturum yoksa splash kapanmaz; login kartı onun üzerinde açılır.
- },6000);
+ },9000);
 });
 
 /* MENÜ */
