@@ -2318,8 +2318,8 @@ body.voice-screen-open{overflow:hidden}
 
 <style id="tozra-final-voice-avatar-visibility">
 #homeVoiceButton{display:inline-flex!important;visibility:visible!important;opacity:1!important;align-items:center!important;justify-content:center!important;gap:12px!important;min-height:54px!important;cursor:pointer!important;pointer-events:auto!important;position:relative!important;z-index:5!important}
-#profileButton.animal-avatar{display:grid!important;place-items:center!important;overflow:hidden!important;width:40px!important;height:40px!important;min-width:40px!important;min-height:40px!important;padding:0!important;border-radius:50%!important;background:#edf2e7!important;border:2px solid #cbdcbd!important}
-#profileButton.animal-avatar img{display:block!important;visibility:visible!important;opacity:1!important;width:100%!important;height:100%!important;object-fit:contain!important}
+#profileButton.user-avatar{display:grid!important;place-items:center!important;overflow:hidden!important;width:40px!important;height:40px!important;min-width:40px!important;min-height:40px!important;padding:0!important;border-radius:50%!important;background:rgba(255,255,255,.08)!important;border:1px solid rgba(255,255,255,.22)!important;color:var(--text,#f1f5f1)!important}
+#profileButton.user-avatar svg{display:block!important;width:22px!important;height:22px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
 </style>
 
 </head>
@@ -2400,7 +2400,9 @@ body.voice-screen-open{overflow:hidden}
  <div class="top-actions">
   <div class="status">Çevrimiçi</div>
   <button class="top-button" id="plansButton">Üyelik</button>
-  <button class="avatar animal-avatar" id="profileButton" aria-label="Profil" title="Profil"><img src="/avatars/cat.svg" alt="Profil avatarı"></button>
+  <button class="avatar user-avatar" id="profileButton" aria-label="Profil" title="Profil">
+   <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.8 20c.5-3.6 3.3-5.6 7.2-5.6s6.7 2 7.2 5.6"></path></svg>
+  </button>
  </div>
 </header>
 
@@ -2822,11 +2824,9 @@ const TozraAuth = (() => {
  function updateAccountUI() {
   const button = document.getElementById("profileButton");
   if (button) {
-   const animal = avatarForCurrentUser();
-   button.innerHTML = `<img src="/avatars/${animal}.svg" alt="${animal} avatarı" loading="eager" onerror="this.onerror=null;this.src='/avatars/cat.svg'">`;
+   button.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="3.6"></circle><path d="M4.8 20c.5-3.6 3.3-5.6 7.2-5.6s6.7 2 7.2 5.6"></path></svg>`;
    button.title = session?.user?.email || "Hesap";
    button.setAttribute("aria-label", session?.user?.email ? "Profil" : "Misafir profil");
-   button.dataset.avatar = animal;
   }
  }
 

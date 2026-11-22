@@ -6,20 +6,12 @@
 "use strict";
 
 const CACHE_PREFIX = "tozra-";
-const CACHE_NAME = "tozra-v24";
+const CACHE_NAME = "tozra-v25";
 const APP_SHELL = [
   "/",
   "/manifest.json",
   "/apple-touch-icon.PNG",
   "/tozra-logo.svg",
-  "/avatars/cat.svg",
-  "/avatars/fox.svg",
-  "/avatars/panda.svg",
-  "/avatars/rabbit.svg",
-  "/avatars/bear.svg",
-  "/avatars/dog.svg",
-  "/avatars/penguin.svg",
-  "/avatars/frog.svg",
   "/voice.js?v=16"
 ];
 
