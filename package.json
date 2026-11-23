@@ -7,6 +7,6 @@
     "node": ">=18"
   },
   "scripts": {
-    "check": "node --check api/_auth.js && node --check api/_context.js && node --check api/config.js && node --check api/chat.js && node --check api/transcribe.js && node --check api/realtime-session.js && node --check api/generate-image.js && node --check memory.js && node --check voice.js && node tests/context.test.js && node tests/chat.test.js && node tests/realtime.test.js"
+    "check": "node --check atlas.js && node --check api/_auth.js && node --check api/_context.js && node --check api/config.js && node --check api/chat.js && node --check api/transcribe.js && node --check api/realtime-session.js && node --check api/generate-image.js && node --check memory.js && node --check voice.js && node tests/context.test.js && node tests/chat.test.js && node tests/realtime.test.js"
   }
 }
