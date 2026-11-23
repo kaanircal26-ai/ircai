@@ -392,6 +392,13 @@
         session.audioElement.srcObject = null;
         session.audioElement.remove();
       }
+      if (session.remoteAudioSource) {
+        try { session.remoteAudioSource.disconnect(); } catch (_) {}
+        session.remoteAudioSource = null;
+      }
+      if (session.outputAudioContext && session.outputAudioContext.state !== "closed") {
+        await session.outputAudioContext.close();
+      }
       if (session.visualFrame) cancelAnimationFrame(session.visualFrame);
       if (session.visualContext && session.visualContext.state !== "closed") await session.visualContext.close();
       const screen = $("tozraVoiceScreen");
@@ -701,9 +708,26 @@
       dataChannel: null,
       localStream: null,
       audioElement: null,
+      outputAudioContext: null,
+      remoteAudioSource: null,
       savedMessages: new Set(),
       assistantDrafts: new Map()
     };
+
+    // iOS Safari may block remote WebRTC audio unless its audio engine is
+    // resumed directly inside the user's tap gesture. Unlock it before any await.
+    try {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (AudioContextClass) {
+        session.outputAudioContext = new AudioContextClass();
+        const resumePromise = session.outputAudioContext.resume();
+        if (resumePromise && typeof resumePromise.catch === "function") {
+          resumePromise.catch(error => console.warn("iOS ses motoru başlatılamadı:", error));
+        }
+      }
+    } catch (error) {
+      console.warn("TOZRA ses motoru oluşturulamadı; medya oynatıcı kullanılacak:", error);
+    }
 
     voiceSession = session;
     $("voiceScreenMic")?.classList.remove("is-muted");
@@ -760,11 +784,30 @@
           event.streams?.[0] ||
           new MediaStream([event.track]);
 
-        let audio = session.audioElement;
+        // Preferred path: route the remote WebRTC stream through the AudioContext
+        // unlocked by the initial tap. This avoids iOS Safari's delayed autoplay block.
+        if (session.outputAudioContext) {
+          try {
+            if (session.outputAudioContext.state !== "running") {
+              await session.outputAudioContext.resume();
+            }
+            if (!session.remoteAudioSource) {
+              session.remoteAudioSource = session.outputAudioContext.createMediaStreamSource(remoteStream);
+              session.remoteAudioSource.connect(session.outputAudioContext.destination);
+            }
+            if (session.outputAudioContext.state === "running") {
+              setStatus("TOZRA'nın sesi hazır. Konuşabilirsin.", target.status);
+              return;
+            }
+          } catch (error) {
+            console.warn("iPhone AudioContext ses çıkışı başarısız; medya oynatıcı deneniyor:", error);
+          }
+        }
 
+        // Fallback for browsers without a usable AudioContext output route.
+        let audio = session.audioElement;
         if (!audio) {
           audio = document.createElement("audio");
-
           audio.autoplay = true;
           audio.playsInline = true;
           audio.muted = false;
@@ -776,34 +819,23 @@
           audio.style.position = "fixed";
           audio.style.width = "1px";
           audio.style.height = "1px";
-          audio.style.opacity = "0";
+          audio.style.opacity = "0.01";
           audio.style.pointerEvents = "none";
-
           document.body.appendChild(audio);
-
           session.audioElement = audio;
         }
-
         audio.srcObject = remoteStream;
-
         try {
           await audio.play();
-
-          setStatus(
-            "TOZRA'nın sesi hazır. Konuşabilirsin.",
-            target.status
-          );
-
+          setStatus("TOZRA'nın sesi hazır. Konuşabilirsin.", target.status);
         } catch (error) {
           console.warn("Ses oynatma engellendi:", error);
-
           audio.controls = true;
-          audio.style.display = "block";
-
-          setStatus(
-            "Sesi başlatmak için oynat düğmesine dokun.",
-            target.status
-          );
+          audio.style.opacity = "1";
+          audio.style.width = "min(90vw, 320px)";
+          audio.style.height = "40px";
+          audio.style.zIndex = "99999";
+          setStatus("iPhone ses izni engelledi. Ekrandaki oynat düğmesine dokun.", target.status);
         }
       };
 
