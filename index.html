@@ -2428,6 +2428,18 @@ html[data-tozra-theme="dark"] #workspacePage .tozra-home-action-row .tozra-home-
 @media(max-width:360px){#workspacePage .tozra-home-action-row{gap:7px}#workspacePage .tozra-home-action-row .tozra-minimal-talk{font-size:10px;padding:0 6px;gap:5px}#workspacePage .home-action-icon{width:18px;height:18px;flex-basis:18px}#workspacePage .home-action-icon svg{width:17px;height:17px}}
 </style>
 
+
+<style id="tozra-independent-screen-navigation-v1">
+/* Her ana bölüm bağımsız ekran/kaydırma alanı olarak çalışır. */
+.page{min-height:0;}
+.page.active{display:block;max-height:calc(100dvh - 66px);overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scrollbar-gutter:stable;}
+@media(max-width:760px){
+ .page.active{max-height:calc(100dvh - env(safe-area-inset-top) - 8px);padding-bottom:calc(94px + env(safe-area-inset-bottom));}
+ #workspacePage.active{padding-bottom:calc(104px + env(safe-area-inset-bottom))!important;}
+ #chatPage.active{padding-bottom:calc(112px + env(safe-area-inset-bottom))!important;}
+}
+.page:not(.active){display:none!important;}
+</style>
 </head>
 
 <body>
@@ -3222,8 +3234,13 @@ $("menuBackdrop").onclick=()=>toggleMenu(true);
 
 /* SAYFA GEÇİŞLERİ */
 function showPage(page){
- document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
- $(page+"Page").classList.add("active");
+ const target=$(page+"Page");
+ if(!target){console.warn("TOZRA: ekran bulunamadı:",page);return;}
+ document.querySelectorAll(".page").forEach(p=>{p.classList.remove("active");p.setAttribute("aria-hidden","true");});
+ target.classList.add("active");
+ target.setAttribute("aria-hidden","false");
+ /* Ekranların kendi kaydırma alanı vardır; belge/ana sayfa konumu değişmez. */
+ target.scrollTop=0;
  $("navWorkspace").classList.toggle("active",page==="workspace");
  $("navProjects").classList.toggle("active",page==="projectList"||page==="project");
  $("navChat").classList.toggle("active",page==="chat");
@@ -3237,9 +3254,6 @@ function showPage(page){
   page==="creativeStudio"?"CREATIVE STUDIO":
   page==="tasks"?"GÖREVLERİM & TAKVİM":"IRCAL DESIGN";
  toggleMenu(true);
- const content=document.querySelector(".content");
- if(content) content.scrollTo({top:0,behavior:"instant"});
- document.querySelectorAll(".page").forEach(section=>{section.scrollTop=0;});
 }
 $("navWorkspace").onclick=()=>showPage("workspace");
 $("navProjects").onclick=()=>{showPage("projectList");renderProjects();};
@@ -5623,21 +5637,4 @@ html[data-tozra-theme="dark"] #workspacePage .trh-orbit-glow:before{border-color
  #workspacePage .trh-orbit-line,#workspacePage .trh-orbit-glow,#workspacePage .trh-orbit-glow:before,#workspacePage .trh-orbit:before,#workspacePage .trh-orbit:after,
  #tozraVoiceScreen .voice-orb-wrap:before,#tozraVoiceScreen .voice-orb-wrap:after,#tozraVoiceScreen .voice-orb-ring,#tozraVoiceScreen .voice-orb:before{animation:none!important}
 }
-</style>
-
-<style id="tozra-independent-screen-navigation-v1">
-
-/* TOZRA independent workspace screens: each page owns its scroll position. */
-.main{min-height:0;height:100dvh;overflow:hidden}
-.content{min-height:0;flex:1 1 auto;overflow-y:auto;overscroll-behavior-y:contain;scrollbar-gutter:stable;scroll-behavior:smooth}
-.page{width:100%;min-height:100%;overscroll-behavior:contain}
-.page:not(.active){display:none!important}
-#homePrimaryNav{flex-shrink:0}
-@media(max-width:760px){
- .main{height:100dvh;height:100svh}
- .content{height:calc(100svh - 58px);padding-bottom:112px!important;-webkit-overflow-scrolling:touch}
- .page{min-height:calc(100svh - 170px)}
- #homePrimaryNav{position:fixed!important}
-}
-
 </style>
