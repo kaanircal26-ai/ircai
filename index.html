@@ -5836,6 +5836,13 @@ html[data-tozra-theme="dark"] .market-categories button.is-active,html[data-tozr
 #atlasWorldGlobe canvas{display:block;max-width:100%}
 .atlas-globe-hint{text-align:center;color:var(--text-secondary,#9299a4);font-size:11px;padding:2px 0 4px}
 @media(max-width:640px){.atlas-globe-stage{padding:14px 8px 10px}#atlasWorldGlobe{height:330px}.atlas-globe-heading small{font-size:10px}}
+
+/* Atlas globe visual fallback: the Earth remains visible while WebGL initializes */
+#atlasWorldGlobe{position:relative;min-height:430px;isolation:isolate}
+#atlasWorldGlobe::before{content:"";position:absolute;z-index:0;width:min(68vw,350px);aspect-ratio:1;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;background-color:#173c4b;background-image:url('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg'),radial-gradient(circle at 34% 30%,#8ec8b5 0%,#397f83 38%,#17465b 72%,#0b2636 100%);background-size:auto 100%,cover;background-repeat:repeat-x,no-repeat;box-shadow:inset -24px -8px 38px rgba(0,0,0,.48),inset 10px 5px 22px rgba(192,239,201,.18),0 0 55px rgba(112,169,91,.18);animation:atlasEarthSpin 42s linear infinite}
+#atlasWorldGlobe canvas{position:relative;z-index:1;display:block}
+@keyframes atlasEarthSpin{from{background-position:0 0,center}to{background-position:700px 0,center}}
+@media(max-width:640px){#atlasWorldGlobe{min-height:330px}#atlasWorldGlobe::before{width:min(76vw,290px)}}
 </style>
 
 <script src="/atlas.js"></script>

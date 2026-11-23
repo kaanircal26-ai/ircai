@@ -33,7 +33,9 @@ function initGlobe(){
   state.globeLoading=false;
  };
  if(window.Globe){start();return}
- const script=document.createElement('script');script.src='https://unpkg.com/globe.gl@2.41.12/dist/globe.gl.min.js';script.onload=start;script.onerror=()=>{state.globeLoading=false;host.innerHTML='<div class="atlas-empty">3D küre servisi şu anda yüklenemedi.</div>'};document.head.append(script);
+ const urls=['https://unpkg.com/globe.gl','https://cdn.jsdelivr.net/npm/globe.gl/dist/globe.gl.min.js'];
+ const load=(i)=>{const script=document.createElement('script');script.src=urls[i];script.onload=()=>{if(window.Globe)start();else if(i+1<urls.length)load(i+1);else{state.globeLoading=false;notice('atlasMapStatus','3D küre kütüphanesi yüklenemedi. Dünya görseli yedek görünümde gösteriliyor.')}};script.onerror=()=>{if(i+1<urls.length)load(i+1);else{state.globeLoading=false;notice('atlasMapStatus','3D küre servisine erişilemedi. Dünya yedek görünümde gösteriliyor.')}};document.head.append(script)};
+ load(0);
 }
 function countryCard(c){return `<button class="atlas-country-card" data-country="${esc(c.cca3)}"><span class="atlas-flag">${esc(c.flag||'🌐')}</span><strong>${esc(c.name.common)}</strong><small>${esc(c.region||'')} · ${esc((c.capital||[])[0]||'Başkent bilgisi yok')}</small><em>${Number(c.population||0).toLocaleString('tr-TR')} nüfus</em></button>`}
 function renderCountries(list){const target=state.tab==='countries'?'atlasCountryGridAll':'atlasCountryGrid';$(target).innerHTML=list.map(countryCard).join('')||'<div class="atlas-empty">Eşleşen ülke bulunamadı.</div>';root.querySelectorAll('[data-country]').forEach(b=>b.onclick=()=>showCountry(b.dataset.country))}
