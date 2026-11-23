@@ -1,7 +1,7 @@
 
 "use strict";
 
-/* TOZRA FREE BROWSER VOICE v4 */
+/* TOZRA REALTIME VOICE v3 - PERSONAL MEMORY */
 (() => {
   let voiceSession = null;
 
@@ -214,7 +214,136 @@
     }
   }
 
-  async function stopVoiceSession(showMessage = true) {
+  function handleRealtimeEvent(event, session) {
+    if (!event || !session) return;
+
+    switch (event.type) {
+
+      case "session.created":
+      case "session.updated":
+        setStatus(
+          "TOZRA hazır. Seni dinliyorum…",
+          session.target.status
+        );
+        break;
+
+      case "input_audio_buffer.speech_started":
+        const transcriptNode = $("voiceScreenTranscript");
+        if (transcriptNode) { transcriptNode.textContent = "Seni dinliyorum…"; transcriptNode.dataset.role = "user"; }
+        setStatus(
+          "Seni dinliyorum…",
+          session.target.status
+        );
+        break;
+
+      case "input_audio_buffer.speech_stopped":
+        setStatus(
+          "TOZRA yanıt hazırlıyor…",
+          session.target.status
+        );
+        break;
+
+      case "output_audio_buffer.started":
+        setStatus(
+          "TOZRA konuşuyor…",
+          session.target.status
+        );
+        break;
+
+      case "output_audio_buffer.stopped":
+        setStatus(
+          "Dinliyorum…",
+          session.target.status
+        );
+        break;
+
+      case "conversation.item.input_audio_transcription.completed": {
+        const transcriptNode = $("voiceScreenTranscript");
+        if (transcriptNode && event.transcript) transcriptNode.textContent = event.transcript;
+        const itemId = event.item_id;
+
+        addVoiceMessage(
+          session,
+          "user",
+          event.transcript,
+          itemId ? `user-${itemId}` : null
+        );
+
+        break;
+      }
+
+      case "response.output_audio_transcript.delta": {
+        const transcriptNode = $("voiceScreenTranscript");
+        if (transcriptNode && event.delta) {
+          if (transcriptNode.dataset.role !== "assistant") { transcriptNode.textContent = ""; transcriptNode.dataset.role = "assistant"; }
+          transcriptNode.textContent += event.delta;
+        }
+        const id = event.response_id || "response";
+
+        session.assistantDrafts.set(
+          id,
+          (session.assistantDrafts.get(id) || "") +
+            (event.delta || "")
+        );
+
+        break;
+      }
+
+      case "response.output_audio_transcript.done": {
+        const id =
+          event.response_id ||
+          event.item_id ||
+          `assistant-${Date.now()}`;
+
+        const finalText =
+          event.transcript ||
+          session.assistantDrafts.get(id) ||
+          "";
+
+        addVoiceMessage(
+          session,
+          "assistant",
+          finalText,
+          `assistant-${id}`
+        );
+
+        session.assistantDrafts.delete(id);
+
+        break;
+      }
+
+      case "conversation.item.input_audio_transcription.failed":
+        setStatus(
+          "Konuşman anlaşılamadı. Tekrar deneyebilirsin.",
+          session.target.status
+        );
+        break;
+
+      case "error":
+        console.error("TOZRA Realtime error:", event);
+
+        setStatus(
+          event.error?.message ||
+            "Sesli görüşmede bir hata oluştu.",
+          session.target.status
+        );
+        break;
+
+      case "response.done":
+        if (
+          session.pc &&
+          session.pc.connectionState === "connected"
+        ) {
+          setStatus(
+            "Dinliyorum…",
+            session.target.status
+          );
+        }
+        break;
+    }
+  }
+
+  async function stopRealtimeVoice(showMessage = true) {
     const session = voiceSession;
 
     if (!session) return;
@@ -525,11 +654,362 @@
     else startBrowserRecognition(session);
   }
 
+  async function startRealtimeVoice() {
+    if (voiceSession) {
+      await stopRealtimeVoice();
+      return;
+    }
+
+    let target;
+
+    try {
+      target = getVoiceTarget();
+
+      if (!target.button || !target.status) {
+        throw new Error(
+          "Sesli sohbet arayüzü bulunamadı."
+        );
+      }
+
+    } catch (error) {
+      alert(error.message);
+      return;
+    }
+
+    if (!window.TozraAuth?.getSession?.()) {
+      setStatus("Sesli sohbet için önce hesabına giriş yapmalısın.", target.status);
+      if (typeof window.showModal === "function") window.showModal("login");
+      return;
+    }
+
+    if (
+      !navigator.mediaDevices?.getUserMedia ||
+      !window.RTCPeerConnection
+    ) {
+      setStatus(
+        "Tarayıcın gerçek zamanlı sesli görüşmeyi desteklemiyor.",
+        target.status
+      );
+      return;
+    }
+
+    const session = {
+      target,
+      scope: target.scope,
+      projectId: target.projectId,
+      pc: null,
+      dataChannel: null,
+      localStream: null,
+      audioElement: null,
+      savedMessages: new Set(),
+      assistantDrafts: new Map()
+    };
+
+    voiceSession = session;
+    $("voiceScreenMic")?.classList.remove("is-muted");
+    $("voiceScreenMic")?.setAttribute("aria-label", "Mikrofonu kapat");
+
+    updateButton(target, true);
+
+    setStatus(
+      "Sesli görüşme hazırlanıyor…",
+      target.status
+    );
+
+    try {
+      /*
+       * Mikrofon izni.
+       */
+      session.localStream =
+        await navigator.mediaDevices.getUserMedia({
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: true
+          }
+        });
+
+      if (voiceSession !== session) {
+        session.localStream
+          .getTracks()
+          .forEach(track => track.stop());
+
+        return;
+      }
+      attachVoiceVisualizer(session, session.localStream);
+
+      /*
+       * WebRTC bağlantısı.
+       */
+      session.pc = new RTCPeerConnection();
+
+      session.localStream
+        .getAudioTracks()
+        .forEach(track => {
+          session.pc.addTrack(
+            track,
+            session.localStream
+          );
+        });
+
+      /*
+       * TOZRA'nın sesini oynat.
+       */
+      session.pc.ontrack = async event => {
+        const remoteStream =
+          event.streams?.[0] ||
+          new MediaStream([event.track]);
+
+        let audio = session.audioElement;
+
+        if (!audio) {
+          audio = document.createElement("audio");
+
+          audio.autoplay = true;
+          audio.playsInline = true;
+          audio.muted = false;
+          audio.volume = 1;
+          audio.setAttribute("playsinline", "");
+          audio.setAttribute("webkit-playsinline", "");
+          audio.setAttribute("autoplay", "");
+          audio.setAttribute("aria-label", "TOZRA ses çıkışı");
+          audio.style.position = "fixed";
+          audio.style.width = "1px";
+          audio.style.height = "1px";
+          audio.style.opacity = "0";
+          audio.style.pointerEvents = "none";
+
+          document.body.appendChild(audio);
+
+          session.audioElement = audio;
+        }
+
+        audio.srcObject = remoteStream;
+
+        try {
+          await audio.play();
+
+          setStatus(
+            "TOZRA'nın sesi hazır. Konuşabilirsin.",
+            target.status
+          );
+
+        } catch (error) {
+          console.warn("Ses oynatma engellendi:", error);
+
+          audio.controls = true;
+          audio.style.display = "block";
+
+          setStatus(
+            "Sesi başlatmak için oynat düğmesine dokun.",
+            target.status
+          );
+        }
+      };
+
+      /*
+       * Bağlantı durumları.
+       */
+      session.pc.oniceconnectionstatechange = () => {
+        const iceState = session.pc?.iceConnectionState;
+        if (iceState === "failed") {
+          setStatus("Ses bağlantısı kurulamadı. Ağını veya VPN ayarını kontrol edip tekrar dene.", target.status);
+        }
+      };
+
+      session.pc.onconnectionstatechange = () => {
+        const state =
+          session.pc?.connectionState;
+
+        if (state === "connected") {
+          setStatus(
+            "Bağlantı kuruldu. Seni dinliyorum…",
+            target.status
+          );
+        }
+
+        if (state === "failed") {
+          setStatus(
+            "Bağlantı başarısız oldu. Tekrar deneyebilirsin.",
+            target.status
+          );
+        }
+
+        if (state === "disconnected") {
+          setStatus(
+            "Bağlantı kesiliyor…",
+            target.status
+          );
+        }
+      };
+
+      /*
+       * Realtime olay kanalı.
+       */
+      session.dataChannel =
+        session.pc.createDataChannel("oai-events");
+
+      session.dataChannel.onopen = () => {
+        setStatus(
+          "TOZRA hazır. Seni dinliyorum…",
+          target.status
+        );
+        // The first greeting confirms that both audio directions are alive.
+        try {
+          session.dataChannel.send(JSON.stringify({ type: "response.create" }));
+        } catch (error) {
+          console.warn("TOZRA ilk sesli yanıt isteği gönderilemedi:", error);
+        }
+      };
+
+      session.dataChannel.onmessage = message => {
+        try {
+          const event = JSON.parse(message.data);
+
+          handleRealtimeEvent(event, session);
+
+        } catch (error) {
+          console.warn(
+            "Realtime olayı okunamadı:",
+            error
+          );
+        }
+      };
+
+      session.dataChannel.onerror = error => {
+        console.error(
+          "Realtime data channel:",
+          error
+        );
+
+        setStatus(
+          "Sesli sohbet veri bağlantısında hata oluştu.",
+          target.status
+        );
+      };
+
+      /*
+       * Önceki sohbet bağlamını sunucuya gönder.
+       */
+      const history = target.history
+        .slice(-8)
+        .map(item => ({
+          role: item.role,
+          content: String(item.content || "")
+        }))
+        .filter(item =>
+          ["user", "assistant"].includes(item.role) &&
+          item.content.trim()
+        );
+
+      /*
+       * Kişisel hafıza kayıtlarını al.
+       */
+      const personalMemory = getPersonalMemory();
+
+      /*
+       * Oturum anahtarını al.
+       */
+      const tokenResponse = await fetch(
+        "/api/realtime-session",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...(await TozraAuth.authHeaders())
+          },
+          body: JSON.stringify({
+            history,
+            projectContext: target.projectContext,
+            personalMemory
+          })
+        }
+      );
+
+      const tokenData =
+        await tokenResponse.json().catch(() => ({}));
+
+      if (
+        !tokenResponse.ok ||
+        !tokenData.success ||
+        !tokenData.client_secret
+      ) {
+        throw new Error(
+          tokenData.error ||
+            "Sesli görüşme anahtarı alınamadı."
+        );
+      }
+
+      if (voiceSession !== session) return;
+
+      /*
+       * SDP teklifi oluştur.
+       */
+      const offer =
+        await session.pc.createOffer();
+
+      await session.pc.setLocalDescription(offer);
+
+      /*
+       * OpenAI Realtime bağlantısı.
+       */
+      const rtcResponse = await fetch(
+        "https://api.openai.com/v1/realtime/calls",
+        {
+          method: "POST",
+          headers: {
+            "Authorization":
+              `Bearer ${tokenData.client_secret}`,
+            "Content-Type": "application/sdp"
+          },
+          body: session.pc.localDescription.sdp
+        }
+      );
+
+      const answerSdp =
+        await rtcResponse.text();
+
+      if (!rtcResponse.ok) {
+        throw new Error(
+          "Realtime bağlantısı reddedildi: " +
+          answerSdp.slice(0, 400)
+        );
+      }
+
+      if (voiceSession !== session) return;
+
+      await session.pc.setRemoteDescription({
+        type: "answer",
+        sdp: answerSdp
+      });
+
+      setStatus(
+        "Bağlanıyor… Birazdan konuşabilirsin.",
+        target.status
+      );
+
+    } catch (error) {
+      console.error(
+        "TOZRA sesli sohbet hatası:",
+        error
+      );
+
+      if (voiceSession === session) {
+        await stopRealtimeVoice(false);
+      }
+
+      const readableError = error?.message || "Bilinmeyen hata";
+      setStatus("Sesli sohbet başlatılamadı: " + readableError, target.status);
+      const transcript = $("voiceScreenTranscript");
+      if (transcript) transcript.textContent = readableError;
+    }
+  }
+
   /* Mevcut mikrofon düğmelerini tam ekran görüşme arayüzüne bağla. */
   const generalButton = $("voiceButton");
   const projectButton = $("projectVoiceButton");
   const startFromButton = async () => {
-    if (voiceSession) { showVoiceScreen(); await stopVoiceSession(); return; }
+    if (voiceSession) { showVoiceScreen(); await stopRealtimeVoice(); return; }
 
     // Do not check the in-memory session before Supabase has restored it.
     // This was the reason Google users were incorrectly sent to the login modal.
@@ -568,7 +1048,7 @@
     projectButton.textContent = "🎙 Sesli sohbet";
   }
 
-  const finishAndClose = async () => { await stopVoiceSession(); hideVoiceScreen(); };
+  const finishAndClose = async () => { await stopRealtimeVoice(); hideVoiceScreen(); };
   $("voiceScreenEnd")?.addEventListener("click", finishAndClose);
   $("voiceScreenClose")?.addEventListener("click", finishAndClose);
   $("voiceScreenClose2")?.addEventListener("click", finishAndClose);
@@ -608,10 +1088,10 @@
     setStatus(currentlyEnabled ? "Mikrofon kapalı." : "Mikrofon açık. Seni dinliyorum…", voiceSession.target.status);
   });
 
-  window.stopTozraVoice = stopVoiceSession;
+  window.stopTozraVoice = stopRealtimeVoice;
 
   window.addEventListener("pagehide", () => {
-    stopVoiceSession(false);
+    stopRealtimeVoice(false);
   });
 
 })();

@@ -3923,8 +3923,8 @@ function renderAttachmentsFor(list,areaId){
 }
 function addFiles(files,kind,list,areaId){
  const selected=Array.from(files);
- if(list.length+selected.length>3){
-  alert("Bir mesajda en fazla 3 dosya ekleyebilirsin.");
+ if(list.length+selected.length>15){
+  alert("Bir mesajda fotoğraf ve videolar dahil en fazla 15 medya ekleyebilirsin.");
   return;
  }
  for(const file of selected){
@@ -3949,7 +3949,7 @@ function clearFiles(list,areaId){
  list.length=0;
  renderAttachmentsFor(list,areaId);
 }
-function imageToDataURL(file,maxSide=1100,quality=.72){
+function imageToDataURL(file,maxSide=800,quality=.52){
  return new Promise((resolve,reject)=>{
   const img=new Image();
   const url=URL.createObjectURL(file);
@@ -4002,7 +4002,7 @@ function videoToFrames(file,count=3){
    try{
     const duration=video.duration;
     if(!Number.isFinite(duration)||duration<=0)throw new Error("Video süresi okunamadı.");
-    const fractions=count===1?[.5]:count===2?[.2,.8]:[.1,.5,.9];
+    const fractions=Array.from({length:count},(_,i)=>(i+1)/(count+1));
     const frames=[];
 
     for(const f of fractions){
@@ -4029,14 +4029,14 @@ function videoToFrames(file,count=3){
       }
      });
 
-     const scale=Math.min(1,640/Math.max(video.videoWidth,video.videoHeight));
+     const scale=Math.min(1,560/Math.max(video.videoWidth,video.videoHeight));
      const canvas=document.createElement("canvas");
      canvas.width=Math.max(1,Math.round(video.videoWidth*scale));
      canvas.height=Math.max(1,Math.round(video.videoHeight*scale));
      const ctx=canvas.getContext("2d");
      if(!ctx)throw new Error("Video karesi işlenemedi.");
      ctx.drawImage(video,0,0,canvas.width,canvas.height);
-     frames.push({data:canvas.toDataURL("image/jpeg",.55),time:target});
+     frames.push({data:canvas.toDataURL("image/jpeg",.42),time:target});
     }
 
     finish();
@@ -4052,37 +4052,34 @@ function videoToFrames(file,count=3){
 }
 async function prepareMedia(list){
  const images=[],videoFrames=[],timeline=[];
- for(const item of list){
-  if(item.kind==="image")images.push(await imageToDataURL(item.file));
- }
- for(const item of list){
-  if(item.kind==="video"){
-   const remaining=3-images.length-videoFrames.length;
-   if(remaining<=0)break;
-   const result=await videoToFrames(item.file,Math.min(3,remaining));
-   timeline.push({
-    name:result.name,
-    duration:result.duration,
-    frames:result.frames.map((f,i)=>({index:i+1,time:f.time}))
-   });
+ const imageItems=list.filter(item=>item.kind==="image");
+ const videoItems=list.filter(item=>item.kind==="video");
+ const frameBudget=Math.max(0,15-imageItems.length);
+ for(const item of imageItems) images.push(await imageToDataURL(item.file));
+ if(videoItems.length&&frameBudget>0){
+  const base=Math.floor(frameBudget/videoItems.length);
+  let remainder=frameBudget%videoItems.length;
+  for(let index=0;index<videoItems.length;index++){
+   const item=videoItems[index];
+   const count=base+(remainder>0?1:0);
+   if(remainder>0)remainder--;
+   if(count<=0)continue;
+   const result=await videoToFrames(item.file,count);
+   timeline.push({name:result.name,duration:result.duration,frames:result.frames.map((f,i)=>({index:i+1,time:f.time}))});
    videoFrames.push(...result.frames.map(f=>f.data));
   }
  }
-
  let timelineText="";
  if(timeline.length){
-  timelineText="\n\n[VİDEO ANALİZİ - KRONOLOJİK KARELER]\n";
+  timelineText="\n\n[TOZRA VISION - KRONOLOJİK VİDEO KARELERİ]\n";
   timeline.forEach(v=>{
    timelineText+="\nVideo: "+v.name+"\nSüre: "+v.duration.toFixed(2)+" saniye\n";
-   v.frames.forEach(f=>{
-    timelineText+="Kare "+f.index+": "+formatTime(f.time)+" zamanında alınmıştır.\n";
-   });
+   v.frames.forEach(f=>{timelineText+="Kare "+f.index+": "+formatTime(f.time)+" zamanında alınmıştır.\n";});
   });
-  timelineText+="\nKareleri zaman sırasına göre incele. Görüntüde olmayan hareketleri uydurma. Videonun sesini veya tamamını analiz ettiğini iddia etme.";
+  timelineText+="\nTüm fotoğrafları ve video karelerini birlikte değerlendir. Her videonun karelerini kendi zaman sırasına göre yorumla. Farklı videoları birbirine karıştırma. Yalnızca örneklenen karelerin desteklediği gözlemleri belirt; videonun sesini veya örneklenmeyen anlarını analiz ettiğini iddia etme. Benzer/tekrarlanan kareleri ve gözlemlenebilen sahne değişimlerini belirt.";
  }
  return {images,videoFrames,timelineText};
 }
-
 /* API */
 function createTyping(area){
  const el=document.createElement("div");
@@ -5180,7 +5177,7 @@ renderTasksCalendar();
  </div>
 </div>
 
-<script src="/voice.js?v=20"></script>
+<script src="/voice.js?v=21"></script>
 <script>
 (()=>{
  const splash=document.getElementById('splash');
