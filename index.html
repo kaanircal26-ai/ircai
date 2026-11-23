@@ -2440,6 +2440,30 @@ html[data-tozra-theme="dark"] #workspacePage .tozra-home-action-row .tozra-home-
 }
 .page:not(.active){display:none!important;}
 </style>
+
+<style id="tozra-screen-isolation-v1">
+/* Each navigation destination is a separate screen. Home-only shortcuts never leak into other screens. */
+.main > .content{position:relative;isolation:isolate;min-height:0}
+.main > .content > .page{display:none!important;visibility:hidden!important;pointer-events:none!important}
+.main > .content > .page.active{display:block!important;visibility:visible!important;pointer-events:auto!important}
+.main > .content > #workspacePage.active{display:grid!important}
+.main > .content > .page:not(.active){max-height:0!important;min-height:0!important;overflow:hidden!important;margin:0!important;padding:0!important}
+#workspacePage .trh-header,
+#workspacePage .trh-shortcuts,
+#workspacePage .trh-orbit,
+#workspacePage .trh-welcome,
+#workspacePage .trh-composer,
+#workspacePage .trh-section,
+#workspacePage .trh-bottom-nav{display:block}
+#homePrimaryNav{display:grid!important}
+@media(max-width:760px){
+ .main > .content{overflow:hidden}
+ .main > .content > .page.active{height:calc(100dvh - var(--tozra-topbar-height,58px) - env(safe-area-inset-top));max-height:calc(100dvh - var(--tozra-topbar-height,58px) - env(safe-area-inset-top));overflow-y:auto!important;overscroll-behavior:contain}
+ .main > .content > #workspacePage.active{display:flex!important;flex-direction:column}
+ .main > .content > #workspacePage.active{padding-bottom:calc(100px + env(safe-area-inset-bottom))!important}
+}
+</style>
+
 </head>
 
 <body>
@@ -3235,12 +3259,16 @@ $("menuButton").onclick=()=>toggleMenu();
 $("menuBackdrop").onclick=()=>toggleMenu(true);
 
 /* SAYFA GEÇİŞLERİ */
+document.documentElement.dataset.tozraActivePage="workspace";
+document.body.dataset.tozraActivePage="workspace";
 function showPage(page){
  const target=$(page+"Page");
  if(!target){console.warn("TOZRA: ekran bulunamadı:",page);return;}
  document.querySelectorAll(".page").forEach(p=>{p.classList.remove("active");p.setAttribute("aria-hidden","true");});
  target.classList.add("active");
  target.setAttribute("aria-hidden","false");
+ document.documentElement.dataset.tozraActivePage=page;
+ document.body.dataset.tozraActivePage=page;
  /* Ekranların kendi kaydırma alanı vardır; belge/ana sayfa konumu değişmez. */
  target.scrollTop=0;
  $("navWorkspace").classList.toggle("active",page==="workspace");
