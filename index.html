@@ -2429,34 +2429,71 @@ html[data-tozra-theme="dark"] #workspacePage .tozra-home-action-row .tozra-home-
 </style>
 
 
+<style id="tozra-navigation-state-repair">
+/* Navigation state is authoritative: inactive workspaces must never remain visible. */
+.content > .page,
+.content > #workspacePage,
+.content > #projectListPage,
+.content > #projectPage,
+.content > #chatPage,
+.content > #creativeStudioPage,
+.content > #tasksPage {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+.content > .page.active,
+.content > #workspacePage.active,
+.content > #projectListPage.active,
+.content > #projectPage.active,
+.content > #chatPage.active,
+.content > #creativeStudioPage.active,
+.content > #tasksPage.active {
+  display: block !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+@media (max-width: 760px) {
+  .content {
+    position: relative !important;
+    min-height: 0 !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+  }
+  .content > #workspacePage.active {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .content > #chatPage.active,
+  .content > #projectListPage.active,
+  .content > #projectPage.active,
+  .content > #creativeStudioPage.active,
+  .content > #tasksPage.active {
+    display: block !important;
+  }
+  .content > .page.active {
+    min-height: calc(100dvh - 132px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    padding-bottom: calc(86px + env(safe-area-inset-bottom)) !important;
+    margin-top: 0 !important;
+    scroll-margin-top: 0 !important;
+  }
+  /* Home-only quick actions and hero are scoped to the home page and cannot leak. */
+  .content > #workspacePage:not(.active) .trh-header,
+  .content > #workspacePage:not(.active) .trh-shortcuts,
+  .content > #workspacePage:not(.active) .trh-orbit,
+  .content > #workspacePage:not(.active) .trh-welcome,
+  .content > #workspacePage:not(.active) .trh-composer,
+  .content > #workspacePage:not(.active) .trh-section,
+  .content > #workspacePage:not(.active) .trh-bottom-nav {
+    display: none !important;
+  }
+}
+</style>
 
-<style id="tozra-screen-navigation-stability">
-/* Exactly one top-level app page is visible; the active route controls visibility. */
-.content > .page{display:none!important;min-width:0;max-width:100%}
-.content > .page.active{display:block!important;visibility:visible!important;pointer-events:auto!important}
-.content > .page:not(.active){visibility:hidden!important;pointer-events:none!important}
-@media(max-width:760px){
- .content{min-height:0;overflow-x:hidden}
- .content > .page.active{width:100%;min-height:calc(100dvh - 150px);overflow-x:hidden}
- #homePrimaryNav{z-index:999}
-}
-</style>
-<style id="tozra-mobile-screen-layout-fix">
-/* Hide the home-only secondary icon row on every non-home screen. */
-.content:not(.is-home-page) > #homePrimaryNav{display:none!important}
-.content.is-home-page > #homePrimaryNav{display:grid!important}
-.content > .page.active{align-self:stretch;flex:0 0 auto;margin-top:0!important}
-@media(max-width:760px){
- .content{padding:10px 14px 18px!important;min-height:0!important;gap:0!important}
- .content > .page.active{width:100%;min-height:0!important;max-height:none!important;overflow-x:hidden}
- .content > #chatPage.active,
- .content > #projectListPage.active,
- .content > #projectPage.active,
- .content > #creativeStudioPage.active,
- .content > #tasksPage.active{margin-top:0!important;padding-top:4px!important}
- .projects-page-heading,.cs-heading,.tasks-heading{margin-top:0!important;padding-top:4px!important}
-}
-</style>
 </head>
 
 <body>
@@ -3251,16 +3288,8 @@ $("menuBackdrop").onclick=()=>toggleMenu(true);
 
 /* SAYFA GEÇİŞLERİ */
 function showPage(page){
- const target=$(page+"Page");
- if(!target){console.warn("TOZRA: ekran bulunamadı:",page);return;}
- document.querySelectorAll(".page").forEach(p=>{p.classList.remove("active");p.setAttribute("aria-hidden","true");});
- target.classList.add("active");
- target.setAttribute("aria-hidden","false");
- document.documentElement.dataset.tozraActivePage=page;
- document.body.dataset.tozraActivePage=page;
- const appContent=document.querySelector(".content");
- if(appContent) appContent.classList.toggle("is-home-page",page==="workspace");
- target.scrollTop=0;
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ $(page+"Page").classList.add("active");
  $("navWorkspace").classList.toggle("active",page==="workspace");
  $("navProjects").classList.toggle("active",page==="projectList"||page==="project");
  $("navChat").classList.toggle("active",page==="chat");
@@ -3276,7 +3305,6 @@ function showPage(page){
  toggleMenu(true);
  window.scrollTo({top:0,behavior:"smooth"});
 }
-document.querySelector(".content")?.classList.toggle("is-home-page",!!document.getElementById("workspacePage")?.classList.contains("active"));
 $("navWorkspace").onclick=()=>showPage("workspace");
 $("navProjects").onclick=()=>{showPage("projectList");renderProjects();};
 $("navChat").onclick=()=>openGeneralChat();
@@ -3311,11 +3339,8 @@ $("homeSeeAllChats")?.addEventListener("click", openGeneralChat);
 $("homeRecentChat")?.addEventListener("click", openGeneralChat);
 $("homeBottomHome")?.addEventListener("click", ()=>$("navWorkspace").click());
 $("homeBottomProjects")?.addEventListener("click", ()=>$("navProjects").click());
-$("homeBottomHome")?.addEventListener("click", ()=>showPage("workspace"));
 $("homeBottomChat")?.addEventListener("click", ()=>openGeneralChat());
-$("homeBottomProjects")?.addEventListener("click", ()=>{showPage("projectList");renderProjects();});
-$("homeBottomStudio")?.addEventListener("click", ()=>showPage("creativeStudio"));
-$("homeBottomProfile")?.addEventListener("click", ()=>showModal("profile"));
+$("homeBottomStudio")?.addEventListener("click", ()=>$("navCreativeStudio").click());
 
 function syncHomePrimaryNav(tab){
  const nav=document.getElementById("homePrimaryNav"); if(!nav)return;
@@ -3326,6 +3351,8 @@ function syncHomePrimaryNav(tab){
  });
 }
 $("homeBottomProfile")?.addEventListener("click",()=>syncHomePrimaryNav("profile"));
+
+$("homeBottomProfile")?.addEventListener("click", ()=>$("profileButton").click());
 $("homeAttachButton")?.addEventListener("click", ()=>$("imageButton").click());
 $("homeImageButton")?.addEventListener("click", ()=>$("imageButton").click());
 $("homeMicButton")?.addEventListener("click", ()=>$("voiceButton").click());
@@ -5016,7 +5043,7 @@ if("serviceWorker" in navigator){
  function syncDockToPage(){
   const active=document.querySelector(".page.active");
   if(!active)return;
-  const map={workspacePage:"home",chatPage:"chat",projectListPage:"projects",projectPage:"projects",creativeStudioPage:"studio",tasksPage:"home"};
+  const map={workspacePage:"home",chatPage:"chat",projectPage:"projects",creativeStudioPage:"studio"};
   const tab=map[active.id];
   if(tab)setDockTab(tab);
  }
