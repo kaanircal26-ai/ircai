@@ -2494,7 +2494,7 @@ html[data-tozra-theme="dark"] #workspacePage .tozra-home-action-row .tozra-home-
 }
 </style>
 
-</head>
+<link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.125/Build/Cesium/Widgets/widgets.css"></head>
 
 <body>
 <div class="splash" id="splash">
@@ -2694,7 +2694,13 @@ html[data-tozra-theme="dark"] #workspacePage .tozra-home-action-row .tozra-home-
  <section class="atlas-panel" data-atlas-panel="companies" hidden><div class="atlas-section-head"><div><span class="atlas-kicker">COMPANY INTELLIGENCE</span><h2>Küresel şirket keşfi</h2><p>Wikidata'nın açık bilgi grafiğinde şirket ve kurum kayıtlarını ara.</p></div></div><form class="atlas-search-form" id="atlasCompanyForm"><input class="atlas-input" id="atlasCompanySearch" required placeholder="Şirket adı veya anahtar kelime…"><button class="atlas-primary">Ara</button></form><p class="atlas-status" id="atlasCompanyStatus">Arama yapmak için bir şirket adı gir.</p><div class="atlas-results" id="atlasCompanyResults"></div><p class="atlas-disclaimer">Sonuçlar açık Wikidata kayıtlarından gelir. Eksik veya güncel olmayan şirket bilgileri olabilir; kayıtları doğrulamak için kaynak sayfasını aç.</p></section>
  <section class="atlas-panel" data-atlas-panel="technology" hidden><div class="atlas-section-head"><div><span class="atlas-kicker">TECHNOLOGY RADAR</span><h2>Teknoloji dünyasında neler oluyor?</h2><p>Yapay zekâ, robotik, yarı iletkenler ve iklim teknolojileri hakkında haber keşfi.</p></div><button class="atlas-secondary" id="atlasTechRefresh">Akışı yenile ↻</button></div><p class="atlas-status" id="atlasTechStatus">Teknoloji haberleri yükleniyor…</p><div class="atlas-results" id="atlasTechResults"></div><p class="atlas-disclaimer">Haber akışı GDELT üzerinden derlenir. Başlık ve yayın zamanı kaynağa göre değişebilir.</p></section>
  <section class="atlas-panel" data-atlas-panel="research" hidden><div class="atlas-section-head"><div><span class="atlas-kicker">AI RESEARCH</span><h2>Atlas araştırma asistanı</h2><p>Araştırma sorunu TOZRA AI'ya aktar; kaynaklı, yapılandırılmış bir rapor iste.</p></div></div><textarea class="atlas-textarea" id="atlasResearchPrompt" rows="5" placeholder="Örn. Türkiye ve Güney Kore'nin teknoloji girişim ekosistemlerini karşılaştır…"></textarea><div class="atlas-actions"><button class="atlas-primary" id="atlasResearchRun">TOZRA AI ile araştır →</button><button class="atlas-secondary" id="atlasSaveSearch">Konuyu kaydet</button></div><p class="atlas-status" id="atlasResearchStatus">Araştırma, TOZRA AI sohbetinde yürütülür. Güncel web kaynaklarına erişim varsa kaynak bağlantıları istenecektir.</p></section>
- <section class="atlas-panel" data-atlas-panel="map" hidden><div class="atlas-section-head"><div><span class="atlas-kicker">DISCOVERY MAP</span><h2>Dünyada keşfet</h2><p>Ülke, şehir, şirket merkezi veya teknoloji bölgesi ara.</p></div></div><form class="atlas-search-form" id="atlasMapForm"><input class="atlas-input" id="atlasMapSearch" required placeholder="Örn. Seoul, Silicon Valley, Berlin…"><button class="atlas-primary">Haritada bul</button></form><p class="atlas-status" id="atlasMapStatus">Harita OpenStreetMap verilerini kullanır.</p><div class="atlas-globe-stage"><div class="atlas-globe-heading"><span>INTERACTIVE WORLD</span><small>Dünyayı döndür, ülkeleri keşfet</small></div><div id="atlasWorldGlobe" role="img" aria-label="Etkileşimli üç boyutlu dünya küresi"></div><div class="atlas-globe-hint">Fareyle sürükle · Yakınlaştırmak için kaydır · Noktalara tıkla</div></div><p class="atlas-disclaimer">Harita verisi © OpenStreetMap katkıcıları. Arama Nominatim hizmetiyle yapılır; kullanım koşulları geçerlidir.</p></section>
+ <section class="atlas-panel" data-atlas-panel="map" hidden><div class="atlas-section-head"><div><span class="atlas-kicker">DISCOVERY MAP</span><h2>Dünyada keşfet</h2><p>Ülke, şehir, şirket merkezi veya teknoloji bölgesi ara.</p></div></div><form class="atlas-search-form" id="atlasMapForm"><input class="atlas-input" id="atlasMapSearch" required placeholder="Örn. Seoul, Silicon Valley, Berlin…"><button class="atlas-primary">Haritada bul</button></form><p class="atlas-status" id="atlasMapStatus">Harita OpenStreetMap verilerini kullanır.</p><div class="atlas-globe-stage atlas-earth-stage">
+ <div class="atlas-globe-heading"><span>TOZRA ATLAS / EARTH VIEW</span><small>Uydu görünümü · 3D dünya</small></div>
+ <div id="atlasWorldGlobe" role="application" aria-label="3 boyutlu uydu dünya görünümü"></div>
+ <div class="atlas-earth-controls"><button type="button" id="atlasEarthHome" title="Dünyaya dön">◎ Dünya</button><button type="button" id="atlasEarthZoomIn" title="Yakınlaştır">＋</button><button type="button" id="atlasEarthZoomOut" title="Uzaklaştır">－</button></div>
+ <div class="atlas-globe-hint">Döndürmek için sürükle · Yakınlaştırmak için tekerlek veya + / − kullan</div>
+ <div class="atlas-earth-credit">Uydu görüntüleri: Esri, Maxar, Earthstar Geographics ve katkıda bulunanlar</div>
+</div><p class="atlas-disclaimer">Harita verisi © OpenStreetMap katkıcıları. Arama Nominatim hizmetiyle yapılır; kullanım koşulları geçerlidir.</p></section>
  <section class="atlas-panel" data-atlas-panel="saved" hidden><div class="atlas-section-head"><div><span class="atlas-kicker">YOUR COLLECTION</span><h2>Kaydettiğin keşifler</h2><p>Araştırma konularını bu cihazda sakla.</p></div></div><div class="atlas-results" id="atlasSavedList"></div></section>
  <footer class="atlas-footer">TOZRA ATLAS · EXPLORE THE WORLD. UNDERSTAND THE FUTURE.</footer>
 </div>
@@ -5843,6 +5849,18 @@ html[data-tozra-theme="dark"] .market-categories button.is-active,html[data-tozr
 #atlasWorldGlobe canvas{position:relative;z-index:1;display:block}
 @keyframes atlasEarthSpin{from{background-position:0 0,center}to{background-position:700px 0,center}}
 @media(max-width:640px){#atlasWorldGlobe{min-height:330px}#atlasWorldGlobe::before{width:min(76vw,290px)}}
+
+.atlas-earth-stage{position:relative;background:#050b12!important;border-color:rgba(150,175,190,.25);padding:14px 14px 10px;overflow:hidden}
+.atlas-earth-stage .atlas-globe-heading{color:#dce6ef;position:relative;z-index:2}
+#atlasWorldGlobe{height:560px;width:100%;position:relative;background:radial-gradient(ellipse at center,#142b3d 0%,#07111c 68%,#03070d 100%);overflow:hidden}
+#atlasWorldGlobe .cesium-viewer,#atlasWorldGlobe .cesium-widget,#atlasWorldGlobe canvas{width:100%;height:100%}
+#atlasWorldGlobe .cesium-viewer-bottom{display:none}
+.atlas-earth-controls{position:absolute;right:24px;top:62px;z-index:5;display:flex;flex-direction:column;gap:7px}
+.atlas-earth-controls button{border:1px solid rgba(255,255,255,.18);border-radius:10px;background:rgba(8,17,26,.84);color:#f3f7fa;padding:9px 12px;font-weight:650;cursor:pointer;backdrop-filter:blur(10px)}
+.atlas-earth-controls button:hover{background:rgba(145,185,83,.92);color:#10170d}
+.atlas-earth-credit{position:absolute;bottom:34px;right:20px;z-index:3;color:#d7e1e8;font-size:9px;text-shadow:0 1px 3px #000}
+.atlas-earth-stage .atlas-globe-hint{color:#c0ccd5;position:relative;z-index:2}
+@media(max-width:640px){#atlasWorldGlobe{height:410px}.atlas-earth-controls{right:18px;top:55px}.atlas-earth-controls button{padding:8px 10px}}
 </style>
 
 <script src="/atlas.js"></script>

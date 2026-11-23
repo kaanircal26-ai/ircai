@@ -8,33 +8,61 @@ const api=async(url)=>{const r=await fetch(url,{headers:{'Accept':'application/j
 function notice(id,msg){const el=$(id);if(el)el.textContent=msg}
 function tab(name){state.tab=name;root.querySelectorAll('[data-atlas-tab]').forEach(b=>b.classList.toggle('is-active',b.dataset.atlasTab===name));root.querySelectorAll('.atlas-panel').forEach(p=>p.hidden=p.dataset.atlasPanel!==name);if(name==='map'){requestAnimationFrame(()=>initGlobe());loadOverview();}if(name==='countries')loadOverview();if(name==='overview')loadOverview();if(name==='countries'&&state.countries.length)renderCountries(state.countries)}
 
+
 function initGlobe(){
  const host=$('atlasWorldGlobe');if(!host)return;
- if(state.globe){const w=host.clientWidth||620;state.globe.width(w).height(host.clientHeight||430);return}
+ if(state.globe){setTimeout(()=>{try{state.globe.resize()}catch(e){}},80);return}
  if(state.globeLoading)return;
  state.globeLoading=true;
  const start=()=>{
-  if(!window.Globe){state.globeLoading=false;host.innerHTML='<div class="atlas-empty">3D küre yüklenemedi. İnternet bağlantını kontrol edip tekrar dene.</div>';return}
-  const points=(state.countries||[]).filter(c=>Array.isArray(c.latlng)&&c.latlng.length===2).map(c=>({lat:c.latlng[0],lng:c.latlng[1],name:c.name.common,flag:c.flag,code:c.cca3}));
-  state.globe=window.Globe()(host)
-   .width(host.clientWidth||620).height(host.clientHeight||430)
-   .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
-   .bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png')
-   .backgroundColor('rgba(0,0,0,0)')
-   .showAtmosphere(true).atmosphereColor('#9bcf62').atmosphereAltitude(.18)
-   .pointsData([...points,...state.searchPoints]).pointLat('lat').pointLng('lng').pointColor(()=> '#b6e36a')
-   .pointAltitude(.012).pointRadius(.20).pointResolution(8)
-   .pointLabel(d=>`<div style="padding:5px 8px"><b>${esc(d.flag||'🌍')} ${esc(d.name)}</b><br><small>Ülke profilini aç</small></div>`)
-   .onPointClick(d=>{if(d?.code){const c=state.countries.find(x=>x.cca3===d.code);if(c){showCountry(d.code);}}});
-  state.globe.controls().autoRotate=true;state.globe.controls().autoRotateSpeed=.42;
-  state.globe.controls().enableDamping=true;
-  const resize=()=>{if(!state.globe)return;const w=host.clientWidth||620;state.globe.width(w).height(host.clientHeight||430)};
-  resize();if(window.ResizeObserver){new ResizeObserver(resize).observe(host)}else window.addEventListener('resize',resize);
-  state.globeLoading=false;
+  if(!window.Cesium){state.globeLoading=false;notice('atlasMapStatus','3D uydu küresi yüklenemedi. Sayfayı yenileyip tekrar dene.');return}
+  try{
+   const C=window.Cesium;
+   const imagery=new C.UrlTemplateImageryProvider({
+    url:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    maximumLevel:19,
+    credit:'Esri, Maxar, Earthstar Geographics ve katkıda bulunanlar'
+   });
+   state.globe=new C.Viewer(host,{
+    imageryProvider:imagery,
+    terrainProvider:new C.EllipsoidTerrainProvider(),
+    animation:false,timeline:false,baseLayerPicker:false,geocoder:false,
+    homeButton:false,sceneModePicker:false,navigationHelpButton:false,
+    fullscreenButton:false,infoBox:false,selectionIndicator:false,
+    scene3DOnly:true,shouldAnimate:true,
+    requestRenderMode:false
+   });
+   const viewer=state.globe;
+   viewer.scene.globe.enableLighting=true;
+   viewer.scene.globe.showGroundAtmosphere=true;
+   viewer.scene.skyAtmosphere.show=true;
+   viewer.scene.backgroundColor=C.Color.fromCssColorString('#030912');
+   viewer.scene.screenSpaceCameraController.enableTilt=true;
+   viewer.scene.screenSpaceCameraController.enableRotate=true;
+   viewer.scene.screenSpaceCameraController.enableZoom=true;
+   viewer.camera.setView({destination:C.Cartesian3.fromDegrees(15,22,24500000)});
+   viewer.entities.add({name:'TOZRA Atlas',position:C.Cartesian3.fromDegrees(15,22,0),point:{pixelSize:1,color:C.Color.TRANSPARENT}});
+   setTimeout(()=>viewer.resize(),100);
+   if(window.ResizeObserver)new ResizeObserver(()=>viewer.resize()).observe(host);
+   $('atlasEarthHome')?.addEventListener('click',()=>viewer.camera.flyTo({destination:C.Cartesian3.fromDegrees(15,22,24500000),duration:1.5}));
+   $('atlasEarthZoomIn')?.addEventListener('click',()=>viewer.camera.zoomIn(viewer.camera.positionCartographic.height*.45));
+   $('atlasEarthZoomOut')?.addEventListener('click',()=>viewer.camera.zoomOut(viewer.camera.positionCartographic.height*.7));
+   state.globeLoading=false;
+   notice('atlasMapStatus','Uydu dünya görünümü hazır. Bir konum arayarak o noktaya yaklaşabilirsin.');
+  }catch(e){state.globeLoading=false;notice('atlasMapStatus','3D uydu küresi başlatılamadı. Bağlantını kontrol edip tekrar dene.')}
  };
- if(window.Globe){start();return}
- const urls=['https://unpkg.com/globe.gl','https://cdn.jsdelivr.net/npm/globe.gl/dist/globe.gl.min.js'];
- const load=(i)=>{const script=document.createElement('script');script.src=urls[i];script.onload=()=>{if(window.Globe)start();else if(i+1<urls.length)load(i+1);else{state.globeLoading=false;notice('atlasMapStatus','3D küre kütüphanesi yüklenemedi. Dünya görseli yedek görünümde gösteriliyor.')}};script.onerror=()=>{if(i+1<urls.length)load(i+1);else{state.globeLoading=false;notice('atlasMapStatus','3D küre servisine erişilemedi. Dünya yedek görünümde gösteriliyor.')}};document.head.append(script)};
+ if(window.Cesium){start();return}
+ const urls=[
+  'https://cesium.com/downloads/cesiumjs/releases/1.125/Build/Cesium/Cesium.js',
+  'https://cdn.jsdelivr.net/npm/cesium@1.125/Build/Cesium/Cesium.js'
+ ];
+ const load=i=>{
+  window.CESIUM_BASE_URL='https://cesium.com/downloads/cesiumjs/releases/1.125/Build/Cesium/';
+  const script=document.createElement('script');script.src=urls[i];
+  script.onload=()=>{if(window.Cesium)start();else if(i+1<urls.length)load(i+1);else{state.globeLoading=false;notice('atlasMapStatus','3D motor yüklenemedi. CDN bağlantısını kontrol et.')}};
+  script.onerror=()=>{if(i+1<urls.length)load(i+1);else{state.globeLoading=false;notice('atlasMapStatus','3D motor yüklenemedi. CDN bağlantısını kontrol et.')}};
+  document.head.append(script);
+ };
  load(0);
 }
 function countryCard(c){return `<button class="atlas-country-card" data-country="${esc(c.cca3)}"><span class="atlas-flag">${esc(c.flag||'🌐')}</span><strong>${esc(c.name.common)}</strong><small>${esc(c.region||'')} · ${esc((c.capital||[])[0]||'Başkent bilgisi yok')}</small><em>${Number(c.population||0).toLocaleString('tr-TR')} nüfus</em></button>`}
@@ -45,24 +73,32 @@ async function companySearch(q){if(!q.trim())return;notice('atlasCompanyStatus',
 async function techSearch(){notice('atlasTechStatus','Teknoloji haberleri aranıyor…');try{const url='https://api.gdeltproject.org/api/v2/doc/doc?query='+encodeURIComponent('(artificial intelligence OR robotics OR semiconductor OR climate technology)')+'&mode=ArtList&format=json&maxrecords=18&sort=HybridRel';const data=await api(url);const rows=data.articles||[];$('atlasTechResults').innerHTML=rows.map(a=>`<article class="atlas-result"><div><strong>${esc(a.title)}</strong><small>${esc(a.domain||'')} · ${esc(a.seendate||'')}</small></div><a href="${esc(a.url)}" target="_blank" rel="noopener">Haberi aç ↗</a></article>`).join('')||'<div class="atlas-empty">Şu anda sonuç bulunamadı.</div>';notice('atlasTechStatus',rows.length+' gelişme · Kaynak: GDELT haber verisi.');}catch(e){notice('atlasTechStatus','Teknoloji akışı yüklenemedi. Daha sonra tekrar dene.')}}
 
 function initMap(){initGlobe()}
+
 async function mapSearch(){
  const q=$('atlasMapSearch').value.trim();if(!q)return;
  notice('atlasMapStatus','Konum aranıyor…');
  try{
-  const rows=await api('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=8&q='+encodeURIComponent(q));
+  const rows=await api('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&q='+encodeURIComponent(q));
   if(!rows.length){notice('atlasMapStatus','Konum bulunamadı.');return}
-  const add=rows.map(x=>({lat:+x.lat,lng:+x.lon,name:x.name||x.display_name.split(',')[0],flag:'📍',display:x.display_name,custom:true}));
-  state.searchPoints=add;
-  const update=()=>{
-   if(!state.globe){setTimeout(update,150);return}
-   const countries=(state.countries||[]).filter(c=>Array.isArray(c.latlng)&&c.latlng.length===2).map(c=>({lat:c.latlng[0],lng:c.latlng[1],name:c.name.common,flag:c.flag,code:c.cca3}));
-   state.globe.pointsData([...countries,...add]);
-   state.globe.pointColor(d=>d.custom?'#f0c66a':'#b6e36a').pointRadius(d=>d.custom?.34:.16);
-   state.globe.pointLabel(d=>`<div style="padding:5px 8px"><b>${esc(d.flag||'🌍')} ${esc(d.name)}</b><br><small>${esc(d.display||'Ülke profili')}</small></div>`);
-   state.globe.pointOfView({lat:add[0].lat,lng:add[0].lng,altitude:1.65},1200);
-   notice('atlasMapStatus',rows.length+' konum küre üzerinde işaretlendi · OpenStreetMap / Nominatim.');
+  initGlobe();
+  const fly=()=>{
+   if(!state.globe){setTimeout(fly,150);return}
+   const C=window.Cesium,viewer=state.globe;
+   viewer.entities.removeAll();
+   rows.forEach((x,i)=>{
+    const lon=+x.lon,lat=+x.lat,label=x.name||x.display_name.split(',')[0];
+    viewer.entities.add({
+     name:label,description:esc(x.display_name),
+     position:C.Cartesian3.fromDegrees(lon,lat,80),
+     point:{pixelSize:12,color:C.Color.fromCssColorString('#b7dc79'),outlineColor:C.Color.WHITE,outlineWidth:2,heightReference:C.HeightReference.CLAMP_TO_GROUND},
+     label:{text:label,font:'13px sans-serif',fillColor:C.Color.WHITE,outlineColor:C.Color.BLACK,outlineWidth:3,style:C.LabelStyle.FILL_AND_OUTLINE,pixelOffset:new C.Cartesian2(0,-22),disableDepthTestDistance:Number.POSITIVE_INFINITY}
+    });
+   });
+   const x=rows[0],height=Math.max(90000,Math.min(9000000,Number(x.boundingbox?.[1]-x.boundingbox?.[0]||1)*150000));
+   viewer.camera.flyTo({destination:C.Cartesian3.fromDegrees(+x.lon,+x.lat,height),duration:2.2});
+   notice('atlasMapStatus',rows.length+' konum bulundu. Uydu görüntüsünde yakınlaştırılıyor · Kaynak: OpenStreetMap / Nominatim.');
   };
-  initGlobe();update();
+  fly();
  }catch(e){notice('atlasMapStatus','Konum araması başarısız oldu. Daha sonra tekrar dene.')}
 }
 function research(){const q=$('atlasResearchPrompt').value.trim();if(!q)return;const prompt=`TOZRA ATLAS ARAŞTIRMASI\n\nKonu: ${q}\n\nLütfen araştırmayı şu yapıda hazırla: kısa özet, doğrulanabilir bulgular, ülke/şirket/teknoloji bağlantıları, karşılaştırma gerekiyorsa tablo, belirsizlikler ve mutlaka kaynak bağlantıları. Güncel bilgiye erişemiyorsan bunu açıkça belirt; kaynak veya veri uydurma.`;if(typeof window.openGeneralChat==='function'){window.openGeneralChat();setTimeout(()=>{const input=$('prompt');if(input){input.value=prompt;input.dispatchEvent(new Event('input',{bubbles:true}));input.focus();$('sendBtn')?.click()||$('sendButton')?.click()||$('send')?.click()}} ,350)}else{alert('Araştırma sohbeti açılamadı. Sohbet sayfasını açıp sorunu oraya aktarabilirsin.')}}
