@@ -4201,7 +4201,14 @@ async function prepareMedia(list){
  const images=[],videoFrames=[],timeline=[];
  const imageItems=list.filter(item=>item.kind==="image");
  const videoItems=list.filter(item=>item.kind==="video");
- const frameBudget=Math.max(0,15-imageItems.length);
+ const maxVisionImages=3;
+ if(imageItems.length>maxVisionImages){
+  throw new Error("TOZRA şu anda bir istekte en fazla 3 fotoğrafı birlikte analiz edebiliyor. Lütfen fotoğrafları 3'erli gruplar hâlinde gönder.");
+ }
+ const frameBudget=Math.max(0,maxVisionImages-imageItems.length);
+ if(videoItems.length>frameBudget){
+  throw new Error("Bu istekteki fotoğraf ve videoların her birine en az bir analiz karesi ayırmak mümkün değil. En fazla 3 medya dosyası seçip tekrar dene.");
+ }
  for(const item of imageItems) images.push(await imageToDataURL(item.file));
  if(videoItems.length&&frameBudget>0){
   const base=Math.floor(frameBudget/videoItems.length);
