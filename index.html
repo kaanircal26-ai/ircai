@@ -2525,6 +2525,14 @@ html[data-tozra-theme="dark"] #workspacePage .tozra-home-action-row .tozra-home-
  </div>
 </header>
 
+  <nav class="trh-bottom-nav" id="homePrimaryNav" aria-label="Ana gezinme">
+   <button class="selected" type="button" id="homeBottomHome" data-home-tab="home" aria-current="page"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg><span>Ana Sayfa</span></button>
+   <button type="button" id="homeBottomChat" data-home-tab="chat"><svg viewBox="0 0 24 24"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-3 2v-6.5A7.5 7.5 0 1 1 20 11.5Z"/><path d="M8 11h8M8 14.5h5"/></svg><span>Sohbet</span></button>
+   <button type="button" id="homeBottomProjects" data-home-tab="projects"><svg viewBox="0 0 24 24"><path d="M3 7.5A1.5 1.5 0 0 1 4.5 6H10l2 2h7.5A1.5 1.5 0 0 1 21 9.5v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5z"/></svg><span>Projeler</span></button>
+   <button type="button" id="homeBottomStudio" data-home-tab="studio"><svg viewBox="0 0 24 24"><path d="m14 4 6 6M4 20l4.5-1 10-10a2.1 2.1 0 0 0-3-3l-10 10z"/><path d="M4 4h5M4 4v5M20 20h-5M20 20v-5"/></svg><span>Stüdyo</span></button>
+   <button type="button" id="homeBottomProfile" data-home-tab="profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 21c.5-3.8 3.2-5.8 7.5-5.8s7 2 7.5 5.8"/></svg><span>Profil</span></button>
+  </nav>
+
 <section class="content">
 <div class="page active" id="workspacePage">
  <section class="tozra-reference-home" aria-label="TOZRA ana sayfa">
@@ -2567,13 +2575,7 @@ html[data-tozra-theme="dark"] #workspacePage .tozra-home-action-row .tozra-home-
 
  </section>
 </div>
-  <nav class="trh-bottom-nav" id="homePrimaryNav" aria-label="Ana gezinme">
-   <button class="selected" type="button" id="homeBottomHome" data-home-tab="home" aria-current="page"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg><span>Ana Sayfa</span></button>
-   <button type="button" id="homeBottomChat" data-home-tab="chat"><svg viewBox="0 0 24 24"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-3 2v-6.5A7.5 7.5 0 1 1 20 11.5Z"/><path d="M8 11h8M8 14.5h5"/></svg><span>Sohbet</span></button>
-   <button type="button" id="homeBottomProjects" data-home-tab="projects"><svg viewBox="0 0 24 24"><path d="M3 7.5A1.5 1.5 0 0 1 4.5 6H10l2 2h7.5A1.5 1.5 0 0 1 21 9.5v9a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5z"/></svg><span>Projeler</span></button>
-   <button type="button" id="homeBottomStudio" data-home-tab="studio"><svg viewBox="0 0 24 24"><path d="m14 4 6 6M4 20l4.5-1 10-10a2.1 2.1 0 0 0-3-3l-10 10z"/><path d="M4 4h5M4 4v5M20 20h-5M20 20v-5"/></svg><span>Stüdyo</span></button>
-   <button type="button" id="homeBottomProfile" data-home-tab="profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 21c.5-3.8 3.2-5.8 7.5-5.8s7 2 7.5 5.8"/></svg><span>Profil</span></button>
-  </nav>
+
 <div class="page" id="projectListPage">
  <div class="projects-page-heading">
   <div><div class="cs-eyebrow">TOZRA / WORKSPACE</div><h1>Projelerim</h1><p>Oluşturduğun projeleri tek ekrandan yönet.</p></div>
@@ -5537,6 +5539,14 @@ html[data-tozra-theme="dark"] #workspacePage .trh-orbit-glow{background:radial-g
 </style>
 
 
+
+<style id="tozra-global-mobile-navigation-fix">
+@media(max-width:760px){
+ #homePrimaryNav.trh-bottom-nav{position:fixed!important;left:50%!important;right:auto!important;bottom:calc(8px + env(safe-area-inset-bottom))!important;transform:translateX(-50%)!important;z-index:10050!important;display:grid!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;width:min(540px,calc(100vw - 24px))!important;margin:0!important}
+ .content{padding-bottom:calc(104px + env(safe-area-inset-bottom))!important;min-height:calc(100dvh - var(--topbar-height,0px))}
+ .content>.page{width:100%;min-height:calc(100dvh - 90px);overflow-x:hidden}
+}
+</style>
 </body>
 </html>
 
