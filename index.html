@@ -2465,6 +2465,7 @@ html[data-tozra-theme="dark"] #workspacePage .tozra-home-action-row .tozra-home-
   <button type="button" onclick="showModal('login')">Giriş yap</button>
   <span aria-hidden="true"></span>
   <button type="button" onclick="showModal('register')">Kayıt ol</button>
+  <button type="button" id="splashSoundToggle" aria-pressed="true">Ses: Açık</button>
  </div>
 </div>
 
@@ -2551,6 +2552,9 @@ html[data-tozra-theme="dark"] #workspacePage .tozra-home-action-row .tozra-home-
    <div class="trh-section-head"><h2>Son Sohbetler</h2><button type="button" id="homeSeeAllChats">Tümünü Gör <span>›</span></button></div>
    <button class="trh-recent-card" id="homeRecentChat" type="button"><span class="trh-recent-icon"><svg viewBox="0 0 24 24"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-3 2v-6.5A7.5 7.5 0 1 1 20 11.5Z"/></svg></span><span><strong>TOZRA proje yol haritası</strong><small>Son sohbetlerine devam et</small></span><i>→</i></button>
   </section>
+
+ </section>
+</div>
   <nav class="trh-bottom-nav" id="homePrimaryNav" aria-label="Ana gezinme">
    <button class="selected" type="button" id="homeBottomHome" data-home-tab="home" aria-current="page"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg><span>Ana Sayfa</span></button>
    <button type="button" id="homeBottomChat" data-home-tab="chat"><svg viewBox="0 0 24 24"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-3 2v-6.5A7.5 7.5 0 1 1 20 11.5Z"/><path d="M8 11h8M8 14.5h5"/></svg><span>Sohbet</span></button>
@@ -2558,8 +2562,6 @@ html[data-tozra-theme="dark"] #workspacePage .tozra-home-action-row .tozra-home-
    <button type="button" id="homeBottomStudio" data-home-tab="studio"><svg viewBox="0 0 24 24"><path d="m14 4 6 6M4 20l4.5-1 10-10a2.1 2.1 0 0 0-3-3l-10 10z"/><path d="M4 4h5M4 4v5M20 20h-5M20 20v-5"/></svg><span>Stüdyo</span></button>
    <button type="button" id="homeBottomProfile" data-home-tab="profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 21c.5-3.8 3.2-5.8 7.5-5.8s7 2 7.5 5.8"/></svg><span>Profil</span></button>
   </nav>
- </section>
-</div>
 <div class="page" id="projectListPage">
  <div class="projects-page-heading">
   <div><div class="cs-eyebrow">TOZRA / WORKSPACE</div><h1>Projelerim</h1><p>Oluşturduğun projeleri tek ekrandan yönet.</p></div>
@@ -5522,7 +5524,74 @@ html[data-tozra-theme="dark"] #workspacePage .trh-orbit-glow{background:radial-g
 </body>
 </html>
 
-<style id="tozra-mobile-dock-neutral-v2">
+<style id="tozra-mobile-dock-neutral-v2
+<style id="tozra-final-premium-update">
+/* Premium cinematic opening */
+.splash{isolation:isolate;overflow:hidden;background:radial-gradient(ellipse at 50% 46%,#f1eee7 0%,#e7e4dc 48%,#d9d9d0 100%)!important;color:#20241e!important}
+.splash-cosmos{position:absolute;inset:0;overflow:hidden;pointer-events:none;opacity:.8}
+.splash-cosmos:before,.splash-cosmos:after{content:"";position:absolute;left:50%;top:45%;width:min(76vw,520px);aspect-ratio:1;border:1px solid rgba(113,137,94,.24);border-radius:50%;transform:translate(-50%,-50%) scale(.72);animation:tozraIntroOrbit 5.6s cubic-bezier(.2,.7,.2,1) both}
+.splash-cosmos:after{width:min(92vw,650px);border-color:rgba(151,137,111,.18);animation-delay:.18s;transform:translate(-50%,-50%) scale(.6)}
+.splash-wave-art{opacity:.55;filter:blur(.2px)}
+.splash-core-glow{position:absolute;left:50%;top:45%;width:170px;height:170px;border-radius:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(173,197,145,.36),rgba(173,197,145,0) 70%);animation:tozraIntroGlow 3.8s ease-in-out infinite}
+.splash-inner{position:relative;z-index:2;animation:tozraIntroReveal 1.35s cubic-bezier(.16,1,.3,1) both}
+.splash-mark{width:88px;height:88px;border-radius:27px;background:linear-gradient(145deg,#f8f7f2,#dce2d4)!important;border:1px solid rgba(92,112,78,.2);box-shadow:0 18px 48px rgba(45,58,39,.13),inset 0 1px 0 rgba(255,255,255,.9)!important;animation:tozraMarkFloat 4.4s ease-in-out .9s infinite;position:relative}
+.splash-mark:after{content:"";position:absolute;inset:-9px;border:1px solid rgba(118,148,94,.28);border-radius:32px;animation:tozraMarkHalo 3.4s ease-out infinite;pointer-events:none}
+.splash-name{font-size:32px!important;font-weight:650!important;letter-spacing:.32em!important;padding-left:.32em;color:#252a22!important;animation:tozraWordReveal 1.2s .25s both}
+.splash-tagline{color:#777d70!important;letter-spacing:.24em!important;font-size:9px!important;animation:tozraWordReveal 1.2s .48s both}
+.splash-feature-icons{animation:tozraWordReveal 1.2s .62s both}
+.splash-loader-label,.splash-progress{color:#7d8278!important}
+.loader{background:rgba(87,105,74,.15)!important}.loader-bar{background:linear-gradient(90deg,#80966b,#c0a98a)!important;box-shadow:0 0 14px rgba(128,150,107,.25)!important}
+@keyframes tozraIntroReveal{0%{opacity:0;transform:translateY(28px) scale(.94);filter:blur(8px)}65%{filter:blur(0)}100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+@keyframes tozraIntroOrbit{0%{opacity:0;transform:translate(-50%,-50%) scale(.58) rotate(-18deg)}45%{opacity:1}100%{opacity:.55;transform:translate(-50%,-50%) scale(1) rotate(12deg)}}
+@keyframes tozraIntroGlow{0%,100%{opacity:.55;transform:translate(-50%,-50%) scale(.82)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.2)}}
+@keyframes tozraMarkFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes tozraMarkHalo{0%{transform:scale(.9);opacity:.6}100%{transform:scale(1.28);opacity:0}}
+@keyframes tozraWordReveal{from{opacity:0;transform:translateY(9px);letter-spacing:.5em}to{opacity:1;transform:translateY(0)}}
+/* One persistent bottom navigation: retain the rounded primary dock, suppress duplicate dock */
+.mobile-dock{display:none!important}
+#homePrimaryNav.trh-bottom-nav{position:fixed!important;left:50%!important;bottom:calc(9px + env(safe-area-inset-bottom))!important;transform:translateX(-50%)!important;width:min(540px,calc(100vw - 24px))!important;margin:0!important;z-index:999!important;background:rgba(250,249,246,.94)!important;border:1px solid rgba(95,110,87,.16)!important;box-shadow:0 10px 34px rgba(27,38,27,.17)!important;backdrop-filter:blur(22px) saturate(140%)!important}
+#workspacePage{padding-bottom:88px!important}
+#homePrimaryNav.trh-bottom-nav button{min-width:0!important;overflow:visible!important}
+#homePrimaryNav.trh-bottom-nav button span{white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;max-width:100%!important}
+@media(max-width:760px){#homePrimaryNav.trh-bottom-nav{bottom:calc(8px + env(safe-area-inset-bottom))!important}.content{padding-bottom:100px!important}#homePrimaryNav.trh-bottom-nav button{min-height:57px!important;font-size:10px!important}}
+/* Ensure sidebar and shortcut icons are never clipped or washed out */
+#sidebar .nav-symbol,#sidebar .studio-icon,.trh-shortcut svg,.trh-tool svg,.trh-card-icon svg,.trh-recent-icon svg{display:inline-grid!important;visibility:visible!important;opacity:1!important;flex-shrink:0!important;overflow:visible!important}
+#sidebar .nav-symbol svg,#sidebar .studio-icon svg{display:block!important;width:20px!important;height:20px!important;stroke:currentColor!important;fill:none!important;stroke-width:1.9!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+.trh-shortcut,.trh-tool,.trh-quick-card{min-width:0!important;overflow:visible!important}
+.trh-quick-card>span:nth-child(2){min-width:0!important;flex:1 1 auto!important}.trh-quick-card strong,.trh-quick-card small{overflow-wrap:anywhere!important}
+/* Keep home shortcuts legible and fitted inside their cards */
+#workspacePage .trh-brand span{display:none!important}
+#workspacePage .trh-shortcuts{min-width:0!important}#workspacePage .trh-shortcut{min-width:0!important;gap:8px!important;padding-inline:10px!important}#workspacePage .trh-shortcut span{min-width:0!important;overflow-wrap:anywhere!important}
+@media(prefers-reduced-motion:reduce){.splash-cosmos:before,.splash-cosmos:after,.splash-core-glow,.splash-inner,.splash-mark,.splash-mark:after,.splash-name,.splash-tagline,.splash-feature-icons{animation:none!important}}
+</style>
+<script id="tozra-opening-sound">
+(()=>{
+ const KEY='tozra-opening-sound-enabled';
+ let played=false;
+ function playIntro(){
+  if(played)return;played=true;
+  try{if(localStorage.getItem(KEY)==='off')return;}catch(e){}
+  const Ctx=window.AudioContext||window.webkitAudioContext;if(!Ctx)return;
+  const ctx=new Ctx();
+  const now=ctx.currentTime;
+  const master=ctx.createGain();master.gain.setValueAtTime(.0001,now);master.gain.exponentialRampToValueAtTime(.055,now+.18);master.gain.exponentialRampToValueAtTime(.0001,now+2.45);master.connect(ctx.destination);
+  [[392,0,.72],[587.33,.22,.92],[783.99,.52,1.35]].forEach(([freq,delay,duration],i)=>{
+   const osc=ctx.createOscillator(),gain=ctx.createGain();osc.type=i===1?'sine':'triangle';osc.frequency.setValueAtTime(freq,now+delay);osc.frequency.exponentialRampToValueAtTime(freq*1.012,now+delay+duration);
+   gain.gain.setValueAtTime(.0001,now+delay);gain.gain.exponentialRampToValueAtTime(i===2?.32:.22,now+delay+.12);gain.gain.exponentialRampToValueAtTime(.0001,now+delay+duration);
+   osc.connect(gain);gain.connect(master);osc.start(now+delay);osc.stop(now+delay+duration+.04);
+  });
+  setTimeout(()=>{try{ctx.close()}catch(e){}},3000);
+ }
+ // Browsers require a user gesture before audio; play on the first deliberate interaction.
+ window.addEventListener('pointerdown',playIntro,{once:true,passive:true});
+ window.addEventListener('keydown',playIntro,{once:true});
+ window.tozraSetOpeningSound=(enabled)=>{try{localStorage.setItem(KEY,enabled?'on':'off')}catch(e){}};
+ const soundButton=document.getElementById('splashSoundToggle');
+ if(soundButton){let enabled=true;try{enabled=localStorage.getItem(KEY)!=='off'}catch(e){};const paint=()=>{soundButton.textContent='Ses: '+(enabled?'Açık':'Kapalı');soundButton.setAttribute('aria-pressed',String(enabled))};paint();soundButton.addEventListener('click',()=>{enabled=!enabled;window.tozraSetOpeningSound(enabled);paint()})}
+})();
+</script>
+
+">
 @media(max-width:760px){
  .mobile-dock{background:rgba(250,249,246,.97)!important;border:1px solid rgba(80,88,76,.12)!important;box-shadow:0 8px 26px rgba(28,36,27,.10),inset 0 1px 0 rgba(255,255,255,.9)!important;-webkit-backdrop-filter:blur(20px) saturate(125%)!important;backdrop-filter:blur(20px) saturate(125%)!important}
  .mobile-dock button{color:#73776f!important;background:transparent!important;border-color:transparent!important;box-shadow:none!important}
