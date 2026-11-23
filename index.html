@@ -5471,6 +5471,48 @@ html[data-tozra-theme="dark"] .auth-divider{color:#a7b5a5}
 @media(prefers-reduced-motion:reduce){#workspacePage .tozra-reference-home *{scroll-behavior:auto!important;transition:none!important}}
 </style>
 
+
+<style id="tozra-ui-fixes-2026-11-23">
+/* Workspace: tek alt navigasyon ve tek hamburger */
+@media(max-width:760px){
+ body:has(#workspacePage.active) .mobile-brand .mobile-menu{display:none!important}
+ body:has(#workspacePage.active) #mobileDock{display:none!important}
+}
+/* Ana ekranın referans tasarımı karanlık temada da tamamen koyu palete geçsin. */
+html[data-tozra-theme="dark"] #workspacePage .tozra-reference-home{
+ background:radial-gradient(ellipse at 2% 28%,rgba(117,157,83,.12),transparent 28%),radial-gradient(ellipse at 100% 65%,rgba(117,157,83,.10),transparent 32%),linear-gradient(145deg,#121713 0%,#171f19 48%,#121713 100%)!important;
+ color:#edf2e9!important;
+}
+html[data-tozra-theme="dark"] #workspacePage .trh-brand,
+html[data-tozra-theme="dark"] #workspacePage .trh-welcome h1,
+html[data-tozra-theme="dark"] #workspacePage .trh-section-head h2{color:#edf2e9!important}
+html[data-tozra-theme="dark"] #workspacePage .trh-welcome p,
+html[data-tozra-theme="dark"] #workspacePage .trh-quick-card small,
+html[data-tozra-theme="dark"] #workspacePage .trh-recent-card small{color:#a0ad9f!important}
+html[data-tozra-theme="dark"] #workspacePage .trh-round,
+html[data-tozra-theme="dark"] #workspacePage .trh-shortcut,
+html[data-tozra-theme="dark"] #workspacePage .trh-composer,
+html[data-tozra-theme="dark"] #workspacePage .trh-tool,
+html[data-tozra-theme="dark"] #workspacePage .trh-quick-card,
+html[data-tozra-theme="dark"] #workspacePage .trh-recent-card,
+html[data-tozra-theme="dark"] #workspacePage .trh-bottom-nav{
+ background:rgba(29,39,31,.88)!important;color:#e8eee5!important;border-color:#354438!important;
+ box-shadow:0 7px 22px rgba(0,0,0,.18)!important;
+}
+html[data-tozra-theme="dark"] #workspacePage .trh-prompt-label,
+html[data-tozra-theme="dark"] #workspacePage .trh-prompt-label input{color:#edf2e9!important}
+html[data-tozra-theme="dark"] #workspacePage .trh-prompt-label input::placeholder{color:#9aa797!important}
+html[data-tozra-theme="dark"] #workspacePage .trh-shortcut.active,
+html[data-tozra-theme="dark"] #workspacePage .trh-bottom-nav button.selected{background:#34472e!important;color:#f0f6e9!important;border-color:#536d45!important}
+html[data-tozra-theme="dark"] #workspacePage .trh-card-icon,
+html[data-tozra-theme="dark"] #workspacePage .trh-recent-icon{background:#293a2b!important;color:#c5df98!important}
+html[data-tozra-theme="dark"] #workspacePage .trh-quick-card>i,
+html[data-tozra-theme="dark"] #workspacePage .trh-recent-card>i{background:#29362c!important;color:#dce8d6!important}
+html[data-tozra-theme="dark"] #workspacePage .trh-section-head button{color:#c5df98!important}
+html[data-tozra-theme="dark"] #workspacePage .trh-orbit-glow{background:radial-gradient(circle at 45% 35%,rgba(50,67,48,.98),rgba(38,57,39,.82) 50%,rgba(90,125,66,.22) 72%,transparent 74%);border-color:#52664b;box-shadow:0 0 20px rgba(135,178,93,.18),inset 0 1px 18px rgba(255,255,255,.05)}
+</style>
+
+
 </body>
 </html>
 
