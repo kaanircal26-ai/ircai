@@ -682,8 +682,6 @@
       return;
     }
 
-    showVoiceScreen();
-
     if (
       !navigator.mediaDevices?.getUserMedia ||
       !window.RTCPeerConnection
@@ -1029,11 +1027,7 @@
       return;
     }
 
-    // Use the Realtime WebRTC path for hands-free, automatic turn detection.
-    // The server VAD configured by /api/realtime-session starts a response
-    // after the user finishes speaking; no per-turn microphone button is needed.
-    showVoiceScreen();
-    await startRealtimeVoice();
+    await startBrowserVoice();
   };
   window.startTozraVoiceFromHome = startFromButton;
   const homeVoiceButton = $("homeVoiceButton");
