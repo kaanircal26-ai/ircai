@@ -2411,6 +2411,23 @@ body.voice-screen-open{overflow:hidden}
 @media(prefers-reduced-motion:reduce){#workspacePage .tozra-minimal-home{transition:none!important}}
 </style>
 
+
+<style id="tozra-home-chat-voice-actions-v1">
+#workspacePage .tozra-home-action-row{position:relative;z-index:5;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin:0 auto;max-width:620px}
+#workspacePage .tozra-home-action-row .tozra-minimal-talk{min-width:0;flex:1 1 220px;max-width:290px;min-height:56px;padding:0 17px;gap:10px;white-space:nowrap}
+#workspacePage .tozra-home-action-row .tozra-home-chat{background:linear-gradient(135deg,#a9df69,#c9f18d)!important;border-color:rgba(133,177,83,.5)!important;color:#24351d!important;box-shadow:0 10px 28px rgba(116,164,70,.18)!important}
+#workspacePage .tozra-home-action-row .tozra-home-chat .talk-arrow{color:#36552a!important}
+#workspacePage .home-action-icon{display:inline-grid;place-items:center;width:22px;height:22px;flex:0 0 22px}
+#workspacePage .home-action-icon svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+#workspacePage .tozra-home-action-row .tozra-home-voice{background:rgba(255,255,255,.78)!important;color:#354633!important;border-color:rgba(133,157,119,.42)!important}
+#workspacePage .tozra-home-action-row .tozra-home-voice .talk-arrow{color:var(--home-accent-deep,#6c8b4c)!important}
+#workspacePage .tozra-home-action-row .tozra-minimal-talk:active{transform:scale(.98)}
+html[data-tozra-theme="dark"] #workspacePage .tozra-home-action-row .tozra-home-chat{background:linear-gradient(135deg,#a9df69,#c9f18d)!important;color:#24351d!important}
+html[data-tozra-theme="dark"] #workspacePage .tozra-home-action-row .tozra-home-voice{background:#293a2b!important;color:#edf2e9!important;border-color:#536d45!important}
+@media(max-width:760px){#workspacePage .tozra-home-action-row{width:100%;gap:9px;flex-wrap:nowrap}#workspacePage .tozra-home-action-row .tozra-minimal-talk{flex:1 1 0;max-width:none;min-width:0;min-height:54px;padding:0 9px;gap:7px;font-size:11px}#workspacePage .tozra-home-action-row .talk-arrow{font-size:14px;margin-left:0}#workspacePage .tozra-home-action-row .talk-wave{gap:2px}}
+@media(max-width:360px){#workspacePage .tozra-home-action-row{gap:7px}#workspacePage .tozra-home-action-row .tozra-minimal-talk{font-size:10px;padding:0 6px;gap:5px}#workspacePage .home-action-icon{width:18px;height:18px;flex-basis:18px}#workspacePage .home-action-icon svg{width:17px;height:17px}}
+</style>
+
 </head>
 
 <body>
@@ -2510,10 +2527,16 @@ body.voice-screen-open{overflow:hidden}
   <div class="tozra-minimal-kicker">CREATIVE INTELLIGENCE</div>
   <h1>TOZRA</h1>
   <p>Yapay zekânla konuş. Fikirlerini birlikte geliştirelim.</p>
-  <button type="button" class="tozra-minimal-talk" id="homeVoiceButton" aria-label="TOZRA ile konuşmayı başlat">
-   <span class="talk-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
-   <span>TOZRA ile konuş</span><span class="talk-arrow" aria-hidden="true">↗</span>
-  </button>
+  <div class="tozra-home-action-row" role="group" aria-label="TOZRA iletişim seçenekleri">
+   <button type="button" class="tozra-minimal-talk tozra-home-chat" id="homeChatButton" aria-label="AI Chat'i aç">
+    <span class="home-action-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-3 2v-6.5A7.5 7.5 0 1 1 20 11.5Z"/><path d="M8 11h8M8 14.5h5"/></svg></span>
+    <span>AI Chat</span><span class="talk-arrow" aria-hidden="true">↗</span>
+   </button>
+   <button type="button" class="tozra-minimal-talk tozra-home-voice" id="homeVoiceButton" aria-label="TOZRA ile sesli konuşmayı başlat">
+    <span class="talk-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+    <span>TOZRA ile Sesli Konuş</span><span class="talk-arrow" aria-hidden="true">↗</span>
+   </button>
+  </div>
   <div class="tozra-minimal-caption">HER FİKİR BİR YOLCULUKLA BAŞLAR</div>
  </section>
 </div>
@@ -3212,6 +3235,7 @@ function openGeneralChat(){
  showPage("chat");
  renderGeneralMessages();
 }
+$("homeChatButton")?.addEventListener("click", openGeneralChat);
 window.openGeneralChat = openGeneralChat;
 window.showPage = showPage;
 
