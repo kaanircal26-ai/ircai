@@ -2441,6 +2441,22 @@ html[data-tozra-theme="dark"] #workspacePage .tozra-home-action-row .tozra-home-
  #homePrimaryNav{z-index:999}
 }
 </style>
+<style id="tozra-mobile-screen-layout-fix">
+/* Hide the home-only secondary icon row on every non-home screen. */
+.content:not(.is-home-page) > #homePrimaryNav{display:none!important}
+.content.is-home-page > #homePrimaryNav{display:grid!important}
+.content > .page.active{align-self:stretch;flex:0 0 auto;margin-top:0!important}
+@media(max-width:760px){
+ .content{padding:10px 14px 18px!important;min-height:0!important;gap:0!important}
+ .content > .page.active{width:100%;min-height:0!important;max-height:none!important;overflow-x:hidden}
+ .content > #chatPage.active,
+ .content > #projectListPage.active,
+ .content > #projectPage.active,
+ .content > #creativeStudioPage.active,
+ .content > #tasksPage.active{margin-top:0!important;padding-top:4px!important}
+ .projects-page-heading,.cs-heading,.tasks-heading{margin-top:0!important;padding-top:4px!important}
+}
+</style>
 </head>
 
 <body>
@@ -3242,6 +3258,8 @@ function showPage(page){
  target.setAttribute("aria-hidden","false");
  document.documentElement.dataset.tozraActivePage=page;
  document.body.dataset.tozraActivePage=page;
+ const appContent=document.querySelector(".content");
+ if(appContent) appContent.classList.toggle("is-home-page",page==="workspace");
  target.scrollTop=0;
  $("navWorkspace").classList.toggle("active",page==="workspace");
  $("navProjects").classList.toggle("active",page==="projectList"||page==="project");
@@ -3258,6 +3276,7 @@ function showPage(page){
  toggleMenu(true);
  window.scrollTo({top:0,behavior:"smooth"});
 }
+document.querySelector(".content")?.classList.toggle("is-home-page",!!document.getElementById("workspacePage")?.classList.contains("active"));
 $("navWorkspace").onclick=()=>showPage("workspace");
 $("navProjects").onclick=()=>{showPage("projectList");renderProjects();};
 $("navChat").onclick=()=>openGeneralChat();
