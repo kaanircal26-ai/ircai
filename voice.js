@@ -392,13 +392,6 @@
         session.audioElement.srcObject = null;
         session.audioElement.remove();
       }
-      if (session.remoteAudioSource) {
-        try { session.remoteAudioSource.disconnect(); } catch (_) {}
-        session.remoteAudioSource = null;
-      }
-      if (session.outputAudioContext && session.outputAudioContext.state !== "closed") {
-        await session.outputAudioContext.close();
-      }
       if (session.visualFrame) cancelAnimationFrame(session.visualFrame);
       if (session.visualContext && session.visualContext.state !== "closed") await session.visualContext.close();
       const screen = $("tozraVoiceScreen");
@@ -427,13 +420,63 @@
 
 
   const BrowserSpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const isIOSDevice = /iPad|iPhone|iPod/i.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  let mobileVoiceAudioContext = null;
+
+  // iOS Safari may refuse speech/audio playback if its audio session was not
+  // activated synchronously from the original user tap. This runs BEFORE auth
+  // restoration or network requests in the click handler.
+  function unlockMobileVoiceAudio() {
+    try {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (AudioContextClass) {
+        if (!mobileVoiceAudioContext || mobileVoiceAudioContext.state === "closed") {
+          mobileVoiceAudioContext = new AudioContextClass();
+        }
+        if (mobileVoiceAudioContext.state !== "running") {
+          const resumeResult = mobileVoiceAudioContext.resume();
+          if (resumeResult && typeof resumeResult.catch === "function") {
+            resumeResult.catch(error => console.warn("TOZRA iOS ses motoru:", error));
+          }
+        }
+        // A near-silent, very short sound primes Safari's output route.
+        const oscillator = mobileVoiceAudioContext.createOscillator();
+        const gain = mobileVoiceAudioContext.createGain();
+        gain.gain.value = 0.00001;
+        oscillator.connect(gain);
+        gain.connect(mobileVoiceAudioContext.destination);
+        oscillator.start();
+        oscillator.stop(mobileVoiceAudioContext.currentTime + 0.025);
+      }
+    } catch (error) {
+      console.warn("TOZRA ses çıkışı etkinleştirilemedi:", error);
+    }
+
+    // Prime Web Speech while the tap is still active. The real utterance is
+    // queued only after the assistant response arrives.
+    try {
+      if (window.speechSynthesis && window.SpeechSynthesisUtterance) {
+        const primer = new SpeechSynthesisUtterance(" ");
+        primer.lang = "tr-TR";
+        primer.volume = 0;
+        primer.rate = 10;
+        window.speechSynthesis.speak(primer);
+      }
+    } catch (error) {
+      console.warn("TOZRA konuşma motoru etkinleştirilemedi:", error);
+    }
+  }
 
   function speakBrowserReply(text, session) {
     if (!window.speechSynthesis || !text) {
       setStatus("Yanıt hazır. Tarayıcın sesli okumayı desteklemiyor.", session.target.status);
       return;
     }
+    // Safari can remain paused after the silent priming utterance; explicitly
+    // clear stale speech and resume the speech queue before adding this reply.
     window.speechSynthesis.cancel();
+    try { window.speechSynthesis.resume(); } catch (_) {}
     // Emojileri yalnızca seslendirme metninden çıkar; ekrandaki yanıt aynen kalır.
     const speechText = String(text)
       .replace(/[\p{Extended_Pictographic}\uFE0F\u200D\u{1F1E6}-\u{1F1FF}\u{1F3FB}-\u{1F3FF}\u20E3]/gu, " ")
@@ -448,6 +491,11 @@
     utterance.lang = "tr-TR";
     utterance.rate = 1;
     utterance.pitch = 1;
+    utterance.volume = 1;
+    try {
+      const trVoice = window.speechSynthesis.getVoices().find(voice => /^tr([-_]|$)/i.test(voice.lang || ""));
+      if (trVoice) utterance.voice = trVoice;
+    } catch (_) {}
     utterance.onstart = () => setStatus("TOZRA konuşuyor…", session.target.status);
     utterance.onend = () => {
       if (voiceSession === session && !session.muted) {
@@ -456,9 +504,21 @@
         else startBrowserRecognition(session);
       }
     };
-    utterance.onerror = () => {
-      if (voiceSession === session) setStatus("Yanıt hazır. Tekrar konuşabilirsin.", session.target.status);
+    utterance.onerror = event => {
+      console.warn("TOZRA seslendirme hatası:", event?.error || event);
+      if (voiceSession === session) {
+        setStatus("Sesli okuma başlatılamadı. Tekrar deneyebilirsin.", session.target.status);
+        // Do not leave the conversation stuck after a Safari TTS error.
+        if (!session.muted) {
+          window.setTimeout(() => {
+            if (voiceSession !== session || session.muted) return;
+            if (session.mediaRecorderMode) startMediaRecorderCapture(session);
+            else startBrowserRecognition(session);
+          }, 500);
+        }
+      }
     };
+    try { window.speechSynthesis.resume(); } catch (_) {}
     window.speechSynthesis.speak(utterance);
   }
 
@@ -606,7 +666,7 @@
         finally { session.processing = false; }
       };
       recorder.start();
-      setStatus("Seni dinliyorum. Konuşman bitince mikrofon düğmesine bas.", session.target.status);
+      setStatus(isIOSDevice ? "Seni dinliyorum. Konuşman bitince mikrofon düğmesine dokunup gönder." : "Seni dinliyorum. Konuşman bitince mikrofon düğmesine bas.", session.target.status);
       const mic = $("voiceScreenMic");
       mic?.classList.remove("is-muted");
       mic?.setAttribute("aria-label", "Konuşmayı gönder");
@@ -617,6 +677,7 @@
   }
 
   async function startBrowserVoice() {
+    unlockMobileVoiceAudio();
     let target;
     try {
       target = getVoiceTarget();
@@ -648,7 +709,9 @@
       muted: false,
       processing: false,
       recognition: null,
-      mediaRecorderMode: !BrowserSpeechRecognition,
+      // iOS Safari's SpeechRecognition support is inconsistent. Use the
+      // MediaRecorder + server transcription path there for predictable input.
+      mediaRecorderMode: isIOSDevice || !BrowserSpeechRecognition,
       recorder: null,
       localStream: null
     };
@@ -708,26 +771,9 @@
       dataChannel: null,
       localStream: null,
       audioElement: null,
-      outputAudioContext: null,
-      remoteAudioSource: null,
       savedMessages: new Set(),
       assistantDrafts: new Map()
     };
-
-    // iOS Safari may block remote WebRTC audio unless its audio engine is
-    // resumed directly inside the user's tap gesture. Unlock it before any await.
-    try {
-      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-      if (AudioContextClass) {
-        session.outputAudioContext = new AudioContextClass();
-        const resumePromise = session.outputAudioContext.resume();
-        if (resumePromise && typeof resumePromise.catch === "function") {
-          resumePromise.catch(error => console.warn("iOS ses motoru başlatılamadı:", error));
-        }
-      }
-    } catch (error) {
-      console.warn("TOZRA ses motoru oluşturulamadı; medya oynatıcı kullanılacak:", error);
-    }
 
     voiceSession = session;
     $("voiceScreenMic")?.classList.remove("is-muted");
@@ -784,30 +830,11 @@
           event.streams?.[0] ||
           new MediaStream([event.track]);
 
-        // Preferred path: route the remote WebRTC stream through the AudioContext
-        // unlocked by the initial tap. This avoids iOS Safari's delayed autoplay block.
-        if (session.outputAudioContext) {
-          try {
-            if (session.outputAudioContext.state !== "running") {
-              await session.outputAudioContext.resume();
-            }
-            if (!session.remoteAudioSource) {
-              session.remoteAudioSource = session.outputAudioContext.createMediaStreamSource(remoteStream);
-              session.remoteAudioSource.connect(session.outputAudioContext.destination);
-            }
-            if (session.outputAudioContext.state === "running") {
-              setStatus("TOZRA'nın sesi hazır. Konuşabilirsin.", target.status);
-              return;
-            }
-          } catch (error) {
-            console.warn("iPhone AudioContext ses çıkışı başarısız; medya oynatıcı deneniyor:", error);
-          }
-        }
-
-        // Fallback for browsers without a usable AudioContext output route.
         let audio = session.audioElement;
+
         if (!audio) {
           audio = document.createElement("audio");
+
           audio.autoplay = true;
           audio.playsInline = true;
           audio.muted = false;
@@ -819,23 +846,34 @@
           audio.style.position = "fixed";
           audio.style.width = "1px";
           audio.style.height = "1px";
-          audio.style.opacity = "0.01";
+          audio.style.opacity = "0";
           audio.style.pointerEvents = "none";
+
           document.body.appendChild(audio);
+
           session.audioElement = audio;
         }
+
         audio.srcObject = remoteStream;
+
         try {
           await audio.play();
-          setStatus("TOZRA'nın sesi hazır. Konuşabilirsin.", target.status);
+
+          setStatus(
+            "TOZRA'nın sesi hazır. Konuşabilirsin.",
+            target.status
+          );
+
         } catch (error) {
           console.warn("Ses oynatma engellendi:", error);
+
           audio.controls = true;
-          audio.style.opacity = "1";
-          audio.style.width = "min(90vw, 320px)";
-          audio.style.height = "40px";
-          audio.style.zIndex = "99999";
-          setStatus("iPhone ses izni engelledi. Ekrandaki oynat düğmesine dokun.", target.status);
+          audio.style.display = "block";
+
+          setStatus(
+            "Sesi başlatmak için oynat düğmesine dokun.",
+            target.status
+          );
         }
       };
 
@@ -1042,6 +1080,10 @@
   const projectButton = $("projectVoiceButton");
   const startFromButton = async () => {
     if (voiceSession) { showVoiceScreen(); await stopRealtimeVoice(); return; }
+
+    // IMPORTANT: this must happen synchronously inside the physical tap,
+    // before Supabase init (which is asynchronous) or any fetch call.
+    unlockMobileVoiceAudio();
 
     // Do not check the in-memory session before Supabase has restored it.
     // This was the reason Google users were incorrectly sent to the login modal.
