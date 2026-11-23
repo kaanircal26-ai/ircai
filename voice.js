@@ -358,6 +358,11 @@
           session.recognition.onresult = null;
           session.recognition.stop();
         }
+        if (session.recorder && session.recorder.state !== "inactive") {
+          session.recorder.onstop = null;
+          session.recorder.stop();
+        }
+        if (session.localStream) session.localStream.getTracks().forEach(track => track.stop());
         if (window.speechSynthesis) window.speechSynthesis.cancel();
       } catch (error) {
         console.warn("Tarayıcı ses oturumu kapatılırken:", error);
@@ -440,7 +445,8 @@
     utterance.onend = () => {
       if (voiceSession === session && !session.muted) {
         setStatus("Seni dinliyorum…", session.target.status);
-        startBrowserRecognition(session);
+        if (session.mediaRecorderMode) startMediaRecorderCapture(session);
+        else startBrowserRecognition(session);
       }
     };
     utterance.onerror = () => {
@@ -533,6 +539,76 @@
     }
   }
 
+  async function transcribeRecordedAudio(blob, session) {
+    if (!blob || !blob.size || voiceSession !== session) return;
+    setStatus("Konuşman yazıya dönüştürülüyor…", session.target.status);
+    try {
+      const dataUrl = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result || ""));
+        reader.onerror = () => reject(new Error("Ses kaydı okunamadı."));
+        reader.readAsDataURL(blob);
+      });
+      const base64 = dataUrl.split(",")[1] || "";
+      const mimeType = (blob.type || session.mimeType || "audio/mp4").split(";")[0];
+      const response = await fetch("/api/transcribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...(await window.TozraAuth.authHeaders()) },
+        body: JSON.stringify({ audio: base64, mimeType })
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok || !data.success || !data.text) throw new Error(data.error || "Ses yazıya dönüştürülemedi.");
+      await answerBrowserVoice(data.text, session);
+    } catch (error) {
+      console.error("TOZRA mobil ses dönüştürme:", error);
+      setStatus("Ses işlenemedi: " + (error.message || "Bağlantını kontrol et."), session.target.status);
+      if (voiceSession === session && !session.muted) {
+        setStatus("Tekrar konuşmak için mikrofon düğmesine bas.", session.target.status);
+      }
+    }
+  }
+
+  async function startMediaRecorderCapture(session) {
+    if (voiceSession !== session || session.muted || session.processing || session.recorder?.state === "recording") return;
+    try {
+      if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
+        setStatus("Bu cihazda mikrofon kaydı desteklenmiyor. Safari/Chrome izinlerini kontrol et.", session.target.status);
+        return;
+      }
+      if (!session.localStream) {
+        session.localStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
+      }
+      const candidates = ["audio/mp4", "audio/webm;codecs=opus", "audio/webm", "audio/ogg;codecs=opus"];
+      const mimeType = candidates.find(type => !MediaRecorder.isTypeSupported || MediaRecorder.isTypeSupported(type)) || "";
+      const recorder = new MediaRecorder(session.localStream, mimeType ? { mimeType } : undefined);
+      session.recorder = recorder;
+      session.mimeType = recorder.mimeType || mimeType || "audio/mp4";
+      session.audioChunks = [];
+      recorder.ondataavailable = event => { if (event.data?.size) session.audioChunks.push(event.data); };
+      recorder.onerror = event => setStatus("Mikrofon kayıt hatası: " + (event.error?.message || "Tekrar deneyebilirsin."), session.target.status);
+      recorder.onstop = async () => {
+        const blob = new Blob(session.audioChunks || [], { type: session.mimeType });
+        session.audioChunks = [];
+        if (voiceSession !== session) return;
+        if (!blob.size) {
+          setStatus("Ses algılanmadı. Mikrofon düğmesine basıp tekrar konuş.", session.target.status);
+          return;
+        }
+        session.processing = true;
+        try { await transcribeRecordedAudio(blob, session); }
+        finally { session.processing = false; }
+      };
+      recorder.start();
+      setStatus("Seni dinliyorum. Konuşman bitince mikrofon düğmesine bas.", session.target.status);
+      const mic = $("voiceScreenMic");
+      mic?.classList.remove("is-muted");
+      mic?.setAttribute("aria-label", "Konuşmayı gönder");
+    } catch (error) {
+      console.error("TOZRA MediaRecorder:", error);
+      setStatus("Mikrofon açılamadı: " + (error.message || "Mikrofon iznini kontrol et."), session.target.status);
+    }
+  }
+
   async function startBrowserVoice() {
     let target;
     try {
@@ -545,9 +621,9 @@
       if (typeof window.showModal === "function") window.showModal("login");
       return;
     }
-    if (!BrowserSpeechRecognition) {
+    if (!BrowserSpeechRecognition && (!window.MediaRecorder || !navigator.mediaDevices?.getUserMedia)) {
       showVoiceScreen();
-      setStatus("Ücretsiz ses tanıma bu tarayıcıda desteklenmiyor. Chrome veya Edge kullanabilirsin.", target.status);
+      setStatus("Bu tarayıcı sesli sohbeti desteklemiyor. Mikrofon izni ve güncel Safari/Chrome gerekli.", target.status);
       return;
     }
     if (!window.speechSynthesis) {
@@ -564,14 +640,18 @@
       savedMessages: new Set(),
       muted: false,
       processing: false,
-      recognition: null
+      recognition: null,
+      mediaRecorderMode: !BrowserSpeechRecognition,
+      recorder: null,
+      localStream: null
     };
     voiceSession = session;
     updateButton(target, true);
     $("voiceScreenMic")?.classList.remove("is-muted");
     $("voiceScreenMic")?.setAttribute("aria-label", "Mikrofonu kapat");
     setStatus("Ücretsiz sesli sohbet hazırlanıyor…", target.status);
-    startBrowserRecognition(session);
+    if (session.mediaRecorderMode) startMediaRecorderCapture(session);
+    else startBrowserRecognition(session);
   }
 
   async function startRealtimeVoice() {
@@ -975,6 +1055,18 @@
   $("voiceScreenMic")?.addEventListener("click", () => {
     if (voiceSession?.browserFallback) {
       const session = voiceSession;
+      if (session.mediaRecorderMode) {
+        if (session.recorder?.state === "recording") {
+          try { session.recorder.stop(); } catch {}
+          $("voiceScreenMic")?.classList.add("is-muted");
+          $("voiceScreenMic")?.setAttribute("aria-label", "Mikrofonu aç");
+          setStatus("Konuşman gönderiliyor…", session.target.status);
+        } else {
+          session.muted = false;
+          startMediaRecorderCapture(session);
+        }
+        return;
+      }
       session.muted = !session.muted;
       if (session.muted) {
         try { session.recognition?.stop(); } catch {}

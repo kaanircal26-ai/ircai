@@ -2322,6 +2322,95 @@ body.voice-screen-open{overflow:hidden}
 #profileButton.user-avatar svg{display:block!important;width:22px!important;height:22px!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
 </style>
 
+
+<style id="tozra-splash-accent-sync-v1">
+/* Açılış ekranındaki TOZRA animasyonu, profil bölümünde seçilen renge bağlanır. */
+#splash.splash{
+  --splash-accent:var(--tozra-accent,#a8c77b);
+  --splash-accent-light:var(--tozra-accent-dark,#c5df98);
+  --splash-accent-deep:var(--tozra-accent-deep,#607d3b);
+  --splash-accent-soft:var(--tozra-accent-soft,#edf4e2);
+  background:
+    radial-gradient(ellipse at 50% 47%,color-mix(in srgb,var(--splash-accent) 24%,#102016) 0%,color-mix(in srgb,var(--splash-accent-deep) 27%,#07150d) 43%,#040d08 100%)!important;
+  transition:background .45s ease!important;
+}
+#splash .wave-ribbon{stroke:var(--splash-accent-light)!important;transition:stroke .4s ease,filter .4s ease}
+#splash .wave-top,#splash .wave-bottom{filter:drop-shadow(0 0 8px color-mix(in srgb,var(--splash-accent) 62%,transparent))!important}
+#splash:before{background:
+  radial-gradient(ellipse at 16% 13%,color-mix(in srgb,var(--splash-accent) 28%,transparent),transparent 29%),
+  radial-gradient(ellipse at 84% 82%,color-mix(in srgb,var(--splash-accent) 24%,transparent),transparent 31%),
+  radial-gradient(ellipse at 50% 48%,color-mix(in srgb,var(--splash-accent-deep) 32%,transparent),transparent 45%)!important}
+#splash:after{border-color:color-mix(in srgb,var(--splash-accent-light) 55%,transparent)!important;border-left-color:transparent!important;border-bottom-color:color-mix(in srgb,var(--splash-accent) 18%,transparent)!important;box-shadow:0 0 30px color-mix(in srgb,var(--splash-accent) 18%,transparent),inset 0 0 25px color-mix(in srgb,var(--splash-accent) 12%,transparent)!important}
+#splash .splash-mark{border-color:color-mix(in srgb,var(--splash-accent-light) 72%,white)!important;box-shadow:0 0 0 7px color-mix(in srgb,var(--splash-accent) 12%,transparent),0 0 32px color-mix(in srgb,var(--splash-accent) 58%,transparent),0 18px 65px rgba(0,0,0,.38)!important}
+#splash .splash-name{ text-shadow:0 4px 28px color-mix(in srgb,var(--splash-accent) 32%,transparent)!important}
+#splash .splash-tagline{color:var(--splash-accent-light)!important;text-shadow:0 0 18px color-mix(in srgb,var(--splash-accent) 35%,transparent)!important}
+#splash .splash-feature-icons span{border-color:color-mix(in srgb,var(--splash-accent-light) 35%,transparent)!important;background:linear-gradient(145deg,color-mix(in srgb,var(--splash-accent) 20%,transparent),color-mix(in srgb,var(--splash-accent-deep) 30%,transparent))!important}
+#splash .splash-feature-icons svg,#splash .splash-feature-icons span:first-child svg{stroke:var(--splash-accent-light)!important;fill:var(--splash-accent-light)!important}
+#splash .splash-loader-label i{color:var(--splash-accent-light)!important}
+#splash .loader{background:color-mix(in srgb,var(--splash-accent) 16%,transparent)!important}
+#splash .loader-bar{background:linear-gradient(90deg,var(--splash-accent-deep),var(--splash-accent-light),var(--splash-accent))!important;box-shadow:0 0 13px color-mix(in srgb,var(--splash-accent) 58%,transparent)!important}
+#splash .splash-particle{background:var(--splash-accent-light)!important;box-shadow:0 0 15px 4px color-mix(in srgb,var(--splash-accent) 48%,transparent)!important}
+#splash .splash-auth-actions span{background:color-mix(in srgb,var(--splash-accent-light) 35%,transparent)!important}
+#splash .splash-auth-actions button:first-child{color:#142018!important;background:linear-gradient(110deg,var(--splash-accent),var(--splash-accent-light))!important;box-shadow:0 7px 25px color-mix(in srgb,var(--splash-accent) 24%,transparent)!important}
+#splash .splash-auth-actions button{border-color:color-mix(in srgb,var(--splash-accent-light) 40%,transparent)!important}
+@media(prefers-reduced-motion:reduce){#splash.splash{transition:none!important}}
+</style>
+
+
+<style id="tozra-home-orbit-accent-sync-v2">
+/* Ana sayfadaki orbit/TOZRA animasyonu profil vurgu rengine bağlıdır. */
+#workspacePage .tozra-minimal-home{
+ --home-accent:var(--tozra-accent,#a8c77b);
+ --home-accent-soft:var(--tozra-accent-soft,#edf4e2);
+ --home-accent-deep:var(--tozra-accent-deep,#607d3b);
+ --home-accent-light:var(--tozra-accent-dark,#c5df98);
+ background:
+  radial-gradient(ellipse at 50% 43%,color-mix(in srgb,var(--home-accent) 19%,transparent),transparent 38%),
+  radial-gradient(ellipse at 50% 58%,color-mix(in srgb,var(--home-accent-soft) 35%,transparent),transparent 57%),
+  var(--canvas,#f2f1ed)!important;
+ transition:background .45s ease!important;
+}
+#workspacePage .tozra-minimal-home:before,
+#workspacePage .tozra-minimal-home:after{
+ border-color:color-mix(in srgb,var(--home-accent) 19%,transparent)!important;
+ transition:border-color .4s ease!important;
+}
+#workspacePage .tozra-minimal-home:after{
+ border-color:color-mix(in srgb,var(--home-accent-deep) 25%,transparent)!important;
+}
+#workspacePage .tozra-orbit-core{
+ background:radial-gradient(circle at 35% 28%,color-mix(in srgb,#fff 88%,var(--home-accent-light)) 0%,color-mix(in srgb,var(--home-accent-light) 72%,white) 28%,var(--home-accent) 64%,var(--home-accent-deep) 100%)!important;
+ box-shadow:0 0 32px color-mix(in srgb,var(--home-accent) 38%,transparent),0 0 80px color-mix(in srgb,var(--home-accent) 17%,transparent),inset 0 0 22px rgba(255,255,255,.7)!important;
+ transition:background .45s ease,box-shadow .45s ease!important;
+}
+#workspacePage .tozra-orbit-core:before{
+ border-color:color-mix(in srgb,var(--home-accent-deep) 58%,transparent)!important;
+}
+#workspacePage .tozra-core-symbol{
+ color:color-mix(in srgb,var(--home-accent-deep) 78%,#172018)!important;
+ text-shadow:0 2px 14px color-mix(in srgb,var(--home-accent-light) 70%,white)!important;
+ transition:color .4s ease,text-shadow .4s ease!important;
+}
+#workspacePage .tozra-orbit-ring{border-color:color-mix(in srgb,var(--home-accent-deep) 46%,transparent)!important}
+#workspacePage .tozra-orbit-ring.ring-two{border-color:color-mix(in srgb,var(--home-accent) 34%,transparent)!important}
+#workspacePage .tozra-orbit-ring.ring-three{border-color:color-mix(in srgb,var(--home-accent-deep) 52%,transparent)!important}
+#workspacePage .tozra-orbit-particle{
+ background:var(--home-accent)!important;
+ box-shadow:0 0 16px color-mix(in srgb,var(--home-accent) 72%,transparent)!important;
+ transition:background .4s ease,box-shadow .4s ease!important;
+}
+#workspacePage .tozra-minimal-kicker{color:var(--home-accent-deep)!important;transition:color .4s ease!important}
+#workspacePage .tozra-minimal-talk{
+ border-color:color-mix(in srgb,var(--home-accent) 52%,transparent)!important;
+ box-shadow:0 10px 30px color-mix(in srgb,var(--home-accent-deep) 13%,transparent)!important;
+ transition:border-color .4s ease,box-shadow .4s ease,transform .2s,background .2s!important;
+}
+#workspacePage .talk-wave i{background:var(--home-accent-deep)!important;transition:background .4s ease!important}
+#workspacePage .talk-arrow{color:var(--home-accent-deep)!important;transition:color .4s ease!important}
+#workspacePage .tozra-minimal-caption{color:color-mix(in srgb,var(--home-accent-deep) 56%,#9ba397)!important}
+@media(prefers-reduced-motion:reduce){#workspacePage .tozra-minimal-home{transition:none!important}}
+</style>
+
 </head>
 
 <body>
@@ -2754,7 +2843,15 @@ const TozraAuth = (() => {
  let configError = "";
 
  async function init() {
-  if (initialized) return session;
+  if (initialized) {
+   // Re-read the persisted Supabase session when an installed mobile app resumes.
+   try {
+    const restored = await client?.auth?.getSession();
+    if (restored && !restored.error) session = restored.data.session || null;
+   } catch (error) { console.warn("TOZRA kayıtlı oturum okunamadı:", error); }
+   updateAccountUI();
+   return session;
+  }
   if (initPromise) return initPromise;
 
   initPromise = (async () => {
@@ -2766,7 +2863,7 @@ const TozraAuth = (() => {
      const config = await response.json();
      if (!response.ok || !config.success) throw new Error(config.error || "Supabase yapılandırması okunamadı.");
      client = window.supabase.createClient(config.supabaseUrl, config.supabaseKey, {
-      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, storage: window.localStorage }
      });
     }
 
@@ -4200,6 +4297,16 @@ function setTozraAccent(name){
  root.style.setProperty("--tozra-accent-soft",c.soft);
  root.style.setProperty("--tozra-accent-deep",c.deep);
  root.style.setProperty("--tozra-accent-dark",c.dark);
+ /* Açılış animasyonu da seçilen vurgu rengini anında takip eder. */
+ root.style.setProperty("--splash-accent",c.main);
+ root.style.setProperty("--splash-accent-light",c.dark);
+ root.style.setProperty("--splash-accent-deep",c.deep);
+ root.style.setProperty("--splash-accent-soft",c.soft);
+ /* Ana ekrandaki TOZRA orbit animasyonu da aktif vurgu rengini takip eder. */
+ root.style.setProperty("--home-accent",c.main);
+ root.style.setProperty("--home-accent-soft",c.soft);
+ root.style.setProperty("--home-accent-deep",c.deep);
+ root.style.setProperty("--home-accent-light",c.dark);
  localStorage.setItem("tozra-accent",key);
  const meta=document.querySelector('meta[name="theme-color"]');
  if(meta)meta.content=getTozraTheme()==="dark"?"#151b17":c.soft;
@@ -4538,6 +4645,15 @@ async function refreshAccountData(){
  TozraAuth.updateAccountUI();
  updateDashboardStats();
 }
+window.addEventListener("pageshow", async ()=>{
+ // iOS PWA/Safari may restore a page from the back-forward cache; refresh the
+ // in-memory auth snapshot from Supabase's persistent localStorage session.
+ try { await TozraAuth.init(); } catch (error) { console.warn("TOZRA oturum geri yükleme:", error); }
+});
+window.addEventListener("visibilitychange", async ()=>{
+ if(document.visibilityState !== "visible") return;
+ try { await TozraAuth.init(); } catch (error) { console.warn("TOZRA oturum yenileme:", error); }
+});
 window.addEventListener("load", async ()=>{
  await TozraAuth.init();
  await refreshAccountData();
@@ -5210,3 +5326,17 @@ html[data-tozra-theme="dark"] .auth-divider{color:#a7b5a5}
 
 </body>
 </html>
+
+<style id="tozra-mobile-dock-neutral-v2">
+@media(max-width:760px){
+ .mobile-dock{background:rgba(250,249,246,.97)!important;border:1px solid rgba(80,88,76,.12)!important;box-shadow:0 8px 26px rgba(28,36,27,.10),inset 0 1px 0 rgba(255,255,255,.9)!important;-webkit-backdrop-filter:blur(20px) saturate(125%)!important;backdrop-filter:blur(20px) saturate(125%)!important}
+ .mobile-dock button{color:#73776f!important;background:transparent!important;border-color:transparent!important;box-shadow:none!important}
+ .mobile-dock button .dock-icon{background:transparent!important;border:0!important;box-shadow:none!important;color:#777d72!important}
+ .mobile-dock button.is-active{background:color-mix(in srgb,var(--tozra-accent,#a8c77b) 13%,#ffffff)!important;color:#303a2d!important;border:1px solid color-mix(in srgb,var(--tozra-accent,#a8c77b) 20%,transparent)!important;box-shadow:none!important}
+ .mobile-dock button.is-active .dock-icon{background:transparent!important;color:var(--tozra-accent-deep,#607d3b)!important;border:0!important;box-shadow:none!important}
+}
+html[data-tozra-theme="dark"] .mobile-dock{background:rgba(28,32,29,.97)!important;border-color:rgba(210,220,205,.12)!important}
+html[data-tozra-theme="dark"] .mobile-dock button{color:#aeb5aa!important}
+html[data-tozra-theme="dark"] .mobile-dock button .dock-icon{color:#aeb5aa!important}
+html[data-tozra-theme="dark"] .mobile-dock button.is-active{background:color-mix(in srgb,var(--tozra-accent,#a8c77b) 18%,#202720)!important;color:#edf2e9!important}
+</style>
