@@ -418,6 +418,14 @@ button,input,textarea{font:inherit}button{transition:background .18s,border-colo
 .cs-download-image{display:inline-flex;margin-top:12px;text-decoration:none;align-items:center;justify-content:center}
 #csGenerateImage:disabled{opacity:.55;cursor:wait}
 
+.cs-video-options{margin-top:18px;padding:16px;border:1px solid #e5e1d9;border-radius:14px;background:rgba(244,241,235,.72)}
+.cs-video-options-head{display:grid;gap:5px;margin-bottom:14px}
+.cs-video-options-head strong{font-size:14px;color:#302d28}
+.cs-video-options-head small{font-size:11px;line-height:1.5;color:#8c857a}
+.cs-video-options .cs-field-row+.cs-field-row{margin-top:10px}
+.cs-storyboard-button{border-color:#cfc5b8}
+.cs-storyboard-button[hidden],.cs-video-options[hidden]{display:none!important}
+@media(max-width:520px){.cs-video-options{padding:12px}.cs-video-options .cs-field-row{grid-template-columns:1fr 1fr;gap:8px}.cs-video-options .cs-select{font-size:12px;min-width:0}}
 .cs-builder-aside{padding:24px 20px;background:#f4f1eb;border-left:1px solid #e5e1d9}
 .cs-builder-aside h3{margin:7px 0 20px;color:#2c2a25;font-size:17px;letter-spacing:-.03em}
 .cs-steps{display:grid;gap:17px;list-style:none;padding:0;margin:0}
@@ -2992,9 +3000,21 @@ html[data-tozra-theme="dark"] #workspacePage .tozra-home-action-row .tozra-home-
      </select>
     </div>
    </div>
+   <div class="cs-video-options" id="csVideoOptions" hidden>
+    <div class="cs-video-options-head"><span class="cs-eyebrow">VIDEO PRODUCTION</span><strong>Storyboard ayarları</strong><small>Video fikrini sahne sahne çekim planına dönüştür.</small></div>
+    <div class="cs-field-row">
+     <div><label class="cs-label" for="csVideoPlatform">Yayın platformu</label><select class="cs-select" id="csVideoPlatform"><option value="YouTube">YouTube</option><option value="Instagram Reels">Instagram Reels</option><option value="TikTok">TikTok</option><option value="YouTube Shorts">YouTube Shorts</option><option value="Reklam / Marka filmi">Reklam / Marka filmi</option><option value="Sunum / Kurumsal video">Sunum / Kurumsal video</option></select></div>
+     <div><label class="cs-label" for="csVideoDuration">Video süresi</label><select class="cs-select" id="csVideoDuration"><option value="15 saniye">15 saniye</option><option value="30 saniye" selected>30 saniye</option><option value="45 saniye">45 saniye</option><option value="60 saniye">60 saniye</option><option value="90 saniye">90 saniye</option><option value="3 dakika">3 dakika</option></select></div>
+    </div>
+    <div class="cs-field-row">
+     <div><label class="cs-label" for="csVideoRatio">Görüntü oranı</label><select class="cs-select" id="csVideoRatio"><option value="9:16 dikey">9:16 — Dikey</option><option value="16:9 yatay" selected>16:9 — Yatay</option><option value="1:1 kare">1:1 — Kare</option><option value="4:5 portre">4:5 — Portre</option></select></div>
+     <div><label class="cs-label" for="csVideoScenes">Sahne sayısı</label><select class="cs-select" id="csVideoScenes"><option value="4">4 sahne</option><option value="5" selected>5 sahne</option><option value="6">6 sahne</option><option value="8">8 sahne</option><option value="10">10 sahne</option></select></div>
+    </div>
+   </div>
    <div class="cs-builder-actions">
     <button class="cs-secondary" type="button" id="csSaveProject">Projelerime kaydet</button>
     <button class="cs-secondary" type="button" id="csGenerateImage">✦ Görsel oluştur</button>
+    <button class="cs-secondary cs-storyboard-button" type="button" id="csBuildStoryboard" hidden>▤ Storyboard oluştur</button>
     <button class="cs-primary" type="button" id="csGenerate">TOZRA ile geliştir <span>→</span></button>
    </div>
    <div id="csImageResult" class="cs-image-result" hidden aria-live="polite">
@@ -5135,6 +5155,8 @@ if("serviceWorker" in navigator){
   const set=(id,value)=>{const el=byId(id);if(el)el.textContent=value;};
   set('csBuilderTitle',c.title);set('csBuilderName',c.name);set('csBuilderIcon',c.icon);set('csBuilderDescription',c.desc);
   const brief=byId('csBrief');if(brief)brief.placeholder=c.placeholder;
+  const videoOptions=byId('csVideoOptions');if(videoOptions)videoOptions.hidden=active!=='video';
+  const storyboardButton=byId('csBuildStoryboard');if(storyboardButton)storyboardButton.hidden=active!=='video';
  }
  function openStudio(){
   if(typeof window.showPage==='function')window.showPage('creativeStudio');
@@ -5193,13 +5215,46 @@ if("serviceWorker" in navigator){
    button.disabled=false;button.textContent='✦ Görsel oluştur';
   }
  }
+ function buildStoryboard(){
+  const base=makePrompt();
+  if(!base)return;
+  const platform=byId('csVideoPlatform')?.value||'YouTube';
+  const duration=byId('csVideoDuration')?.value||'30 saniye';
+  const ratio=byId('csVideoRatio')?.value||'16:9 yatay';
+  const scenes=byId('csVideoScenes')?.value||'5';
+  const storyboardPrompt=[
+   base,
+   '',
+   'VIDEO STUDIO — STORYBOARD VE ÜRETİM PLANI',
+   'YAYIN PLATFORMU: '+platform,
+   'HEDEF SÜRE: '+duration,
+   'GÖRÜNTÜ ORANI: '+ratio,
+   'SAHNE SAYISI: '+scenes,
+   '',
+   'İSTENEN ÇIKTI:',
+   '1. Videonun ana fikri, amacı ve izleyicide bırakacağı etki.',
+   '2. İlk 2-3 saniye için güçlü açılış / hook.',
+   '3. Belirtilen sahne sayısına göre zaman kodlu storyboard tablosu. Her sahnede süre, görüntü ve aksiyon, kamera/kadraj, ekranda görülecek metin, seslendirme veya diyalog, müzik/ses efekti ve geçiş bilgisi bulunsun.',
+   '4. Toplam sahne sürelerinin hedef video süresine uyduğunu kontrol et.',
+   '5. Çekim ve kurgu notları; gerekli çekimler, görsel varlıklar ve ses ihtiyaçları.',
+   '6. Platforma uygun kapak/thumbnail fikri, başlık ve kısa açıklama.',
+   '7. Son kontrol listesi ve üretimde dikkat edilmesi gerekenler.',
+   '',
+   'Gerçek video dosyası oluşturduğunu iddia etme. Bu görev, çekime veya harici video üretim aracına aktarılabilecek eksiksiz bir storyboard ve üretim planı hazırlamaktır. Bilinmeyen ayrıntıları varsayım olarak işaretle.'
+  ].join('\n');
+  if(typeof window.showPage==='function')window.showPage('chat');
+  if(typeof window.startChatWithPrompt==='function')window.startChatWithPrompt(storyboardPrompt);
+  const input=byId('prompt');if(input)input.value=storyboardPrompt;
+  if(typeof window.sendGeneralMessage==='function')window.sendGeneralMessage(storyboardPrompt);
+  else {input?.focus();alert('Storyboard brief’i sohbet alanına aktarıldı. Göndermek için gönder düğmesine bas.');}
+ }
  function saveProject(){
   const brief=(byId('csBrief')?.value||'').trim();
   if(!brief){alert('Önce yaratıcı brief alanına çalışmanı yaz.');byId('csBrief')?.focus();return;}
   try{
    if(!Array.isArray(projects))throw new Error('Proje listesi hazır değil.');
    const c=modes[active],name=(byId('csProjectName')?.value||'').trim()||c.name;
-   const project={id:typeof window.makeId==='function'?window.makeId():Date.now().toString(36),name,category:active==='image'||active==='design'?'Görsel stüdyo':active==='video'?'Video stüdyo':active==='writing'||active==='campaign'?'İçerik üretimi':'Fikir geliştirme',description:brief.slice(0,250),createdAt:Date.now(),updatedAt:Date.now(),messages:[],notes:'CREATIVE STUDIO BRIEF\n\n'+brief+'\n\nHedef kitle: '+((byId('csAudience')?.value||'').trim()||'Belirtilmedi')+'\nYaratıcı yaklaşım: '+(byId('csTone')?.value||'Belirtilmedi')};
+   const project={id:typeof window.makeId==='function'?window.makeId():Date.now().toString(36),name,category:active==='image'||active==='design'?'Görsel stüdyo':active==='video'?'Video stüdyo':active==='writing'||active==='campaign'?'İçerik üretimi':'Fikir geliştirme',description:brief.slice(0,250),createdAt:Date.now(),updatedAt:Date.now(),messages:[],notes:'CREATIVE STUDIO BRIEF\n\n'+brief+'\n\nHedef kitle: '+((byId('csAudience')?.value||'').trim()||'Belirtilmedi')+'\nYaratıcı yaklaşım: '+(byId('csTone')?.value||'Belirtilmedi')+(active==='video'?'\n\nVIDEO AYARLARI\nPlatform: '+(byId('csVideoPlatform')?.value||'YouTube')+'\nSüre: '+(byId('csVideoDuration')?.value||'30 saniye')+'\nGörüntü oranı: '+(byId('csVideoRatio')?.value||'16:9 yatay')+'\nSahne sayısı: '+(byId('csVideoScenes')?.value||'5'):'')};
    projects.unshift(project);
    if(typeof window.saveProjects==='function')window.saveProjects();
    else localStorage.setItem('tozra-projects',JSON.stringify(projects));
@@ -5211,11 +5266,12 @@ if("serviceWorker" in navigator){
   const target=event.target instanceof Element?event.target:null;if(!target)return;
   const modeButton=target.closest('[data-creative-mode]');
   if(modeButton){event.preventDefault();event.stopImmediatePropagation();chooseMode(modeButton.getAttribute('data-creative-mode'));openStudio();byId('csBrief')?.focus({preventScroll:true});return;}
-  const button=target.closest('#csGenerate,#csSaveProject,#csStartIdea,#csGenerateImage');if(!button)return;
+  const button=target.closest('#csGenerate,#csSaveProject,#csStartIdea,#csGenerateImage,#csBuildStoryboard');if(!button)return;
   event.preventDefault();event.stopImmediatePropagation();
   if(button.id==='csGenerate')generate();
   else if(button.id==='csSaveProject')saveProject();
   else if(button.id==='csGenerateImage')generateImage();
+  else if(button.id==='csBuildStoryboard')buildStoryboard();
   else {chooseMode('idea');openStudio();byId('csBrief')?.focus({preventScroll:true});}
  },true);
  document.addEventListener('DOMContentLoaded',()=>chooseMode('idea'));

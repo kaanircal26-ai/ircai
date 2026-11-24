@@ -25,3 +25,16 @@ KURULUM
 4. Diğer dosyaları silmeyin veya taşımayın.
 5. Commit & push yaptıktan sonra Vercel/hosting deployment'ının tamamlanmasını bekleyin.
 6. Uygulamayı önbelleği yenileyerek açın (Ctrl+Shift+R).
+
+
+CREATIVE STUDIO 2.0 — VIDEO STORYBOARD GELİŞTİRMESİ
+- Video Studio seçildiğinde platform, hedef süre, görüntü oranı ve sahne sayısı ayarları açılır.
+- "Storyboard oluştur" seçeneği, mevcut TOZRA sohbet akışına bu ayarlarla yapılandırılmış bir üretim brief'i gönderir.
+- İstenen çıktı: zaman kodlu sahne tablosu; görüntü/aksiyon; kamera/kadraj; ekran metni; seslendirme; müzik/efekt; geçiş; çekim ve kurgu notları.
+- Video ayarları proje kaydının notlarına eklenir.
+- Gerçek video render servisi eklenmemiştir; özellik storyboard ve üretim planı hazırlar.
+- Var olan görsel üretim, Creative Studio çalışma alanları, proje kaydetme ve Atlas 2.0 kodları korunmuştur.
+
+GÜNCELLEME KURULUMU
+- Dağıtımın kök dizinindeki index.html dosyasını bu paketteki ircai-main/index.html ile değiştirin.
+- atlas.js ve diğer dosyaları değiştirmeyin; Atlas 2.0 sürümü pakette korunur.
