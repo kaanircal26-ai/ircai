@@ -3378,7 +3378,7 @@ function showPage(page){
  $("navMarket").classList.toggle("active",page==="market");
  $("navSocial").classList.toggle("active",page==="social");
  $("navAtlas").classList.toggle("active",page==="atlas");
- syncHomePrimaryNav(page==="workspace"?"home":page==="chat"?"chat":page==="projectList"||page==="project"?"projects":page==="creativeStudio"?"studio":page==="nexus"||page==="universe"||page==="market"||page==="social"||page==="atlas"?"": "home");
+ syncHomePrimaryNav(getHomePrimaryTab(page));
  $("topbarTitle").textContent=
   page==="workspace"?"TOZRA AI":
   page==="projectList"?"PROJECTS":
@@ -3430,15 +3430,24 @@ $("homeBottomProjects")?.addEventListener("click", ()=>$("navProjects").click())
 $("homeBottomChat")?.addEventListener("click", ()=>openGeneralChat());
 $("homeBottomStudio")?.addEventListener("click", ()=>$("navCreativeStudio").click());
 
+function getHomePrimaryTab(page){
+ if(page==="workspace")return "home";
+ if(page==="chat")return "chat";
+ if(page==="projectList"||page==="project")return "projects";
+ if(page==="creativeStudio")return "studio";
+ return null;
+}
 function syncHomePrimaryNav(tab){
  const nav=document.getElementById("homePrimaryNav"); if(!nav)return;
  nav.querySelectorAll("[data-home-tab]").forEach(button=>{
-  const active=button.dataset.homeTab===tab;
+  const active=!!tab&&button.dataset.homeTab===tab;
   button.classList.toggle("selected",active);
   if(active)button.setAttribute("aria-current","page");else button.removeAttribute("aria-current");
  });
+ nav.dataset.activeTab=tab||"";
 }
 $("homeBottomProfile")?.addEventListener("click",()=>syncHomePrimaryNav("profile"));
+document.getElementById("profileButton")?.addEventListener("click",()=>syncHomePrimaryNav("profile"),true);
 
 $("homeBottomProfile")?.addEventListener("click", ()=>$("profileButton").click());
 $("homeAttachButton")?.addEventListener("click", ()=>$("imageButton").click());
@@ -5864,6 +5873,20 @@ html[data-tozra-theme="dark"] .market-categories button.is-active,html[data-tozr
 </style>
 
 <script src="/atlas.js"></script>
+
+<style id="tozra-primary-nav-v9-fix">
+/* v9: the single primary navigation remains available across app pages. */
+#homePrimaryNav.trh-bottom-nav{position:fixed!important;left:50%!important;bottom:calc(8px + env(safe-area-inset-bottom))!important;transform:translateX(-50%)!important;width:min(540px,calc(100vw - 24px))!important;z-index:1200!important;}
+@media(max-width:760px){
+  #homePrimaryNav.trh-bottom-nav{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;}
+  .content{padding-bottom:calc(104px + env(safe-area-inset-bottom))!important;}
+}
+html[data-tozra-theme="dark"] #homePrimaryNav.trh-bottom-nav{background:rgba(20,27,22,.96)!important;border-color:rgba(174,198,160,.16)!important;box-shadow:0 10px 34px rgba(0,0,0,.38)!important;color:#e8eee5!important;}
+html[data-tozra-theme="dark"] #homePrimaryNav.trh-bottom-nav button{color:#aab6a7!important;}
+html[data-tozra-theme="dark"] #homePrimaryNav.trh-bottom-nav button.selected{background:linear-gradient(135deg,#34432f,#263629)!important;color:#f0f6e9!important;}
+html[data-tozra-theme="dark"] #homePrimaryNav.trh-bottom-nav button.selected svg{fill:#f0f6e9!important;}
+@media(prefers-reduced-motion:reduce){#homePrimaryNav.trh-bottom-nav,#homePrimaryNav.trh-bottom-nav *{transition:none!important;animation:none!important;}}
+</style>
 </body>
 </html>
 
