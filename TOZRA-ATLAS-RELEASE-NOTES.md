@@ -27,3 +27,18 @@
 - Improved camera zoom limits, interaction inertia, resize handling, and mobile map controls.
 - Country data request now includes `capitalInfo` for capital marker placement.
 - Terrain remains the Cesium ellipsoid in this release; real elevation terrain is not claimed or enabled.
+
+
+## TOZRA ATLAS MAX
+- CesiumJS runtime and widget stylesheet upgraded to 1.145.
+- Added satellite, topographic, and OpenStreetMap street imagery choices.
+- Added Natural Earth country boundary GeoJSON layer.
+- Added click/tap coordinate inspector with copy action.
+- Added opt-in browser geolocation button. Location is used locally for camera navigation and is not sent to TOZRA's server by this feature.
+- Added two-point geodesic surface distance measurement.
+- Added optional Cesium World Terrain and OSM Buildings toggles.
+- Optional terrain/building layers require `CESIUM_ION_TOKEN` in Vercel. The token is returned only by `/api/atlas-config` to the browser; configure it as a public client token restricted by allowed origins and assets in Cesium ion.
+- Without a Cesium ion token, base 3D globe, imagery styles, borders, search, coordinate inspection, and distance measurement remain available. Terrain/building controls are disabled and report why.
+- Existing country, company, technology, research, and saved-discovery panels remain in place.
+
+Validation: JavaScript syntax and ZIP integrity checks are performed. Live provider availability, Cesium ion account permissions, browser WebGL rendering, and device-specific performance require deployment testing.

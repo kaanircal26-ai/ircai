@@ -2502,7 +2502,7 @@ html[data-tozra-theme="dark"] #workspacePage .tozra-home-action-row .tozra-home-
 }
 </style>
 
-<link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.125/Build/Cesium/Widgets/widgets.css"><style id="tozra-home-mobile-stage2">
+<link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.145/Build/Cesium/Widgets/widgets.css"><style id="tozra-home-mobile-stage2">
 /* Stage 2 — ana ekranı dar telefonlarda okunaklı ve rahat kullanılır hale getir. */
 @media (max-width: 760px) {
   #workspacePage {box-sizing:border-box!important;padding-bottom:calc(112px + env(safe-area-inset-bottom))!important}
@@ -2769,11 +2769,29 @@ html[data-tozra-theme="dark"] #workspacePage .tozra-home-action-row .tozra-home-
  <section class="atlas-panel" data-atlas-panel="technology" hidden><div class="atlas-section-head"><div><span class="atlas-kicker">TECHNOLOGY RADAR</span><h2>Teknoloji dünyasında neler oluyor?</h2><p>Yapay zekâ, robotik, yarı iletkenler ve iklim teknolojileri hakkında haber keşfi.</p></div><button class="atlas-secondary" id="atlasTechRefresh">Akışı yenile ↻</button></div><p class="atlas-status" id="atlasTechStatus">Teknoloji haberleri yükleniyor…</p><div class="atlas-results" id="atlasTechResults"></div><p class="atlas-disclaimer">Haber akışı GDELT üzerinden derlenir. Başlık ve yayın zamanı kaynağa göre değişebilir.</p></section>
  <section class="atlas-panel" data-atlas-panel="research" hidden><div class="atlas-section-head"><div><span class="atlas-kicker">AI RESEARCH</span><h2>Atlas araştırma asistanı</h2><p>Araştırma sorunu TOZRA AI'ya aktar; kaynaklı, yapılandırılmış bir rapor iste.</p></div></div><textarea class="atlas-textarea" id="atlasResearchPrompt" rows="5" placeholder="Örn. Türkiye ve Güney Kore'nin teknoloji girişim ekosistemlerini karşılaştır…"></textarea><div class="atlas-actions"><button class="atlas-primary" id="atlasResearchRun">TOZRA AI ile araştır →</button><button class="atlas-secondary" id="atlasSaveSearch">Konuyu kaydet</button></div><p class="atlas-status" id="atlasResearchStatus">Araştırma, TOZRA AI sohbetinde yürütülür. Güncel web kaynaklarına erişim varsa kaynak bağlantıları istenecektir.</p></section>
  <section class="atlas-panel" data-atlas-panel="map" hidden><div class="atlas-section-head"><div><span class="atlas-kicker">DISCOVERY MAP</span><h2>Dünyada keşfet</h2><p>Ülke, şehir, şirket merkezi veya teknoloji bölgesi ara.</p></div></div><form class="atlas-search-form" id="atlasMapForm"><input class="atlas-input" id="atlasMapSearch" required placeholder="Örn. Seoul, Silicon Valley, Berlin…"><button class="atlas-primary">Haritada bul</button></form><p class="atlas-status" id="atlasMapStatus">Harita OpenStreetMap verilerini kullanır.</p><div class="atlas-globe-stage atlas-earth-stage">
- <div class="atlas-globe-heading"><span>TOZRA ATLAS / EARTH VIEW</span><small>Uydu görünümü · 3D dünya</small></div>
+ <div class="atlas-globe-heading"><span>TOZRA ATLAS / EARTH VIEW</span><small>3D uydu dünyası · gelişmiş keşif araçları</small></div>
+ <div class="atlas-map-toolbar">
+  <label class="atlas-map-select-label">HARİTA GÖRÜNÜMÜ
+   <select id="atlasImageryStyle" class="atlas-map-select"><option value="satellite">Uydu</option><option value="topographic">Topoğrafik</option><option value="street">Sokak haritası</option></select>
+  </label>
+  <button type="button" id="atlasLocateMe" class="atlas-map-tool">◎ Konumum</button>
+  <button type="button" id="atlasMeasureToggle" class="atlas-map-tool">↔ Mesafe ölç</button>
+  <button type="button" id="atlasMeasureClear" class="atlas-map-tool">Ölçümü temizle</button>
+ </div>
  <div id="atlasWorldGlobe" role="application" aria-label="3 boyutlu uydu dünya görünümü"></div>
- <div class="atlas-earth-controls"><button type="button" id="atlasEarthHome" title="Dünyaya dön">◎ Dünya</button><button type="button" id="atlasEarthZoomIn" title="Yakınlaştır">＋</button><button type="button" id="atlasEarthZoomOut" title="Uzaklaştır">－</button></div><div class="atlas-map-layers"><strong>HARİTA KATMANLARI</strong><label><input type="checkbox" id="atlasLayerCountries" checked> Başkent işaretleri</label><label><input type="checkbox" id="atlasLayerSearch" checked> Arama işaretleri</label></div><div id="atlasMapResults" class="atlas-map-results" aria-live="polite"></div>
- <div class="atlas-globe-hint">Döndürmek için sürükle · Yakınlaştırmak için tekerlek veya + / − kullan</div>
- <div class="atlas-earth-credit">Uydu görüntüleri: Esri, Maxar, Earthstar Geographics ve katkıda bulunanlar</div>
+ <div class="atlas-earth-controls"><button type="button" id="atlasEarthHome" title="Dünyaya dön">◎ Dünya</button><button type="button" id="atlasEarthZoomIn" title="Yakınlaştır">＋</button><button type="button" id="atlasEarthZoomOut" title="Uzaklaştır">－</button></div>
+ <div class="atlas-map-layers">
+  <strong>KATMANLAR</strong>
+  <label><input type="checkbox" id="atlasLayerCountries" checked> Başkentler</label>
+  <label><input type="checkbox" id="atlasLayerSearch" checked> Arama işaretleri</label>
+  <label><input type="checkbox" id="atlasLayerBorders" checked> Ülke sınırları</label>
+  <label><input type="checkbox" id="atlasLayerTerrain"> 3D arazi</label>
+  <label><input type="checkbox" id="atlasLayerBuildings"> 3D şehir binaları</label>
+ </div>
+ <div id="atlasMapInfo" class="atlas-map-info" aria-live="polite"><strong>Harita bilgisi</strong><span>Dünyada bir noktaya dokun veya tıkla; koordinatları burada görüntülenecek.</span></div>
+ <div id="atlasMapResults" class="atlas-map-results" aria-live="polite"></div>
+ <div class="atlas-globe-hint">Sürükle: döndür · Tekerlek: yakınlaştır · Sağ tık: eğ · Noktaya dokun: koordinatları gör</div>
+ <div class="atlas-earth-credit">Uydu: Esri / Maxar · Harita: OpenStreetMap · Sınırlar: Natural Earth</div>
 </div><p class="atlas-disclaimer">Harita verisi © OpenStreetMap katkıcıları. Arama Nominatim hizmetiyle yapılır; kullanım koşulları geçerlidir.</p></section>
  <section class="atlas-panel" data-atlas-panel="saved" hidden><div class="atlas-section-head"><div><span class="atlas-kicker">YOUR COLLECTION</span><h2>Kaydettiğin keşifler</h2><p>Araştırma konularını bu cihazda sakla.</p></div></div><div class="atlas-results" id="atlasSavedList"></div></section>
  <footer class="atlas-footer">TOZRA ATLAS · EXPLORE THE WORLD. UNDERSTAND THE FUTURE.</footer>
@@ -6098,6 +6116,23 @@ html[data-tozra-theme="dark"] .market-categories button.is-active,html[data-tozr
 .atlas-earth-controls button:hover{background:rgba(145,185,83,.92);color:#10170d}
 .atlas-earth-credit{position:absolute;bottom:34px;right:20px;z-index:3;color:#d7e1e8;font-size:9px;text-shadow:0 1px 3px #000}
 .atlas-earth-stage .atlas-globe-hint{color:#c0ccd5;position:relative;z-index:2}
+.atlas-map-toolbar{position:relative;z-index:4;display:flex;align-items:end;gap:8px;flex-wrap:wrap;margin:12px 0}
+.atlas-map-select-label{display:grid;gap:5px;color:#b9c6ce;font-size:9px;letter-spacing:.1em;font-weight:750}
+.atlas-map-select,.atlas-map-tool{min-height:38px;border:1px solid rgba(255,255,255,.18);border-radius:9px;background:rgba(8,17,26,.9);color:#edf4f7;padding:8px 11px;font-size:11px}
+.atlas-map-tool{cursor:pointer;font-weight:700}
+.atlas-map-tool:hover,.atlas-map-tool.is-active{background:#b5d18a;color:#172318;border-color:#b5d18a}
+.atlas-map-layers{position:relative;z-index:4;display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:10px 12px;margin-top:8px;border:1px solid rgba(255,255,255,.13);border-radius:10px;background:rgba(8,17,26,.78);color:#dce6ef;font-size:10px}
+.atlas-map-layers strong{font-size:9px;letter-spacing:.12em;color:#b5d18a}
+.atlas-map-layers label{display:flex;align-items:center;gap:5px;cursor:pointer}
+.atlas-map-layers input{accent-color:#b5d18a}
+.atlas-map-info{position:relative;z-index:4;display:grid;gap:5px;padding:12px 14px;margin-top:9px;border:1px solid rgba(181,209,138,.22);border-radius:10px;background:rgba(9,18,26,.9);color:#dce6ef;font-size:11px}
+.atlas-map-info strong{color:#b5d18a;font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+.atlas-map-info span{line-height:1.5;color:#c1cbd2;overflow-wrap:anywhere}
+.atlas-map-info button{justify-self:start;margin-top:4px;border:1px solid rgba(255,255,255,.18);border-radius:7px;background:transparent;color:#eaf1f4;padding:6px 9px;font-size:10px}
+.atlas-map-status-pill{display:inline-flex;align-items:center;gap:6px;color:#c8d7bd}
+.atlas-map-status-pill:before{content:"";width:6px;height:6px;border-radius:50%;background:#b5d18a}
+@media(max-width:640px){.atlas-map-toolbar{display:grid;grid-template-columns:1fr 1fr;align-items:stretch}.atlas-map-select-label{grid-column:1/-1}.atlas-map-select{width:100%}.atlas-map-tool{min-width:0;padding:8px 6px;font-size:10px}.atlas-map-layers{gap:9px}.atlas-map-layers strong{width:100%}}
+
 @media(max-width:640px){#atlasWorldGlobe{height:410px}.atlas-earth-controls{right:18px;top:55px}.atlas-earth-controls button{padding:8px 10px}}
 </style>
 
