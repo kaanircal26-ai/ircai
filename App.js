@@ -44,41 +44,50 @@ function Button({title,onPress,secondary=false,disabled=false,icon}) { return <P
 function Chip({label,active,onPress}) { return <Pressable onPress={onPress} style={[s.chip,active&&s.chipActive]}><Text style={[s.chipText,active&&s.chipTextActive]}>{label}</Text></Pressable>; }
 
 function IntroSplash({onFinish}) {
- const orbit = useRef(new Animated.Value(0)).current;
- const reveal = useRef(new Animated.Value(0)).current;
- const glow = useRef(new Animated.Value(0)).current;
- useEffect(()=>{
-  const spin=Animated.loop(Animated.timing(orbit,{toValue:1,duration:5200,easing:Easing.linear,useNativeDriver:true}));
-  spin.start();
+ const surgeScale = useRef(new Animated.Value(0.35)).current;
+ const surgeOpacity = useRef(new Animated.Value(0)).current;
+ const flashOpacity = useRef(new Animated.Value(0)).current;
+ const subOpacity = useRef(new Animated.Value(0)).current;
+
+ useEffect(() => {
   Animated.sequence([
-   Animated.delay(250),
-   Animated.timing(reveal,{toValue:1,duration:1050,easing:Easing.out(Easing.cubic),useNativeDriver:true}),
-   Animated.delay(650),
-   Animated.timing(glow,{toValue:1,duration:750,easing:Easing.inOut(Easing.quad),useNativeDriver:true}),
-   Animated.delay(1450),
-   Animated.timing(reveal,{toValue:0.96,duration:350,easing:Easing.out(Easing.quad),useNativeDriver:true})
-  ]).start(({finished})=>{if(finished)onFinish();});
-  return ()=>spin.stop();
- },[]);
- const rotate=orbit.interpolate({inputRange:[0,1],outputRange:['0deg','360deg']});
- const opacity=reveal;
- const translate=reveal.interpolate({inputRange:[0,1],outputRange:[24,0]});
- const halo=glow.interpolate({inputRange:[0,1],outputRange:[0.12,0.7]});
- return <View style={s.splashRoot}>
-  <Animated.View style={[s.splashHalo,{opacity:halo,transform:[{scale:glow.interpolate({inputRange:[0,1],outputRange:[0.72,1.18]})}]}]}/>
-  <View style={s.splashOrbitStage}>
-   <Animated.View style={[s.splashOrbit,{transform:[{rotate}]}]}><View style={s.splashOrbitPoint}/></Animated.View>
-   <Animated.View style={[s.splashCore,{opacity,transform:[{scale:reveal.interpolate({inputRange:[0,1],outputRange:[0.72,1]})}]}]}>
-    <Text style={s.splashGlyph}>T</Text>
+   // Crisp instant snap-in of TOZRA mark
+   Animated.parallel([
+    Animated.timing(surgeOpacity, { toValue: 1, duration: 160, easing: Easing.out(Easing.quad), useNativeDriver: true }),
+    Animated.spring(surgeScale, { toValue: 1.04, friction: 6, tension: 190, useNativeDriver: true }),
+    Animated.timing(subOpacity, { toValue: 1, duration: 240, delay: 90, useNativeDriver: true })
+   ]),
+   // Brief hold so brand mark registers cleanly
+   Animated.delay(420),
+   // Sudden dramatic scale-burst / zoom-surge into screen reveal
+   Animated.parallel([
+    Animated.timing(surgeScale, { toValue: 14, duration: 420, easing: Easing.in(Easing.exp), useNativeDriver: true }),
+    Animated.timing(surgeOpacity, { toValue: 0, duration: 360, delay: 60, useNativeDriver: true }),
+    Animated.timing(subOpacity, { toValue: 0, duration: 160, useNativeDriver: true }),
+    Animated.sequence([
+     Animated.timing(flashOpacity, { toValue: 0.85, duration: 240, easing: Easing.in(Easing.cubic), useNativeDriver: true }),
+     Animated.timing(flashOpacity, { toValue: 0, duration: 220, easing: Easing.out(Easing.cubic), useNativeDriver: true })
+    ])
+   ])
+  ]).start(({ finished }) => {
+   if (finished) onFinish();
+  });
+ }, []);
+
+ return (
+  <View style={s.splashBurstRoot}>
+   <Animated.View style={[s.splashBurstFlash, { opacity: flashOpacity }]} pointerEvents="none" />
+   <Animated.View style={[s.splashBurstMarkWrap, { opacity: surgeOpacity, transform: [{ scale: surgeScale }] }]}>
+    <View style={s.splashBurstBadge}>
+     <Text style={s.splashBurstGlyph}>T</Text>
+    </View>
+    <Text style={s.splashBurstWordmark}>TOZRA</Text>
+   </Animated.View>
+   <Animated.View style={[s.splashBurstSubWrap, { opacity: subOpacity }]}>
+    <Text style={s.splashBurstTag}>CREATIVE INTELLIGENCE</Text>
    </Animated.View>
   </View>
-  <Animated.View style={{opacity,transform:[{translateY:translate}],alignItems:'center'}}>
-   <Text style={s.splashWordmark}>TOZRA</Text>
-   <Text style={s.splashTag}>CREATIVE INTELLIGENCE</Text>
-   <View style={s.splashRule}/>
-   <Text style={s.splashLine}>Düşün. Üret. Keşfet. Geliştir.</Text>
-  </Animated.View>
- </View>;
+ );
 }
 
 function AuthScreen({onReady}) {
@@ -104,55 +113,292 @@ async function mediaPayload(asset,kind) {
   return {kind:'video',uri:asset.uri,name:asset.fileName||'video',frames};
 }
 
-function HomeScreen({data,setData,onTab}) {
+function HomeScreen({data,setData,onTab,onOpenChat,session}) {
+ const [promptInput,setPromptInput]=useState('');
  const [newTask,setNewTask]=useState('');
  const [day,setDay]=useState((new Date().getDay()+6)%7);
  const done=data.tasks.filter(x=>x.done).length;
  const todayTasks=data.tasks.filter(x=>x.date===dateKey());
  const progress=data.tasks.length?Math.round(done/data.tasks.length*100):0;
- const firstName=(data.profileName||'').trim().split(/\s+/)[0];
- const modules=[
-  ['chat','TOZRA AI','Fikirlerini geliştir','sparkles-outline'],
-  ['studio','Creative Studio','Görsel ve video üret','color-wand-outline'],
-  ['projects','Projeler','Projelerini yönet','albums-outline'],
-  ['tasks','Planlama','Takvim ve görevler','calendar-outline'],
-  ['atlas','Atlas','Konum ve keşif','map-outline'],
-  ['nexus','Nexus','Fikir bağlantıları','git-network-outline'],
-  ['universe','Universe','Yaratıcı evrenler','planet-outline'],
-  ['market','Market','Şablon ve kaynaklar','storefront-outline'],
-  ['social','Social','İçerik planlama','people-outline'],
-  ['web','TOZRA Web','Web sitesi üretimi','globe-outline']
+ const rawName=session?.user?.user_metadata?.full_name||session?.user?.user_metadata?.name||data.profileName||'';
+ const firstName=String(rawName).trim().split(/\s+/)[0];
+ const recentChats=(data.chatSessions||[]).slice(0,3);
+
+ const shortcuts=[
+  {id:'chat',label:'AI Chat',icon:'chatbubble-ellipses-outline',active:true},
+  {id:'studio',label:'Studio',icon:'layers-outline'},
+  {id:'projects',label:'Projeler',icon:'folder-open-outline'},
+  {id:'tasks',label:'Takvim',icon:'calendar-outline'}
  ];
- function add(){const title=newTask.trim();if(!title)return;setData(v=>({...v,tasks:[{id:uid(),title,date:dateKey(),priority:'normal',done:false},...v.tasks]}));setNewTask('');}
- const todayLabel=new Date().toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long'});
- return <ScrollView contentContainerStyle={s.page} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-  <View style={s.homeTopline}><View><Text style={s.eyebrow}>TOZRA WORKSPACE</Text><Text style={s.homeDate}>{todayLabel}</Text></View><View style={s.livePill}><View style={s.liveDot}/><Text style={s.liveText}>ÇALIŞMA ALANI</Text></View></View>
-  <View style={s.hero}>
-   <View style={s.heroOrb}><Ionicons name="sparkles" size={22} color={C.accent}/></View>
-   <Text style={s.eyebrow}>YARATICI MERKEZİN</Text>
-   <Text style={s.heroTitle}>{firstName?`Merhaba, ${firstName}.`:'Fikirlerini hayata geçir.'}</Text>
-   <Text style={s.muted}>Düşün, planla, üret ve bütün projelerini tek bir çalışma alanından yönet.</Text>
-   <Pressable style={s.askBar} onPress={()=>onTab('chat')}><Ionicons name="sparkles" color={C.accent} size={18}/><Text style={s.askText}>TOZRA AI ile çalışmaya başla…</Text><View style={s.askArrow}><Ionicons name="arrow-up" color={C.bg} size={16}/></View></Pressable>
-   <View style={s.heroFoot}><Text style={s.heroFootText}>FİKİRDEN ÜRETİME</Text><Text style={s.heroFootText}>CREATIVE INTELLIGENCE</Text></View>
+
+ const quickAccess=[
+  {id:'idea',title:'Fikir Geliştir',sub:'Yeni fikirler üret',icon:'bulb-outline',action:()=>onOpenChat?onOpenChat('Yeni bir fikir geliştirmek istiyorum. Bana yardımcı ol.'):onTab('chat')},
+  {id:'projects',title:'Projelerim',sub:'Çalışmalarını yönet',icon:'folder-open-outline',action:()=>onTab('projects')},
+  {id:'studio',title:'Creative Studio',sub:'İçeriklerini tasarla',icon:'color-palette-outline',action:()=>onTab('studio')},
+  {id:'tasks',title:'Takvim',sub:'Planlarını düzenle',icon:'calendar-outline',action:()=>onTab('tasks')}
+ ];
+
+ const allModules=[
+  {id:'atlas',title:'Atlas',icon:'map-outline'},
+  {id:'nexus',title:'Nexus',icon:'git-network-outline'},
+  {id:'universe',title:'Universe',icon:'planet-outline'},
+  {id:'market',title:'Market',icon:'storefront-outline'},
+  {id:'social',title:'Social',icon:'people-outline'},
+  {id:'web',title:'TOZRA Web',icon:'globe-outline'}
+ ];
+
+ function handlePromptSubmit(){
+  const val=promptInput.trim();
+  if(!val){onTab('chat');return;}
+  setPromptInput('');
+  if(onOpenChat)onOpenChat(val);
+  else onTab('chat');
+ }
+
+ function add(){
+  const title=newTask.trim();
+  if(!title)return;
+  setData(v=>({...v,tasks:[{id:uid(),title,date:dateKey(),priority:'normal',done:false},...v.tasks]}));
+  setNewTask('');
+ }
+
+ return <ScrollView contentContainerStyle={s.trhPage} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+  {/* Ambient organic glow layers */}
+  <View style={s.trhGlowLeft} pointerEvents="none"/>
+  <View style={s.trhGlowRight} pointerEvents="none"/>
+
+  {/* Top Navigation Pills */}
+  <View style={s.trhShortcuts}>
+   {shortcuts.map(item=>(
+    <Pressable key={item.id} onPress={()=>onTab(item.id)} style={[s.trhShortcut,item.active&&s.trhShortcutActive]}>
+     <Ionicons name={item.icon} size={17} color={item.active?'#285C30':'#191D1A'}/>
+     <Text numberOfLines={1} style={[s.trhShortcutText,item.active&&s.trhShortcutTextActive]}>{item.label}</Text>
+    </Pressable>
+   ))}
   </View>
-  <View style={s.overviewHead}><Text style={s.sectionTitle}>Çalışma özeti</Text><Text style={s.sectionHint}>GENEL BAKIŞ</Text></View>
-  <View style={s.stats}>
-   <View style={s.stat}><View style={s.statIcon}><Ionicons name="albums-outline" color={C.accent} size={16}/></View><Text style={s.statNum}>{data.projects.length}</Text><Text style={s.statLabel}>PROJE</Text></View>
-   <View style={s.statDivider}/>
-   <View style={s.stat}><View style={s.statIcon}><Ionicons name="list-outline" color={C.accent} size={16}/></View><Text style={s.statNum}>{data.tasks.length}</Text><Text style={s.statLabel}>GÖREV</Text></View>
-   <View style={s.statDivider}/>
-   <View style={s.stat}><View style={s.statIcon}><Ionicons name="checkmark-done-outline" color={C.accent} size={16}/></View><Text style={s.statNum}>{done}</Text><Text style={s.statLabel}>TAMAMLANAN</Text></View>
+
+  {/* Orbital Brand Emblem */}
+  <View style={s.trhOrbitWrap}>
+   <View style={s.trhOrbitRing}/>
+   <View style={s.trhOrbitGlow}>
+    <View style={s.trhOrbitCore}>
+     <Text style={s.trhOrbitLogo}>T</Text>
+    </View>
+   </View>
   </View>
-  <View style={s.progressPanel}><View style={s.rowBetween}><View><Text style={s.cardTitle}>Görev ilerlemesi</Text><Text style={s.smallMuted}>Tüm görevlerinde tamamlanma oranı</Text></View><Text style={s.progressValue}>%{progress}</Text></View><View style={s.progressTrack}><View style={[s.progressFill,{width:`${progress}%`}]}/></View></View>
-  <View style={s.sectionHeader}><View><Text style={s.sectionTitle}>Çalışma alanları</Text><Text style={s.sectionSub}>İhtiyacın olan araca doğrudan geç.</Text></View><Text style={s.sectionHint}>10 MODÜL</Text></View>
-  <View style={s.moduleGrid}>{modules.map((m,i)=><Pressable key={m[0]} onPress={()=>onTab(m[0])} style={[s.moduleCard,i===0&&s.moduleCardFeatured]}><View style={s.moduleTop}><View style={s.moduleIcon}><Ionicons name={m[3]} size={20} color={C.accent}/></View><Ionicons name="arrow-up-right" size={17} color={C.faint}/></View><Text style={s.moduleTitle}>{m[1]}</Text><Text style={s.moduleSub}>{m[2]}</Text></Pressable>)}</View>
-  <View style={s.sectionHeader}><View><Text style={s.sectionTitle}>Bugünün odağı</Text><Text style={s.sectionSub}>{todayTasks.length?`${todayTasks.length} görev planlandı`:'Günün için ilk görevini oluştur.'}</Text></View><Pressable onPress={()=>onTab('tasks')}><Text style={s.textLink}>Takvimi aç <Ionicons name="arrow-forward" size={11}/></Text></Pressable></View>
-  <Card><View style={s.addRow}><Field value={newTask} onChangeText={setNewTask} placeholder="Yeni görevini yaz…" style={{flex:1,marginBottom:0}} onSubmitEditing={add}/><Pressable onPress={add} style={s.addButton}><Ionicons name="add" color="#17191D" size={23}/></Pressable></View>{todayTasks.slice(0,5).map(t=><TaskRow key={t.id} task={t} onToggle={()=>setData(v=>({...v,tasks:v.tasks.map(z=>z.id===t.id?{...z,done:!z.done}:z)}))} onDelete={()=>setData(v=>({...v,tasks:v.tasks.filter(z=>z.id!==t.id)}))}/>)}{!todayTasks.length?<Text style={s.empty}>Henüz görev yok. İlk görevini yukarıdan ekleyebilirsin.</Text>:null}</Card>
-  <View style={s.sectionHeader}><View><Text style={s.sectionTitle}>Not defteri</Text><Text style={s.sectionSub}>Aklındaki fikirleri kaybetme.</Text></View><Ionicons name="document-text-outline" size={19} color={C.accent}/></View>
-  <Card><Field value={data.notes} onChangeText={v=>setData(old=>({...old,notes:v}))} placeholder="Fikir, bağlantı veya hatırlatmalarını buraya yaz…" multiline style={{minHeight:110,textAlignVertical:'top'}}/><Text style={s.smallMuted}>Notların hesabına özel olarak saklanır.</Text></Card>
-  <View style={s.sectionHeader}><View><Text style={s.sectionTitle}>Haftalık plan</Text><Text style={s.sectionSub}>Haftanın akışını düzenle.</Text></View><Ionicons name="calendar-clear-outline" size={19} color={C.accent}/></View>
-  <Card><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{gap:7,marginBottom:14}}>{DAYS.map((d,i)=><Chip key={d} label={d.slice(0,3)} active={day===i} onPress={()=>setDay(i)}/>)}</ScrollView><Text style={s.cardTitle}>{DAYS[day]}</Text><Field value={data.week[day]||''} onChangeText={v=>setData(old=>({...old,week:{...old.week,[day]:v}}))} placeholder="Bu gün için planını yaz…" multiline style={{minHeight:85,textAlignVertical:'top'}}/></Card>
-  <Text style={s.foot}>TOZRA · CREATIVE INTELLIGENCE</Text>
+
+  {/* Welcome Header */}
+  <View style={s.trhWelcome}>
+   <Text style={s.trhWelcomeTitle}>{firstName?`Merhaba ${firstName},`:'Merhaba!'}</Text>
+   <Text style={s.trhWelcomeSub}>Bugün ne üretmek, planlamak veya keşfetmek istersin?</Text>
+  </View>
+
+  {/* Interactive Prompt Composer */}
+  <View style={s.trhComposer}>
+   <View style={s.trhPromptRow}>
+    <Text style={s.trhSpark}>✦</Text>
+    <TextInput
+     value={promptInput}
+     onChangeText={setPromptInput}
+     placeholder="TOZRA’ya bir şey sor..."
+     placeholderTextColor="#777D79"
+     style={s.trhPromptInput}
+     onSubmitEditing={handlePromptSubmit}
+     returnKeyType="send"
+    />
+   </View>
+   <View style={s.trhComposerTools}>
+    <Pressable onPress={()=>onTab('chat')} style={s.trhToolBtn} accessibilityLabel="Dosya ekle">
+     <Ionicons name="attach-outline" size={20} color="#1C2420"/>
+    </Pressable>
+    <Pressable onPress={()=>onTab('studio')} style={s.trhToolBtn} accessibilityLabel="Görsel ekle">
+     <Ionicons name="image-outline" size={19} color="#1C2420"/>
+    </Pressable>
+    <Pressable onPress={()=>onTab('chat')} style={s.trhToolBtn} accessibilityLabel="Sesli mesaj">
+     <Ionicons name="mic-outline" size={19} color="#1C2420"/>
+    </Pressable>
+    <Pressable onPress={handlePromptSubmit} style={s.trhSendBtn} accessibilityLabel="Gönder">
+     <Ionicons name="arrow-up" size={22} color="#15240E"/>
+    </Pressable>
+   </View>
+  </View>
+
+  {/* Hızlı Erişim (Quick Access Grid) */}
+  <View style={s.trhSection}>
+   <View style={s.trhSectionHead}>
+    <Text style={s.trhSectionTitle}>Hızlı Erişim</Text>
+    <Pressable onPress={()=>onTab('studio')}>
+     <Text style={s.trhSectionLink}>Tümünü Gör ›</Text>
+    </Pressable>
+   </View>
+   <View style={s.trhQuickGrid}>
+    {quickAccess.map(card=>(
+     <Pressable key={card.id} onPress={card.action} style={s.trhQuickCard}>
+      <View style={s.trhCardIconWrap}>
+       <Ionicons name={card.icon} size={24} color="#2C7137"/>
+      </View>
+      <View style={{flex:1,minWidth:0}}>
+       <Text numberOfLines={1} style={s.trhCardTitle}>{card.title}</Text>
+       <Text numberOfLines={1} style={s.trhCardSub}>{card.sub}</Text>
+      </View>
+      <View style={s.trhCardArrow}>
+       <Ionicons name="arrow-forward" size={14} color="#343A36"/>
+      </View>
+     </Pressable>
+    ))}
+   </View>
+  </View>
+
+  {/* Son Sohbetler (Recent Chats) */}
+  <View style={s.trhSection}>
+   <View style={s.trhSectionHead}>
+    <Text style={s.trhSectionTitle}>Son Sohbetler</Text>
+    <Pressable onPress={()=>onTab('chat')}>
+     <Text style={s.trhSectionLink}>Tümünü Gör ›</Text>
+    </Pressable>
+   </View>
+   {recentChats.length>0?recentChats.map(chat=>(
+    <Pressable key={chat.id} onPress={()=>{setData(v=>({...v,currentChatId:chat.id,chat:chat.messages||[]}));onTab('chat');}} style={[s.trhRecentCard,{marginBottom:8}]}>
+     <View style={s.trhRecentIcon}>
+      <Ionicons name="chatbubble-ellipses-outline" size={22} color="#245F30"/>
+     </View>
+     <View style={{flex:1,minWidth:0}}>
+      <Text numberOfLines={1} style={s.trhCardTitle}>{chat.title||'TOZRA Sohbeti'}</Text>
+      <Text numberOfLines={1} style={s.trhCardSub}>Son sohbetine devam et</Text>
+     </View>
+     <View style={s.trhCardArrow}>
+      <Ionicons name="arrow-forward" size={14} color="#343A36"/>
+     </View>
+    </Pressable>
+   )):(
+    <Pressable onPress={()=>onTab('chat')} style={s.trhRecentCard}>
+     <View style={s.trhRecentIcon}>
+      <Ionicons name="chatbubble-ellipses-outline" size={22} color="#245F30"/>
+     </View>
+     <View style={{flex:1,minWidth:0}}>
+      <Text numberOfLines={1} style={s.trhCardTitle}>TOZRA proje yol haritası</Text>
+      <Text numberOfLines={1} style={s.trhCardSub}>Yeni bir sohbet başlat</Text>
+     </View>
+     <View style={s.trhCardArrow}>
+      <Ionicons name="arrow-forward" size={14} color="#343A36"/>
+     </View>
+    </Pressable>
+   )}
+  </View>
+
+  {/* Çalışma Özeti & İlerleme */}
+  <View style={s.trhSection}>
+   <View style={s.trhSectionHead}>
+    <Text style={s.trhSectionTitle}>Çalışma Özeti</Text>
+    <Text style={s.trhBadgeText}>%{progress} TAMAMLANDI</Text>
+   </View>
+   <View style={s.trhStatsBox}>
+    <Pressable onPress={()=>onTab('projects')} style={s.trhStatCol}>
+     <Text style={s.trhStatNum}>{data.projects.length}</Text>
+     <Text style={s.trhStatLabel}>PROJE</Text>
+    </Pressable>
+    <View style={s.trhStatSep}/>
+    <Pressable onPress={()=>onTab('tasks')} style={s.trhStatCol}>
+     <Text style={s.trhStatNum}>{data.tasks.length}</Text>
+     <Text style={s.trhStatLabel}>GÖREV</Text>
+    </Pressable>
+    <View style={s.trhStatSep}/>
+    <Pressable onPress={()=>onTab('tasks')} style={s.trhStatCol}>
+     <Text style={[s.trhStatNum,{color:'#2C7137'}]}>{done}</Text>
+     <Text style={s.trhStatLabel}>BİTEN</Text>
+    </Pressable>
+   </View>
+   <View style={s.trhProgressTrack}>
+    <View style={[s.trhProgressFill,{width:`${progress}%`}]}/>
+   </View>
+  </View>
+
+  {/* Bugünün Odağı (Hızlı Görev Ekleme) */}
+  <View style={s.trhSection}>
+   <View style={s.trhSectionHead}>
+    <Text style={s.trhSectionTitle}>Bugünün Odağı</Text>
+    <Pressable onPress={()=>onTab('tasks')}>
+     <Text style={s.trhSectionLink}>Takvim ›</Text>
+    </Pressable>
+   </View>
+   <View style={s.trhLightCard}>
+    <View style={s.addRow}>
+     <TextInput
+      value={newTask}
+      onChangeText={setNewTask}
+      placeholder="Yeni görevini yaz…"
+      placeholderTextColor="#858A86"
+      style={s.trhLightInput}
+      onSubmitEditing={add}
+     />
+     <Pressable onPress={add} style={s.trhLightAddBtn}>
+      <Ionicons name="add" color="#15240E" size={22}/>
+     </Pressable>
+    </View>
+    {todayTasks.slice(0,4).map(t=>(
+     <View key={t.id} style={s.trhTaskRow}>
+      <Pressable onPress={()=>setData(v=>({...v,tasks:v.tasks.map(z=>z.id===t.id?{...z,done:!z.done}:z)}))} style={[s.trhCheck,t.done&&s.trhCheckDone]}>
+       {t.done?<Ionicons name="checkmark" color="#15240E" size={13}/>:null}
+      </Pressable>
+      <Text style={[s.trhTaskText,t.done&&{textDecorationLine:'line-through',color:'#858A86'}]}>{t.title}</Text>
+      <Pressable onPress={()=>setData(v=>({...v,tasks:v.tasks.filter(z=>z.id!==t.id)}))}>
+       <Ionicons name="close" color="#858A86" size={17}/>
+      </Pressable>
+     </View>
+    ))}
+    {!todayTasks.length?<Text style={s.trhEmptyText}>Bugün için henüz görev eklenmedi.</Text>:null}
+   </View>
+  </View>
+
+  {/* Diğer Modüller */}
+  <View style={s.trhSection}>
+   <View style={s.trhSectionHead}>
+    <Text style={s.trhSectionTitle}>Ek Modüller</Text>
+    <Text style={s.trhBadgeText}>WORKSPACE</Text>
+   </View>
+   <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{gap:8}}>
+    {allModules.map(m=>(
+     <Pressable key={m.id} onPress={()=>onTab(m.id)} style={s.trhMiniPill}>
+      <Ionicons name={m.icon} size={16} color="#2C7137"/>
+      <Text style={s.trhMiniPillText}>{m.title}</Text>
+     </Pressable>
+    ))}
+   </ScrollView>
+  </View>
+
+  {/* Not Defteri & Haftalık Plan */}
+  <View style={s.trhSection}>
+   <View style={s.trhSectionHead}>
+    <Text style={s.trhSectionTitle}>Hızlı Not & Haftalık Plan</Text>
+   </View>
+   <View style={s.trhLightCard}>
+    <TextInput
+     value={data.notes}
+     onChangeText={v=>setData(old=>({...old,notes:v}))}
+     placeholder="Aklındaki fikirleri veya notlarını buraya yaz…"
+     placeholderTextColor="#858A86"
+     multiline
+     style={[s.trhLightInput,{minHeight:78,textAlignVertical:'top',marginBottom:12}]}
+    />
+    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{gap:6,marginBottom:10}}>
+     {DAYS.map((d,i)=>(
+      <Pressable key={d} onPress={()=>setDay(i)} style={[s.trhDayChip,day===i&&s.trhDayChipActive]}>
+       <Text style={[s.trhDayChipText,day===i&&s.trhDayChipTextActive]}>{d.slice(0,3)}</Text>
+      </Pressable>
+     ))}
+    </ScrollView>
+    <TextInput
+     value={data.week[day]||''}
+     onChangeText={v=>setData(old=>({...old,week:{...old.week,[day]:v}}))}
+     placeholder={`${DAYS[day]} günü için planını yaz…`}
+     placeholderTextColor="#858A86"
+     multiline
+     style={[s.trhLightInput,{minHeight:68,textAlignVertical:'top'}]}
+    />
+   </View>
+  </View>
+
+  <Text style={s.trhFooter}>TOZRA · CREATIVE INTELLIGENCE</Text>
  </ScrollView>;
 }
 
@@ -250,7 +496,7 @@ function MainApp({session}) {
  function openChat(prompt,context=''){setInitialPrompt(prompt||'');setProjectContext(context);setTab('chat');}
  async function signOut(){await getSupabase().auth.signOut();}
  let activeScreen;
- if(tab==='home') activeScreen=<HomeScreen data={data} setData={setData} onTab={setTab}/>;
+ if(tab==='home') activeScreen=<HomeScreen data={data} setData={setData} onTab={setTab} onOpenChat={p=>openChat(p)} session={session}/>;
  else if(tab==='chat') activeScreen=<ChatScreen session={session} data={data} setData={setData} initialPrompt={initialPrompt} setInitialPrompt={setInitialPrompt} projectContext={projectContext}/>;
  else if(tab==='projects') activeScreen=<ProjectsScreen data={data} setData={setData} session={session} onOpenChat={p=>openChat(p)}/>;
  else if(tab==='studio') activeScreen=<StudioScreen session={session} data={data} setData={setData} onOpenChat={p=>openChat(p)}/>;
@@ -259,7 +505,7 @@ function MainApp({session}) {
  else if(['atlas','nexus','universe','market','social'].includes(tab)) activeScreen=<WorkspaceModules tab={tab} data={data} setData={setData} onCreateProject={p=>setData(v=>({...v,projects:[p,...v.projects]}))}/>;
  else activeScreen=<ProfileScreen user={session.user} onSignOut={signOut} data={data} setData={setData}/>;
  if(!ready)return <View style={s.loading}><Brand/><ActivityIndicator color={C.accent} style={{marginTop:20}}/></View>;
- return <SafeAreaView style={s.safe} edges={['top']}><View style={s.topBar}><Brand small/><Pressable onPress={()=>setTab('profile')} style={s.avatarMini}><Ionicons name="person-outline" color={C.text} size={17}/></Pressable></View><Animated.View style={{flex:1,opacity:screenIn,transform:[{translateY:screenShift}]}}>{activeScreen}</Animated.View><ScrollView horizontal showsHorizontalScrollIndicator={false} style={s.tabScroll} contentContainerStyle={s.tabBar}>{TABS.map(t=><Pressable key={t[0]} onPress={()=>setTab(t[0])} style={[s.tabItem,tab===t[0]&&s.tabItemActive]}><Ionicons name={tab===t[0]?t[3]:t[2]} size={19} color={tab===t[0]?C.accent:C.faint}/><Text style={[s.tabLabel,tab===t[0]&&{color:C.accent}]}>{t[1]}</Text></Pressable>)}</ScrollView></SafeAreaView>;
+ return <SafeAreaView style={[s.safe,tab==='home'&&{backgroundColor:'#F4F5F4'}]} edges={['top']}><View style={[s.topBar,tab==='home'&&s.trhTopBar]}><View style={s.brandRow}><View style={[s.brandMark,{width:34,height:34,borderRadius:11},tab==='home'&&{backgroundColor:'#171A18',borderColor:'#2C7137'}]}><Text style={[s.brandLetter,{fontSize:20},tab==='home'&&{color:'#A6DC54'}]}>T</Text></View><View><Text style={[s.brandName,{fontSize:18},tab==='home'&&{color:'#171A18'}]}>TOZRA</Text><Text style={[s.brandSub,tab==='home'&&{color:'#6D716E'}]}>CREATIVE INTELLIGENCE</Text></View></View><Pressable onPress={()=>setTab('profile')} style={[s.avatarMini,tab==='home'&&{backgroundColor:'rgba(255,255,255,0.75)',borderWidth:1,borderColor:'#E2E6E3'}]}><Ionicons name="person-outline" color={tab==='home'?'#171A18':C.text} size={17}/></Pressable></View><Animated.View style={{flex:1,opacity:screenIn,transform:[{translateY:screenShift}]}}>{activeScreen}</Animated.View><ScrollView horizontal showsHorizontalScrollIndicator={false} style={[s.tabScroll,tab==='home'&&s.trhTabScroll]} contentContainerStyle={s.tabBar}>{TABS.map(t=><Pressable key={t[0]} onPress={()=>setTab(t[0])} style={[s.tabItem,tab==='home'&&s.trhTabItem,tab===t[0]&&(tab==='home'?s.trhTabItemActive:s.tabItemActive)]}><Ionicons name={tab===t[0]?t[3]:t[2]} size={19} color={tab===t[0]?(tab==='home'?'#172119':C.accent):(tab==='home'?'#626966':C.faint)}/><Text style={[s.tabLabel,tab==='home'&&{color:'#626966'},tab===t[0]&&{color:tab==='home'?'#172119':C.accent}]}>{t[1]}</Text></Pressable>)}</ScrollView></SafeAreaView>;
 }
 
 export default function App(){const [introDone,setIntroDone]=useState(false),[clientReady,setClientReady]=useState(false),[bootError,setBootError]=useState(''),[session,setSession]=useState(null),[authChecked,setAuthChecked]=useState(false);useEffect(()=>{let sub,mounted=true;(async()=>{try{const sb=await initializeSupabase();const {data}=await sb.auth.getSession();if(!mounted)return;setSession(data.session);const r=sb.auth.onAuthStateChange((_e,next)=>{if(mounted)setSession(next);});sub=r.data.subscription;setClientReady(true);}catch(e){if(mounted)setBootError(e.message||'Başlatma hatası');}finally{if(mounted)setAuthChecked(true);}})();return()=>{mounted=false;sub?.unsubscribe();};},[]);return <SafeAreaProvider>{!introDone?<IntroSplash onFinish={()=>setIntroDone(true)}/>:<><StatusBar barStyle="light-content" backgroundColor={C.bg}/><ExpoStatusBar style="light"/>{!authChecked?<View style={s.loading}><Brand/><ActivityIndicator color={C.accent} style={{marginTop:20}}/><Text style={s.muted}>TOZRA hazırlanıyor…</Text></View>:bootError?<SafeAreaView style={s.safe}><View style={s.errorScreen}><Brand/><Text style={s.authTitle}>Bağlantı kurulamadı</Text><Text style={s.muted}>{bootError}</Text><Button title="Yeniden dene" onPress={()=>{setAuthChecked(false);setBootError('');initializeSupabase().then(async()=>{const {data}=await getSupabase().auth.getSession();setSession(data.session);setClientReady(true);setAuthChecked(true);}).catch(e=>{setBootError(e.message);setAuthChecked(true);});}}/></View></SafeAreaView>:session?<MainApp session={session}/>:clientReady?<AuthScreen onReady={setSession}/>:<AuthScreen onReady={setSession}/>}</>}</SafeAreaProvider>;}
@@ -314,6 +560,79 @@ const s=StyleSheet.create({
  splashWordmark:{fontSize:30,fontWeight:'300',letterSpacing:11,color:'#F0E7D8',marginLeft:10},
  splashTag:{fontSize:8,letterSpacing:4,color:'#AFA18B',marginTop:9},
  splashRule:{width:46,height:1,backgroundColor:'#BDA47D',marginTop:22,marginBottom:15},
- splashLine:{fontSize:12,color:'#B9B2A7',letterSpacing:1}
+ splashLine:{fontSize:12,color:'#B9B2A7',letterSpacing:1},
+
+ splashBurstRoot:{flex:1,backgroundColor:'#0B0C0F',alignItems:'center',justifyContent:'center',overflow:'hidden'},
+ splashBurstFlash:{...StyleSheet.absoluteFillObject,backgroundColor:'#F4F5F4',zIndex:5},
+ splashBurstMarkWrap:{alignItems:'center',justifyContent:'center',zIndex:2},
+ splashBurstBadge:{width:112,height:112,borderRadius:34,backgroundColor:'#171A18',borderWidth:2,borderColor:'#A6DC54',alignItems:'center',justifyContent:'center',shadowColor:'#9CE04F',shadowOpacity:0.55,shadowRadius:26,elevation:10},
+ splashBurstGlyph:{fontSize:62,fontWeight:'900',color:'#A6DC54',letterSpacing:-2},
+ splashBurstWordmark:{fontSize:32,fontWeight:'900',color:'#F4F5F4',letterSpacing:8,marginTop:16,marginLeft:8},
+ splashBurstSubWrap:{position:'absolute',bottom:72,alignItems:'center',zIndex:2},
+ splashBurstTag:{fontSize:10,fontWeight:'800',letterSpacing:4,color:'#A6DC54'}
+
+
+ trhTopBar:{backgroundColor:'#F4F5F4',borderBottomColor:'rgba(23,26,24,0.07)'},
+ trhTabScroll:{backgroundColor:'rgba(255,255,255,0.92)',borderTopColor:'rgba(23,26,24,0.08)'},
+ trhTabItem:{borderRadius:16},
+ trhTabItemActive:{backgroundColor:'#E4F4D4',borderWidth:1,borderColor:'#C5E5A5',borderRadius:16},
+ trhPage:{padding:16,paddingBottom:34,backgroundColor:'#F4F5F4',flexGrow:1},
+ trhGlowLeft:{position:'absolute',left:-90,top:110,width:240,height:240,borderRadius:120,backgroundColor:'rgba(165,219,130,0.22)'},
+ trhGlowRight:{position:'absolute',right:-90,top:280,width:250,height:250,borderRadius:125,backgroundColor:'rgba(183,224,165,0.20)'},
+ trhShortcuts:{flexDirection:'row',gap:7,marginBottom:16},
+ trhShortcut:{flex:1,minHeight:46,borderRadius:24,borderWidth:1,borderColor:'rgba(255,255,255,0.9)',backgroundColor:'rgba(255,255,255,0.72)',flexDirection:'row',alignItems:'center',justifyContent:'center',gap:5,paddingHorizontal:6,shadowColor:'#1E281E',shadowOpacity:0.04,shadowRadius:8,shadowOffset:{width:0,height:3},elevation:1},
+ trhShortcutActive:{backgroundColor:'#DFF3CC',borderColor:'#BBE299'},
+ trhShortcutText:{fontSize:11,fontWeight:'600',color:'#191D1A'},
+ trhShortcutTextActive:{color:'#285C30',fontWeight:'700'},
+ trhOrbitWrap:{height:142,alignItems:'center',justifyContent:'center',marginVertical:4},
+ trhOrbitRing:{position:'absolute',width:220,height:54,borderRadius:110,borderWidth:1,borderColor:'rgba(143,195,113,0.45)',transform:[{rotate:'-13deg'}]},
+ trhOrbitGlow:{width:116,height:116,borderRadius:58,backgroundColor:'rgba(230,250,216,0.85)',borderWidth:2,borderColor:'#FFFFFF',alignItems:'center',justifyContent:'center',shadowColor:'#8BD43A',shadowOpacity:0.35,shadowRadius:18,shadowOffset:{width:0,height:6},elevation:4},
+ trhOrbitCore:{width:72,height:72,borderRadius:24,backgroundColor:'#171A18',alignItems:'center',justifyContent:'center'},
+ trhOrbitLogo:{fontSize:38,fontWeight:'900',color:'#A6DC54'},
+ trhWelcome:{alignItems:'center',marginTop:4,marginBottom:18,paddingHorizontal:12},
+ trhWelcomeTitle:{fontSize:28,fontWeight:'800',color:'#111513',letterSpacing:-0.7,marginBottom:6,textAlign:'center'},
+ trhWelcomeSub:{fontSize:15,lineHeight:21,color:'#656A6B',textAlign:'center'},
+ trhComposer:{minHeight:116,borderRadius:22,borderWidth:1,borderColor:'#FFFFFF',backgroundColor:'rgba(255,255,255,0.82)',padding:14,marginBottom:24,shadowColor:'#1E2723',shadowOpacity:0.06,shadowRadius:14,shadowOffset:{width:0,height:6},elevation:2},
+ trhPromptRow:{flexDirection:'row',alignItems:'center',gap:10,minHeight:38},
+ trhSpark:{fontSize:20,color:'#77AD32',lineHeight:22},
+ trhPromptInput:{flex:1,fontSize:14,color:'#202521',paddingVertical:4},
+ trhComposerTools:{flexDirection:'row',alignItems:'center',gap:9,marginTop:12},
+ trhToolBtn:{width:42,height:42,borderRadius:21,borderWidth:1,borderColor:'#FFFFFF',backgroundColor:'rgba(244,246,245,0.9)',alignItems:'center',justifyContent:'center'},
+ trhSendBtn:{width:48,height:48,borderRadius:24,marginLeft:'auto',backgroundColor:'#9CE04F',alignItems:'center',justifyContent:'center',shadowColor:'#8ECD47',shadowOpacity:0.35,shadowRadius:10,shadowOffset:{width:0,height:4},elevation:3},
+ trhSection:{marginBottom:22},
+ trhSectionHead:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',marginBottom:10,paddingHorizontal:2},
+ trhSectionTitle:{fontSize:17,fontWeight:'800',color:'#171B19',letterSpacing:-0.3},
+ trhSectionLink:{fontSize:12,fontWeight:'700',color:'#5C8B29'},
+ trhBadgeText:{fontSize:10,fontWeight:'800',color:'#5C8B29',letterSpacing:0.8},
+ trhQuickGrid:{flexDirection:'row',flexWrap:'wrap',justifyContent:'space-between',gap:9},
+ trhQuickCard:{width:'48.5%',minHeight:78,borderRadius:18,borderWidth:1,borderColor:'#FFFFFF',backgroundColor:'rgba(255,255,255,0.78)',padding:11,flexDirection:'row',alignItems:'center',gap:9,shadowColor:'#1E281E',shadowOpacity:0.04,shadowRadius:10,shadowOffset:{width:0,height:4},elevation:1},
+ trhCardIconWrap:{width:40,height:40,borderRadius:13,backgroundColor:'#E8F5DC',alignItems:'center',justifyContent:'center'},
+ trhCardTitle:{fontSize:13,fontWeight:'700',color:'#1B201D'},
+ trhCardSub:{fontSize:10,color:'#7B807D',marginTop:2},
+ trhCardArrow:{width:24,height:24,borderRadius:12,backgroundColor:'#ECEFED',alignItems:'center',justifyContent:'center'},
+ trhRecentCard:{minHeight:72,borderRadius:20,borderWidth:1,borderColor:'#FFFFFF',backgroundColor:'rgba(255,255,255,0.82)',padding:12,flexDirection:'row',alignItems:'center',gap:12,shadowColor:'#1E281E',shadowOpacity:0.04,shadowRadius:10,shadowOffset:{width:0,height:4},elevation:1},
+ trhRecentIcon:{width:46,height:46,borderRadius:23,backgroundColor:'#E7F1E4',alignItems:'center',justifyContent:'center'},
+ trhStatsBox:{flexDirection:'row',alignItems:'center',justifyContent:'space-around',borderRadius:18,borderWidth:1,borderColor:'#FFFFFF',backgroundColor:'rgba(255,255,255,0.78)',paddingVertical:14,marginBottom:8},
+ trhStatCol:{flex:1,alignItems:'center'},
+ trhStatNum:{fontSize:20,fontWeight:'800',color:'#171A18'},
+ trhStatLabel:{fontSize:9,fontWeight:'800',color:'#7B807D',letterSpacing:0.7,marginTop:3},
+ trhStatSep:{width:1,height:32,backgroundColor:'rgba(23,26,24,0.08)'},
+ trhProgressTrack:{height:6,borderRadius:4,backgroundColor:'#E3E7E4',overflow:'hidden'},
+ trhProgressFill:{height:6,borderRadius:4,backgroundColor:'#8BD43A'},
+ trhLightCard:{borderRadius:18,borderWidth:1,borderColor:'#FFFFFF',backgroundColor:'rgba(255,255,255,0.82)',padding:14},
+ trhLightInput:{flex:1,backgroundColor:'#F4F6F5',borderWidth:1,borderColor:'#E3E7E4',borderRadius:12,color:'#171A18',minHeight:44,paddingHorizontal:12,paddingVertical:10,fontSize:12},
+ trhLightAddBtn:{width:44,height:44,borderRadius:12,backgroundColor:'#9CE04F',alignItems:'center',justifyContent:'center'},
+ trhTaskRow:{flexDirection:'row',alignItems:'center',gap:10,paddingVertical:10,borderTopWidth:1,borderTopColor:'#ECEFED',marginTop:6},
+ trhCheck:{width:20,height:20,borderRadius:7,borderWidth:1.5,borderColor:'#9AA09C',alignItems:'center',justifyContent:'center'},
+ trhCheckDone:{backgroundColor:'#9CE04F',borderColor:'#9CE04F'},
+ trhTaskText:{flex:1,fontSize:12,color:'#171A18',fontWeight:'500'},
+ trhEmptyText:{fontSize:11,color:'#858A86',textAlign:'center',paddingVertical:12},
+ trhMiniPill:{flexDirection:'row',alignItems:'center',gap:6,paddingHorizontal:13,paddingVertical:9,borderRadius:20,borderWidth:1,borderColor:'#FFFFFF',backgroundColor:'rgba(255,255,255,0.8)'},
+ trhMiniPillText:{fontSize:12,fontWeight:'600',color:'#191D1A'},
+ trhDayChip:{paddingHorizontal:11,paddingVertical:7,borderRadius:10,backgroundColor:'#F0F2F1',borderWidth:1,borderColor:'#E3E7E4'},
+ trhDayChipActive:{backgroundColor:'#DFF3CC',borderColor:'#A6DC54'},
+ trhDayChipText:{fontSize:11,fontWeight:'700',color:'#656A6B'},
+ trhDayChipTextActive:{color:'#285C30'},
+ trhFooter:{textAlign:'center',fontSize:9,color:'#858A86',letterSpacing:1.2,marginTop:8}
 
 });
