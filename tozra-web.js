@@ -11,14 +11,25 @@
     if(!code||!frame)return;
     let saved=null;try{saved=JSON.parse(localStorage.getItem(KEY)||'null')}catch{}
     code.value=saved?.code||starter;brief.value=saved?.brief||'';
+    let previewTimer=0;
     const preview=()=>{
-      const html=String(code.value||'');
-      // Re-assign only after the editor value is committed; srcdoc is the isolated preview document.
+      const html=String(code.value||'').trim();
+      const fallback='<!doctype html><html lang=\"tr\"><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><body style=\"font:16px Arial;padding:24px;color:#333\">Önizleme için HTML kodu ekle.</body></html>';
+      // Recreate the srcdoc document on every refresh; assigning while the parent
+      // page is display:none is unreliable in some embedded browsers, so refresh
+      // again when TOZRA Web becomes the active page.
       frame.removeAttribute('src');
-      frame.srcdoc=html || '<!doctype html><html lang="tr"><body style="font:16px Arial;padding:24px">Önizleme için HTML kodu ekle.</body></html>';
+      frame.srcdoc=html||fallback;
       frame.dataset.previewUpdatedAt=String(Date.now());
     };
-    window.TozraWebPreview={refresh:()=>requestAnimationFrame(preview)};
+    const refreshWhenVisible=()=>{
+      cancelAnimationFrame(previewTimer);
+      previewTimer=requestAnimationFrame(()=>requestAnimationFrame(()=>{
+        const page=$('tozraWebPage');
+        if(page && page.classList.contains('active')) preview();
+      }));
+    };
+    window.TozraWebPreview={refresh:refreshWhenVisible};
     preview();
     $('twRefresh')?.addEventListener('click',preview);
     code.addEventListener('input',()=>{ $('twSaveState').textContent='Kaydedilmemiş değişiklik'; });
