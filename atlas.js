@@ -2,7 +2,8 @@
 (()=>{'use strict';
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const safeJSON=(key,fallback)=>{try{const v=JSON.parse(localStorage.getItem(key)||'null');return v??fallback}catch{return fallback}};
+const storageKey=key=>typeof window.tozraStorageKey==='function'?window.tozraStorageKey(key):key;
+const safeJSON=(key,fallback)=>{try{let raw=localStorage.getItem(storageKey(key));if(raw===null&&storageKey(key)!==key){raw=localStorage.getItem(key);if(raw!==null){localStorage.setItem(storageKey(key),raw);localStorage.removeItem(key)}}const v=JSON.parse(raw||'null');return v??fallback}catch{return fallback}};
 const layerPrefs=safeJSON('tozra-atlas-layers-v1',{});
 const state={
  tab:'overview',countries:[],country:null,companyResults:[],techResults:[],
@@ -20,12 +21,12 @@ const state={
  searchCache:new Map(),lastSearchAt:0
 };
 const root=$('atlasPage');if(!root)return;
-const store=()=>{try{localStorage.setItem('tozra-atlas-saved-v1',JSON.stringify(state.saved))}catch(e){}};
-const storeLayerPrefs=()=>{try{localStorage.setItem('tozra-atlas-layers-v1',JSON.stringify({
+const store=()=>{try{localStorage.setItem(storageKey('tozra-atlas-saved-v1'),JSON.stringify(state.saved));if(window.TozraCloudSync)window.TozraCloudSync.schedule()}catch(e){}};
+const storeLayerPrefs=()=>{try{localStorage.setItem(storageKey('tozra-atlas-layers-v1'),JSON.stringify({
  countryLayerVisible:state.countryLayerVisible,searchLayerVisible:state.searchLayerVisible,
  borderLayerVisible:state.borderLayerVisible,terrainEnabled:state.terrainEnabled,
  buildingsEnabled:state.buildingsEnabled,imageryStyle:state.imageryStyle
-}))}catch(e){}};
+}));if(window.TozraCloudSync)window.TozraCloudSync.schedule()}catch(e){}};
 const api=async(url,options={})=>{const r=await fetch(url,{headers:{'Accept':'application/json',...(options.headers||{})},...options});if(!r.ok)throw Error('Veri kaynağı yanıt vermedi ('+r.status+')');return r.json()};
 function notice(id,msg){const el=$(id);if(el)el.textContent=msg}
 function setInfo(title,body,extra=''){

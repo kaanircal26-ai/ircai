@@ -166,7 +166,8 @@ const TozraCloudSync = (() => {
  const KEYS = [
   "tozra-projects", "tozra-conversations", "ircal_tasks_calendar_v1",
   "tozra-web-home-tasks-v1", "tozra-web-home-notes-v1",
-  "tozra-web-home-week-v1", "tozra-personal-memory-v1"
+  "tozra-web-home-week-v1", "tozra-personal-memory-v1",
+  "tozra-atlas-saved-v1", "tozra-atlas-layers-v1"
  ];
  let activeUser = null, timer = null, applying = false, channel = null;
  let pushPromise = null, pushQueued = false;
