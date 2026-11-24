@@ -2494,7 +2494,73 @@ html[data-tozra-theme="dark"] #workspacePage .tozra-home-action-row .tozra-home-
 }
 </style>
 
-<link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.125/Build/Cesium/Widgets/widgets.css"></head>
+<link rel="stylesheet" href="https://cesium.com/downloads/cesiumjs/releases/1.125/Build/Cesium/Widgets/widgets.css"><style id="tozra-home-mobile-stage2">
+/* Stage 2 — ana ekranı dar telefonlarda okunaklı ve rahat kullanılır hale getir. */
+@media (max-width: 760px) {
+  #workspacePage {box-sizing:border-box!important;padding-bottom:calc(112px + env(safe-area-inset-bottom))!important}
+  #workspacePage .tozra-reference-home {box-sizing:border-box!important;width:100%!important;max-width:100%!important;min-height:auto!important;overflow-x:clip!important;overflow-y:visible!important;padding:12px max(12px,env(safe-area-inset-left)) 22px max(12px,env(safe-area-inset-right))!important}
+  #workspacePage .trh-header {min-height:58px!important;height:58px!important;grid-template-columns:44px minmax(0,1fr) 44px!important;gap:7px!important}
+  #workspacePage .trh-round {width:42px!important;height:42px!important;min-height:42px!important}
+  #workspacePage .trh-brand img {width:35px!important;height:35px!important}
+  #workspacePage .trh-shortcuts {grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:6px!important;margin:10px 0 8px!important}
+  #workspacePage .trh-shortcut {min-width:0!important;min-height:46px!important;padding:6px 3px!important;gap:3px!important;font-size:clamp(8px,2.55vw,10px)!important;line-height:1.15!important;white-space:normal!important;overflow-wrap:anywhere!important}
+  #workspacePage .trh-shortcut svg {width:18px!important;height:18px!important;flex:0 0 18px!important}
+  #workspacePage #homeVoiceButton span {display:block!important;max-width:100%!important;text-align:center!important;white-space:normal!important}
+  #workspacePage .trh-orbit {height:clamp(106px,31vw,128px)!important;margin:2px auto 0!important}
+  #workspacePage .trh-orbit-glow {width:clamp(88px,28vw,108px)!important;height:clamp(88px,28vw,108px)!important}
+  #workspacePage .trh-orbit-glow img {width:62%!important;height:62%!important}
+  #workspacePage .trh-welcome {margin:2px 0 16px!important;padding-inline:4px!important}
+  #workspacePage .trh-welcome h1 {font-size:clamp(25px,7vw,31px)!important;line-height:1.16!important;overflow-wrap:anywhere!important}
+  #workspacePage .trh-welcome p {font-size:clamp(14px,3.9vw,17px)!important;line-height:1.45!important}
+  #workspacePage .trh-composer {box-sizing:border-box!important;width:100%!important;min-width:0!important;min-height:112px!important;padding:11px 12px 10px!important;margin:0 0 21px!important;border-radius:18px!important}
+  #workspacePage .trh-prompt-label {min-width:0!important;min-height:42px!important;gap:8px!important}
+  #workspacePage .trh-prompt-label input {min-width:0!important;width:100%!important;font-size:16px!important;line-height:1.35!important}
+  #workspacePage .trh-composer-tools {gap:8px!important;padding-top:7px!important}
+  #workspacePage .trh-tool {width:44px!important;height:44px!important;min-width:44px!important;min-height:44px!important}
+  #workspacePage .trh-send {width:48px!important;height:48px!important;min-width:48px!important;min-height:48px!important}
+  #workspacePage .trh-section {width:100%!important;min-width:0!important;margin-bottom:18px!important}
+  #workspacePage .trh-section-head {gap:8px!important;margin-bottom:9px!important}
+  #workspacePage .trh-section-head h2 {font-size:17px!important}
+  #workspacePage .trh-quick-grid {grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+  #workspacePage .trh-quick-card {box-sizing:border-box!important;min-width:0!important;min-height:76px!important;gap:7px!important;padding:9px!important;border-radius:15px!important}
+  #workspacePage .trh-card-icon {width:34px!important;height:38px!important;flex:0 0 34px!important}
+  #workspacePage .trh-card-icon svg {width:30px!important;height:30px!important}
+  #workspacePage .trh-quick-card>span:nth-child(2),#workspacePage .trh-recent-card>span:nth-child(2) {flex:1 1 auto!important;min-width:0!important}
+  #workspacePage .trh-quick-card strong {font-size:clamp(10px,2.8vw,12px)!important;line-height:1.25!important;white-space:normal!important;overflow-wrap:anywhere!important}
+  #workspacePage .trh-quick-card small {font-size:9px!important;line-height:1.3!important;white-space:normal!important}
+  #workspacePage .trh-quick-card>i {width:22px!important;height:22px!important;flex:0 0 22px!important}
+  #workspacePage .trh-recent-card {box-sizing:border-box!important;width:100%!important;min-width:0!important;min-height:70px!important;gap:9px!important;padding:9px 10px!important}
+  #workspacePage .trh-recent-icon {width:42px!important;height:42px!important;flex:0 0 42px!important}
+  #workspacePage .trh-recent-card strong {font-size:12px!important;white-space:normal!important;overflow-wrap:anywhere!important}
+  #workspacePage .trh-recent-card small {font-size:10px!important;white-space:normal!important}
+  #homePrimaryNav.trh-bottom-nav {box-sizing:border-box!important;width:calc(100vw - 20px)!important;max-width:540px!important;padding:5px!important;gap:3px!important;border-radius:22px!important}
+  #homePrimaryNav.trh-bottom-nav button {min-width:0!important;min-height:56px!important;padding:5px 1px!important;gap:3px!important;font-size:clamp(8px,2.5vw,10px)!important;line-height:1.15!important}
+  #homePrimaryNav.trh-bottom-nav button svg {width:21px!important;height:21px!important;flex:0 0 21px!important}
+  #homePrimaryNav.trh-bottom-nav button span {display:block!important;max-width:100%!important;white-space:nowrap!important;font-size:inherit!important}
+  .content {padding-bottom:calc(122px + env(safe-area-inset-bottom))!important}
+}
+@media (max-width: 380px) {
+  #workspacePage .trh-shortcuts {gap:4px!important}
+  #workspacePage .trh-shortcut {padding-inline:2px!important;font-size:8px!important}
+  #workspacePage .trh-quick-card {gap:5px!important;padding:8px 7px!important}
+  #workspacePage .trh-card-icon {width:29px!important;flex-basis:29px!important}
+  #workspacePage .trh-card-icon svg {width:26px!important;height:26px!important}
+  #workspacePage .trh-quick-card>i {display:none!important}
+  #homePrimaryNav.trh-bottom-nav {width:calc(100vw - 16px)!important}
+}
+@media (max-height: 620px) and (max-width: 760px) {
+  #workspacePage .trh-orbit {height:82px!important}
+  #workspacePage .trh-orbit-glow {width:76px!important;height:76px!important}
+  #workspacePage .trh-welcome {margin-bottom:10px!important}
+  #workspacePage .trh-composer {min-height:100px!important;margin-bottom:14px!important}
+  #workspacePage .trh-section {margin-bottom:13px!important}
+}
+@media (prefers-reduced-motion: reduce) {
+  #workspacePage .tozra-reference-home *,#homePrimaryNav.trh-bottom-nav,#homePrimaryNav.trh-bottom-nav * {scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+
+</head>
 
 <body>
 <div class="splash" id="splash">
