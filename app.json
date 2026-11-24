@@ -1,0 +1,58 @@
+{
+  "expo": {
+    "name": "TOZRA",
+    "slug": "tozra-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "scheme": "tozra",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#080B16"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tozra.mobile",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "TOZRA sesli giriş için mikrofon erişimi ister.",
+        "NSCameraUsageDescription": "TOZRA fotoğraf ve video çekmek için kameraya erişir.",
+        "NSPhotoLibraryUsageDescription": "TOZRA sohbet ve analiz için seçtiğin görsellere erişir."
+      }
+    },
+    "android": {
+      "package": "com.tozra.mobile",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#080B16"
+      },
+      "edgeToEdgeEnabled": true,
+      "permissions": [
+        "RECORD_AUDIO",
+        "CAMERA",
+        "READ_MEDIA_IMAGES",
+        "READ_MEDIA_VIDEO"
+      ]
+    },
+    "extra": {
+      "apiBaseUrl": "https://tozra.com.tr"
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "TOZRA analiz için seçtiğin görsellere erişir.",
+          "cameraPermission": "TOZRA fotoğraf ve video çekmek için kameraya erişir.",
+          "microphonePermission": "TOZRA video kaydı için mikrofon erişimi ister."
+        }
+      ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "TOZRA sesli giriş için mikrofon erişimi ister."
+        }
+      ]
+    ]
+  }
+}
