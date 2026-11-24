@@ -4646,7 +4646,7 @@ async function sendGeneralMessage(value){
    speakNextVoiceReply(answer);
   },
   onFailure:(error,errorData)=>{
-   conversation.push({role:"assistant",content:error,sources:errorData?.sources||[]});
+   // Transport/API errors are UI notices, not assistant replies; do not feed them back as chat context.
    addMessage($("messages"),"assistant",error,errorData?.sources||[]);
    saveGeneralConversation();
   }
@@ -4695,7 +4695,7 @@ async function sendProjectMessage(){
   },
 
   onFailure:(error,errorData)=>{
-   p.messages.push({role:"assistant",content:error,sources:errorData?.sources||[]});
+   // Keep the user's prompt, but never store a network/API error as an AI answer.
    p.updatedAt=Date.now();
    saveProjects();
    addMessage($("projectMessages"),"assistant",error,errorData?.sources||[]);
