@@ -169,6 +169,7 @@ const TozraCloudSync = (() => {
   "tozra-web-home-week-v1", "tozra-personal-memory-v1"
  ];
  let activeUser = null, timer = null, applying = false, channel = null;
+ let pushPromise = null, pushQueued = false;
  let lastError = "";
  const keyFor = key => scopedStorageKey(key);
  function collect() {
@@ -191,17 +192,46 @@ const TozraCloudSync = (() => {
   } finally { applying = false; }
  }
  async function pushNow() {
-  const userId = TozraAuth.userId(), client = TozraAuth.getClient();
-  if (!client || userId === "guest" || applying) return false;
-  const payload = { ...collect(), _meta: { version: 1, updatedAt: new Date().toISOString(), app: "TOZRA" } };
-  const { error } = await client.from(TABLE).upsert(
-   { user_id: userId, data: payload, updated_at: new Date().toISOString() },
-   { onConflict: "user_id" }
-  );
-  if (error) { lastError = error.message || "Bulut kaydı başarısız."; console.warn("TOZRA cloud sync:", lastError); return false; }
-  lastError = "";
-  window.dispatchEvent(new CustomEvent("tozra-cloud-status", { detail: { status: "synced" } }));
-  return true;
+  // Serialize cloud writes. If another save is requested while one is in flight,
+  // perform one fresh upload afterwards so an older snapshot cannot win a race.
+  if (pushPromise) {
+   pushQueued = true;
+   return pushPromise;
+  }
+
+  pushPromise = (async () => {
+   let uploaded = false;
+   do {
+    pushQueued = false;
+    const userId = TozraAuth.userId(), client = TozraAuth.getClient();
+    if (!client || userId === "guest" || applying) return false;
+
+    const updatedAt = new Date().toISOString();
+    const payload = { ...collect(), _meta: { version: 1, updatedAt, app: "TOZRA" } };
+    const { error } = await client.from(TABLE).upsert(
+     { user_id: userId, data: payload, updated_at: updatedAt },
+     { onConflict: "user_id" }
+    );
+    if (error) {
+     lastError = error.message || "Bulut kaydı başarısız.";
+     console.warn("TOZRA cloud sync:", lastError);
+     return false;
+    }
+
+    uploaded = true;
+    lastError = "";
+    window.dispatchEvent(new CustomEvent("tozra-cloud-status", { detail: { status: "synced" } }));
+   } while (pushQueued);
+   return uploaded;
+  })();
+
+  try {
+   return await pushPromise;
+  } finally {
+   pushPromise = null;
+   // A request may arrive just as the upload settles; never leave it stranded.
+   if (pushQueued) schedule();
+  }
  }
  function schedule() {
   if (applying || TozraAuth.userId() === "guest") return;
