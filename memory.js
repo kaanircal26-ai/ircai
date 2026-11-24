@@ -184,22 +184,26 @@
     const tokens = [...new Set(
       String(prompt || "")
         .toLocaleLowerCase("tr-TR")
-        .match(/[a-zçğıöşü0-9]{3,}/g) || []
+        .match(/[a-zçğıöşü0-9]{4,}/g) || []
     )].filter(token => !stopWords.has(token));
 
-    if (!tokens.length) return memories.slice(-Math.min(4, safeLimit));
+    // Belirsiz veya eşleşmeyen isteklerde son kayıtları otomatik ekleme.
+    // Böylece ilgisiz eski tercihler yeni yanıtlara taşınmaz.
+    if (!tokens.length) return [];
 
     const ranked = memories.map((item, index) => {
       const searchable = `${item.content || ""} ${item.category || ""}`
         .toLocaleLowerCase("tr-TR");
+      const memoryTokens = new Set(searchable.match(/[a-zçğıöşü0-9]{4,}/g) || []);
       let score = 0;
       for (const token of tokens) {
-        if (searchable.includes(token)) score += token.length >= 6 ? 2 : 1;
+        if (memoryTokens.has(token)) score += 3;
+        else if (token.length >= 6 && searchable.includes(token)) score += 1;
       }
       return { item, index, score };
     }).filter(entry => entry.score > 0);
 
-    if (!ranked.length) return memories.slice(-Math.min(4, safeLimit));
+    if (!ranked.length) return [];
 
     return ranked
       .sort((a, b) => b.score - a.score || b.index - a.index)
