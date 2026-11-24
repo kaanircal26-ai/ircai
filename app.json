@@ -10,7 +10,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#111311"
+      "backgroundColor": "#101216"
     },
     "ios": {
       "supportsTablet": true,
@@ -25,7 +25,7 @@
       "package": "com.tozra.mobile",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#111311"
+        "backgroundColor": "#080B16"
       },
       "edgeToEdgeEnabled": true,
       "permissions": [

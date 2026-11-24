@@ -1,23 +1,22 @@
-# TOZRA Native Mobile — 1.3 implementation record
+# TOZRA native port — implementation record
 
-## Native workspaces
-- Home, AI Chat, Projects, Creative Studio, Tasks & Calendar, Atlas, Nexus, Universe, Market, Social, Web Studio and Account are exposed as separate native screens.
-- Atlas supports personal discovery records, search, layer selection and AI research handoff. The visual canvas is a native conceptual map panel; live map tiles and device location are not enabled in this build.
-- Nexus supports idea nodes, node search, relationship creation/removal and AI idea development.
-- Universe visualizes existing projects and Nexus ideas in Galaxy/Constellation views and can open a selected project.
-- Market includes TOZRA Originals starter templates, category/search filters, favorites, details and AI template handoff. It is not a public seller marketplace and does not process payments.
-- Social supports brand workspaces, content drafting, platform/format selection, planned/draft status, date-based queue and AI copy refinement. Social OAuth, auto-publishing and analytics are not enabled.
+## Implemented in this package
 
-## Persistence
-- New native module data is stored account-scoped in AsyncStorage and synchronized through the existing `public.user_data` JSON document as `tozra-native-modules-v1`.
-- Existing projects, chat, tasks, events, notes, weekly plan, personal memory, Supabase auth and authenticated API calls are retained.
+- Native screens for Home, AI Chat, Projects, Creative Studio, Tasks & Calendar, Atlas and Account.
+- Existing Supabase authentication and authenticated server calls to `/api/chat`, `/api/generate-image`, and `/api/transcribe`.
+- AI Agent mode, chat history, project context, and user-provided memory context.
+- Gallery and camera image/video input. Images are normalized to JPEG; videos are sampled at up to three chronological thumbnail frames each, with the server's combined 15-image/frame limit enforced.
+- Project records with goals, milestones, project tasks and notes.
+- Creative Studio modes matching the web mode set: idea, image, video storyboard, brand, content and campaign.
+- Native calendar with dated tasks and events.
+- Native map with satellite/terrain/standard layers, saved locations, place search and building display toggle.
+- Account-scoped local persistence and compatibility mapping to the web `public.user_data` JSON document for projects, tasks/events, notes, weekly plan, conversations, personal memory and Atlas saved places/layer preferences.
+- Web Atlas local-storage keys are now account-scoped and included in the existing web cloud-sync key list, so the same saved Atlas items/preferences can move between web and native when the existing `user_data` table and RLS policies are configured.
 
-## App bootstrap repair
-- Added the missing `src/theme.js` and `src/supabase.js` modules required by `App.js`.
-- Added Expo dependencies and the missing app icon/splash assets referenced by app configuration.
-- Supabase configuration is fetched from the existing `/api/config` endpoint; no secret key is bundled in the app.
+## Not yet one-to-one with the web application
 
-## Validation
-- Project structure check passed (12 screens and 12 navigation entries).
-- TypeScript JSX parser passed for `App.js`.
-- Expo dependency installation, Expo Doctor, native compilation and real-device interaction have not been run in this environment.
+- The Cesium 3D globe, Cesium terrain provider, globe-specific borders/entities and every Atlas discovery panel are not reproduced as native 3D Cesium in this package. Atlas is a native map adaptation with satellite/terrain/building display and saved places.
+- The browser WebRTC real-time voice conversation is not a native WebRTC session here. Native voice input is recording plus server transcription, followed by normal AI chat.
+- Video Studio creates scripts/storyboards/production plans; neither web nor this native flow renders a finished video file.
+
+These limitations are explicitly listed rather than represented as complete parity.
