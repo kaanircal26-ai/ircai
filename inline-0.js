@@ -866,6 +866,19 @@ function buildProjectContext(project){
  ].join("\n");
 }
 
+function findRelevantProjectContext(prompt){
+ const query=String(prompt||"").toLocaleLowerCase("tr-TR");
+ if(!/\b(proje|projeyi|projem|projeme|tozra|uygulama|ürünüm|ürün)\b/.test(query))return "";
+ const candidates=Array.isArray(projects)?projects:[];
+ const named=candidates.find(project=>{
+  const name=String(project.name||"").trim().toLocaleLowerCase("tr-TR");
+  return name.length>=3 && query.includes(name);
+ });
+ const active=getCurrentProject();
+ const selected=named || (active && /\b(aktif proje|bu proje|mevcut projem|tozra|projem)\b/.test(query) ? active : null);
+ return selected ? buildProjectContext(selected).slice(0,10000) : "";
+}
+
 $("projectNotes").addEventListener("input",()=>{
  const p=getCurrentProject();
  if(!p)return;
@@ -1251,7 +1264,7 @@ function createTyping(area){
  return el;
 }
 
-async function sendToAI({text,list,area,history,onSuccess,onFailure,agentMode=false}){
+async function sendToAI({text,list,area,history,onSuccess,onFailure,agentMode=false,projectContext=""}){
  if(busy)return;
  if(!text.trim()&&!list.length)return;
  if(!text.trim()&&list.length){
@@ -1274,8 +1287,12 @@ async function sendToAI({text,list,area,history,onSuccess,onFailure,agentMode=fa
     history:history,
     images:media.images,
     videoFrames:media.videoFrames,
+    projectContext:typeof projectContext==="string"?projectContext.slice(0,10000):"",
     personalMemory:window.TozraMemory && typeof window.TozraMemory.getAll==="function"
-     ? window.TozraMemory.getAll().slice(-30).map(item=>({content:item.content,category:item.category}))
+     ? (typeof window.TozraMemory.getRelevant==="function"
+        ? window.TozraMemory.getRelevant(text,12)
+        : window.TozraMemory.getAll().slice(-8))
+        .map(item=>({content:item.content,category:item.category}))
      : [],
     agentMode:Boolean(agentMode)
    })
@@ -1308,6 +1325,53 @@ async function sendToAI({text,list,area,history,onSuccess,onFailure,agentMode=fa
  }
 }
 
+function offerMemorySuggestion(content,area){
+ const value=String(content||"").trim();
+ const durablePattern=/\b(bundan sonra|uzun vadeli hedefim|hedefim|tercihim|tercih ederim|tercih ediyorum|her zaman|gelecekte|üzerinde çalışıyorum|projem)\b/i;
+ const sensitivePattern=/\b(şifre|parola|password|api[_ -]?key|token|secret|sağlık|hastalık|ilaç|tanı|teşhis|adresim|kimlik numaram|kart numaram|siyasi görüşüm|dinim|ırkım)\b/i;
+ if(value.length<20||value.length>350||!durablePattern.test(value)||sensitivePattern.test(value))return;
+ if(!window.TozraMemory||typeof window.TozraMemory.add!=="function")return;
+ const card=document.createElement("div");
+ card.className="ph-memory-item";
+ card.style.margin="10px 0 10px 42px";
+ card.style.background="var(--surface, #f7f9f6)";
+ const body=document.createElement("div");
+ body.className="ph-memory-body";
+ const tag=document.createElement("span");
+ tag.className="ph-memory-tag";
+ tag.textContent="HAFIZA ÖNERİSİ";
+ const description=document.createElement("p");
+ description.textContent="Bu bilgi ileride işine yarayabilir. Kişisel hafızana kaydetmek ister misin?";
+ body.append(tag,description);
+ const actions=document.createElement("div");
+ actions.style.display="flex";
+ actions.style.gap="8px";
+ actions.style.alignItems="center";
+ const save=document.createElement("button");
+ save.type="button";
+ save.className="secondary";
+ save.textContent="Hafızaya kaydet";
+ const dismiss=document.createElement("button");
+ dismiss.type="button";
+ dismiss.className="ph-memory-remove";
+ dismiss.textContent="Şimdi değil";
+ save.addEventListener("click",()=>{
+  try{
+   window.TozraMemory.add(value,"Tercih ve hedefler");
+   description.textContent="Bilgi kişisel hafızana kaydedildi.";
+   save.remove();
+   dismiss.remove();
+  }catch(error){
+   description.textContent=error.message||"Hafıza kaydedilemedi.";
+  }
+ });
+ dismiss.addEventListener("click",()=>card.remove());
+ actions.append(save,dismiss);
+ card.append(body,actions);
+ area.appendChild(card);
+ card.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+
 /* GENEL SOHBET */
 async function sendGeneralMessage(value){
  const text=(value??promptInput.value).trim();
@@ -1330,10 +1394,12 @@ async function sendGeneralMessage(value){
   area:$("messages"),
   history:conversation.slice(0,-1),
   agentMode:agentModeEnabled,
+  projectContext:findRelevantProjectContext(text),
   onSuccess:(answer,data)=>{
    const sources=Array.isArray(data?.sources)?data.sources:[];
    conversation.push({role:"assistant",content:answer,sources});
    addMessage($("messages"),"assistant",answer,sources);
+   offerMemorySuggestion(text,$("messages"));
    saveGeneralConversation();
    speakNextVoiceReply(answer);
   },
@@ -1368,13 +1434,10 @@ async function sendProjectMessage(){
  saveProjects();
 
  const projectContext=buildProjectContext(p);
- const contextualPrompt=
-  projectContext+
-  "\n\n[KULLANICININ YENİ MESAJI]\n"+
-  text;
 
  await sendToAI({
-  text:contextualPrompt,
+  text,
+  projectContext,
   list:projectAttachments,
   area:$("projectMessages"),
   history:p.messages.slice(0,-1),

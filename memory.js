@@ -12,7 +12,11 @@
     /api[_ -]?key/i,
     /password|şifre|parola/i,
     /secret|token/i,
-    /kredi kartı/i
+    /kredi kartı/i,
+    /kimlik numarası|tc kimlik|pasaport numarası/i,
+    /ev adresim|açık adresim|telefon numaram/i,
+    /hastalık|teşhis|tanı|ilaç kullanıyorum|sağlık durumum/i,
+    /siyasi görüşüm|dinim|ırkım|etnik kökenim/i
   ];
 
   function storageKey() {
@@ -48,6 +52,9 @@
     try {
       localStorage.setItem(storageKey(), JSON.stringify(memories));
       if (window.TozraCloudSync) window.TozraCloudSync.schedule();
+      if (typeof window.dispatchEvent === "function" && typeof CustomEvent === "function") {
+        window.dispatchEvent(new CustomEvent("tozra-memory-updated"));
+      }
       return true;
     } catch (error) {
       console.error("TOZRA hafıza kayıt hatası:", error);
@@ -165,6 +172,42 @@
     return write([]);
   }
 
+  function getRelevant(prompt, limit = 12) {
+    const memories = read();
+    const safeLimit = Math.max(1, Math.min(12, Number(limit) || 12));
+    const stopWords = new Set([
+      "acaba", "ancak", "artık", "bana", "bunu", "bunun", "daha", "diye",
+      "eder", "etmek", "gibi", "için", "ilgili", "ile", "lütfen", "nasıl",
+      "neden", "olan", "olarak", "önce", "sonra", "şey", "şunu", "veya",
+      "ve", "çok", "şimdi", "benim", "senin", "bizim", "var", "yok"
+    ]);
+    const tokens = [...new Set(
+      String(prompt || "")
+        .toLocaleLowerCase("tr-TR")
+        .match(/[a-zçğıöşü0-9]{3,}/g) || []
+    )].filter(token => !stopWords.has(token));
+
+    if (!tokens.length) return memories.slice(-Math.min(4, safeLimit));
+
+    const ranked = memories.map((item, index) => {
+      const searchable = `${item.content || ""} ${item.category || ""}`
+        .toLocaleLowerCase("tr-TR");
+      let score = 0;
+      for (const token of tokens) {
+        if (searchable.includes(token)) score += token.length >= 6 ? 2 : 1;
+      }
+      return { item, index, score };
+    }).filter(entry => entry.score > 0);
+
+    if (!ranked.length) return memories.slice(-Math.min(4, safeLimit));
+
+    return ranked
+      .sort((a, b) => b.score - a.score || b.index - a.index)
+      .slice(0, safeLimit)
+      .sort((a, b) => a.index - b.index)
+      .map(entry => entry.item);
+  }
+
   function buildContext(limit = 30) {
     return read()
       .slice(-limit)
@@ -175,6 +218,7 @@
   window.TozraMemory = Object.freeze({
     add,
     getAll,
+    getRelevant,
     update,
     remove,
     clear,
