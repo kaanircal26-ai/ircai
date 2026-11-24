@@ -2,7 +2,7 @@
   "expo": {
     "name": "TOZRA",
     "slug": "tozra-mobile",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
     "scheme": "tozra",
@@ -10,7 +10,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#080B16"
+      "backgroundColor": "#111211"
     },
     "ios": {
       "supportsTablet": true,
@@ -25,7 +25,7 @@
       "package": "com.tozra.mobile",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#080B16"
+        "backgroundColor": "#111211"
       },
       "edgeToEdgeEnabled": true,
       "permissions": [
