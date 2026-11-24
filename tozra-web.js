@@ -11,7 +11,14 @@
     if(!code||!frame)return;
     let saved=null;try{saved=JSON.parse(localStorage.getItem(KEY)||'null')}catch{}
     code.value=saved?.code||starter;brief.value=saved?.brief||'';
-    const preview=()=>{frame.srcdoc=code.value||'';};
+    const preview=()=>{
+      const html=String(code.value||'');
+      // Re-assign only after the editor value is committed; srcdoc is the isolated preview document.
+      frame.removeAttribute('src');
+      frame.srcdoc=html || '<!doctype html><html lang="tr"><body style="font:16px Arial;padding:24px">Önizleme için HTML kodu ekle.</body></html>';
+      frame.dataset.previewUpdatedAt=String(Date.now());
+    };
+    window.TozraWebPreview={refresh:()=>requestAnimationFrame(preview)};
     preview();
     $('twRefresh')?.addEventListener('click',preview);
     code.addEventListener('input',()=>{ $('twSaveState').textContent='Kaydedilmemiş değişiklik'; });
