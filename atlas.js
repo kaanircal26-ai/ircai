@@ -3,17 +3,29 @@
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const safeJSON=(key,fallback)=>{try{const v=JSON.parse(localStorage.getItem(key)||'null');return v??fallback}catch{return fallback}};
+const layerPrefs=safeJSON('tozra-atlas-layers-v1',{});
 const state={
  tab:'overview',countries:[],country:null,companyResults:[],techResults:[],
- saved:safeJSON('tozra-atlas-saved-v1',[]),map:null,markers:null,globe:null,globeLoading:false,
- searchPoints:[],searchEntities:[],countryEntities:[],borderSource:null,buildings:null,
- countryLayerVisible:true,searchLayerVisible:true,borderLayerVisible:true,terrainEnabled:false,
- imageryStyle:'satellite',measureMode:false,measurePoints:[],measureEntity:null,clickHandler:null,
- resizeObserver:null,ionToken:'',terrainAvailable:false,buildingsAvailable:false,configLoaded:false,
- mapClickHandler:null,lastPicked:null
+ saved:(()=>{const v=safeJSON('tozra-atlas-saved-v1',[]);return Array.isArray(v)?v:[]})(),
+ map:null,markers:null,globe:null,globeLoading:false,
+ searchPoints:[],searchEntities:[],countryEntities:[],borderSource:null,buildings:null,terrainProvider:null,
+ countryLayerVisible:layerPrefs.countryLayerVisible!==false,
+ searchLayerVisible:layerPrefs.searchLayerVisible!==false,
+ borderLayerVisible:layerPrefs.borderLayerVisible!==false,
+ terrainEnabled:layerPrefs.terrainEnabled===true,buildingsEnabled:layerPrefs.buildingsEnabled===true,
+ imageryStyle:['satellite','topographic','street'].includes(layerPrefs.imageryStyle)?layerPrefs.imageryStyle:'satellite',
+ measureMode:false,measurePoints:[],measureEntity:null,clickHandler:null,
+ resizeObserver:null,ionToken:'',terrainAvailable:false,buildingsAvailable:false,configLoaded:false,configPromise:null,
+ mapClickHandler:null,lastPicked:null,configError:'',terrainRequest:0,buildingsRequest:0,
+ searchCache:new Map(),lastSearchAt:0
 };
 const root=$('atlasPage');if(!root)return;
 const store=()=>{try{localStorage.setItem('tozra-atlas-saved-v1',JSON.stringify(state.saved))}catch(e){}};
+const storeLayerPrefs=()=>{try{localStorage.setItem('tozra-atlas-layers-v1',JSON.stringify({
+ countryLayerVisible:state.countryLayerVisible,searchLayerVisible:state.searchLayerVisible,
+ borderLayerVisible:state.borderLayerVisible,terrainEnabled:state.terrainEnabled,
+ buildingsEnabled:state.buildingsEnabled,imageryStyle:state.imageryStyle
+}))}catch(e){}};
 const api=async(url,options={})=>{const r=await fetch(url,{headers:{'Accept':'application/json',...(options.headers||{})},...options});if(!r.ok)throw Error('Veri kaynağı yanıt vermedi ('+r.status+')');return r.json()};
 function notice(id,msg){const el=$(id);if(el)el.textContent=msg}
 function setInfo(title,body,extra=''){
@@ -43,14 +55,35 @@ function addCountryPins(){
   e.show=state.countryLayerVisible;state.countryEntities.push(e);
  });
 }
-async function loadConfig(){
- if(state.configLoaded)return;state.configLoaded=true;
- try{const c=await api('/api/atlas-config');if(c?.success&&c.cesiumIonToken)state.ionToken=String(c.cesiumIonToken).trim();state.terrainAvailable=Boolean(state.ionToken);state.buildingsAvailable=Boolean(state.ionToken)}catch(e){/* Optional service: public satellite map still works without an ion token. */}
+async function loadConfig(force=false){
+ if(state.configPromise&&!force)return state.configPromise;
+ if(state.configLoaded&&!force)return Boolean(state.ionToken);
+ state.configPromise=(async()=>{
+  state.configError='';
+  try{
+   const c=await api('/api/atlas-config');
+   if(!c?.success||!c.cesiumIonToken)throw new Error(c?.error||'Cesium ion anahtarı yapılandırılmamış.');
+   state.ionToken=String(c.cesiumIonToken).trim();
+   if(!state.ionToken)throw new Error('Cesium ion anahtarı boş.');
+   state.configLoaded=true;state.terrainAvailable=true;state.buildingsAvailable=true;
+   if(window.Cesium)window.Cesium.Ion.defaultAccessToken=state.ionToken;
+   return true;
+  }catch(e){
+   state.configLoaded=false;state.ionToken='';state.terrainAvailable=false;state.buildingsAvailable=false;
+   state.configError=e?.message||'Cesium yapılandırması alınamadı.';
+   return false;
+  }finally{state.configPromise=null;setLayerStatus()}
+ })();
+ return state.configPromise;
 }
 function setLayerStatus(){
  const terrain=$('atlasLayerTerrain'),buildings=$('atlasLayerBuildings');
- if(terrain){terrain.disabled=!state.terrainAvailable;terrain.title=state.terrainAvailable?'3D araziyi aç/kapat':'Cesium ion anahtarı gerekli'}
- if(buildings){buildings.disabled=!state.buildingsAvailable;buildings.title=state.buildingsAvailable?'3D binaları aç/kapat':'Cesium ion anahtarı gerekli'}
+ if(terrain){terrain.disabled=!state.terrainAvailable;terrain.checked=state.terrainEnabled;terrain.title=state.terrainAvailable?'3D araziyi aç/kapat':'Cesium ion anahtarı gerekli'}
+ if(buildings){buildings.disabled=!state.buildingsAvailable;buildings.checked=state.buildingsEnabled;buildings.title=state.buildingsAvailable?'3D binaları aç/kapat':'Cesium ion anahtarı gerekli'}
+ const imagery=$('atlasImageryStyle');if(imagery)imagery.value=state.imageryStyle;
+ const capitals=$('atlasLayerCountries');if(capitals)capitals.checked=state.countryLayerVisible;
+ const searches=$('atlasLayerSearch');if(searches)searches.checked=state.searchLayerVisible;
+ const borders=$('atlasLayerBorders');if(borders)borders.checked=state.borderLayerVisible;
 }
 function createImagery(style){
  const C=window.Cesium;
@@ -69,11 +102,14 @@ function createImagery(style){
 }
 function setImagery(style){
  if(!state.globe||!window.Cesium)return;
+ if(!['satellite','topographic','street'].includes(style))style='satellite';
  try{
+  const provider=createImagery(style);
   state.globe.imageryLayers.removeAll();
-  state.globe.imageryLayers.addImageryProvider(createImagery(style));
-  state.imageryStyle=style;state.globe.scene.requestRender();
- }catch(e){notice('atlasMapStatus','Harita katmanı değiştirilemedi.');}
+  state.globe.imageryLayers.addImageryProvider(provider);
+  state.imageryStyle=style;storeLayerPrefs();state.globe.scene.requestRender();
+  notice('atlasMapStatus',style==='satellite'?'Uydu görüntüsü etkin.':style==='topographic'?'Topoğrafik harita etkin.':'Sokak haritası etkin.');
+ }catch(e){notice('atlasMapStatus','Harita katmanı değiştirilemedi. Görünüm sağlayıcısını kontrol et.');}
 }
 async function loadBorders(){
  if(!state.globe||!window.Cesium||state.borderSource)return;
@@ -89,26 +125,52 @@ async function loadBorders(){
  }catch(e){notice('atlasMapStatus','Ülke sınırları şu anda yüklenemedi; diğer harita özellikleri kullanılabilir.')}
 }
 async function enableTerrain(enabled){
- const C=window.Cesium,v=state.globe;if(!v||!C)return;
- if(!enabled){v.terrainProvider=new C.EllipsoidTerrainProvider();state.terrainEnabled=false;notice('atlasMapStatus','Düz küre görünümüne geçildi.');return}
- if(!state.ionToken){notice('atlasMapStatus','3D arazi için Cesium ion erişim anahtarı gerekiyor. Vercel ortam değişkenine CESIUM_ION_TOKEN eklenmeli.');$('atlasLayerTerrain').checked=false;return}
+ const C=window.Cesium,v=state.globe;
+ state.terrainEnabled=Boolean(enabled);storeLayerPrefs();setLayerStatus();
+ if(!v||!C)return;
+ const request=++state.terrainRequest;
+ if(!enabled){
+  try{v.terrainProvider=new C.EllipsoidTerrainProvider();v.scene.globe.depthTestAgainstTerrain=false;v.scene.requestRender()}catch(e){}
+  state.terrainProvider=null;notice('atlasMapStatus','Düz küre görünümüne geçildi.');return;
+ }
+ if(!await loadConfig()){
+  if(request===state.terrainRequest){state.terrainEnabled=false;storeLayerPrefs();setLayerStatus();notice('atlasMapStatus','3D arazi açılamadı: Cesium ion anahtarı alınamadı. Vercel ortam değişkenini ve dağıtımı kontrol et.')}
+  return;
+ }
  try{
-  C.Ion.defaultAccessToken=state.ionToken;
-  notice('atlasMapStatus','Yüksek çözünürlüklü 3D arazi yükleniyor…');
+  C.Ion.defaultAccessToken=state.ionToken;notice('atlasMapStatus','Cesium World Terrain yükleniyor…');
   const terrain=await C.createWorldTerrainAsync({requestVertexNormals:true,requestWaterMask:true});
-  v.terrainProvider=terrain;state.terrainEnabled=true;v.scene.globe.depthTestAgainstTerrain=true;v.scene.requestRender();
-  notice('atlasMapStatus','3D arazi aktif · Cesium World Terrain.');
- }catch(e){state.terrainEnabled=false;$('atlasLayerTerrain').checked=false;notice('atlasMapStatus','3D arazi yüklenemedi. Cesium ion anahtarını ve erişim izinlerini kontrol et.')}
+  if(request!==state.terrainRequest||!state.terrainEnabled)return;
+  v.terrainProvider=terrain;state.terrainProvider=terrain;
+  v.scene.globe.depthTestAgainstTerrain=true;v.scene.requestRender();
+  notice('atlasMapStatus','3D arazi etkin · Cesium World Terrain.');
+ }catch(e){
+  if(request===state.terrainRequest){state.terrainEnabled=false;storeLayerPrefs();setLayerStatus();notice('atlasMapStatus','3D arazi yüklenemedi. Cesium ion token erişimini, Terrain izinlerini ve ağ bağlantısını kontrol et.')}
+ }
 }
 async function enableBuildings(enabled){
- const C=window.Cesium,v=state.globe;if(!v||!C)return;
- if(!enabled){if(state.buildings){v.scene.primitives.remove(state.buildings);state.buildings=null}return}
- if(!state.ionToken){notice('atlasMapStatus','3D binalar için Cesium ion erişim anahtarı gerekiyor.');$('atlasLayerBuildings').checked=false;return}
+ const C=window.Cesium,v=state.globe;
+ state.buildingsEnabled=Boolean(enabled);storeLayerPrefs();setLayerStatus();
+ if(!v||!C)return;
+ const request=++state.buildingsRequest;
+ if(!enabled){
+  if(state.buildings){try{v.scene.primitives.remove(state.buildings)}catch(e){}state.buildings=null}
+  v.scene.requestRender();notice('atlasMapStatus','3D şehir binaları kapatıldı.');return;
+ }
+ if(state.buildings){v.scene.requestRender();return}
+ if(!await loadConfig()){
+  if(request===state.buildingsRequest){state.buildingsEnabled=false;storeLayerPrefs();setLayerStatus();notice('atlasMapStatus','3D binalar açılamadı: Cesium ion anahtarı alınamadı.')}
+  return;
+ }
  try{
-  C.Ion.defaultAccessToken=state.ionToken;notice('atlasMapStatus','3D şehir binaları yükleniyor…');
-  state.buildings=await C.createOsmBuildingsAsync();v.scene.primitives.add(state.buildings);
-  notice('atlasMapStatus','3D şehir binaları katmanı etkin.');
- }catch(e){state.buildings=null;$('atlasLayerBuildings').checked=false;notice('atlasMapStatus','3D binalar yüklenemedi. Cesium ion ayarlarını kontrol et.')}
+  C.Ion.defaultAccessToken=state.ionToken;notice('atlasMapStatus','OpenStreetMap 3D bina katmanı yükleniyor…');
+  const tileset=await C.createOsmBuildingsAsync();
+  if(request!==state.buildingsRequest||!state.buildingsEnabled){try{tileset.destroy()}catch(e){}return}
+  state.buildings=v.scene.primitives.add(tileset);v.scene.requestRender();
+  notice('atlasMapStatus','3D şehir binaları etkin.');
+ }catch(e){
+  if(request===state.buildingsRequest){state.buildings=null;state.buildingsEnabled=false;storeLayerPrefs();setLayerStatus();notice('atlasMapStatus','3D binalar yüklenemedi. Cesium ion token erişimini, 3D Tiles izinlerini ve ağ bağlantısını kontrol et.')}
+ }
 }
 function pickCartographic(position){
  const C=window.Cesium,v=state.globe;if(!C||!v)return null;
@@ -200,7 +262,7 @@ async function initGlobe(){
    const C=window.Cesium;
    await loadConfig();
    if(state.ionToken)C.Ion.defaultAccessToken=state.ionToken;
-   const imagery=createImagery('satellite');
+   const imagery=createImagery(state.imageryStyle);
    state.globe=new C.Viewer(host,{imageryProvider:imagery,terrainProvider:new C.EllipsoidTerrainProvider(),
     animation:false,timeline:false,baseLayerPicker:false,geocoder:false,homeButton:false,sceneModePicker:false,
     navigationHelpButton:false,fullscreenButton:false,infoBox:false,selectionIndicator:false,scene3DOnly:true,
@@ -217,7 +279,7 @@ async function initGlobe(){
    viewer.camera.setView({destination:C.Cartesian3.fromDegrees(15,22,24500000)});
    state.globeLoading=false;
    if(state.countries.length)addCountryPins();
-   bindGlobeControls();setLayerStatus();loadBorders();
+   bindGlobeControls();setLayerStatus();loadBorders();if(state.terrainEnabled)enableTerrain(true);if(state.buildingsEnabled)enableBuildings(true);
    setTimeout(()=>{try{viewer.resize();viewer.scene.requestRender()}catch(e){}},180);
    if(window.ResizeObserver){state.resizeObserver=new ResizeObserver(()=>{try{viewer.resize();viewer.scene.requestRender()}catch(e){}});state.resizeObserver.observe(host)}
    notice('atlasMapStatus',state.ionToken?'3D uydu dünyası hazır. İsteğe bağlı 3D arazi ve bina katmanları kullanılabilir.':'3D uydu dünyası hazır. Uydu, topoğrafik ve sokak katmanları kullanılabilir; 3D arazi/bina için Cesium ion anahtarı gerekir.');
@@ -282,7 +344,15 @@ async function mapSearch(){
  const q=$('atlasMapSearch').value.trim();if(!q)return;
  notice('atlasMapStatus','Konum aranıyor…');const resultBox=$('atlasMapResults');if(resultBox)resultBox.innerHTML='';
  try{
-  const rows=await api('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&addressdetails=1&q='+encodeURIComponent(q));
+  const cacheKey=q.toLocaleLowerCase('tr-TR');
+  let rows=state.searchCache.get(cacheKey);
+  if(!rows){
+   const wait=Math.max(0,1100-(Date.now()-state.lastSearchAt));
+   if(wait)await new Promise(resolve=>setTimeout(resolve,wait));
+   state.lastSearchAt=Date.now();
+   rows=await api('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&addressdetails=1&q='+encodeURIComponent(q));
+   state.searchCache.set(cacheKey,rows);
+  }
   if(!rows.length){notice('atlasMapStatus','Konum bulunamadı. Farklı bir şehir, ülke veya yer adı dene.');return}
   initGlobe();let waitCount=0;
   const fly=()=>{
@@ -305,7 +375,10 @@ async function mapSearch(){
    }));
    notice('atlasMapStatus',`${rows.length} konum bulundu · OpenStreetMap / Nominatim.`);
   };fly();
- }catch(e){notice('atlasMapStatus','Konum araması başarısız oldu. Daha sonra tekrar dene.')}
+ }catch(e){
+  const message=String(e?.message||'');
+  notice('atlasMapStatus',/429/.test(message)?'Konum servisi kısa süreli istek sınırına ulaştı. Biraz bekleyip tekrar dene.':'Konum araması başarısız oldu. Bağlantıyı kontrol edip tekrar dene.');
+ }
 }
 function research(){
  const q=$('atlasResearchPrompt').value.trim();if(!q)return;
@@ -319,7 +392,12 @@ function renderSaved(){
  root.querySelectorAll('[data-atlas-remove]').forEach(b=>b.onclick=()=>{state.saved.splice(+b.dataset.atlasRemove,1);store();renderSaved()});
 }
 root.querySelectorAll('[data-atlas-tab]').forEach(b=>b.addEventListener('click',()=>tab(b.dataset.atlasTab)));
-$('atlasCountrySearch')?.addEventListener('input',e=>{if(state.tab!=='countries')tab('countries');const q=e.target.value.toLocaleLowerCase('tr');renderCountries(state.countries.filter(c=>c.name.common.toLocaleLowerCase('tr').includes(q)||c.region?.toLocaleLowerCase('tr').includes(q)).slice(0,80))});
+$('atlasCountrySearch')?.addEventListener('input',e=>{
+  if(state.tab!=='countries')tab('countries');
+  const q=e.target.value.toLocaleLowerCase('tr');
+  const filter=()=>renderCountries(state.countries.filter(c=>c.name.common.toLocaleLowerCase('tr').includes(q)||c.name.official?.toLocaleLowerCase('tr').includes(q)||c.region?.toLocaleLowerCase('tr').includes(q)).slice(0,80));
+  if(state.countries.length)filter();else loadOverview().then(filter);
+ });
 $('atlasCompanyForm')?.addEventListener('submit',e=>{e.preventDefault();companySearch($('atlasCompanySearch').value)});
 $('atlasTechRefresh')?.addEventListener('click',techSearch);
 $('atlasMapForm')?.addEventListener('submit',e=>{e.preventDefault();mapSearch()});
