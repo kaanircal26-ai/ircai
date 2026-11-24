@@ -11,23 +11,21 @@ Bu proje WebView değildir. React Native + Expo ile Android ve iOS için hazırl
 - **Projeler:** Proje oluşturma, kategori, açıklama, hedef, kilometre taşları, proje görevleri, notlar ve AI ile proje üzerinde çalışma.
 - **Creative Studio:** Fikir, görsel, video storyboard, marka, içerik ve kampanya çalışma modları. Görsel modu mevcut `/api/generate-image` servisini kullanır.
 - **Görevler & Takvim:** Aylık takvim, gün seçimi, görev/etkinlik ekleme, öncelik, tamamlama ve silme.
-- **TOZRA Web:** Mobil ekrandan web sitesi briefi hazırlama ve TOZRA AI sohbetine aktarma. Tam kod editörü ve canlı önizleme web sürümündedir.
+- **TOZRA Atlas:** Native harita, uydu/arazi/standart katmanlar, 3D bina görünümü, yer arama ve kayıtlı konumlar.
 - **Sesli giriş:** Mikrofonla kayıt ve mevcut `/api/transcribe` servisiyle konuşmayı metne çevirme.
 - **Kişisel hafıza:** Kullanıcının eklediği bağlam kayıtları ve hassas bilgileri engelleyen temel filtre.
 - **Bulut senkronizasyonu:** Web projesinin kullandığı `public.user_data` tablosu ve aynı JSON anahtarlarıyla projeler, görevler, takvim, notlar, haftalık plan, sohbet ve hafıza verilerinin hesap bazında eşitlenmesi. Tablo/RLS kurulumu yoksa cihaz içi kayıt devam eder ve senkronizasyon hatası konsola yazılır.
 
 ## Önemli kapsam notları
 
-- Atlas, Nexus, Universe, Market ve Social modülleri web sürümünde bulunur; bu kaynak paketinde ayrı native ekranlar olarak henüz taşınmamıştır.
+- Web Atlas'ın Cesium tabanlı gerçek 3D dünya küresi native React Native harita bileşeniyle birebir aynı değildir. Bu pakette native uydu/arazi haritası, 3D binalar, arama ve kayıtlı konumlar vardır; Cesium'un 3D küre, özel arazi/terrain ve web'e özgü katmanlarının birebir native karşılığı henüz yoktur.
 - Web'deki WebRTC gerçek zamanlı çift yönlü sesli sohbet bu sürümde native WebRTC olarak taşınmadı. Mobilde mikrofon kaydı → sunucu transkripsiyonu → yazılı AI sohbet akışı vardır.
 - Video Studio web sürümünde olduğu gibi senaryo/storyboard/üretim planı oluşturur; doğrudan video render etmez.
 - Harici servis anahtarları uygulama içine konulmaz. AI, görsel, transkripsiyon ve Atlas sunucu ayarları mevcut `tozra.com.tr` API'lerinden alınır.
 
 ## Kurulum
 
-Bu arşivde mobil kaynakların önceki eksik `src/` ve `assets/` dosyaları tamamlandı. Ana ekran daha kapsamlı bir Creative Workspace düzenine geçirildi.
-
-Node.js 22 veya üzeri gerekir. Paket bağımlılıklarını kurduktan sonra Expo SDK uyumluluğunu `npx expo install --fix` ile eşitle.
+Node.js 22 veya üzeri gerekir.
 
 ```bash
 npm install
