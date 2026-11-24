@@ -563,13 +563,13 @@ const s=StyleSheet.create({
  splashLine:{fontSize:12,color:'#B9B2A7',letterSpacing:1},
 
  splashBurstRoot:{flex:1,backgroundColor:'#0B0C0F',alignItems:'center',justifyContent:'center',overflow:'hidden'},
- splashBurstFlash:{...StyleSheet.absoluteFillObject,backgroundColor:'#F4F5F4',zIndex:5},
+ splashBurstFlash:{position:'absolute',top:0,left:0,right:0,bottom:0,backgroundColor:'#F4F5F4',zIndex:5},
  splashBurstMarkWrap:{alignItems:'center',justifyContent:'center',zIndex:2},
  splashBurstBadge:{width:112,height:112,borderRadius:34,backgroundColor:'#171A18',borderWidth:2,borderColor:'#A6DC54',alignItems:'center',justifyContent:'center',shadowColor:'#9CE04F',shadowOpacity:0.55,shadowRadius:26,elevation:10},
  splashBurstGlyph:{fontSize:62,fontWeight:'900',color:'#A6DC54',letterSpacing:-2},
  splashBurstWordmark:{fontSize:32,fontWeight:'900',color:'#F4F5F4',letterSpacing:8,marginTop:16,marginLeft:8},
  splashBurstSubWrap:{position:'absolute',bottom:72,alignItems:'center',zIndex:2},
- splashBurstTag:{fontSize:10,fontWeight:'800',letterSpacing:4,color:'#A6DC54'}
+ splashBurstTag:{fontSize:10,fontWeight:'800',letterSpacing:4,color:'#A6DC54'},
 
 
  trhTopBar:{backgroundColor:'#F4F5F4',borderBottomColor:'rgba(23,26,24,0.07)'},
