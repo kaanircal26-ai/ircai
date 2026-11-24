@@ -441,12 +441,12 @@ function MainApp({session}) {
 function CinematicIntro({onDone}) {
  const progress=useRef(new Animated.Value(0)).current;
  useEffect(()=>{
-  Animated.timing(progress,{toValue:1,duration:4700,easing:Easing.inOut(Easing.cubic),useNativeDriver:true}).start(({finished})=>{if(finished)onDone();});
+  Animated.timing(progress,{toValue:1,duration:4700,easing:Easing.inOut(Easing.cubic),useNativeDriver:false}).start(({finished})=>{if(finished)onDone();});
  },[]);
  const spin=progress.interpolate({inputRange:[0,1],outputRange:['-35deg','325deg']});
  const scale=progress.interpolate({inputRange:[0,.35,.7,1],outputRange:[.72,1.08,1,1]});
  const opacity=progress.interpolate({inputRange:[0,.12,.82,1],outputRange:[0,1,1,0]});
- const line=progress.interpolate({inputRange:[0,.35,.7,1],outputRange:[0,1,1,1]});
+ const lineWidth=progress.interpolate({inputRange:[0,1],outputRange:['0%','100%']});
  return <View style={s.introScreen}>
   <Animated.View style={[s.introGlow,{opacity,transform:[{scale}]}]}/>
   <Animated.View style={[s.introOrbit,{opacity,transform:[{rotate:spin}]}]}><View style={s.introOrbitDot}/></Animated.View>
@@ -456,7 +456,7 @@ function CinematicIntro({onDone}) {
    <Text style={s.introWord}>TOZRA</Text>
    <Text style={s.introSub}>CREATIVE INTELLIGENCE</Text>
   </Animated.View>
-  <View style={s.introBottom}><View style={s.introLine}><Animated.View style={[s.introLineFill,{width:line.interpolate?line.interpolate({inputRange:[0,1],outputRange:['0%','100%']}):'100%'}]}/></View><Text style={s.introCaption}>A NEW SPACE TO CREATE</Text></View>
+  <View style={s.introBottom}><View style={s.introLine}><Animated.View style={[s.introLineFill,{width:lineWidth}]}/></View><Text style={s.introCaption}>A NEW SPACE TO CREATE</Text></View>
  </View>;
 }
 
