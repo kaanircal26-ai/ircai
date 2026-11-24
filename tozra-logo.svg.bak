@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="TOZRA">
+  <rect width="512" height="512" rx="116" fill="#171A17"/>
+  <path d="M112 132h288v66H288v183h-64V198H112z" fill="#EAE9E2"/>
+  <path d="M112 132h288" stroke="#C7F36B" stroke-width="15" stroke-linecap="round"/>
+  <path d="M336 336l48 48" stroke="#C7F36B" stroke-width="22" stroke-linecap="round"/>
+  <circle cx="384" cy="384" r="23" fill="#C7F36B"/>
+</svg>
