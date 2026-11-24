@@ -4023,6 +4023,24 @@ function buildProjectContext(project){
  ].join("\n");
 }
 
+function buildTozraBaselineContext(){
+ return [
+  "[TOZRA ANA PROJE PROFİLİ — KULLANICININ DAHA ÖNCE PAYLAŞTIĞI BİLGİLER]",
+  "Proje adı: TOZRA",
+  "Amaç: Yapay zekâ destekli kişisel asistan ve yaratıcı üretim platformu.",
+  "Ana kullanım alanları: soru-cevap ve araştırma; proje geliştirme desteği; görsel, video ve ses odaklı dijital üretim süreçlerine yardım.",
+  "Ürün modülleri/hedefleri: gelişmiş AI asistanı; kişisel ve proje hafızası; görsel ve video analizi; sesli asistan; Creative Studio; TOZRA Atlas; web ve mobil deneyim.",
+  "Teknik altyapı — mevcut kaynak kodda görülenler: HTML/CSS/JavaScript tabanlı web arayüzü; Vercel üzerinde barındırma ve /api sunucu fonksiyonları; Supabase ile kimlik doğrulama ve hesap verisi senkronizasyonu; Groq Chat Completions API.",
+  "AI modeli — mevcut api/chat.js dosyasında tanımlı: qwen/qwen3.8-27b. Dağıtım ortamında farklı bir sürüm çalıştırılıyorsa bu bilgi güncellenmelidir.",
+  "Araştırma entegrasyonu: Tavily API kodu mevcut; çalışması için Vercel ortamında TAVILY_API_KEY gerekir.",
+  "Hafıza yapısı: tarayıcı tarafında memory.js ile kişisel kayıtlar; proje kayıtları tarayıcı depolamasında tozra-projects anahtarıyla tutulur; mevcut bulut senkronizasyonu user_data üzerinden yürütülür.",
+  "Geliştirme ilkesi: çalışan özellikleri koru; mevcut tasarımı ve mimariyi gereksiz yere baştan yazma; değişiklikleri test ederek ve hedefli biçimde yap.",
+  "Öncelikli geliştirme alanları: AI yanıt kalitesi ve devamlılığı; proje/kişisel hafıza aktarımı; mobil deneyim; sesli sohbet; Creative Studio; Atlas.",
+  "Doğrulanmamış noktalar: gerçek kullanıcı sayısı, canlı API anahtarlarının/entegrasyonların aktifliği, üretim ortamındaki gerçek model sürümü, tüm modüllerin tamamlanma durumu.",
+  "Bu profil kişisel hafıza değildir; TOZRA ürün/proje bağlamıdır. Kişisel hafıza boş olsa bile bu proje profilini kullan."
+ ].join("\n");
+}
+
 function findRelevantProjectContext(prompt){
  const query=String(prompt||"").toLocaleLowerCase("tr-TR");
  const normalizedQuery=query.replace(/[ıİ]/g,"i");
@@ -4038,28 +4056,27 @@ function findRelevantProjectContext(prompt){
  const tozraProject=candidates.find(project=>normalize(project.name)==="tozra");
  const active=getCurrentProject();
 
- // A general-chat query naming TOZRA must use the saved TOZRA project,
- // even when no project tab is currently open.
  const selected=named ||
   (/\btozra\b/.test(query) ? tozraProject : null) ||
   (active && /\b(aktif proje|bu proje|mevcut projem|projem)\b/.test(query) ? active : null) ||
   (candidates.length===1 ? candidates[0] : null);
 
+ // TOZRA is the app's own product profile. Supply it even when the user
+ // has not created a separate project card in the workspace.
+ const baseline=/\btozra\b/.test(query) ? buildTozraBaselineContext() : "";
  if(!selected){
-  console.warn("[TOZRA project memory] No matching project found.", {
-   projectCount:candidates.length,
-   projectNames:candidates.map(project=>project.name)
-  });
-  return "";
+  return baseline;
  }
 
- const context=buildProjectContext(selected);
- console.info("[TOZRA project memory] Context selected.", {
+ const savedContext=buildProjectContext(selected);
+ const combined=[baseline,savedContext].filter(Boolean).join("\n\n");
+ console.info("[TOZRA project memory] Context selected.",{
   projectName:selected.name,
   projectId:selected.id,
-  contextLength:context.length
+  contextLength:combined.length,
+  baselineIncluded:Boolean(baseline)
  });
- return typeof context==="string" ? context.slice(0,10000) : "";
+ return combined.slice(0,10000);
 }
 
 $("projectNotes").addEventListener("input",()=>{
