@@ -1,36 +1,12 @@
 {
-  "name": "tozra-mobile",
-  "version": "1.5.0",
+  "name": "tozra",
+  "version": "1.0.0",
   "private": true,
-  "main": "node_modules/expo/AppEntry.js",
+  "description": "TOZRA Creative Intelligence",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
-    "start": "expo start",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
-    "web": "expo start --web",
-    "doctor": "expo-doctor"
-  },
-  "dependencies": {
-    "@expo/vector-icons": "^15.0.3",
-    "@react-native-async-storage/async-storage": "2.2.0",
-    "@supabase/supabase-js": "^2.57.4",
-    "expo": "~54.0.25",
-    "expo-audio": "~1.1.1",
-    "expo-constants": "~18.0.10",
-    "expo-file-system": "~19.0.19",
-    "expo-image-manipulator": "~14.0.7",
-    "expo-image-picker": "~17.0.8",
-    "expo-status-bar": "~3.0.9",
-    "expo-video-thumbnails": "~10.0.7",
-    "react": "19.1.0",
-    "react-native": "0.81.5",
-    "react-native-maps": "1.20.1",
-    "react-native-safe-area-context": "~5.6.0",
-    "react-native-screens": "~4.16.0",
-    "react-native-url-polyfill": "^2.0.0"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.25.2",
-    "expo-doctor": "^1.17.11"
+    "check": "node --check tozra-web.js && node --check api/_auth.js && node --check api/config.js && node --check api/chat.js && node --check api/transcribe.js && node --check api/realtime-session.js && node --check api/generate-image.js && node --check memory.js && node --check voice.js && node --check inline-0.js && node --check inline-1.js && node --check inline-2.js && node --check inline-3.js && node --check inline-4.js && node --check inline-5.js && node --check inline-6.js && node tests/tozra-web.test.js"
   }
 }
