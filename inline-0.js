@@ -868,15 +868,30 @@ function buildProjectContext(project){
 
 function findRelevantProjectContext(prompt){
  const query=String(prompt||"").toLocaleLowerCase("tr-TR");
- if(!/\b(proje|projeyi|projem|projeme|tozra|uygulama|ürünüm|ürün)\b/.test(query))return "";
+ const projectIntent=/\b(proje|projeyi|projem|projeme|tozra|uygulama|ürünüm|ürün)\b/.test(query);
+ if(!projectIntent)return "";
+
  const candidates=Array.isArray(projects)?projects:[];
+ const normalize=value=>String(value||"")
+  .trim().toLocaleLowerCase("tr-TR")
+  .replace(/[ıİ]/g,"i");
+
  const named=candidates.find(project=>{
-  const name=String(project.name||"").trim().toLocaleLowerCase("tr-TR");
-  return name.length>=3 && query.includes(name);
+  const name=normalize(project.name);
+  return name.length>=3 && normalize(query).includes(name);
  });
+ const tozraProject=candidates.find(project=>normalize(project.name)==="tozra");
  const active=getCurrentProject();
- const selected=named || (active && /\b(aktif proje|bu proje|mevcut projem|tozra|projem)\b/.test(query) ? active : null);
- return selected ? buildProjectContext(selected).slice(0,10000) : "";
+
+ // Öncelik: açık isim eşleşmesi, TOZRA adı, aktif proje, tek kayıtlı proje.
+ const selected=named ||
+  (/\btozra\b/.test(query) ? tozraProject : null) ||
+  (active && /\b(aktif proje|bu proje|mevcut projem|projem)\b/.test(query) ? active : null) ||
+  (candidates.length===1 ? candidates[0] : null);
+
+ if(!selected)return "";
+ const context=buildProjectContext(selected);
+ return typeof context==="string" ? context.slice(0,10000) : "";
 }
 
 $("projectNotes").addEventListener("input",()=>{
