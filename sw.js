@@ -1,4 +1,4 @@
-/* TOZRA Service Worker — v21
+/* TOZRA Service Worker — v22
    - Kurulumda tek bir eksik dosya yüzünden tüm yükleme iptal olmaz.
    - Yalnızca TOZRA önbellekleri temizlenir.
    - API ve kullanıcıya özel yanıtlar önbelleğe alınmaz.
@@ -6,13 +6,13 @@
 "use strict";
 
 const CACHE_PREFIX = "tozra-";
-const CACHE_NAME = "tozra-vision-v31";
+const CACHE_NAME = "tozra-vision-v32";
 const APP_SHELL = [
   "/",
   "/manifest.json",
   "/apple-touch-icon.PNG",
   "/tozra-logo.svg",
-  "/voice.js?v=21"
+  "/voice.js?v=22"
 ];
 
 self.addEventListener("install", event => {

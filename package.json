@@ -7,6 +7,6 @@
     "node": ">=18"
   },
   "scripts": {
-    "check": "node --check atlas.js && node --check api/_auth.js && node --check api/config.js && node --check api/atlas-config.js && node --check api/chat.js && node --check api/transcribe.js && node --check api/realtime-session.js && node --check api/generate-image.js && node --check memory.js && node --check voice.js && node --check inline-0.js && node --check inline-1.js && node --check inline-2.js && node --check inline-3.js && node --check inline-4.js && node --check inline-5.js && node --check inline-6.js && node tests/atlas-config.test.js && node tests/memory.test.js && node tests/chat-quality.test.js"
+    "check": "node --check atlas.js && node --check api/_auth.js && node --check api/config.js && node --check api/atlas-config.js && node --check api/chat.js && node --check api/transcribe.js && node --check api/realtime-session.js && node --check api/generate-image.js && node --check memory.js && node --check voice.js && node --check inline-0.js && node --check inline-1.js && node --check inline-2.js && node --check inline-3.js && node --check inline-4.js && node --check inline-5.js && node --check inline-6.js && node tests/atlas-config.test.js && node tests/memory.test.js && node tests/chat-quality.test.js && node tests/voice-mobile.test.js"
   }
 }

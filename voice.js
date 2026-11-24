@@ -421,9 +421,18 @@
 
   const BrowserSpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
+  function resumeBrowserCapture(session, delay = 250) {
+    window.setTimeout(() => {
+      if (voiceSession !== session || session.muted || session.processing) return;
+      if (session.mediaRecorderMode) startMediaRecorderCapture(session);
+      else startBrowserRecognition(session);
+    }, delay);
+  }
+
   function speakBrowserReply(text, session) {
     if (!window.speechSynthesis || !text) {
       setStatus("Yanıt hazır. Tarayıcın sesli okumayı desteklemiyor.", session.target.status);
+      resumeBrowserCapture(session);
       return;
     }
     window.speechSynthesis.cancel();
@@ -434,7 +443,7 @@
       .replace(/\\s+([,.!?;:])/g, "$1")
       .trim();
     if (!speechText) {
-      if (voiceSession === session && !session.muted) startBrowserRecognition(session);
+      resumeBrowserCapture(session, 0);
       return;
     }
     const utterance = new SpeechSynthesisUtterance(speechText);
@@ -445,12 +454,14 @@
     utterance.onend = () => {
       if (voiceSession === session && !session.muted) {
         setStatus("Seni dinliyorum…", session.target.status);
-        if (session.mediaRecorderMode) startMediaRecorderCapture(session);
-        else startBrowserRecognition(session);
+        resumeBrowserCapture(session, 120);
       }
     };
     utterance.onerror = () => {
-      if (voiceSession === session) setStatus("Yanıt hazır. Tekrar konuşabilirsin.", session.target.status);
+      if (voiceSession === session) {
+        setStatus("Sesli yanıt tamamlanamadı. Dinleme yeniden başlatılıyor…", session.target.status);
+        resumeBrowserCapture(session, 450);
+      }
     };
     window.speechSynthesis.speak(utterance);
   }
@@ -486,7 +497,7 @@
     } catch (error) {
       console.error("TOZRA ücretsiz sesli sohbet:", error);
       setStatus("Yanıt alınamadı: " + (error.message || "Bağlantı hatası"), session.target.status);
-      if (voiceSession === session) startBrowserRecognition(session);
+      if (voiceSession === session) resumeBrowserCapture(session, 350);
     }
   }
 
@@ -579,8 +590,15 @@
         session.localStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
       }
       const candidates = ["audio/mp4", "audio/webm;codecs=opus", "audio/webm", "audio/ogg;codecs=opus"];
-      const mimeType = candidates.find(type => !MediaRecorder.isTypeSupported || MediaRecorder.isTypeSupported(type)) || "";
-      const recorder = new MediaRecorder(session.localStream, mimeType ? { mimeType } : undefined);
+      const supportsMimeProbe = typeof MediaRecorder.isTypeSupported === "function";
+      const mimeType = supportsMimeProbe ? (candidates.find(type => MediaRecorder.isTypeSupported(type)) || "") : "";
+      let recorder;
+      try {
+        recorder = new MediaRecorder(session.localStream, mimeType ? { mimeType } : undefined);
+      } catch (mimeError) {
+        // Some Safari/WebKit builds expose MediaRecorder but reject explicit MIME hints.
+        recorder = new MediaRecorder(session.localStream);
+      }
       session.recorder = recorder;
       session.mimeType = recorder.mimeType || mimeType || "audio/mp4";
       session.audioChunks = [];
