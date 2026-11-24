@@ -4025,15 +4025,41 @@ function buildProjectContext(project){
 
 function findRelevantProjectContext(prompt){
  const query=String(prompt||"").toLocaleLowerCase("tr-TR");
- if(!/\b(proje|projeyi|projem|projeme|tozra|uygulama|ürünüm|ürün)\b/.test(query))return "";
+ const normalizedQuery=query.replace(/[ıİ]/g,"i");
+ const projectIntent=/\b(proje|projeyi|projem|projeme|tozra|uygulama|ürünüm|ürün)\b/.test(query);
+ if(!projectIntent)return "";
+
  const candidates=Array.isArray(projects)?projects:[];
+ const normalize=value=>String(value||"").trim().toLocaleLowerCase("tr-TR").replace(/[ıİ]/g,"i");
  const named=candidates.find(project=>{
-  const name=String(project.name||"").trim().toLocaleLowerCase("tr-TR");
-  return name.length>=3 && query.includes(name);
+  const name=normalize(project.name);
+  return name.length>=3 && normalizedQuery.includes(name);
  });
+ const tozraProject=candidates.find(project=>normalize(project.name)==="tozra");
  const active=getCurrentProject();
- const selected=named || (active && /\b(aktif proje|bu proje|mevcut projem|tozra|projem)\b/.test(query) ? active : null);
- return selected ? buildProjectContext(selected).slice(0,10000) : "";
+
+ // A general-chat query naming TOZRA must use the saved TOZRA project,
+ // even when no project tab is currently open.
+ const selected=named ||
+  (/\btozra\b/.test(query) ? tozraProject : null) ||
+  (active && /\b(aktif proje|bu proje|mevcut projem|projem)\b/.test(query) ? active : null) ||
+  (candidates.length===1 ? candidates[0] : null);
+
+ if(!selected){
+  console.warn("[TOZRA project memory] No matching project found.", {
+   projectCount:candidates.length,
+   projectNames:candidates.map(project=>project.name)
+  });
+  return "";
+ }
+
+ const context=buildProjectContext(selected);
+ console.info("[TOZRA project memory] Context selected.", {
+  projectName:selected.name,
+  projectId:selected.id,
+  contextLength:context.length
+ });
+ return typeof context==="string" ? context.slice(0,10000) : "";
 }
 
 $("projectNotes").addEventListener("input",()=>{
