@@ -65,59 +65,47 @@ async function mediaPayload(asset,kind) {
 }
 
 
-function HomeScreen({data,setData,onTab}) {
- const [newTask,setNewTask]=useState('');
- const done=data.tasks.filter(x=>x.done).length;
- const today=data.tasks.filter(x=>x.date===dateKey());
- const completion=data.tasks.length?Math.round(done/data.tasks.length*100):0;
+function HomeScreen({data,setData,onTab,onOpenChat}) {
+ const [prompt,setPrompt]=useState('');
  const dateLabel=new Date().toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long'});
- function add(){const title=newTask.trim();if(!title)return;setData(v=>({...v,tasks:[{id:uid(),title,date:dateKey(),priority:'normal',done:false},...v.tasks]}));setNewTask('');}
- const modules=[
-  ['chat','TOZRA AI','Fikirlerini geliştir','sparkles','moduleAI'],
-  ['studio','Creative Studio','Görsel ve içerik üret','color-palette','moduleStudio'],
-  ['projects','Projeler','Üretimini yönet','layers','moduleProjects'],
-  ['tasks','Planlama','Görevlerini düzenle','calendar','moduleTasks'],
-  ['web','TOZRA Web','Dijital deneyimler oluştur','globe','moduleWeb']
+ const suggestions=[
+  ['bulb-outline','Bir fikri geliştirelim','idea'],
+  ['image-outline','Görsel tasarlayalım','image'],
+  ['videocam-outline','Video projesi oluşturalım','video'],
+  ['aperture-outline','Markamı oluşturalım','brand'],
  ];
- return <ScrollView contentContainerStyle={s.newHome} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-  <View style={s.homeGreeting}>
-   <View><Text style={s.homeOverline}>KİŞİSEL YARATICI ALANIN</Text><Text style={s.homeDate}>{dateLabel}</Text></View>
-   <Pressable onPress={()=>onTab('profile')} style={s.homeAvatar}><Ionicons name="person-outline" size={19} color={C.text}/></Pressable>
+ const send=(value=prompt)=>{const text=value.trim();if(!text)return;onOpenChat(text);};
+ return <ScrollView contentContainerStyle={s.aiHome} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+  <View style={s.aiHomeTop}>
+   <View><Text style={s.aiEyebrow}>KİŞİSEL YARATICI ALANIN</Text><Text style={s.aiDate}>{dateLabel}</Text></View>
+   <Pressable onPress={()=>onTab('profile')} style={s.aiProfile}><Ionicons name="person-outline" size={18} color={C.text}/></Pressable>
   </View>
-  <View style={s.homeHero}>
-   <View style={s.heroOrbOne}/><View style={s.heroOrbTwo}/>
-   <Text style={s.heroKicker}>TOZRA CREATIVE INTELLIGENCE</Text>
-   <Text style={s.homeHeroTitle}>Bugün ne{"\n"}inşa ediyoruz?</Text>
-   <Text style={s.homeHeroCopy}>Fikrini keşfet. Projeni geliştir. Üretimini ileri taşı.</Text>
-   <Pressable onPress={()=>onTab('chat')} style={s.heroAction}>
-    <Ionicons name="sparkles" size={17} color="#191714"/><Text style={s.heroActionText}>TOZRA AI ile başla</Text><Ionicons name="arrow-up-right" size={17} color="#191714"/>
-   </Pressable>
-   <Text style={s.heroIndex}>01 / CREATIVE WORKSPACE</Text>
+  <View style={s.aiWelcome}>
+   <View style={s.aiOrb}><View style={s.aiOrbCore}><Ionicons name="sparkles" size={27} color="#201D17"/></View></View>
+   <Text style={s.aiWelcomeKicker}>TOZRA AI</Text>
+   <Text style={s.aiWelcomeTitle}>Merhaba, hoş geldin.</Text>
+   <Text style={s.aiWelcomeCopy}>Ben TOZRA. Fikirlerini geliştirmek, projelerini oluşturmak ve üretim sürecini kolaylaştırmak için buradayım.</Text>
   </View>
-  <View style={s.metricStrip}>
-   <View style={s.metricCell}><Text style={s.metricValue}>{data.projects.length.toString().padStart(2,'0')}</Text><Text style={s.metricLabel}>PROJE</Text></View>
-   <View style={s.metricDivider}/>
-   <View style={s.metricCell}><Text style={s.metricValue}>{data.tasks.length.toString().padStart(2,'0')}</Text><Text style={s.metricLabel}>GÖREV</Text></View>
-   <View style={s.metricDivider}/>
-   <View style={s.metricCell}><Text style={s.metricValue}>{completion}%</Text><Text style={s.metricLabel}>TAMAMLANMA</Text></View>
+  <View style={s.aiComposerCard}>
+   <TextInput value={prompt} onChangeText={setPrompt} placeholder="Aklındaki fikri anlat…" placeholderTextColor={C.faint} multiline style={s.aiPromptInput} returnKeyType="send" onSubmitEditing={()=>send()}/>
+   <View style={s.aiComposerBottom}>
+    <View style={s.aiComposerHint}><Ionicons name="lock-closed-outline" size={12} color={C.faint}/><Text style={s.aiComposerHintText}>Fikirlerin sana özel</Text></View>
+    <Pressable onPress={()=>send()} style={[s.aiSendButton,!prompt.trim()&&{opacity:.45}]}><Ionicons name="arrow-up" size={19} color="#211D17"/></Pressable>
+   </View>
   </View>
-  <View style={s.sectionHeading}><View><Text style={s.sectionEyebrow}>ÇALIŞMA ALANIN</Text><Text style={s.sectionTitle}>Keşfet ve üret</Text></View><Text style={s.sectionCount}>05 MODÜL</Text></View>
-  <View style={s.moduleGrid}>
-   {modules.map((m,i)=><Pressable key={m[0]} onPress={()=>onTab(m[0])} style={[s.moduleTile,i===0&&s.moduleTileFeatured]}>
-    <View style={s.moduleTop}><View style={[s.moduleIcon,i===0&&s.moduleIconFeatured]}><Ionicons name={m[3]} size={20} color={i===0?'#211D17':C.accent}/></View><Ionicons name="arrow-up-right" size={17} color={C.faint}/></View>
-    <Text style={s.moduleTitle}>{m[1]}</Text><Text style={s.moduleCopy}>{m[2]}</Text>
+  <View style={s.aiSectionHead}><Text style={s.aiSectionTitle}>Nereden başlayalım?</Text><Text style={s.aiSectionMeta}>HIZLI BAŞLANGIÇ</Text></View>
+  <View style={s.aiSuggestionGrid}>
+   {suggestions.map(([icon,label,mode],i)=><Pressable key={mode} onPress={()=>onOpenChat(label)} style={s.aiSuggestion}>
+    <View style={s.aiSuggestionIcon}><Ionicons name={icon} size={19} color={C.accent}/></View>
+    <Text style={s.aiSuggestionText}>{label}</Text><Ionicons name="arrow-up-right" size={16} color={C.faint}/>
    </Pressable>)}
   </View>
-  <View style={s.sectionHeading}><View><Text style={s.sectionEyebrow}>BUGÜNÜN ODAĞI</Text><Text style={s.sectionTitle}>Görevlerin</Text></View><Pressable onPress={()=>onTab('tasks')}><Text style={s.sectionLink}>Tümünü gör ↗</Text></Pressable></View>
-  <View style={s.focusPanel}>
-   <View style={s.focusTop}><Text style={s.focusCaption}>GÜNLÜK İLERLEME</Text><Text style={s.focusPercent}>{today.filter(x=>x.done).length}/{today.length} tamamlandı</Text></View>
-   <View style={s.progressTrack}><View style={[s.progressFill,{width:`${today.length?today.filter(x=>x.done).length/today.length*100:0}%`} ]}/></View>
-   <View style={s.addRow}><Field value={newTask} onChangeText={setNewTask} placeholder="Yeni bir görev ekle…" style={{flex:1,marginBottom:0}} onSubmitEditing={add}/><Pressable onPress={add} style={s.newAddButton}><Ionicons name="plus" color="#211D17" size={21}/></Pressable></View>
-   {today.slice(0,4).map(t=><TaskRow key={t.id} task={t} onToggle={()=>setData(v=>({...v,tasks:v.tasks.map(z=>z.id===t.id?{...z,done:!z.done}:z)}))} onDelete={()=>setData(v=>({...v,tasks:v.tasks.filter(z=>z.id!==t.id)}))}/> )}
-   {!today.length?<Text style={s.focusEmpty}>Bugün için bir görev ekleyerek başlayabilirsin.</Text>:null}
+  <View style={s.aiWorkspaceHead}><View><Text style={s.aiSectionMeta}>ÇALIŞMA ALANIN</Text><Text style={s.aiSectionTitle}>Üretmeye devam et</Text></View></View>
+  <View style={s.aiWorkspaceRow}>
+   <Pressable onPress={()=>onTab('studio')} style={s.aiWorkspaceTile}><View style={s.aiWorkspaceIcon}><Ionicons name="color-palette-outline" size={20} color={C.accent}/></View><Text style={s.aiWorkspaceName}>Creative Studio</Text><Text style={s.aiWorkspaceDesc}>Tasarım ve içerik</Text></Pressable>
+   <Pressable onPress={()=>onTab('projects')} style={s.aiWorkspaceTile}><View style={s.aiWorkspaceIcon}><Ionicons name="layers-outline" size={20} color={C.accent}/></View><Text style={s.aiWorkspaceName}>Projelerim</Text><Text style={s.aiWorkspaceDesc}>{data.projects.length} aktif kayıt</Text></Pressable>
   </View>
-  <View style={s.sectionHeading}><View><Text style={s.sectionEyebrow}>NOT DEFTERİ</Text><Text style={s.sectionTitle}>Aklındaki fikirler</Text></View></View>
-  <View style={s.notesPanel}><Ionicons name="document-text-outline" size={19} color={C.accent}/><Field value={data.notes} onChangeText={v=>setData(old=>({...old,notes:v}))} placeholder="Fikrini kaybetme; buraya not al…" multiline style={s.notesField}/></View>
+  <View style={s.aiBottomNote}><Text style={s.aiBottomNoteText}>TOZRA · THINK. CREATE. BUILD.</Text></View>
  </ScrollView>;
 }
 
@@ -441,22 +429,22 @@ function MainApp({session}) {
 function CinematicIntro({onDone}) {
  const progress=useRef(new Animated.Value(0)).current;
  useEffect(()=>{
-  Animated.timing(progress,{toValue:1,duration:4700,easing:Easing.inOut(Easing.cubic),useNativeDriver:false}).start(({finished})=>{if(finished)onDone();});
+  Animated.timing(progress,{toValue:1,duration:4700,easing:Easing.inOut(Easing.cubic),useNativeDriver:true}).start(({finished})=>{if(finished)onDone();});
  },[]);
  const spin=progress.interpolate({inputRange:[0,1],outputRange:['-35deg','325deg']});
  const scale=progress.interpolate({inputRange:[0,.35,.7,1],outputRange:[.72,1.08,1,1]});
  const opacity=progress.interpolate({inputRange:[0,.12,.82,1],outputRange:[0,1,1,0]});
- const lineWidth=progress.interpolate({inputRange:[0,1],outputRange:['0%','100%']});
+ const line=progress.interpolate({inputRange:[0,.35,.7,1],outputRange:[0,1,1,1]});
  return <View style={s.introScreen}>
   <Animated.View style={[s.introGlow,{opacity,transform:[{scale}]}]}/>
   <Animated.View style={[s.introOrbit,{opacity,transform:[{rotate:spin}]}]}><View style={s.introOrbitDot}/></Animated.View>
   <Animated.View style={[s.introOrbitInner,{opacity,transform:[{rotate:spin}]}]}><View style={s.introOrbitDotSmall}/></Animated.View>
   <Animated.View style={{opacity,alignItems:'center',transform:[{scale}]}}>
-   <View style={s.introMark}><Text style={s.introMarkText}>T</Text></View>
+   <Image source={require('./assets/icon.png')} style={s.introLogoImage} resizeMode="contain"/>
    <Text style={s.introWord}>TOZRA</Text>
    <Text style={s.introSub}>CREATIVE INTELLIGENCE</Text>
   </Animated.View>
-  <View style={s.introBottom}><View style={s.introLine}><Animated.View style={[s.introLineFill,{width:lineWidth}]}/></View><Text style={s.introCaption}>A NEW SPACE TO CREATE</Text></View>
+  <View style={s.introBottom}><View style={s.introLine}><Animated.View style={[s.introLineFill,{width:line.interpolate?line.interpolate({inputRange:[0,1],outputRange:['0%','100%']}):'100%'}]}/></View><Text style={s.introCaption}>A NEW SPACE TO CREATE</Text></View>
  </View>;
 }
 
@@ -483,6 +471,10 @@ const s=StyleSheet.create({
  introLineFill:{height:2,backgroundColor:'#D4C2A0'},
  introCaption:{color:'#8D8578',fontSize:8,letterSpacing:2,marginTop:13,fontWeight:'700'},
 
- connectScreen:{flex:1,backgroundColor:C.bg},connectContent:{padding:18,paddingBottom:28},connectHeader:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',marginBottom:18},connectEyebrow:{fontSize:8,fontWeight:'900',letterSpacing:2.2,color:C.accent},connectTitle:{fontSize:30,fontWeight:'900',color:C.text,letterSpacing:-.8,marginTop:4},connectSubtitle:{fontSize:11,color:C.muted,marginTop:4},connectHeaderIcon:{width:48,height:48,borderRadius:17,backgroundColor:C.surface,borderWidth:1,borderColor:C.line,alignItems:'center',justifyContent:'center'},connectStats:{flexDirection:'row',alignItems:'center',backgroundColor:C.surface,borderWidth:1,borderColor:C.line,borderRadius:18,paddingVertical:15,marginBottom:13},connectStat:{flex:1,alignItems:'center'},connectStatValue:{fontSize:19,fontWeight:'900',color:C.text},connectStatLabel:{fontSize:9,color:C.muted,marginTop:3},connectStatDivider:{width:1,height:28,backgroundColor:C.line},connectQuickActions:{flexDirection:'row',gap:10,marginBottom:18},connectQuickCard:{flex:1,backgroundColor:C.surface,borderWidth:1,borderColor:C.line,borderRadius:17,padding:13},connectQuickIcon:{width:34,height:34,borderRadius:12,backgroundColor:C.surface2,alignItems:'center',justifyContent:'center',marginBottom:9},connectQuickTitle:{fontSize:12,fontWeight:'800',color:C.text},connectQuickHint:{fontSize:9,color:C.muted,marginTop:3},connectSectionTabs:{flexDirection:'row',backgroundColor:C.surface2,borderRadius:13,padding:4,marginBottom:18},connectSectionTab:{flex:1,paddingVertical:9,alignItems:'center',borderRadius:10},connectSectionTabActive:{backgroundColor:C.surface,borderWidth:1,borderColor:C.line},connectSectionTabText:{fontSize:9,color:C.faint,fontWeight:'700'},connectSectionTabTextActive:{color:C.text},connectSearch:{flexDirection:'row',alignItems:'center',gap:9,backgroundColor:C.surface,borderWidth:1,borderColor:C.line,borderRadius:13,paddingHorizontal:12,marginBottom:18},connectSearchInput:{flex:1,color:C.text,fontSize:11,paddingVertical:13},connectSectionHeading:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',marginBottom:10},connectHeading:{fontSize:15,fontWeight:'900',color:C.text,marginBottom:10},connectMuted:{fontSize:9,color:C.faint},connectPersonCard:{flexDirection:'row',alignItems:'center',gap:10,backgroundColor:C.surface,borderWidth:1,borderColor:C.line,borderRadius:16,padding:11,marginBottom:9},connectPersonAvatar:{width:43,height:43,borderRadius:15,alignItems:'center',justifyContent:'center',position:'relative'},connectPersonInitials:{fontSize:12,fontWeight:'900',color:'#F4F0E8'},connectOnlineDot:{position:'absolute',right:-1,bottom:-1,width:10,height:10,borderRadius:5,backgroundColor:'#8DAD8D',borderWidth:2,borderColor:C.surface},connectPersonInfo:{flex:1,minWidth:0},connectPersonName:{fontSize:11,fontWeight:'800',color:C.text},connectPersonHandle:{fontSize:8,color:C.muted,marginTop:3},connectTags:{flexDirection:'row',gap:5,marginTop:6},connectTag:{backgroundColor:C.surface2,borderRadius:6,paddingHorizontal:7,paddingVertical:4},connectTagText:{fontSize:7,color:C.muted,fontWeight:'700'},connectFollowButton:{flexDirection:'row',alignItems:'center',gap:3,backgroundColor:C.accent,borderRadius:9,paddingHorizontal:9,paddingVertical:8},connectFollowingButton:{backgroundColor:C.surface2,borderWidth:1,borderColor:C.line},connectFollowText:{fontSize:8,fontWeight:'900',color:C.bg},connectFollowingText:{color:C.text},connectDisclaimer:{fontSize:9,color:C.faint,lineHeight:15,marginTop:5},connectEmpty:{fontSize:10,color:C.muted,lineHeight:17,backgroundColor:C.surface,borderRadius:14,padding:15},connectSmallAction:{backgroundColor:C.surface2,borderRadius:9,paddingHorizontal:10,paddingVertical:8},connectSmallActionText:{fontSize:8,color:C.text,fontWeight:'800'},connectFeaturePanel:{backgroundColor:C.surface,borderWidth:1,borderColor:C.line,borderRadius:20,padding:20,alignItems:'center',marginTop:4},connectFeatureIcon:{width:58,height:58,borderRadius:20,backgroundColor:C.surface2,alignItems:'center',justifyContent:'center',marginBottom:13},connectFeatureTitle:{fontSize:17,fontWeight:'900',color:C.text},connectFeatureText:{fontSize:10,color:C.muted,textAlign:'center',lineHeight:17,marginTop:8,marginBottom:17},connectPrimaryAction:{flexDirection:'row',alignItems:'center',gap:10,backgroundColor:C.accent,borderRadius:12,paddingHorizontal:16,paddingVertical:12},connectPrimaryActionText:{fontSize:10,fontWeight:'900',color:C.bg},connectMeetingRow:{flexDirection:'row',alignItems:'center',gap:8,backgroundColor:C.surface2,borderRadius:10,padding:10,marginBottom:16,width:'100%'},connectMeetingText:{fontSize:9,color:C.muted,flex:1},connectFooter:{alignItems:'center',paddingTop:20},connectFooterText:{fontSize:7,letterSpacing:2,color:C.faint,fontWeight:'800'}
+ connectScreen:{flex:1,backgroundColor:C.bg},connectContent:{padding:18,paddingBottom:28},connectHeader:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',marginBottom:18},connectEyebrow:{fontSize:8,fontWeight:'900',letterSpacing:2.2,color:C.accent},connectTitle:{fontSize:30,fontWeight:'900',color:C.text,letterSpacing:-.8,marginTop:4},connectSubtitle:{fontSize:11,color:C.muted,marginTop:4},connectHeaderIcon:{width:48,height:48,borderRadius:17,backgroundColor:C.surface,borderWidth:1,borderColor:C.line,alignItems:'center',justifyContent:'center'},connectStats:{flexDirection:'row',alignItems:'center',backgroundColor:C.surface,borderWidth:1,borderColor:C.line,borderRadius:18,paddingVertical:15,marginBottom:13},connectStat:{flex:1,alignItems:'center'},connectStatValue:{fontSize:19,fontWeight:'900',color:C.text},connectStatLabel:{fontSize:9,color:C.muted,marginTop:3},connectStatDivider:{width:1,height:28,backgroundColor:C.line},connectQuickActions:{flexDirection:'row',gap:10,marginBottom:18},connectQuickCard:{flex:1,backgroundColor:C.surface,borderWidth:1,borderColor:C.line,borderRadius:17,padding:13},connectQuickIcon:{width:34,height:34,borderRadius:12,backgroundColor:C.surface2,alignItems:'center',justifyContent:'center',marginBottom:9},connectQuickTitle:{fontSize:12,fontWeight:'800',color:C.text},connectQuickHint:{fontSize:9,color:C.muted,marginTop:3},connectSectionTabs:{flexDirection:'row',backgroundColor:C.surface2,borderRadius:13,padding:4,marginBottom:18},connectSectionTab:{flex:1,paddingVertical:9,alignItems:'center',borderRadius:10},connectSectionTabActive:{backgroundColor:C.surface,borderWidth:1,borderColor:C.line},connectSectionTabText:{fontSize:9,color:C.faint,fontWeight:'700'},connectSectionTabTextActive:{color:C.text},connectSearch:{flexDirection:'row',alignItems:'center',gap:9,backgroundColor:C.surface,borderWidth:1,borderColor:C.line,borderRadius:13,paddingHorizontal:12,marginBottom:18},connectSearchInput:{flex:1,color:C.text,fontSize:11,paddingVertical:13},connectSectionHeading:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',marginBottom:10},connectHeading:{fontSize:15,fontWeight:'900',color:C.text,marginBottom:10},connectMuted:{fontSize:9,color:C.faint},connectPersonCard:{flexDirection:'row',alignItems:'center',gap:10,backgroundColor:C.surface,borderWidth:1,borderColor:C.line,borderRadius:16,padding:11,marginBottom:9},connectPersonAvatar:{width:43,height:43,borderRadius:15,alignItems:'center',justifyContent:'center',position:'relative'},connectPersonInitials:{fontSize:12,fontWeight:'900',color:'#F4F0E8'},connectOnlineDot:{position:'absolute',right:-1,bottom:-1,width:10,height:10,borderRadius:5,backgroundColor:'#8DAD8D',borderWidth:2,borderColor:C.surface},connectPersonInfo:{flex:1,minWidth:0},connectPersonName:{fontSize:11,fontWeight:'800',color:C.text},connectPersonHandle:{fontSize:8,color:C.muted,marginTop:3},connectTags:{flexDirection:'row',gap:5,marginTop:6},connectTag:{backgroundColor:C.surface2,borderRadius:6,paddingHorizontal:7,paddingVertical:4},connectTagText:{fontSize:7,color:C.muted,fontWeight:'700'},connectFollowButton:{flexDirection:'row',alignItems:'center',gap:3,backgroundColor:C.accent,borderRadius:9,paddingHorizontal:9,paddingVertical:8},connectFollowingButton:{backgroundColor:C.surface2,borderWidth:1,borderColor:C.line},connectFollowText:{fontSize:8,fontWeight:'900',color:C.bg},connectFollowingText:{color:C.text},connectDisclaimer:{fontSize:9,color:C.faint,lineHeight:15,marginTop:5},connectEmpty:{fontSize:10,color:C.muted,lineHeight:17,backgroundColor:C.surface,borderRadius:14,padding:15},connectSmallAction:{backgroundColor:C.surface2,borderRadius:9,paddingHorizontal:10,paddingVertical:8},connectSmallActionText:{fontSize:8,color:C.text,fontWeight:'800'},connectFeaturePanel:{backgroundColor:C.surface,borderWidth:1,borderColor:C.line,borderRadius:20,padding:20,alignItems:'center',marginTop:4},connectFeatureIcon:{width:58,height:58,borderRadius:20,backgroundColor:C.surface2,alignItems:'center',justifyContent:'center',marginBottom:13},connectFeatureTitle:{fontSize:17,fontWeight:'900',color:C.text},connectFeatureText:{fontSize:10,color:C.muted,textAlign:'center',lineHeight:17,marginTop:8,marginBottom:17},connectPrimaryAction:{flexDirection:'row',alignItems:'center',gap:10,backgroundColor:C.accent,borderRadius:12,paddingHorizontal:16,paddingVertical:12},connectPrimaryActionText:{fontSize:10,fontWeight:'900',color:C.bg},connectMeetingRow:{flexDirection:'row',alignItems:'center',gap:8,backgroundColor:C.surface2,borderRadius:10,padding:10,marginBottom:16,width:'100%'},connectMeetingText:{fontSize:9,color:C.muted,flex:1},connectFooter:{alignItems:'center',paddingTop:20},connectFooterText:{fontSize:7,letterSpacing:2,color:C.faint,fontWeight:'800'},
+ aiHome:{paddingHorizontal:20,paddingTop:17,paddingBottom:36},aiHomeTop:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',marginBottom:28},aiEyebrow:{color:C.accent,fontSize:8,fontWeight:'900',letterSpacing:2},aiDate:{color:C.muted,fontSize:11,marginTop:5,textTransform:'capitalize'},aiProfile:{width:40,height:40,borderRadius:14,backgroundColor:C.surface,borderWidth:1,borderColor:C.line,alignItems:'center',justifyContent:'center'},
+ aiWelcome:{alignItems:'center',paddingHorizontal:12,marginBottom:24},aiOrb:{width:86,height:86,borderRadius:43,borderWidth:1,borderColor:'#74664F',backgroundColor:'#25221C',alignItems:'center',justifyContent:'center',marginBottom:17},aiOrbCore:{width:58,height:58,borderRadius:29,backgroundColor:C.accent,alignItems:'center',justifyContent:'center'},aiWelcomeKicker:{color:C.accent,fontSize:9,fontWeight:'900',letterSpacing:3},aiWelcomeTitle:{color:C.text,fontSize:26,fontWeight:'800',letterSpacing:-.8,marginTop:9,textAlign:'center'},aiWelcomeCopy:{color:C.muted,fontSize:12,lineHeight:19,textAlign:'center',marginTop:9,maxWidth:310},
+ aiComposerCard:{backgroundColor:C.surface,borderWidth:1,borderColor:'#514938',borderRadius:20,padding:13,marginBottom:27},aiPromptInput:{color:C.text,fontSize:13,minHeight:72,maxHeight:130,textAlignVertical:'top',paddingHorizontal:4,paddingTop:3},aiComposerBottom:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',marginTop:9},aiComposerHint:{flexDirection:'row',alignItems:'center',gap:6},aiComposerHintText:{color:C.faint,fontSize:9},aiSendButton:{width:39,height:39,borderRadius:13,backgroundColor:C.accent,alignItems:'center',justifyContent:'center'},
+ aiSectionHead:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',marginBottom:12},aiSectionTitle:{color:C.text,fontSize:16,fontWeight:'800'},aiSectionMeta:{color:C.faint,fontSize:8,fontWeight:'900',letterSpacing:1.5},aiSuggestionGrid:{gap:9,marginBottom:27},aiSuggestion:{minHeight:59,backgroundColor:C.surface,borderWidth:1,borderColor:C.line,borderRadius:15,paddingHorizontal:12,flexDirection:'row',alignItems:'center',gap:11},aiSuggestionIcon:{width:35,height:35,borderRadius:11,backgroundColor:C.surface2,alignItems:'center',justifyContent:'center'},aiSuggestionText:{color:C.text,fontSize:11,fontWeight:'700',flex:1},aiWorkspaceHead:{marginBottom:12},aiWorkspaceRow:{flexDirection:'row',gap:10},aiWorkspaceTile:{flex:1,backgroundColor:C.surface,borderWidth:1,borderColor:C.line,borderRadius:16,padding:13,minHeight:112},aiWorkspaceIcon:{width:36,height:36,borderRadius:11,backgroundColor:C.surface2,alignItems:'center',justifyContent:'center',marginBottom:11},aiWorkspaceName:{color:C.text,fontSize:11,fontWeight:'800'},aiWorkspaceDesc:{color:C.faint,fontSize:9,marginTop:4},aiBottomNote:{alignItems:'center',paddingTop:26},aiBottomNoteText:{color:C.faint,fontSize:7,fontWeight:'800',letterSpacing:2},introLogoImage:{width:154,height:154,marginBottom:13}
 
 });
