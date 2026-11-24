@@ -18,3 +18,12 @@
 - Discovery Map uses OpenStreetMap/Nominatim; attribution and fair-use policies apply.
 - Saved Atlas research topics are currently browser-local. They are not synced to Supabase in this release.
 - No existing Market, Social, authentication, chat, projects, or other module code was intentionally replaced.
+
+
+## Atlas 2.0 update
+- Fixed the invalid `viewer.pointsData(...)` call; country/capital markers now use Cesium entities.
+- Added separately managed country and search marker collections so a new search no longer deletes other map entities.
+- Added toggles for capital and search markers, plus clickable search result cards.
+- Improved camera zoom limits, interaction inertia, resize handling, and mobile map controls.
+- Country data request now includes `capitalInfo` for capital marker placement.
+- Terrain remains the Cesium ellipsoid in this release; real elevation terrain is not claimed or enabled.
