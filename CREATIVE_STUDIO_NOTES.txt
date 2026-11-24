@@ -38,3 +38,14 @@ CREATIVE STUDIO 2.0 — VIDEO STORYBOARD GELİŞTİRMESİ
 GÜNCELLEME KURULUMU
 - Dağıtımın kök dizinindeki index.html dosyasını bu paketteki ircai-main/index.html ile değiştirin.
 - atlas.js ve diğer dosyaları değiştirmeyin; Atlas 2.0 sürümü pakette korunur.
+
+
+CREATIVE STUDIO 2.0 — MOBİL GELİŞTİRME
+- Mobil Creative Studio ekranı rehberli brief formuna dönüştürüldü.
+- Altı çalışma modu için hızlı başlangıç briefleri eklendi.
+- Hedef kitle, yaratıcı yaklaşım ve platform alanları eklendi.
+- Video modu için süre, oran ve sahne sayısı kontrolleri eklendi; bu bilgiler AI briefine aktarılır.
+- Metin çıktıları ve görsel brief bilgileri mevcut Projeler koleksiyonuna kaydedilebilir.
+- Mevcut apiChat ve /api/generate-image servisleri korunmuştur.
+- Video render servisi eklenmemiştir; Video Studio storyboard/üretim planı üretir.
+- Ayrıntı: CREATIVE-STUDIO-2.0-CHANGELOG.md
