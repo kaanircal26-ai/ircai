@@ -6946,110 +6946,200 @@ html[data-tozra-theme="dark"] .community-feed-tabs button.is-active{background:#
 </style>
 
 
-<style id="tozra-aurora-soft-theme">
-/* Aurora Soft / Pastel Dark — Unified Web & Mobile Visual Layer */
-.splash, #splash {
-  background:
-    radial-gradient(circle at 24% 26%, rgba(124, 107, 255, 0.26), transparent 46%),
-    radial-gradient(circle at 78% 22%, rgba(77, 166, 255, 0.22), transparent 45%),
-    #0B0E17 !important;
+
+
+</body>
+
+<style id="tozra-aurora-soft-theme-v2">
+/* AURORA SOFT / PASTEL DARK — HIGH-SPECIFICITY OVERRIDE FOR SPLASH & HOME (WEB + MOBILE) */
+html, html body, html body.tozra-home {
+  --bg: #0B0E17 !important;
+  --surface: #131829 !important;
+  --surface2: #1A2138 !important;
+  --text: #F4F6FB !important;
+  --muted: #9AA4C7 !important;
+  --border: rgba(165, 180, 252, 0.16) !important;
+  --green: #7C6BFF !important;
+  --green2: #4DA6FF !important;
+  background-color: #0B0E17 !important;
+  background-image:
+    radial-gradient(circle at 20% 18%, rgba(124, 107, 255, 0.22), transparent 44%),
+    radial-gradient(circle at 82% 16%, rgba(77, 166, 255, 0.18), transparent 44%),
+    radial-gradient(circle at 50% 85%, rgba(124, 107, 255, 0.12), transparent 50%) !important;
   color: #F4F6FB !important;
 }
-.splash .loader-bar, #splash .loader-bar {
-  background: linear-gradient(90deg, #7C6BFF, #4DA6FF) !important;
-  box-shadow: 0 0 14px rgba(124, 107, 255, 0.55) !important;
+
+/* Splash / Launch Screen */
+html body #splash.splash,
+html body .splash {
+  background-color: #0B0E17 !important;
+  background-image:
+    radial-gradient(circle at 28% 30%, rgba(124, 107, 255, 0.32), transparent 46%),
+    radial-gradient(circle at 75% 26%, rgba(77, 166, 255, 0.25), transparent 46%) !important;
+  color: #F4F6FB !important;
 }
-.splash .launch-emblem, #splash .launch-emblem {
-  background: rgba(23, 29, 48, 0.78) !important;
+html body #splash .launch-grid,
+html body #splash .launch-scan {
+  opacity: 0.18 !important;
+}
+html body #splash .launch-ambient-a {
+  background: radial-gradient(circle, rgba(124, 107, 255, 0.42), transparent 70%) !important;
+}
+html body #splash .launch-ambient-b {
+  background: radial-gradient(circle, rgba(77, 166, 255, 0.34), transparent 70%) !important;
+}
+html body #splash .launch-orbit {
+  border-color: rgba(165, 180, 252, 0.18) !important;
+}
+html body #splash .launch-emblem {
+  background: linear-gradient(145deg, rgba(30, 38, 66, 0.85), rgba(18, 24, 43, 0.85)) !important;
   border: 1px solid rgba(165, 180, 252, 0.28) !important;
-  box-shadow: 0 18px 44px rgba(124, 107, 255, 0.24) !important;
+  box-shadow: 0 20px 50px rgba(124, 107, 255, 0.28) !important;
+  backdrop-filter: blur(18px) !important;
 }
-.splash-auth-actions button {
-  background: rgba(23, 29, 48, 0.76) !important;
+html body #splash .launch-emblem svg stop[offset="0"] { stop-color: #E0E7FF !important; }
+html body #splash .launch-emblem svg stop[offset=".48"] { stop-color: #8B7CFF !important; }
+html body #splash .launch-emblem svg stop[offset="1"] { stop-color: #4DA6FF !important; }
+html body #splash .launch-wordmark-dot,
+html body #splash .launch-live-dot {
+  color: #7C6BFF !important;
+  background-color: #7C6BFF !important;
+  box-shadow: 0 0 12px #7C6BFF !important;
+}
+html body #splash .launch-loader-track {
+  background: rgba(165, 180, 252, 0.14) !important;
+}
+html body #splash .loader-bar {
+  background: linear-gradient(90deg, #7C6BFF, #4DA6FF) !important;
+  box-shadow: 0 0 14px rgba(124, 107, 255, 0.6) !important;
+}
+html body #splash .splash-auth-actions button {
+  background: rgba(24, 31, 54, 0.78) !important;
   border: 1px solid rgba(165, 180, 252, 0.22) !important;
   color: #F4F6FB !important;
-  backdrop-filter: blur(14px);
+  border-radius: 14px !important;
+  backdrop-filter: blur(14px) !important;
 }
-.splash-auth-actions button:hover {
-  border-color: rgba(124, 107, 255, 0.65) !important;
-  background: rgba(124, 107, 255, 0.22) !important;
-}
-
-body {
-  background:
-    radial-gradient(circle at 18% 14%, rgba(124, 107, 255, 0.16), transparent 44%),
-    radial-gradient(circle at 84% 18%, rgba(77, 166, 255, 0.14), transparent 44%),
-    #0B0E17 !important;
-  color: #F4F6FB !important;
+html body #splash .splash-auth-actions button:hover {
+  background: linear-gradient(135deg, rgba(124, 107, 255, 0.32), rgba(77, 166, 255, 0.22)) !important;
+  border-color: rgba(124, 107, 255, 0.6) !important;
 }
 
-.sidebar {
+/* App Shell, Sidebar & Topbar */
+html body .app,
+html body .main,
+html body .content {
+  background: transparent !important;
+}
+html body .sidebar {
   background: rgba(13, 17, 30, 0.92) !important;
-  border-right-color: rgba(165, 180, 252, 0.14) !important;
+  border-right: 1px solid rgba(165, 180, 252, 0.14) !important;
+  backdrop-filter: blur(20px) !important;
 }
-.topbar {
-  background: rgba(11, 14, 23, 0.84) !important;
-  border-bottom-color: rgba(165, 180, 252, 0.14) !important;
+html body .nav-item:hover,
+html body .nav-item.active {
+  background: rgba(124, 107, 255, 0.18) !important;
+  color: #C4B5FD !important;
+}
+html body .topbar {
+  background: rgba(11, 14, 23, 0.82) !important;
+  border-bottom: 1px solid rgba(165, 180, 252, 0.14) !important;
+  backdrop-filter: blur(18px) !important;
 }
 
-#workspacePage .tozra-reference-home {
+/* Home Screen (#workspacePage & .tozra-reference-home) */
+html body #workspacePage,
+html body #workspacePage .tozra-reference-home {
   background: transparent !important;
   color: #F4F6FB !important;
 }
-#workspacePage .trh-header {
+html body #workspacePage .tozra-reference-home::before,
+html body #workspacePage .tozra-reference-home::after {
+  background: radial-gradient(circle, rgba(124, 107, 255, 0.22), transparent 68%) !important;
+}
+html body #workspacePage .trh-header {
+  background: transparent !important;
   border-bottom: 1px solid rgba(165, 180, 252, 0.12) !important;
 }
-#workspacePage .trh-brand {
+html body #workspacePage .trh-brand,
+html body #workspacePage .trh-welcome h1,
+html body #workspacePage .trh-section-head h2 {
   color: #F4F6FB !important;
 }
-#workspacePage .trh-round,
-#workspacePage .trh-shortcut,
-#workspacePage .trh-composer,
-#workspacePage .trh-tool,
-#workspacePage .trh-quick-card,
-#workspacePage .trh-recent-card {
-  background: linear-gradient(145deg, rgba(25, 32, 54, 0.84), rgba(16, 21, 38, 0.78)) !important;
-  color: #F4F6FB !important;
-  border: 1px solid rgba(165, 180, 252, 0.16) !important;
-  border-radius: 20px !important;
-  backdrop-filter: blur(16px);
-  box-shadow: 0 12px 32px rgba(4, 7, 15, 0.35) !important;
-}
-#workspacePage .trh-shortcut.active,
-#workspacePage .trh-quick-card:hover,
-#workspacePage .trh-recent-card:hover {
-  border-color: rgba(124, 107, 255, 0.55) !important;
-  background: linear-gradient(145deg, rgba(124, 107, 255, 0.24), rgba(77, 166, 255, 0.14)) !important;
-}
-#workspacePage .trh-card-icon,
-#workspacePage .trh-recent-icon {
-  background: rgba(124, 107, 255, 0.16) !important;
-  border: 1px solid rgba(165, 180, 252, 0.22) !important;
-  color: #A5B4FC !important;
-}
-#workspacePage .trh-send,
-.primary-btn {
-  background: linear-gradient(135deg, #7C6BFF, #4DA6FF) !important;
-  color: #FFFFFF !important;
-  box-shadow: 0 8px 24px rgba(124, 107, 255, 0.35) !important;
-}
-#workspacePage .trh-welcome p,
-#workspacePage .trh-quick-card small,
-#workspacePage .trh-recent-card small {
+html body #workspacePage .trh-welcome p,
+html body #workspacePage .trh-section-head button,
+html body #workspacePage .trh-quick-card small,
+html body #workspacePage .trh-recent-card small {
   color: #9AA4C7 !important;
 }
-#workspacePage .trh-bottom-nav {
-  background: rgba(16, 21, 38, 0.88) !important;
+
+/* Aurora Soft Glass Cards & Composer */
+html body #workspacePage .trh-round,
+html body #workspacePage .trh-shortcut,
+html body #workspacePage .trh-composer,
+html body #workspacePage .trh-tool,
+html body #workspacePage .trh-quick-card,
+html body #workspacePage .trh-recent-card {
+  background: linear-gradient(145deg, rgba(26, 33, 56, 0.82), rgba(16, 21, 38, 0.76)) !important;
+  color: #F4F6FB !important;
   border: 1px solid rgba(165, 180, 252, 0.18) !important;
-  backdrop-filter: blur(18px);
+  border-radius: 22px !important;
+  box-shadow: 0 14px 36px rgba(4, 7, 16, 0.36) !important;
+  backdrop-filter: blur(18px) !important;
 }
-#workspacePage .trh-bottom-nav button.selected {
+html body #workspacePage .trh-composer {
+  background: linear-gradient(135deg, rgba(124, 107, 255, 0.22), rgba(77, 166, 255, 0.14)) !important;
+  border-color: rgba(124, 107, 255, 0.36) !important;
+}
+html body #workspacePage #homePromptInput {
+  color: #F4F6FB !important;
+}
+html body #workspacePage #homePromptInput::placeholder {
+  color: #9AA4C7 !important;
+}
+html body #workspacePage .trh-shortcut.active,
+html body #workspacePage .trh-quick-card:hover,
+html body #workspacePage .trh-recent-card:hover {
+  background: linear-gradient(135deg, rgba(124, 107, 255, 0.28), rgba(77, 166, 255, 0.18)) !important;
+  border-color: rgba(124, 107, 255, 0.6) !important;
+}
+html body #workspacePage .trh-card-icon,
+html body #workspacePage .trh-recent-icon,
+html body #workspacePage .trh-orbit-glow {
+  background: rgba(124, 107, 255, 0.18) !important;
+  border: 1px solid rgba(165, 180, 252, 0.24) !important;
+  color: #C4B5FD !important;
+  box-shadow: 0 0 28px rgba(124, 107, 255, 0.25) !important;
+}
+html body #workspacePage .trh-send,
+html body .primary-btn {
+  background: linear-gradient(135deg, #7C6BFF, #4DA6FF) !important;
   color: #FFFFFF !important;
-  background: linear-gradient(135deg, rgba(124, 107, 255, 0.34), rgba(77, 166, 255, 0.22)) !important;
+  border: none !important;
+  box-shadow: 0 8px 24px rgba(124, 107, 255, 0.38) !important;
+}
+
+/* Floating Bottom Navigation Dock */
+html body #workspacePage .trh-bottom-nav,
+html body #homePrimaryNav.trh-bottom-nav {
+  background: rgba(16, 21, 38, 0.88) !important;
+  border: 1px solid rgba(165, 180, 252, 0.2) !important;
+  border-radius: 26px !important;
+  box-shadow: 0 16px 40px rgba(4, 7, 16, 0.5) !important;
+  backdrop-filter: blur(20px) !important;
+}
+html body #workspacePage .trh-bottom-nav button,
+html body #homePrimaryNav.trh-bottom-nav button {
+  color: #9AA4C7 !important;
+}
+html body #workspacePage .trh-bottom-nav button.selected,
+html body #homePrimaryNav.trh-bottom-nav button.selected {
+  color: #FFFFFF !important;
+  background: linear-gradient(135deg, rgba(124, 107, 255, 0.36), rgba(77, 166, 255, 0.24)) !important;
+  border-radius: 18px !important;
 }
 </style>
 
-</body>
 </html>
 
 <style id="tozra-final-premium-update">
