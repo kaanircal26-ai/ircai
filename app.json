@@ -1,14 +1,15 @@
 {
   "expo": {
-    "name": "TOZRA_CLEAN",
-    "slug": "TOZRA_CLEAN",
+    "name": "TOZRA",
+    "slug": "tozra-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "tozraclean",
-    "userInterfaceStyle": "automatic",
+    "scheme": "tozra",
+    "userInterfaceStyle": "dark",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "bundleIdentifier": "com.tozra.mobile"
     },
     "android": {
       "adaptiveIcon": {
@@ -17,18 +18,18 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.tozra.mobile"
     },
     "web": {
       "output": "server",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router",
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
+          "backgroundColor": "#080C09",
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 76
         }
