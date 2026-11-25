@@ -1,27 +1,40 @@
-# TOZRA Mobile 1.5.1
+# TOZRA Mobile — Native iOS / Android
 
-Bu klasör React Native + Expo tabanlı yerel iOS/Android uygulamasıdır; WebView değildir.
+Bu proje React Native + Expo tabanlı yerel mobil uygulamadır; WebView içine sarılmış web sitesi değildir. Web sürümü `index.html` ve ilişkili istemci dosyalarında, native mobil uygulama `App.js` ve `src/` altında bulunur.
+
+## Mevcut mobil ekranlar
+
+- Ana Sayfa
+- TOZRA AI sohbet
+- Projeler
+- Creative Studio
+- Görevler & Takvim
+- TOZRA Nexus
+- TOZRA Universe
+- TOZRA Market
+- TOZRA Social
+- TOZRA Web Builder
+- Profil / Hesap
+
+Alt gezinme web uygulamasının beş ana sekmesini izler: Ana Sayfa, Sohbet, Projeler, Stüdyo, Profil. Diğer modüller üst çubuktaki menüden açılır.
 
 ## Kurulum
 
 1. Node.js 20 veya üzerini kur.
-2. Bu klasörde `npm install` çalıştır.
-3. Paket sürümlerini Expo SDK ile doğrulamak için `npx expo install --fix` çalıştır.
+2. Proje klasöründe `npm install` çalıştır.
+3. Expo paket uyumluluğunu doğrulamak için `npx expo install --fix` çalıştır.
 4. `npx expo-doctor` ile proje kontrollerini yap.
 5. `npx expo start -c` komutunu çalıştırıp QR kodunu Expo Go ile okut. Native modül uyumsuzluğu çıkarsa EAS development build gerekir.
 
 ## Sunucu bağlantısı
 
-Supabase URL ve public client key uygulamaya yazılmaz. Uygulama bunları `https://tozra.com.tr/api/config` adresinden alır. Vercel ortam değişkenlerinde `SUPABASE_URL` ve `SUPABASE_PUBLISHABLE_KEY` (veya `SUPABASE_ANON_KEY`) tanımlı olmalıdır. `SUPABASE_SECRET_KEY` mobil uygulamaya eklenmemelidir.
+Supabase URL ve public client key uygulamaya gömülmez. Uygulama bunları `https://tozra.com.tr/api/config` adresinden alır. Vercel ortam değişkenlerinde `SUPABASE_URL` ve `SUPABASE_PUBLISHABLE_KEY` (veya `SUPABASE_ANON_KEY`) tanımlı olmalıdır. `SUPABASE_SECRET_KEY` mobil uygulamaya eklenmemelidir.
 
-## Mevcut mobil ekranlar
+## Parite notu
 
-Ana Sayfa, TOZRA AI, Projeler, Creative Studio, Görevler/Takvim, TOZRA Web brief alanı ve Hesap. Web sürümünde bulunan Atlas, Nexus, Universe, Market ve Social bu `App.js` sürümünde ayrı mobil ekranlar olarak yer almıyor; sonraki geliştirme aşamalarında ele alınacak.
+Bu sürümde ana sayfanın içerik sırası ve beş sekmeli alt gezinme web mobil referansına yaklaştırıldı. Diğer modüller native bileşenlerle çalışır; tüm ekranların piksel düzeyinde birebir olduğu henüz iddia edilmemektedir. Canlı sesli WebRTC, bazı tarayıcıya özgü etkileşimler ve gerçek cihaz görünüm testleri ayrıca tamamlanmalıdır. Ayrıntılar için `PORTING_AUDIT.md` dosyasına bak.
+## Web ile mobil gezinme eşleştirmesi
 
-## Notlar
-
-- `src/supabase.js` mevcut `/api/config` endpoint'inden güvenli istemci yapılandırmasını alır ve oturumu AsyncStorage üzerinde saklar.
-- `src/theme.js` mobil tema renklerini tek noktadan yönetir.
-- `assets/` klasörü Expo uygulama ikonu, Android adaptive icon ve açılış görselini içerir.
-- Açılış animasyonu 4,7 saniyedir.
-- Bu paketleme ortamında `npm install` zaman aşımına uğradı; bu nedenle Expo Doctor, native derleme ve gerçek cihaz testi henüz yapılmış değildir.
+- Ana gezinme: Ana Sayfa, Sohbet, Projeler, Stüdyo ve Profil.
+- Diğer çalışma modülleri üst menüdeki TOZRA modülleri alanından açılır: Görevler & Takvim, Nexus, Universe, Market, Social ve TOZRA Web.
+- 25.11.2026 parity aşamasında alt gezinme yüzen/yuvarlatılmış yapıya alındı ve ana ekrana yerel tarih eklendi. Ayrıntılı ekran eşleştirmesi ve gerçek cihaz testleri sonraki QA aşamasındadır.

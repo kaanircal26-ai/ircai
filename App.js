@@ -14,11 +14,10 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
 
 const TOZRA_URL = 'https://ircai.vercel.app/';
-const BG = '#0B0E17';
-const TEXT = '#F4F6FB';
-const MUTED = '#9AA4C7';
-const ACCENT = '#7C6BFF';
-const ACCENT2 = '#4DA6FF';
+const BG = '#080C09';
+const TEXT = '#F1F5EA';
+const MUTED = '#9EAD95';
+const ACCENT = '#C7ED67';
 
 function LoadingScreen() {
   const spin = useRef(new Animated.Value(0)).current;
@@ -193,37 +192,37 @@ const styles = StyleSheet.create({
     justifyContent: 'center', overflow: 'hidden',
   },
   orbit: {
-    position: 'absolute', width: 290, height: 290, borderRadius: 145,
-    borderWidth: 1, borderColor: 'rgba(124,107,255,0.34)',
-    borderTopColor: ACCENT, borderRightColor: 'rgba(77,166,255,0.28)',
+    position: 'absolute', width: 286, height: 286, borderRadius: 143,
+    borderWidth: 1, borderColor: 'rgba(199,237,103,0.42)',
+    borderTopColor: ACCENT, borderRightColor: 'rgba(199,237,103,0.08)',
   },
   orbitInner: {
     position: 'absolute', width: 218, height: 218, borderRadius: 109,
-    borderWidth: 1, borderColor: 'rgba(77,166,255,0.24)', borderBottomColor: ACCENT2,
+    borderWidth: 1, borderColor: 'rgba(199,237,103,0.18)', borderBottomColor: ACCENT,
   },
   logoGlow: {
-    position: 'absolute', width: 132, height: 132, borderRadius: 44,
-    backgroundColor: 'rgba(124,107,255,0.26)',
+    position: 'absolute', width: 118, height: 118, borderRadius: 38,
+    backgroundColor: 'rgba(199,237,103,0.18)',
   },
   loadingTrack: {
-    width: 170, height: 4, borderRadius: 999, backgroundColor: 'rgba(165,180,252,0.14)',
+    width: 164, height: 3, borderRadius: 4, backgroundColor: '#202B1D',
     overflow: 'hidden', marginTop: 34,
   },
-  loadingFill: { width: '74%', height: 4, borderRadius: 999, backgroundColor: ACCENT },
+  loadingFill: { width: '72%', height: 3, borderRadius: 4, backgroundColor: ACCENT },
   logo: {
-    width: 72,
-    height: 72,
-    borderRadius: 24,
+    width: 66,
+    height: 66,
+    borderRadius: 22,
     borderWidth: 1,
-    borderColor: 'rgba(165,180,252,0.42)',
-    backgroundColor: '#7C6BFF',
+    borderColor: 'rgba(232,255,185,0.48)',
+    backgroundColor: '#B7D96A',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  logoLetter: { color: '#FFFFFF', fontSize: 40, fontWeight: '800' },
-  brand: { color: TEXT, fontSize: 26, fontWeight: '900', letterSpacing: 7, marginTop: 18 },
-  tagline: { color: MUTED, fontSize: 9, fontWeight: '700', letterSpacing: 2.6, marginTop: 8 },
-  loadingText: { color: MUTED, fontSize: 12, marginTop: 14 },
+  logoLetter: { color: '#18210F', fontSize: 40, fontWeight: '800' },
+  brand: { color: TEXT, fontSize: 25, fontWeight: '900', letterSpacing: 7, marginTop: 16 },
+  tagline: { color: MUTED, fontSize: 8, fontWeight: '700', letterSpacing: 2.5, marginTop: 7 },
+  loadingText: { color: MUTED, fontSize: 11, marginTop: 12 },
   error: {
     flex: 1,
     backgroundColor: BG,
@@ -232,26 +231,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
   },
   errorMark: {
-    width: 62,
-    height: 62,
-    borderRadius: 20,
-    backgroundColor: '#151B2E',
+    width: 58,
+    height: 58,
+    borderRadius: 19,
+    backgroundColor: '#182318',
     borderWidth: 1,
-    borderColor: 'rgba(124,107,255,0.42)',
+    borderColor: 'rgba(199,237,103,0.35)',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 20,
   },
-  errorMarkText: { color: '#C4B5FD', fontSize: 34, fontWeight: '800' },
+  errorMarkText: { color: ACCENT, fontSize: 34, fontWeight: '800' },
   errorTitle: { color: TEXT, fontSize: 19, fontWeight: '800', textAlign: 'center' },
   errorCopy: { color: MUTED, fontSize: 12, lineHeight: 19, textAlign: 'center', marginTop: 10 },
-  errorDetail: { color: '#7D88AE', fontSize: 10, textAlign: 'center', marginTop: 10 },
+  errorDetail: { color: '#8D8578', fontSize: 10, textAlign: 'center', marginTop: 10 },
   retry: {
     marginTop: 22,
     backgroundColor: ACCENT,
-    borderRadius: 16,
-    paddingHorizontal: 26,
-    paddingVertical: 14,
+    borderRadius: 13,
+    paddingHorizontal: 24,
+    paddingVertical: 13,
   },
-  retryText: { color: '#FFFFFF', fontSize: 12, fontWeight: '900' },
+  retryText: { color: '#18210F', fontSize: 12, fontWeight: '900' },
 });
